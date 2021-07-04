@@ -58,7 +58,6 @@ configure<TestedExtension> {
     enable("InvalidPackage")
     enable("Interoperability")
     isAbortOnError = true
-    baselineFile = File("${projectDir}/lint-baseline.xml")
   }
 
   testOptions {
@@ -123,9 +122,8 @@ val lintMain by tasks.registering {
         }
       }
   }
-}
-lintMain {
-  finalizedBy("compileKotlin")
+
+  dependsOn("lintDebug")
 }
 
 val testJvm by tasks.registering {
