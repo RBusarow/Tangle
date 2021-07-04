@@ -156,7 +156,7 @@ pluginBundle {
 
   plugins {
     getByName("tangle") {
-      displayName = "Fast dependency graph validation for gradle"
+      displayName = "Hilt-like ViewModel injection using the Anvil compiler plugin"
     }
   }
 }
