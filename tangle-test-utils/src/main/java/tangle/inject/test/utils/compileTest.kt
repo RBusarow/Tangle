@@ -146,7 +146,9 @@ fun Class<*>.getterFunction(): Method {
 fun Class<*>.providerFactoryClass(): Class<*> {
   val enclosingClassString = enclosingClass?.let { "${it.simpleName}_" } ?: ""
 
-  return classLoader.loadClass("${packageName()}$enclosingClassString${simpleName}_Provider_Factory")
+  return classLoader.loadClass(
+    "${packageName()}$enclosingClassString${simpleName}_Provider_Factory"
+  )
 }
 
 fun Class<*>.implClass(): Class<*> {
