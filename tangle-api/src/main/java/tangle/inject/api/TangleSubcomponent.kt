@@ -12,6 +12,6 @@ public interface TangleSubcomponent {
 
   public interface Factory {
     public fun create(savedStateHandle: SavedStateHandle):
-            TangleSubcomponent
+      TangleSubcomponent
   }
 }
