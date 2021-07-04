@@ -1,0 +1,143 @@
+/*
+ * Copyright (C) 2021 Rick Busarow
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *      http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package tangle.inject.test.utils
+
+import com.squareup.anvil.annotations.ExperimentalAnvilApi
+import com.tschuchort.compiletesting.KotlinCompilation.Result
+import java.lang.reflect.Executable
+import java.lang.reflect.Member
+import java.lang.reflect.Modifier
+import kotlin.reflect.KClass
+
+@ExperimentalAnvilApi
+val Member.isStatic: Boolean
+  get() = Modifier.isStatic(modifiers)
+
+@ExperimentalAnvilApi
+val Member.isAbstract: Boolean
+  get() = Modifier.isAbstract(modifiers)
+
+/**
+ * Creates a new instance of this class with the given arguments. This method assumes that this
+ * class only declares a single constructor.
+ */
+@Suppress("UNCHECKED_CAST")
+fun <T : Any> Class<T>.createInstance(
+  vararg initargs: Any?
+): T = declaredConstructors.single().use { it.newInstance(*initargs) } as T
+
+inline fun <T, E : Executable> E.use(block: (E) -> T): T {
+  // Deprecated since Java 9, but many projects still use JDK 8 for compilation.
+  @Suppress("DEPRECATION")
+  val original = isAccessible
+
+  return try {
+    isAccessible = true
+    block(this)
+  } finally {
+    isAccessible = original
+  }
+}
+
+const val MODULE_PACKAGE_PREFIX = "anvil.module"
+
+val Result.contributingInterface: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.ContributingInterface")
+
+val Result.secondContributingInterface: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.SecondContributingInterface")
+
+val Result.innerInterface: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.SomeClass\$InnerInterface")
+
+val Result.parentInterface: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.ParentInterface")
+
+val Result.componentInterface: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.ComponentInterface")
+
+val Result.componentInterfaceAnvilModule: Class<*>
+  get() = classLoader
+    .loadClass("$MODULE_PACKAGE_PREFIX.tangle.inject.tests.ComponentInterfaceAnvilModule")
+
+val Result.subcomponentInterface: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.SubcomponentInterface")
+
+val Result.subcomponentInterfaceAnvilModule: Class<*>
+  get() = classLoader
+    .loadClass("$MODULE_PACKAGE_PREFIX.tangle.inject.tests.SubcomponentInterfaceAnvilModule")
+
+val Result.daggerModule1: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.DaggerModule1")
+
+val Result.assistedService: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.AssistedService")
+
+val Result.assistedServiceFactory: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.AssistedServiceFactory")
+
+val Result.daggerModule1AnvilModule: Class<*>
+  get() = classLoader
+    .loadClass("$MODULE_PACKAGE_PREFIX.tangle.inject.tests.DaggerModule1AnvilModule")
+
+val Result.daggerModule2: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.DaggerModule2")
+
+val Result.daggerModule3: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.DaggerModule3")
+
+val Result.daggerModule4: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.DaggerModule4")
+
+val Result.innerModule: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.ComponentInterface\$InnerModule")
+
+val Result.injectClass: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.InjectClass")
+
+val Result.myViewModelClass: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.MyViewModel")
+
+val Result.myFragmentClass: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.MyFragment")
+
+val Result.anyQualifier: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.AnyQualifier")
+
+@Suppress("UNCHECKED_CAST")
+val Result.bindingKey: Class<out Annotation>
+  get() = classLoader.loadClass("tangle.inject.tests.BindingKey") as Class<out Annotation>
+
+private fun Class<*>.contributedProperties(packagePrefix: String): List<KClass<*>>? {
+  // The capitalize() doesn't make sense, I don't know where this is coming from. Maybe it's a
+  // bug in the compile testing library?
+  @Suppress("DEPRECATION")
+  val className = canonicalName.replace('.', '_')
+    .capitalize() + "Kt"
+
+  val clazz = try {
+    classLoader.loadClass("$packagePrefix.${packageName()}$className")
+  } catch (e: ClassNotFoundException) {
+    return null
+  }
+
+  return clazz.declaredFields
+    .map {
+      it.isAccessible = true
+      it.get(null)
+    }
+    .filterIsInstance<KClass<*>>()
+}

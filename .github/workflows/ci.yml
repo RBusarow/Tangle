@@ -1,0 +1,152 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - main
+      - master
+      - release
+  pull_request_target:
+    types: [ assigned, opened, synchronize, reopened ]
+
+jobs:
+
+  cancel-other-jobs:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      # cancel previous jobs
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.9.0
+        env:
+          access_token: '${{ github.token }}'
+
+  detekt:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # use a personal access token to check out so that this action can trigger other actions
+          token: ${{ github.token }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+
+      - name: detekt
+        run: ./gradlew detekt
+
+  ktlint:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          # use a personal access token to check out so that this action can trigger other actions
+          token: ${{ github.token }}
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+
+      - name: Copy Dependabot dependencies to toml
+        run: ./gradlew dependencysync
+
+      # If the copy generated changes, commit and push those changes.
+      - name: commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Update dependencies from dependabot
+          commit_options: '--no-verify --signoff'
+
+      # formats all src files
+      - name: KtLint format
+        run: ./gradlew formatKotlin
+
+      # If KtLint generated changes, commit and push those changes.
+      - name: commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: Apply KtLint format
+          commit_options: '--no-verify --signoff'
+
+#  tests-ubuntu:
+#
+#    runs-on: ubuntu-latest
+#
+#    strategy:
+#      fail-fast: false
+#      matrix:
+#        kotlin-version: [ 1.5.0-M2, 1.4.32, 1.3.72 ]
+#        gradle-version: [ 7.0, 6.8.3 ]
+#        agp-version: [ 7.0.0-alpha12, 4.2.0-beta06, 4.1.3, 4.0.1 ]
+#
+#    steps:
+#      - uses: actions/checkout@v2
+#        with:
+#          # use a personal access token to check out so that this action can trigger other actions
+#          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+#
+#      - name: Set up JDK
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 14
+#
+#      - name: all tests
+#        run: ./gradlew lintMain testJvm -Pmodulecheck.kotlinVersion=${{ matrix.kotlin-version }} -Pmodulecheck.gradleVersion=${{ matrix.gradle-version }} -Pmodulecheck.agpVersion=${{ matrix.agp-version }} --rerun-tasks
+#
+#      - name: Archive test results
+#        uses: actions/upload-artifact@v2
+#        if: failure()
+#        with:
+#          name: test-results-ubuntu
+#          path: ./**/build/reports/tests/
+#
+#      - name: Unit test results
+#        uses: mikepenz/action-junit-report@v1
+#        if: failure()
+#        with:
+#          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+#          report_paths: '**/build/**/TEST-*.xml'
+#          check_name: Unit Test Results - Ubuntu
+
+#  tests-windows:
+#
+#    runs-on: windows-latest
+#
+#    steps:
+#
+#      - uses: actions/checkout@v2
+#        with:
+#          # use a personal access token to check out so that this action can trigger other actions
+#          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+#
+#      - name: Set up JDK
+#        uses: actions/setup-java@v1
+#        with:
+#          java-version: 14
+#
+#      - name: all tests
+#        run: ./gradlew lintMain testJvm --rerun-tasks
+#
+#      - name: Archive test results
+#        uses: actions/upload-artifact@v2
+#        if: failure()
+#        with:
+#          name: test-results-windows
+#          path: ./**/build/reports/tests/
+#
+#      - name: Unit test results
+#        uses: mikepenz/action-junit-report@v1
+#        if: failure()
+#        with:
+#          github_token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+#          report_paths: '**/build/**/TEST-*.xml'
+#          check_name: Unit Test Results - Windows

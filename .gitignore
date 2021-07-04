@@ -1,0 +1,67 @@
+#built application files
+*.apk
+*.ap_
+
+# files for the dex VM
+*.dex
+
+# Java class files
+*.class
+
+# generated files
+bin/
+gen/
+
+# Local configuration file (sdk path, etc)
+local.properties
+
+# Windows thumbnail db
+Thumbs.db
+
+# OSX files
+.DS_Store
+
+# Eclipse project files
+.classpath
+.project
+
+## IDEA/Android Studio ignores
+*.iml
+*.ipr
+*.iws
+/.idea/*
+/.gradle/*
+
+# IDEA/Android Studio Ignore exceptions
+!/.idea/vcs.xml
+!/.idea/fileTemplates/
+!/.idea/inspectionProfiles/
+!/.idea/scopes/
+!/.idea/codeStyleSettings.xml
+!/.idea/encodings.xml
+!/.idea/copyright/
+!/.idea/compiler.xml
+# required plugins
+!/.idea/externalDependencies.xml
+# ktlint plugin settings
+!/.idea/ktlint.xml
+
+/.idea/vcs.xml
+**/.idea/workspace.xml
+/.idea/ktlint.xml
+
+#NDK
+obj/
+**/.gradle/
+
+captures/
+/.idea/copyright/profiles_settings.xml
+/.idea/compiler.xml
+!/.idea/codeStyles/
+!/gradle/wrapper/gradle-wrapper.properties
+true/
+
+# all build dirs at any level
+**/build
+/gradle/profiler/gradle-user-home/
+!/gradle/profiler/bin/
