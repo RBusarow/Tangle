@@ -16,15 +16,15 @@
 plugins {
   androidLibrary
 }
-android {
-
-  buildFeatures {
-    compose = true
-  }
-  composeOptions {
-    kotlinCompilerExtensionVersion = "1.0.0-beta09"
-  }
-}
+// android {
+//
+//   buildFeatures {
+//     compose = true
+//   }
+//   composeOptions {
+//     kotlinCompilerExtensionVersion = "1.0.0-beta09"
+//   }
+// }
 
 dependencies {
 
