@@ -114,21 +114,6 @@ java {
   targetCompatibility = JavaVersion.VERSION_1_8
 }
 
-val lintMain by tasks.registering {
-
-  doFirst {
-    tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
-      .configureEach {
-        kotlinOptions {
-          allWarningsAsErrors = true
-        }
-      }
-  }
-}
-lintMain {
-  finalizedBy("compileKotlin")
-}
-
 val testJvm by tasks.registering {
   dependsOn("test")
 }
