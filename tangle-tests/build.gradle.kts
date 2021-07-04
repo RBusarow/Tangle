@@ -16,15 +16,6 @@
 plugins {
   androidLibrary
 }
-// android {
-//
-//   buildFeatures {
-//     compose = true
-//   }
-//   composeOptions {
-//     kotlinCompilerExtensionVersion = "1.0.0-beta09"
-//   }
-// }
 
 dependencies {
 
@@ -57,7 +48,6 @@ dependencies {
   implementation(projects.tangleApi)
   implementation(projects.tangleCompiler)
   implementation(projects.tangleTestUtils)
-  // kapt(libs.google.auto.service.processor)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
