@@ -15,7 +15,7 @@
 
 plugins {
   javaLibrary
-  `maven-publish`
+  id("com.vanniktech.maven.publish")
 }
 
 dependencies {
@@ -49,16 +49,3 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
       )
     }
   }
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-
-      groupId = "com.rickbusarow.tangle"
-      artifactId = "tangle-compiler"
-
-      version = libs.versions.versionName.get()
-
-      from(components["java"])
-    }
-  }
-}

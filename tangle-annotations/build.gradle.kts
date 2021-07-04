@@ -15,26 +15,12 @@
 
 plugins {
   javaLibrary
-  `maven-publish`
+  id("com.vanniktech.maven.publish")
 }
 
 dependencies {
 
   api(libs.javax.inject)
-}
-
-publishing {
-  publications {
-    create<MavenPublication>("maven") {
-
-      groupId = "com.rickbusarow.tangle"
-      artifactId = "tangle-annotations"
-
-      version = libs.versions.versionName.get()
-
-      from(components["java"])
-    }
-  }
 }
 
 kotlin {

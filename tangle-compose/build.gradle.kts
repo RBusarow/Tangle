@@ -15,7 +15,7 @@
 
 plugins {
   androidLibrary
-  `maven-publish`
+  id("com.vanniktech.maven.publish")
 }
 android {
 
@@ -50,20 +50,3 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
       )
     }
   }
-
-
-afterEvaluate {
-  publishing {
-    publications {
-      create<MavenPublication>("maven") {
-
-        groupId = "com.rickbusarow.tangle"
-        artifactId = "tangle-compose"
-
-        version = libs.versions.versionName.get()
-
-        from(components["release"])
-      }
-    }
-  }
-}
