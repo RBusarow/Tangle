@@ -19,15 +19,15 @@ import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.TestFactory
 import tangle.inject.test.utils.BaseTest
-import tangle.inject.test.utils.factoryClass
 import tangle.inject.test.utils.getterFunction
 import tangle.inject.test.utils.myViewModelClass
+import tangle.inject.test.utils.providerClass
 import javax.inject.Provider
 
 class VMInjectGeneratorTest : BaseTest() {
 
   @TestFactory
-  fun `factory is generated for a constructor without arguments`() = test {
+  fun `provider is generated without arguments`() = test {
     compile(
       """
       package tangle.inject.tests
@@ -40,7 +40,7 @@ class VMInjectGeneratorTest : BaseTest() {
       class MyViewModel @VMInject constructor() : ViewModel()
      """
     ) {
-      val providerClass = myViewModelClass.factoryClass()
+      val providerClass = myViewModelClass.providerClass()
 
       val constructor = providerClass.declaredConstructors.single()
       val providerInstance = constructor.newInstance()
@@ -51,7 +51,47 @@ class VMInjectGeneratorTest : BaseTest() {
   }
 
   @TestFactory
-  fun `factory is generated for a constructor with an argument`() = test {
+  fun `same from readme`() = test {
+    compile(
+      """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.ViewModel
+      import androidx.lifecycle.SavedStateHandle
+      import tangle.inject.annotations.ContributesViewModel
+      import tangle.inject.annotations.VMInject
+      import tangle.inject.annotations.FromSavedState
+
+      interface MyRepository
+
+      @ContributesViewModel(Unit::class)
+      class MyViewModel @VMInject constructor(
+        val myRepository: MyRepository,
+        // Tangle will automatically extract arguments from SavedStateHandle
+        @FromSavedState("userId")
+        val userId: String,
+        // nullable SavedStateHandle arguments are just injected as null if missing
+        @FromSavedState("address")
+        val addressOrNull: String?,
+        // SavedStateHandle may be injected directly
+        val savedStateHandle: SavedStateHandle
+      ) : ViewModel() {
+        // ...
+      }
+     """
+    ) {
+      // val providerClass = myViewModelClass.providerClass()
+      //
+      // val constructor = providerClass.declaredConstructors.single()
+      // val providerInstance = constructor.newInstance()
+      // val getter = providerClass.getterFunction()
+      //
+      // getter.invoke(providerInstance)::class.java shouldBe myViewModelClass
+    }
+  }
+
+  @TestFactory
+  fun `provider is generated for an argument`() = test {
     compile(
       """
       package tangle.inject.tests
@@ -66,7 +106,7 @@ class VMInjectGeneratorTest : BaseTest() {
       ) : ViewModel()
      """
     ) {
-      val providerClass = myViewModelClass.factoryClass()
+      val providerClass = myViewModelClass.providerClass()
 
       val constructor = providerClass.declaredConstructors.single()
       val providerInstance = constructor.newInstance(Provider { "name" })
@@ -77,7 +117,7 @@ class VMInjectGeneratorTest : BaseTest() {
   }
 
   @TestFactory
-  fun `factory is generated for a constructor with a generic argument`() = test {
+  fun `provider is generated for a generic argument`() = test {
     compile(
       """
       package tangle.inject.tests
@@ -92,7 +132,7 @@ class VMInjectGeneratorTest : BaseTest() {
       ) : ViewModel()
      """
     ) {
-      val providerClass = myViewModelClass.factoryClass()
+      val providerClass = myViewModelClass.providerClass()
 
       val constructor = providerClass.declaredConstructors.single()
       val providerInstance = constructor.newInstance(Provider { listOf("name") })
@@ -103,7 +143,7 @@ class VMInjectGeneratorTest : BaseTest() {
   }
 
   @TestFactory
-  fun `factory is generated for a constructor with a dagger Lazy argument`() =
+  fun `provider is generated for a dagger Lazy argument`() =
     test {
       compile(
         """
@@ -119,7 +159,7 @@ class VMInjectGeneratorTest : BaseTest() {
       ) : ViewModel()
      """
       ) {
-        val providerClass = myViewModelClass.factoryClass()
+        val providerClass = myViewModelClass.providerClass()
 
         val constructor = providerClass.declaredConstructors.single()
         val providerInstance = constructor.newInstance(Provider { "name" })
@@ -130,7 +170,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `factory is generated for a constructor with a dagger Lazy argument which is generic`() =
+  fun `provider is generated for a dagger Lazy argument which is generic`() =
     test {
       compile(
         """
@@ -146,7 +186,7 @@ class VMInjectGeneratorTest : BaseTest() {
       ) : ViewModel()
      """
       ) {
-        val providerClass = myViewModelClass.factoryClass()
+        val providerClass = myViewModelClass.providerClass()
 
         val constructor = providerClass.declaredConstructors.single()
         val providerInstance = constructor.newInstance(Provider { listOf("name") })
@@ -157,7 +197,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `factory is generated for a constructor with a SavedStateHandle argument`() =
+  fun `provider is generated for a SavedStateHandle argument`() =
     test {
       compile(
         """
@@ -174,10 +214,78 @@ class VMInjectGeneratorTest : BaseTest() {
       ) : ViewModel()
      """
       ) {
-        val providerClass = myViewModelClass.factoryClass()
+        val providerClass = myViewModelClass.providerClass()
 
         val constructor = providerClass.declaredConstructors.single()
         val providerInstance = constructor.newInstance(Provider { SavedStateHandle() })
+        val getter = providerClass.getterFunction()
+
+        getter.invoke(providerInstance)::class.java shouldBe myViewModelClass
+      }
+    }
+
+  @TestFactory
+  fun `provider is generated for a SavedStateHandle argument wrapped in Provider and a FromSavedState argument`() =
+    test {
+      compile(
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.inject.annotations.ContributesViewModel
+      import tangle.inject.annotations.FromSavedState
+      import tangle.inject.annotations.VMInject
+      import javax.inject.Provider
+
+      @ContributesViewModel(Unit::class)
+      class MyViewModel @VMInject constructor(
+        savedStateHandle: Provider<SavedStateHandle>,
+        @FromSavedState("name") val name: String
+      ) : ViewModel()
+     """
+      ) {
+        val providerClass = myViewModelClass.providerClass()
+
+        val constructor = providerClass.declaredConstructors.single()
+        val providerInstance = constructor.newInstance(
+          Provider { SavedStateHandle(mapOf("name" to "Leeroy")) }
+        )
+        val getter = providerClass.getterFunction()
+
+        getter.invoke(providerInstance)::class.java shouldBe myViewModelClass
+      }
+    }
+
+  @TestFactory
+  fun `provider is generated for an argument named savedStateHandleProvider and a FromSavedState argument`() =
+    test {
+      compile(
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.inject.annotations.ContributesViewModel
+      import tangle.inject.annotations.FromSavedState
+      import tangle.inject.annotations.VMInject
+      import javax.inject.Provider
+
+      @ContributesViewModel(Unit::class)
+      class MyViewModel @VMInject constructor(
+        @FromSavedState("name") val name: String,
+        savedStateHandleProvider: String
+      ) : ViewModel()
+     """
+      ) {
+        val providerClass = myViewModelClass.providerClass()
+
+        val constructor = providerClass.declaredConstructors.single()
+
+        val providerInstance = constructor.newInstance(
+          Provider { "a string" },
+          Provider { SavedStateHandle(mapOf("name" to "Leeroy")) }
+        )
         val getter = providerClass.getterFunction()
 
         getter.invoke(providerInstance)::class.java shouldBe myViewModelClass
@@ -203,7 +311,7 @@ class VMInjectGeneratorTest : BaseTest() {
       ) : ViewModel()
      """
       ) {
-        val providerClass = myViewModelClass.factoryClass()
+        val providerClass = myViewModelClass.providerClass()
 
         val constructor = providerClass.declaredConstructors.single()
         val providerInstance = constructor.newInstance(Provider { SavedStateHandle() })
@@ -214,7 +322,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `factory is generated for a constructor with a FromSavedState argument`() =
+  fun `provider is generated for a FromSavedState argument`() =
     test {
       compile(
         """
@@ -232,7 +340,7 @@ class VMInjectGeneratorTest : BaseTest() {
       ) : ViewModel()
      """
       ) {
-        val providerClass = myViewModelClass.factoryClass()
+        val providerClass = myViewModelClass.providerClass()
 
         val constructor = providerClass.declaredConstructors.single()
         val providerInstance = constructor.newInstance(
@@ -245,7 +353,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `factory is generated for a constructor with SavedStateHandle and FromSavedState arguments`() =
+  fun `provider is generated with SavedStateHandle and FromSavedState arguments`() =
     test {
       compile(
         """
@@ -264,7 +372,7 @@ class VMInjectGeneratorTest : BaseTest() {
       ) : ViewModel()
      """
       ) {
-        val providerClass = myViewModelClass.factoryClass()
+        val providerClass = myViewModelClass.providerClass()
 
         val constructor = providerClass.declaredConstructors.single()
         val providerInstance = constructor.newInstance(
@@ -277,7 +385,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `factory is generated for a constructor with two FromSavedState arguments`() =
+  fun `provider is generated with two FromSavedState arguments`() =
     test {
       compile(
         """
@@ -296,7 +404,7 @@ class VMInjectGeneratorTest : BaseTest() {
       ) : ViewModel()
      """
       ) {
-        val providerClass = myViewModelClass.factoryClass()
+        val providerClass = myViewModelClass.providerClass()
 
         val constructor = providerClass.declaredConstructors.single()
         val providerInstance = constructor.newInstance(
@@ -316,7 +424,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `factory is generated for a constructor with two FromSavedState arguments of different types`() =
+  fun `provider is generated with two FromSavedState arguments of different types`() =
     test {
       compile(
         """
@@ -335,7 +443,7 @@ class VMInjectGeneratorTest : BaseTest() {
       ) : ViewModel()
      """
       ) {
-        val providerClass = myViewModelClass.factoryClass()
+        val providerClass = myViewModelClass.providerClass()
 
         val constructor = providerClass.declaredConstructors.single()
         val providerInstance = constructor.newInstance(
