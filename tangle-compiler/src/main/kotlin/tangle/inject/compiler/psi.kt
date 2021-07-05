@@ -23,8 +23,11 @@ import com.squareup.anvil.compiler.internal.hasAnnotation
 import com.squareup.anvil.compiler.internal.isFunctionType
 import com.squareup.anvil.compiler.internal.isGenericType
 import com.squareup.anvil.compiler.internal.isNullable
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.TypeName
+import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import dagger.Lazy
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
@@ -34,7 +37,6 @@ import org.jetbrains.kotlin.descriptors.resolveClassByFqName
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation.FROM_BACKEND
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.*
-import tangle.inject.compiler.VMInjectGenerator.Companion.savedStateHandleParamName
 import javax.inject.Provider
 import com.squareup.anvil.compiler.internal.asClassName as anvilAsClassName
 import com.squareup.anvil.compiler.internal.requireFqName as anvilRequireFqName
@@ -56,7 +58,10 @@ internal fun KtClassOrObject.vmInjectConstructor(module: ModuleDescriptor): KtCo
 }
 
 internal fun KtAnnotationEntry.fromSavedStateName(): String? {
-  return findAnnotationArgument<KtStringTemplateExpression>(name = "name", index = 0)?.text
+  return findAnnotationArgument<KtStringTemplateExpression>(name = "name", index = 0)
+    ?.entries
+    ?.firstOrNull()
+    ?.text
 }
 
 internal fun List<KtCallableDeclaration>.mapToParameter(module: ModuleDescriptor): List<Parameter> =
@@ -239,13 +244,6 @@ internal fun List<Parameter>.asArgumentList(
       if (asProvider) {
         list.map { parameter ->
           when {
-            parameter.isFromSavedState -> {
-              val nullHandler = if (parameter.typeName.isNullable) "" else "!!"
-              CodeBlock.of(
-                "$savedStateHandleParamName.get().get<%T>(${parameter.fromSavedStateName})$nullHandler",
-                parameter.typeName
-              )
-            }
             parameter.isWrappedInProvider -> parameter.name
             // Normally Dagger changes Lazy<Type> parameters to a Provider<Type> (usually the
             // container is a joined type), therefore we use `.lazy(..)` to convert the Provider
@@ -253,6 +251,7 @@ internal fun List<Parameter>.asArgumentList(
             // to a Provider and we can simply use the parameter name in the argument list.
             parameter.isWrappedInLazy && parameter.isAssisted -> parameter.name
             parameter.isWrappedInLazy -> "${FqNames.daggerDoubleCheckString}.lazy(${parameter.name})"
+            parameter.isFromSavedState -> parameter.name
             parameter.isAssisted -> parameter.name
             else -> "${parameter.name}.get()"
           }

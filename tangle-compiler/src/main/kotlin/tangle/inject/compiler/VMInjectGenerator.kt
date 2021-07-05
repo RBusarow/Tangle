@@ -39,9 +39,6 @@ import javax.inject.Provider
 @Suppress("unused", "LongMethod")
 @AutoService(CodeGenerator::class)
 class VMInjectGenerator : CodeGenerator {
-  companion object {
-    internal const val savedStateHandleParamName = "savedStateHandle"
-  }
 
   override fun generateCode(
     codeGenDir: File,
@@ -53,7 +50,7 @@ class VMInjectGenerator : CodeGenerator {
       .mapNotNull { clazz ->
         clazz.vmInjectConstructor(module)?.let { constructor ->
 
-          generateFactoryFile(
+          generateProviderFile(
             codeGenDir = codeGenDir,
             module = module,
             clazz = clazz,
@@ -94,7 +91,7 @@ class VMInjectGenerator : CodeGenerator {
 
   override fun isApplicable(context: AnvilContext): Boolean = true
 
-  private fun generateFactoryFile(
+  private fun generateProviderFile(
     codeGenDir: File,
     module: ModuleDescriptor,
     clazz: KtClassOrObject,
@@ -103,7 +100,7 @@ class VMInjectGenerator : CodeGenerator {
     val packageName = clazz.containingKtFile
       .packageFqName
       .safePackageString(dotSuffix = false)
-    val factoryClassNameString = "${clazz.generateClassName()}_Factory"
+    val factoryClassNameString = "${clazz.generateClassName()}_Provider"
 
     val factoryClassName = ClassName(packageName, factoryClassNameString)
 
@@ -121,22 +118,13 @@ class VMInjectGenerator : CodeGenerator {
     }
 
     val savedStateParam = injectedParams
-      .firstOrNull { it.typeName == ClassNames.androidxSavedStateHandle }
-      ?: Parameter(
-        name = savedStateHandleParamName,
-        typeName = ClassNames.androidxSavedStateHandle,
-        providerTypeName = ClassNames.androidxSavedStateHandle.wrapInProvider(),
-        lazyTypeName = ClassNames.androidxSavedStateHandle.wrapInLazy(),
-        isWrappedInProvider = true,
-        isWrappedInLazy = false,
-        isFromSavedState = false,
-        fromSavedStateName = null,
-        isAssisted = false,
-        assistedIdentifier = "",
-        annotationEntries = emptyList()
-      )
+      .firstOrNull {
+        it.typeName == ClassNames.androidxSavedStateHandle ||
+          it.typeName == ClassNames.androidxSavedStateHandle.jvmSuppressWildcards()
+      }
+      ?: createSavedStateParameter(viewModelConstructorParams)
 
-    val factoryConstructorParams =
+    val providerConstructorParams =
       if (savedStateParam !in injectedParams && savedStateParams.isNotEmpty()) {
         injectedParams + savedStateParam
       } else {
@@ -149,23 +137,13 @@ class VMInjectGenerator : CodeGenerator {
         .addSuperinterface(Provider::class.asClassName().parameterizedBy(viewModelClassName))
         .primaryConstructor(
           FunSpec.constructorBuilder()
-            .applyEach(factoryConstructorParams) { parameter ->
+            .applyEach(providerConstructorParams) { parameter ->
               addParameter(parameter.name, parameter.providerTypeName)
             }
             .addAnnotation(ClassNames.inject)
             .build()
         )
-        .apply {
-          if (savedStateParams.isNotEmpty()) {
-            addProperty(
-              PropertySpec.builder(savedStateHandleParamName, ClassNames.providerSavedStateHandle)
-                .initializer(savedStateHandleParamName)
-                .addModifiers(PRIVATE)
-                .build()
-            )
-          }
-        }
-        .applyEach(injectedParams) { parameter ->
+        .applyEach(providerConstructorParams) { parameter ->
 
           val qualifierAnnotationSpecs = parameter.annotationEntries
             .filter { it.isQualifier(module) }
@@ -179,7 +157,13 @@ class VMInjectGenerator : CodeGenerator {
               .build()
           )
         }
-        .addFunction(generateGetFunction(viewModelClassName, viewModelConstructorParams))
+        .addFunction(
+          generateGetFunction(
+            savedStateParam,
+            viewModelClassName,
+            viewModelConstructorParams
+          )
+        )
         .build()
         .let { addType(it) }
     }
@@ -198,7 +182,29 @@ class VMInjectGenerator : CodeGenerator {
     )
   }
 
+  private fun createSavedStateParameter(viewModelConstructorParams: List<Parameter>): Parameter {
+    fun List<Parameter>.uniqueName(base: String, attempt: Int = 0): String {
+      val maybeName = if (attempt == 0) base else "$base$attempt"
+      val unique = none { it.name == maybeName }
+      return if (unique) maybeName else uniqueName(base, attempt + 1)
+    }
+    return Parameter(
+      name = viewModelConstructorParams.uniqueName("savedStateHandleProvider"),
+      typeName = ClassNames.androidxSavedStateHandle,
+      providerTypeName = ClassNames.androidxSavedStateHandle.wrapInProvider(),
+      lazyTypeName = ClassNames.androidxSavedStateHandle.wrapInLazy(),
+      isWrappedInProvider = true,
+      isWrappedInLazy = false,
+      isFromSavedState = false,
+      fromSavedStateName = null,
+      isAssisted = false,
+      assistedIdentifier = "",
+      annotationEntries = emptyList()
+    )
+  }
+
   private fun generateGetFunction(
+    savedStateParam: Parameter,
     viewModelClassName: TypeName,
     params: List<Parameter>
   ): FunSpec {
@@ -207,55 +213,35 @@ class VMInjectGenerator : CodeGenerator {
       includeModule = false
     )
 
+    val savedState = params.filter { it.isFromSavedState }
+
     return FunSpec.builder("get")
       .addModifiers(OVERRIDE)
       .returns(viewModelClassName)
-      .addStatement("return·%T($allArguments)", viewModelClassName)
-      .build()
-  }
+      .applyEach(savedState) { param ->
 
-  private fun generateCreateFunction(
-    factoryClassName: TypeName,
-    factoryConstructorParams: List<Parameter>
-  ): FunSpec {
-    val allArguments = factoryConstructorParams.asArgumentList(
-      asProvider = false,
-      includeModule = false
-    )
-    return FunSpec.builder("create")
-      .addAnnotation(ClassNames.jvmStatic)
-      .applyEach(factoryConstructorParams) { parameter ->
-        addParameter(parameter.name, parameter.providerTypeName)
-      }
-      .returns(factoryClassName)
-      .addStatement("return·%T($allArguments)", factoryClassName)
-      .build()
-  }
-
-  private fun generateNewInstanceFunction(
-    viewModelClassName: TypeName,
-    savedStateParams: List<Parameter>,
-    injectedParams: List<Parameter>,
-    viewModelConstructorParams: List<Parameter>
-  ): FunSpec {
-    val allArguments = viewModelConstructorParams.asArgumentList(
-      asProvider = true,
-      includeModule = false
-    )
-    return FunSpec.builder("newInstance")
-      .addAnnotation(ClassNames.jvmStatic)
-      .apply {
-        if (savedStateParams.isNotEmpty()) {
-          addParameter(
-            savedStateHandleParamName,
-            ClassNames.providerSavedStateHandle.jvmSuppressWildcards()
+        if (param.fromSavedStateName.isNullOrEmpty()) {
+          throw TangleCompilationException(
+            "parameter ${param.name} is annotated with ${FqNames.fromSavedState.asString()}, " +
+              "but does not have a valid key."
           )
         }
-        injectedParams.forEach { parameter ->
-          addParameter(parameter.name, parameter.providerTypeName)
+
+        addStatement(
+          "val·%L·=·${savedStateParam.name}.get().get<%T>(%S)",
+          param.name,
+          param.typeName,
+          param.fromSavedStateName
+        )
+
+        if (!param.typeName.isNullable) {
+          beginControlFlow("checkNotNull(%L)·{", param.name)
+          addStatement("\"Required parameter with name `%L` \" +", param.fromSavedStateName)
+          addStatement("\"and type `%L` is missing from SavedStateHandle.\"", param.typeName)
+          // addStatement("}")
+          endControlFlow()
         }
       }
-      .returns(viewModelClassName)
       .addStatement("return·%T($allArguments)", viewModelClassName)
       .build()
   }
@@ -292,7 +278,7 @@ class VMInjectGenerator : CodeGenerator {
               FunSpec
                 .builder(
                   name = "provide${
-                  generatedFile.viewModelClassName.simpleNames.joinToString("_")
+                    generatedFile.viewModelClassName.simpleNames.joinToString("_")
                   }Key"
                 )
                 .returns(ClassNames.javaClassOutVM)
@@ -361,7 +347,7 @@ class VMInjectGenerator : CodeGenerator {
                   FunSpec
                     .builder(
                       name = "provide${
-                      generatedFile.viewModelClassName.simpleNames.joinToString("_")
+                        generatedFile.viewModelClassName.simpleNames.joinToString("_")
                       }"
                     )
                     .addParameter("provider", generatedFile.providerImplClassName)
