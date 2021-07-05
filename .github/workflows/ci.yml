@@ -88,7 +88,7 @@ jobs:
           java-version: 14
 
       - name: all tests
-        run: ./gradlew lintMain testJvm --rerun-tasks
+        run: ./gradlew lintMain apiCheck testJvm --rerun-tasks
 
   tests-windows:
 
@@ -106,4 +106,4 @@ jobs:
           java-version: 14
 
       - name: all tests
-        run: ./gradlew lintMain testJvm --rerun-tasks
+        run: ./gradlew testJvm --rerun-tasks
