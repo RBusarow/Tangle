@@ -1,0 +1,30 @@
+public final class tangle/inject/api/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public abstract interface class tangle/inject/api/TangleComponent {
+	public abstract fun getTangleSubcomponentFactory ()Ltangle/inject/api/TangleSubcomponent$Factory;
+	public abstract fun getViewModelKeys ()Ljava/util/Set;
+}
+
+public final class tangle/inject/api/TangleComponents {
+	public static final field INSTANCE Ltangle/inject/api/TangleComponents;
+	public final fun add (Ljava/lang/Object;)V
+	public static final fun get (Ljava/lang/Class;)Ljava/lang/Object;
+}
+
+public abstract interface class tangle/inject/api/TangleSubcomponent {
+	public abstract fun getViewModelProviderMap ()Ljava/util/Map;
+}
+
+public abstract interface class tangle/inject/api/TangleSubcomponent$Factory {
+	public abstract fun create (Landroidx/lifecycle/SavedStateHandle;)Ltangle/inject/api/TangleSubcomponent;
+}
+
+public abstract interface annotation class tangle/inject/api/ViewModelKey : java/lang/annotation/Annotation {
+	public abstract fun value ()Ljava/lang/Class;
+}
+

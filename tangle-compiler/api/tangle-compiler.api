@@ -1,0 +1,44 @@
+public final class tangle/inject/compiler/KotlinPoetKt {
+	public static final fun applyEach (Ljava/lang/Object;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function2;)Ljava/lang/Object;
+	public static final fun buildFile (Lcom/squareup/kotlinpoet/FileSpec$Companion;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+}
+
+public final class tangle/inject/compiler/PsiKt {
+	public static final fun qualifierArgumentsOrNull (Lorg/jetbrains/kotlin/psi/KtAnnotationEntry;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/Map;
+	public static final fun requireClassDescriptor (Lorg/jetbrains/kotlin/name/FqName;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;
+	public static final fun requireTypeReference (Lorg/jetbrains/kotlin/psi/KtCallableDeclaration;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/psi/KtTypeReference;
+}
+
+public final class tangle/inject/compiler/TangleCompilationException : org/jetbrains/kotlin/codegen/CompilationException {
+	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)V
+	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/jetbrains/kotlin/descriptors/annotations/AnnotationDescriptor;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlin/descriptors/annotations/AnnotationDescriptor;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+}
+
+public final class tangle/inject/compiler/TangleComponentGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
+	public fun <init> ()V
+	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
+	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+
+public final class tangle/inject/compiler/TangleSubcomponentGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
+	public fun <init> ()V
+	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
+	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+
+public final class tangle/inject/compiler/TangleSubcomponentModuleGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
+	public fun <init> ()V
+	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
+	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+
+public final class tangle/inject/compiler/VMInjectGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
+	public fun <init> ()V
+	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
+	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+
