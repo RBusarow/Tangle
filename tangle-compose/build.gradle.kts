@@ -40,13 +40,3 @@ dependencies {
   implementation(projects.tangleApi)
 }
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
-  .configureEach {
-
-    kotlinOptions {
-
-      freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
-      )
-    }
-  }

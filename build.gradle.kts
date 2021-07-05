@@ -41,6 +41,7 @@ plugins {
   id("org.jetbrains.dokka") version "1.4.32"
   id("com.osacky.doctor") version "0.7.0"
   id("com.dorongold.task-tree") version "1.5"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.6.0"
   base
 }
 
@@ -131,4 +132,24 @@ allprojects {
       "experimental:argument-list-wrapping" // doesn't work half the time
     )
   }
+}
+
+apiValidation {
+  /**
+   * Packages that are excluded from public API dumps even if they
+   * contain public API.
+   */
+  ignoredPackages.add("tangle.inject.api.internal")
+
+  /**
+   * Sub-projects that are excluded from API validation
+   */
+  ignoredProjects.addAll(listOf("tangle-test-utils", "tangle-tests"))
+
+  /**
+   * Set of annotations that exclude API from being public.
+   * Typically, it is all kinds of `@InternalApi` annotations that mark
+   * effectively private API that cannot be actually private for technical reasons.
+   */
+  nonPublicMarkers.add("tangle.inject.annotations.InternalTangleApi")
 }
