@@ -48,11 +48,14 @@ abstract class BaseTest : HermitJUnit5() {
   ): KotlinCompilation.Result {
     fun String.clean() = replace("[^a-zA-Z0-9]".toRegex(), "_")
 
-    val testName = testInfo.testClass.get().simpleName
-      .plus("-")
-      .plus(testInfo.displayName.clean())
-      .plus("_use-anvil-$useAnvilFactories")
+    val className = testInfo.testClass.get().simpleName
+
+    val testName = testInfo.displayName
+      .clean()
       .replace("_{2,}".toRegex(), "_")
+      .removeSuffix("_")
+
+    val compilerType = if (useAnvilFactories) "anvil" else "dagger"
 
     return compileAnvil(
       sources = sources,
@@ -61,7 +64,7 @@ abstract class BaseTest : HermitJUnit5() {
       // Many constructor parameters are unused.
       allWarningsAsErrors = false,
       block = block,
-      workingDir = File("build/test-builds/$testName")
+      workingDir = File("build/test-builds/$className/$compilerType/$testName")
     )
   }
 
