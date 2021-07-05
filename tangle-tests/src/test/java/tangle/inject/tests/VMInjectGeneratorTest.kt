@@ -51,46 +51,6 @@ class VMInjectGeneratorTest : BaseTest() {
   }
 
   @TestFactory
-  fun `same from readme`() = test {
-    compile(
-      """
-      package tangle.inject.tests
-
-      import androidx.lifecycle.ViewModel
-      import androidx.lifecycle.SavedStateHandle
-      import tangle.inject.annotations.ContributesViewModel
-      import tangle.inject.annotations.VMInject
-      import tangle.inject.annotations.FromSavedState
-
-      interface MyRepository
-
-      @ContributesViewModel(Unit::class)
-      class MyViewModel @VMInject constructor(
-        val myRepository: MyRepository,
-        // Tangle will automatically extract arguments from SavedStateHandle
-        @FromSavedState("userId")
-        val userId: String,
-        // nullable SavedStateHandle arguments are just injected as null if missing
-        @FromSavedState("address")
-        val addressOrNull: String?,
-        // SavedStateHandle may be injected directly
-        val savedStateHandle: SavedStateHandle
-      ) : ViewModel() {
-        // ...
-      }
-     """
-    ) {
-      // val providerClass = myViewModelClass.providerClass()
-      //
-      // val constructor = providerClass.declaredConstructors.single()
-      // val providerInstance = constructor.newInstance()
-      // val getter = providerClass.getterFunction()
-      //
-      // getter.invoke(providerInstance)::class.java shouldBe myViewModelClass
-    }
-  }
-
-  @TestFactory
   fun `provider is generated for an argument`() = test {
     compile(
       """
