@@ -220,11 +220,9 @@ class VMInjectGenerator : CodeGenerator {
       .returns(viewModelClassName)
       .applyEach(savedState) { param ->
 
-        if (param.fromSavedStateName.isNullOrEmpty()) {
-          throw TangleCompilationException(
-            "parameter ${param.name} is annotated with ${FqNames.fromSavedState.asString()}, " +
-              "but does not have a valid key."
-          )
+        require(!param.fromSavedStateName.isNullOrEmpty()) {
+          "parameter ${param.name} is annotated with ${FqNames.fromSavedState.asString()}, " +
+            "but does not have a valid key."
         }
 
         addStatement(
@@ -238,7 +236,6 @@ class VMInjectGenerator : CodeGenerator {
           beginControlFlow("checkNotNull(%L)·{", param.name)
           addStatement("\"Required parameter with name `%L` \" +", param.fromSavedStateName)
           addStatement("\"and type `%L` is missing from SavedStateHandle.\"", param.typeName)
-          // addStatement("}")
           endControlFlow()
         }
       }
