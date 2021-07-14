@@ -22,7 +22,7 @@ repositories {
   google()
 }
 
-val kotlinVersion = "1.5.10"
+val kotlinVersion = libs.versions.kotlin.get()
 
 dependencies {
 

@@ -48,14 +48,14 @@ dependencies {
   dependencySync("androidx.navigation:navigation-runtime-ktx:2.3.5")
   dependencySync("androidx.navigation:navigation-compose:2.4.0-alpha04")
 
-  dependencySync("androidx.compose.ui:ui:1.0.0-rc01")
-  dependencySync("androidx.compose.ui:ui-tooling:1.0.0-rc01")
-  dependencySync("androidx.compose.runtime:runtime:1.0.0-rc01")
-  dependencySync("androidx.compose.foundation:foundation:1.0.0-rc01")
-  dependencySync("androidx.compose.material:material:1.0.0-rc01")
-  dependencySync("androidx.compose.material:material-icons-core:1.0.0-rc01")
-  dependencySync("androidx.compose.material:material-icons-extended:1.0.0-rc01")
-  dependencySync("androidx.compose.ui:ui-test-junit4:1.0.0-rc01")
+  dependencySync("androidx.compose.ui:ui:1.0.0-rc02")
+  dependencySync("androidx.compose.ui:ui-tooling:1.0.0-rc02")
+  dependencySync("androidx.compose.runtime:runtime:1.0.0-rc02")
+  dependencySync("androidx.compose.foundation:foundation:1.0.0-rc02")
+  dependencySync("androidx.compose.material:material:1.0.0-rc02")
+  dependencySync("androidx.compose.material:material-icons-core:1.0.0-rc02")
+  dependencySync("androidx.compose.material:material-icons-extended:1.0.0-rc02")
+  dependencySync("androidx.compose.ui:ui-test-junit4:1.0.0-rc02")
 
   dependencySync("androidx.savedstate:savedstate:1.1.0")
   dependencySync("androidx.test:core:1.4.0")
@@ -117,21 +117,21 @@ dependencies {
   dependencySync("io.kotest:kotest-property-jvm:4.6.1")
   dependencySync("io.kotest:kotest-runner-junit5-jvm:4.6.1")
 
-  dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.21")
-  dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.10")
-  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.21")
-  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
-  dependencySync("org.jetbrains.kotlin:kotlin-reflect:1.5.10")
-  dependencySync("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21")
+  dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.20")
+  dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.20")
+  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.20")
+  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20")
+  dependencySync("org.jetbrains.kotlin:kotlin-reflect:1.5.20")
+  dependencySync("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.20")
 
   dependencySync("com.squareup:kotlinpoet:1.9.0")
 
   dependencySync("org.jmailen.gradle:kotlinter-gradle:3.4.5")
 
   dependencySync("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.16.2")
-  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1-native-mt")
+  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
   dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
-  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.1-native-mt")
+  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.1")
   dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1")
   dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1")
   dependencySync("org.jetbrains.kotlinx:kotlinx-knit-test:0.3.0")
@@ -142,6 +142,7 @@ dependencies {
 
   dependencySync("net.swiftzer.semver:semver:1.1.1")
 
+  dependencySync("dev.zacsweers.autoservice:auto-service-ksp:0.5.2")
   dependencySync("com.jakewharton.timber:timber:4.7.1")
 
 }

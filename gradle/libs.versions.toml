@@ -14,7 +14,7 @@ hermit = "0.9.5"
 jUnit = "5.7.2"
 knit = "0.2.3"
 kotest = "4.6.1"
-kotlin = "1.5.10"
+kotlin = "1.5.20"
 kotlinx-coroutines = "1.5.1"
 kotlinter = "3.4.0"
 mavenPublish = "0.13.0"
@@ -25,7 +25,7 @@ targetSdk = "30"
 taskTree = "1.5"
 versionName = "0.10.0"
 
-androidx-compose = "1.0.0-rc01"
+androidx-compose = "1.0.0-rc02"
 androidx-lifecycle = "2.3.1"
 androidx-room = "2.3.0"
 androidx-test-espresso = "3.4.0"
@@ -109,6 +109,7 @@ google-auto-common = "com.google.auto:auto-common:1.1"
 
 google-auto-service-annotations = "com.google.auto.service:auto-service-annotations:1.0"
 google-auto-service-processor = "com.google.auto.service:auto-service:1.0"
+
 google-auto-service-ksp = "dev.zacsweers.autoservice:auto-service-ksp:0.5.2"
 
 google-dagger-api = { module = "com.google.dagger:dagger", version.ref = "google-dagger" }
