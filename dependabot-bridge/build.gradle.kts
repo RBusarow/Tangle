@@ -131,7 +131,7 @@ dependencies {
   dependencySync("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.16.2")
   dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1-native-mt")
   dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
-  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.1")
+  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.1-native-mt")
   dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1")
   dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1")
   dependencySync("org.jetbrains.kotlinx:kotlinx-knit-test:0.3.0")
