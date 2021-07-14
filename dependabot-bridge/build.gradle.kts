@@ -92,9 +92,9 @@ dependencies {
 
   dependencySync("com.github.tschuchortdev:kotlin-compile-testing:1.4.2")
 
-  dependencySync("com.rickbusarow.hermit:hermit-core:0.9.4")
+  dependencySync("com.rickbusarow.hermit:hermit-core:0.9.5")
   dependencySync("com.rickbusarow.hermit:hermit-coroutines:0.9.5")
-  dependencySync("com.rickbusarow.hermit:hermit-junit4:0.9.4")
+  dependencySync("com.rickbusarow.hermit:hermit-junit4:0.9.5")
   dependencySync("com.rickbusarow.hermit:hermit-junit5:0.9.5")
   dependencySync("com.rickbusarow.hermit:hermit-mockk:0.9.5")
 
@@ -112,16 +112,16 @@ dependencies {
   dependencySync("org.junit.vintage:junit-vintage-engine:5.7.2")
 
   dependencySync("io.kotest:kotest-assertions-core-jvm:4.6.1")
-  dependencySync("io.kotest:kotest-assertions-shared-jvm:4.6.0")
-  dependencySync("io.kotest:kotest-common-jvm:4.6.0")
-  dependencySync("io.kotest:kotest-property-jvm:4.6.0")
+  dependencySync("io.kotest:kotest-assertions-shared-jvm:4.6.1")
+  dependencySync("io.kotest:kotest-common-jvm:4.6.1")
+  dependencySync("io.kotest:kotest-property-jvm:4.6.1")
   dependencySync("io.kotest:kotest-runner-junit5-jvm:4.6.1")
 
   dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.10")
-  dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.21")
-  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.21")
+  dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.10")
+  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.10")
   dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
-  dependencySync("org.jetbrains.kotlin:kotlin-reflect:1.5.21")
+  dependencySync("org.jetbrains.kotlin:kotlin-reflect:1.5.10")
   dependencySync("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10")
 
   dependencySync("com.squareup:kotlinpoet:1.9.0")
@@ -129,11 +129,11 @@ dependencies {
   dependencySync("org.jmailen.gradle:kotlinter-gradle:3.4.5")
 
   dependencySync("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.16.2")
-  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1-native-mt")
-  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1-native-mt")
-  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.0")
-  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.0")
-  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1-native-mt")
+  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.1")
+  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.1")
+  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.1")
+  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.1")
+  dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.1")
   dependencySync("org.jetbrains.kotlinx:kotlinx-knit-test:0.3.0")
 
   dependencySync("io.mockk:mockk:1.12.0")

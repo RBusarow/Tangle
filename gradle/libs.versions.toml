@@ -13,8 +13,9 @@ gradleDoctor = "0.7.0"
 hermit = "0.9.5"
 jUnit = "5.7.2"
 knit = "0.2.3"
-kotest = "4.6.0"
+kotest = "4.6.1"
 kotlin = "1.5.10"
+kotlinx-coroutines = "1.5.1"
 kotlinter = "3.4.0"
 mavenPublish = "0.13.0"
 minSdk = "23"
@@ -108,6 +109,7 @@ google-auto-common = "com.google.auto:auto-common:1.1"
 
 google-auto-service-annotations = "com.google.auto.service:auto-service-annotations:1.0"
 google-auto-service-processor = "com.google.auto.service:auto-service:1.0"
+google-auto-service-ksp = "dev.zacsweers.autoservice:auto-service-ksp:0.5.2"
 
 google-dagger-api = { module = "com.google.dagger:dagger", version.ref = "google-dagger" }
 google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "google-dagger" }
@@ -150,17 +152,17 @@ kotlin-compile-testing = "com.github.tschuchortdev:kotlin-compile-testing:1.4.2"
 
 kotlinter = "org.jmailen.gradle:kotlinter-gradle:3.4.5"
 
-kotlinx-atomicfu = "org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.16.1"
-kotlinx-coroutines-android = "org.jetbrains.kotlinx:kotlinx-coroutines-android:1.5.0"
-kotlinx-coroutines-core = "org.jetbrains.kotlinx:kotlinx-coroutines-core:1.5.0"
-kotlinx-coroutines-jdk8 = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.0"
-kotlinx-coroutines-jvm = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.0"
-kotlinx-coroutines-test = "org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0"
-kotlinx-knit-test = "org.jetbrains.kotlinx:kotlinx-knit-test:0.2.3"
+kotlinx-atomicfu = "org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.16.2"
+kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-jdk8 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-jvm = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm", version.ref = "kotlinx-coroutines" }
+kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
+kotlinx-knit-test = "org.jetbrains.kotlinx:kotlinx-knit-test:0.3.0"
 
-mockk = "io.mockk:mockk:1.11.0"
+mockk = "io.mockk:mockk:1.12.0"
 
-robolectric = "org.robolectric:robolectric:4.5.1"
+robolectric = "org.robolectric:robolectric:4.6.1"
 
 square-kotlinPoet = "com.squareup:kotlinpoet:1.9.0"
 
