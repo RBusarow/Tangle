@@ -134,7 +134,7 @@ dependencies {
   dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-jdk8:1.5.0")
   dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.5.0")
   dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
-  dependencySync("org.jetbrains.kotlinx:kotlinx-knit-test:0.2.3")
+  dependencySync("org.jetbrains.kotlinx:kotlinx-knit-test:0.3.0")
 
   dependencySync("io.mockk:mockk:1.11.0")
 
