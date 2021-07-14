@@ -40,7 +40,7 @@ plugins {
   id("io.gitlab.arturbosch.detekt") version "1.17.1"
   id("org.jetbrains.dokka") version "1.4.32"
   id("com.osacky.doctor") version "0.7.0"
-  id("com.dorongold.task-tree") version "1.5"
+  id("com.dorongold.task-tree") version "2.1.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.6.0"
   base
 }
