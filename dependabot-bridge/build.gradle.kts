@@ -136,7 +136,7 @@ dependencies {
   dependencySync("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.5.0")
   dependencySync("org.jetbrains.kotlinx:kotlinx-knit-test:0.3.0")
 
-  dependencySync("io.mockk:mockk:1.11.0")
+  dependencySync("io.mockk:mockk:1.12.0")
 
   dependencySync("org.robolectric:robolectric:4.5.1")
 
