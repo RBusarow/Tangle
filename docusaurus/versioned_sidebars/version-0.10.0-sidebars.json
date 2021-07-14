@@ -1,0 +1,16 @@
+{
+  "version-0.10.0/Basics": [
+    {
+      "type": "doc",
+      "id": "version-0.10.0/quickstart"
+    },
+    {
+      "type": "doc",
+      "id": "version-0.10.0/configuration"
+    },
+    {
+      "type": "doc",
+      "id": "version-0.10.0/changelog"
+    }
+  ]
+}
