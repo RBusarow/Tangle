@@ -111,7 +111,7 @@ dependencies {
   dependencySync("org.junit.jupiter:junit-jupiter-params:5.7.2")
   dependencySync("org.junit.vintage:junit-vintage-engine:5.7.2")
 
-  dependencySync("io.kotest:kotest-assertions-core-jvm:4.6.0")
+  dependencySync("io.kotest:kotest-assertions-core-jvm:4.6.1")
   dependencySync("io.kotest:kotest-assertions-shared-jvm:4.6.0")
   dependencySync("io.kotest:kotest-common-jvm:4.6.0")
   dependencySync("io.kotest:kotest-property-jvm:4.6.0")
