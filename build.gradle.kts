@@ -29,7 +29,7 @@ buildscript {
     classpath("com.android.tools.build:gradle:4.2.2")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
     classpath("com.vanniktech:gradle-maven-publish-plugin:0.16.0")
-    classpath("org.jetbrains.kotlinx:kotlinx-knit:0.2.3")
+    classpath("org.jetbrains.kotlinx:kotlinx-knit:0.3.0")
     classpath("org.jmailen.gradle:kotlinter-gradle:3.4.5")
   }
 }
