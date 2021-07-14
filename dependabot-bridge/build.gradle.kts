@@ -117,7 +117,7 @@ dependencies {
   dependencySync("io.kotest:kotest-property-jvm:4.6.1")
   dependencySync("io.kotest:kotest-runner-junit5-jvm:4.6.1")
 
-  dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.10")
+  dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.10")
   dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
