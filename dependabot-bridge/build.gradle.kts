@@ -121,7 +121,7 @@ dependencies {
   dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.10")
   dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.10")
   dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
-  dependencySync("org.jetbrains.kotlin:kotlin-reflect:1.5.10")
+  dependencySync("org.jetbrains.kotlin:kotlin-reflect:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10")
 
   dependencySync("com.squareup:kotlinpoet:1.9.0")
