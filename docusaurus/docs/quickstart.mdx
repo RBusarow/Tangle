@@ -8,12 +8,6 @@ slug: /
 
 import Tabs from '@theme/Tabs'; import TabItem from '@theme/TabItem';
 
-:::note
-ModuleCheck leverages Gradle for parsing all build logic, so validation works regardless of whether that logic is expressed in Groovy or Kotlin.
-
-However, auto-correction is only supported for Kotlin build files.
-:::
-
 ## Dependencies
 
 <Tabs groupId="language"
@@ -38,7 +32,23 @@ pluginManagement {
 // top-level build.gradle.kts
 
 plugins {
-  id("com.rickbusarow.module-check") version "0.10.0"
+  id("com.rickbusarow.tangle") version "0.10.0"
+}
+```
+
+```kotlin
+// any Android module's build.gradle.kts
+
+plugins {
+  id("android-library") // or application, etc.
+  kotlin("android")
+  id("com.squareup.anvil")
+  id("com.rickbusarow.tangle")
+}
+
+// optional
+tangle {
+  composeEnabled.set(true) // default is false
 }
 ```
 
@@ -64,97 +74,19 @@ plugins {
 }
 ```
 
-   </TabItem>
-</Tabs>
-
-## Tasks
-
-all checks
-```shell
-./gradlew moduleCheck
-```
-
-kapt checks
-```shell
-./gradlew moduleCheckKapt
-```
-
-sorts
-```shell
-./gradlew moduleCheckSortPlugins moduleCheckSortDependencies
-```
-
-unused
-```shell
-./gardlew moduleCheckUnused
-```
-
-redundant
-```shell
-./gradlew moduleCheckRedundant
-```
-
-overshot
-```shell
-./gradlew moduleCheckOvershot
-```
-
-## Configuration
-
-See [configuration](./configuration.mdx) for a full list of options.
-
-<Tabs groupId="language"
-defaultValue="Kotlin"
-values={[
-{label: 'Kotlin', value: 'Kotlin'}, {label: 'Groovy', value: 'Groovy'},
-]}>
-
-
-   <TabItem value="Kotlin">
-
-```kotlin
-// top-level build.gradle.kts
-
-configure<com.rickbusarow.modulecheck.ModuleCheckExtension> {
-
-  alwaysIgnore.set(setOf(":app"))
-
-  checks {
-    redundant.set(false)
-  }
-}
-```
-
---or--
-
-```kotlin
-// top-level build.gradle.kts
-
-moduleCheck {
-
-  alwaysIgnore.set(setOf(":app"))
-
-  checks {
-    redundant.set(false)
-  }
-}
-```
-
-   </TabItem>
-
-
-<TabItem value="Groovy">
-
 ```groovy
-// top-level build.gradle
+// any Android module's build.gradle
 
-moduleCheck {
+plugins {
+  id 'android-library' // or application, etc.
+  kotlin("android")
+  id 'com.squareup.anvil'
+  id 'com.rickbusarow.tangle'
+}
 
-  alwaysIgnore.set(setOf(":app"))
-
-  checks {
-    redundant.set(false)
-  }
+// optional
+tangle {
+  composeEnabled = true // default is false
 }
 ```
 

@@ -34,12 +34,6 @@ module.exports = {
           position: "left",
         },
         {
-          type: "doc",
-          docId: "rules/unused",
-          label: "Rules",
-          position: "left",
-        },
-        {
           type: "docsVersionDropdown",
           position: "right",
           dropdownActiveClassDisabled: true,
