@@ -138,7 +138,7 @@ dependencies {
 
   dependencySync("io.mockk:mockk:1.12.0")
 
-  dependencySync("org.robolectric:robolectric:4.5.1")
+  dependencySync("org.robolectric:robolectric:4.6.1")
 
   dependencySync("net.swiftzer.semver:semver:1.1.1")
 
