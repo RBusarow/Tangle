@@ -85,7 +85,7 @@ dependencies {
   dependencySync("com.google.dagger:dagger:2.37")
   dependencySync("com.google.dagger:dagger-compiler:2.37")
 
-  dependencySync("com.google.accompanist:accompanist-coil:0.13.0")
+  dependencySync("com.google.accompanist:accompanist-coil:0.14.0")
 
   dependencySync("org.codehaus.groovy:groovy:3.0.8")
   dependencySync("org.codehaus.groovy:groovy-xml:3.0.8")
