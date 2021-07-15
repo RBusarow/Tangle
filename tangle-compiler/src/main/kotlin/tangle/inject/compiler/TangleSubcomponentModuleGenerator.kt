@@ -57,11 +57,7 @@ class TangleSubcomponentModuleGenerator : CodeGenerator {
       packageName,
       "${clazz.generateClassName()}TangleSubcomponent"
     )
-    val subcomponentFactoryClassName = ClassName(
-      packageName,
-      "${clazz.generateClassName()}TangleSubcomponent",
-      "Factory"
-    )
+    val subcomponentFactoryClassName = subcomponentClassName.nestedClass("Factory")
 
     val content = FileSpec.buildFile(packageName, className) {
       TypeSpec.interfaceBuilder(className)
@@ -79,7 +75,7 @@ class TangleSubcomponentModuleGenerator : CodeGenerator {
           FunSpec
             .builder(name = "bind${subcomponentFactoryClassName.simpleNames.joinToString("_")}")
             .addModifiers(ABSTRACT)
-            .returns(ClassNames.tangleSubcomponentFactory)
+            .returns(ClassNames.tangleViewModelSubcomponentFactory)
             .addParameter("factory", subcomponentFactoryClassName)
             .addAnnotation(ClassNames.binds)
             .build()

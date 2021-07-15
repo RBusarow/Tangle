@@ -37,7 +37,7 @@ ____
 * [License](#license)
 
 <!--- END -->
- 
+
 
 ## Config
 
@@ -77,7 +77,7 @@ pluginManagement {
 // top-level build.gradle.kts
 
 plugins {
-  id("com.rickbusarow.tangle") version "0.10.0"
+  id("com.rickbusarow.tangle") version "0.11.0"
 }
 ```
 
@@ -115,15 +115,15 @@ plugins {
 
 dependencies {
 
-  api("com.rickbusarow.tangle:tangle-annotations:0.10.0")
+  api("com.rickbusarow.tangle:tangle-annotations:0.11.0")
 
-  implementation("com.rickbusarow.tangle:tangle-api:0.10.0")
+  implementation("com.rickbusarow.tangle:tangle-api:0.11.0")
 
   // optional Compose support
-  implementation("com.rickbusarow.tangle:tangle-compose:0.10.0")
+  implementation("com.rickbusarow.tangle:tangle-compose:0.11.0")
 
   // `anvil` adds the compiler extension to the Anvil plugin's list of code generators
-  anvil("com.rickbusarow.tangle:tangle-compiler:0.10.0")
+  anvil("com.rickbusarow.tangle:tangle-compiler:0.11.0")
 }
 ```
 
@@ -133,14 +133,14 @@ dependencies {
 Tangle supports injecting [SavedStateHandle] into ViewModel constructors,
 where the `SavedStateHandle` is provided by the ViewModel's owning `Fragment`/`Activity`/`NavBackStackEntry`.
 
-In addition to or in lieu of `SavedStateHandle`, Tangle can automatically extract arguments 
-from the `SavedStateHandle` and inject them into the constructor, 
+In addition to or in lieu of `SavedStateHandle`, Tangle can automatically extract arguments
+from the `SavedStateHandle` and inject them into the constructor,
 through use of the `FromSavedStateHandle` annotation.
 
 If the constructor argument's type is not nullable, then Tangle will assert that the argument
 is in the bundle while creating the ViewModel.
 
-If the argument is marked as nullable, 
+If the argument is marked as nullable,
 then Tangle will gracefully handle a missing argument and just inject `null`.
 
 Given this code:

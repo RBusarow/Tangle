@@ -32,11 +32,12 @@ import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtConstructor
 import org.jetbrains.kotlin.psi.KtFile
-import tangle.inject.annotations.TangleScope
+import tangle.inject.annotations.internal.InternalTangleApi
+import tangle.inject.annotations.internal.TangleScope
 import java.io.File
 import javax.inject.Provider
 
-@Suppress("unused", "LongMethod")
+@Suppress("unused")
 @AutoService(CodeGenerator::class)
 class VMInjectGenerator : CodeGenerator {
 
@@ -71,13 +72,13 @@ class VMInjectGenerator : CodeGenerator {
           .groupBy { it.scopeName }
           .flatMap { (scopeName, byScopeName) ->
             listOf(
-              generateDaggerModule(
+              createDaggerModule(
                 codeGenDir = codeGenDir,
                 scopeName = scopeName.asClassName(module),
                 packageName = packageName,
                 generatedFiles = byScopeName
               ),
-              generateTangleDaggerModule(
+              createTangleScopeDaggerModule(
                 codeGenDir = codeGenDir,
                 packageName = packageName,
                 generatedFiles = byScopeName
@@ -109,7 +110,7 @@ class VMInjectGenerator : CodeGenerator {
     val viewModelConstructorParams = constructor.valueParameters.mapToParameter(module)
 
     val (injectedParams, savedStateParams) = viewModelConstructorParams
-      .partition { !it.isFromSavedState }
+      .partition { !it.isTangleParam }
 
     val typeParameters = clazz.typeVariableNames(module)
 
@@ -183,11 +184,6 @@ class VMInjectGenerator : CodeGenerator {
   }
 
   private fun createSavedStateParameter(viewModelConstructorParams: List<Parameter>): Parameter {
-    fun List<Parameter>.uniqueName(base: String, attempt: Int = 0): String {
-      val maybeName = if (attempt == 0) base else "$base$attempt"
-      val unique = none { it.name == maybeName }
-      return if (unique) maybeName else uniqueName(base, attempt + 1)
-    }
     return Parameter(
       name = viewModelConstructorParams.uniqueName("savedStateHandleProvider"),
       typeName = ClassNames.androidxSavedStateHandle,
@@ -195,10 +191,7 @@ class VMInjectGenerator : CodeGenerator {
       lazyTypeName = ClassNames.androidxSavedStateHandle.wrapInLazy(),
       isWrappedInProvider = true,
       isWrappedInLazy = false,
-      isFromSavedState = false,
-      fromSavedStateName = null,
-      isAssisted = false,
-      assistedIdentifier = "",
+      tangleParamName = null,
       annotationEntries = emptyList()
     )
   }
@@ -213,15 +206,15 @@ class VMInjectGenerator : CodeGenerator {
       includeModule = false
     )
 
-    val savedState = params.filter { it.isFromSavedState }
+    val savedState = params.filter { it.isTangleParam }
 
     return FunSpec.builder("get")
       .addModifiers(OVERRIDE)
       .returns(viewModelClassName)
       .applyEach(savedState) { param ->
 
-        require(!param.fromSavedStateName.isNullOrEmpty()) {
-          "parameter ${param.name} is annotated with ${FqNames.fromSavedState.asString()}, " +
+        require(!param.tangleParamName.isNullOrEmpty()) {
+          "parameter ${param.name} is annotated with ${FqNames.tangleParam.asString()}, " +
             "but does not have a valid key."
         }
 
@@ -229,12 +222,12 @@ class VMInjectGenerator : CodeGenerator {
           "val·%L·=·${savedStateParam.name}.get().get<%T>(%S)",
           param.name,
           param.typeName,
-          param.fromSavedStateName
+          param.tangleParamName
         )
 
         if (!param.typeName.isNullable) {
           beginControlFlow("checkNotNull(%L)·{", param.name)
-          addStatement("\"Required parameter with name `%L` \" +", param.fromSavedStateName)
+          addStatement("\"Required parameter with name `%L` \" +", param.tangleParamName)
           addStatement("\"and type `%L` is missing from SavedStateHandle.\"", param.typeName)
           endControlFlow()
         }
@@ -251,13 +244,13 @@ class VMInjectGenerator : CodeGenerator {
     val generatedFile: GeneratedFile
   )
 
-  private fun generateDaggerModule(
+  private fun createDaggerModule(
     codeGenDir: File,
     scopeName: ClassName,
     packageName: String,
     generatedFiles: List<GeneratedProvider>
   ): GeneratedFile {
-    val moduleName = "Tangle_${scopeName.simpleNames.joinToString("_")}_Module"
+    val moduleName = "Tangle_${scopeName.simpleNames.joinToString("_")}_VMInject_Module"
 
     val content = FileSpec.buildFile(packageName, moduleName) {
       addType(
@@ -298,12 +291,13 @@ class VMInjectGenerator : CodeGenerator {
     )
   }
 
-  private fun generateTangleDaggerModule(
+  @OptIn(InternalTangleApi::class)
+  private fun createTangleScopeDaggerModule(
     codeGenDir: File,
     packageName: String,
     generatedFiles: List<GeneratedProvider>
   ): GeneratedFile {
-    val moduleName = "Tangle_${TangleScope::class.simpleName}_Module"
+    val moduleName = "Tangle_${TangleScope::class.simpleName}_VMInject_Module"
 
     val content = FileSpec.buildFile(packageName, moduleName) {
       addType(

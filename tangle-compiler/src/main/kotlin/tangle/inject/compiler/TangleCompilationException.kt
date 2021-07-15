@@ -15,7 +15,6 @@
 
 package tangle.inject.compiler
 
-import com.squareup.anvil.compiler.api.AnvilCompilationException
 import org.jetbrains.kotlin.codegen.CompilationException
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.com.intellij.psi.PsiNameIdentifierOwner
@@ -65,6 +64,20 @@ internal inline fun require(
 
 internal inline fun require(
   value: Boolean,
+  classDescriptorPromise: () -> ClassDescriptor,
+  cause: Throwable? = null,
+  lazyMessage: () -> String
+) {
+  contract {
+    returns() implies value
+  }
+  if (!value) {
+    throw TangleCompilationException(lazyMessage(), cause, classDescriptorPromise().identifier)
+  }
+}
+
+internal inline fun require(
+  value: Boolean,
   annotationDescriptor: AnnotationDescriptor,
   cause: Throwable? = null,
   lazyMessage: () -> String
@@ -88,13 +101,5 @@ internal inline fun require(
   }
   if (!value) {
     throw TangleCompilationException(lazyMessage(), cause, element)
-  }
-}
-
-internal fun <T> rebrandAnvilException(action: () -> T): T {
-  return try {
-    action()
-  } catch (anvil: AnvilCompilationException) {
-    throw TangleCompilationException(anvil.message ?: "", anvil)
   }
 }

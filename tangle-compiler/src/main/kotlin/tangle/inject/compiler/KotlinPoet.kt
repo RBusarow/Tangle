@@ -55,12 +55,19 @@ private fun FileSpec.writeToString(): String {
   return stream.toString()
 }
 
+private fun FileSpec.Builder.annotateFile(): FileSpec.Builder =
+  addAnnotation(
+    AnnotationSpec
+      .builder(Suppress::class)
+      .addMember("\"DEPRECATION\"").build()
+  )
+
 fun FileSpec.Companion.buildFile(
   packageName: String,
   fileName: String,
   block: FileSpec.Builder.() -> Unit
 ): String = builder(packageName, fileName)
-  .addAnnotation(AnnotationSpec.builder(Suppress::class).addMember("\"DEPRECATION\"").build())
+  .annotateFile()
   .apply { block() }
   .build()
   .writeToString()

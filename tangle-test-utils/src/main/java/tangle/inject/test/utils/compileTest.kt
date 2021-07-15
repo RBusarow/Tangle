@@ -139,6 +139,10 @@ fun Class<*>.providerClass(): Class<*> {
   return classLoader.loadClass("${packageName()}$enclosingClassString${simpleName}_Provider")
 }
 
+fun Class<*>.createFunction(): Method {
+  return getDeclaredMethod("create")
+}
+
 fun Class<*>.getterFunction(): Method {
   return getDeclaredMethod("get")
 }

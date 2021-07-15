@@ -26,21 +26,20 @@ internal data class Parameter(
   val lazyTypeName: ParameterizedTypeName,
   val isWrappedInProvider: Boolean,
   val isWrappedInLazy: Boolean,
-  val isFromSavedState: Boolean,
-  val fromSavedStateName: String?,
-  val isAssisted: Boolean,
-  val assistedIdentifier: String,
-  val annotationEntries: List<KtAnnotationEntry>,
-  val assistedParameterKey: AssistedParameterKey = AssistedParameterKey(
-    typeName,
-    assistedIdentifier
-  )
+  val tangleParamName: String?,
+  val annotationEntries: List<KtAnnotationEntry>
 ) {
 
-  // @Assisted parameters are equal, if the type and the identifier match. This subclass makes
-  // diffing the parameters easier.
-  data class AssistedParameterKey(
-    private val typeName: TypeName,
-    private val assistedIdentifier: String
-  )
+  val isTangleParam: Boolean = tangleParamName != null
+}
+
+internal fun List<Parameter>.uniqueName(base: String, attempt: Int = 0): String {
+  return map { it.name }.uniqueName(base, attempt)
+}
+
+@JvmName("uniqueNameStrings")
+internal fun List<String>.uniqueName(base: String, attempt: Int = 0): String {
+  val maybeName = if (attempt == 0) base else "$base$attempt"
+  val unique = none { it == maybeName }
+  return if (unique) maybeName else uniqueName(base, attempt + 1)
 }

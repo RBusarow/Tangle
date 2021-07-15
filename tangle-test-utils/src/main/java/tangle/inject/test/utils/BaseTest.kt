@@ -16,7 +16,10 @@
 package tangle.inject.test.utils
 
 import com.tschuchort.compiletesting.KotlinCompilation
+import com.tschuchort.compiletesting.KotlinCompilation.ExitCode.COMPILATION_ERROR
 import hermit.test.junit.HermitJUnit5
+import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestInfo
@@ -57,6 +60,8 @@ abstract class BaseTest : HermitJUnit5() {
 
     val compilerType = if (useAnvilFactories) "anvil" else "dagger"
 
+    val workingDir = File("build/test-builds/$className/$compilerType/$testName")
+
     return compileAnvil(
       sources = sources,
       enableDaggerAnnotationProcessor = !useAnvilFactories,
@@ -64,8 +69,14 @@ abstract class BaseTest : HermitJUnit5() {
       // Many constructor parameters are unused.
       allWarningsAsErrors = false,
       block = block,
-      workingDir = File("build/test-builds/$className/$compilerType/$testName")
+      workingDir = workingDir
     )
+  }
+
+  infix fun KotlinCompilation.Result.shouldFailWithMessage(message: String) {
+    exitCode shouldBe COMPILATION_ERROR
+
+    messages shouldContain message
   }
 
   data class TestScope(val useAnvilFactories: Boolean)

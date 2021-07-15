@@ -42,6 +42,7 @@ dependencies {
   implementation(libs.javax.annotation.jsr250.api)
   implementation(libs.kotlin.annotation.processing)
   implementation(libs.kotlin.compile.testing)
+  implementation(libs.kotlin.reflect)
   implementation(libs.kotlin.compiler)
   implementation(libs.square.kotlinPoet)
   implementation(projects.tangleAnnotations)

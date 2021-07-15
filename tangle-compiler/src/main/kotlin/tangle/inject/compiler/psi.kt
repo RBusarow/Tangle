@@ -12,17 +12,12 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@file:Suppress("LongMethod", "ComplexMethod", "TooManyFunctions", "NestedBlockDepth")
+@file:Suppress("ComplexMethod", "TooManyFunctions", "NestedBlockDepth")
 
 package tangle.inject.compiler
 
 import com.squareup.anvil.compiler.api.AnvilCompilationException
-import com.squareup.anvil.compiler.internal.findAnnotation
-import com.squareup.anvil.compiler.internal.findAnnotationArgument
-import com.squareup.anvil.compiler.internal.hasAnnotation
-import com.squareup.anvil.compiler.internal.isFunctionType
-import com.squareup.anvil.compiler.internal.isGenericType
-import com.squareup.anvil.compiler.internal.isNullable
+import com.squareup.anvil.compiler.internal.*
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -33,23 +28,58 @@ import dagger.Lazy
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
+import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.descriptors.resolveClassByFqName
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation.FROM_BACKEND
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.resolve.annotations.argumentValue
 import javax.inject.Provider
 import com.squareup.anvil.compiler.internal.asClassName as anvilAsClassName
 import com.squareup.anvil.compiler.internal.requireFqName as anvilRequireFqName
 import com.squareup.anvil.compiler.internal.requireTypeName as anvilRequireTypeName
 
+fun KtAnnotationEntry.scope(module: ModuleDescriptor): FqName {
+  return findAnnotationArgument<KtClassLiteralExpression>(name = "scope", index = 0)
+    .let { classLiteralExpression ->
+      if (classLiteralExpression == null) {
+        throw TangleCompilationException(
+          "Couldn't find scope for ${fqNameOrNull(module)}.",
+          element = this
+        )
+      }
+
+      classLiteralExpression.requireFqName(module)
+    }
+}
+
 internal fun KtClassOrObject.vmInjectConstructor(module: ModuleDescriptor): KtConstructor<*>? {
+  return annotatedConstructorOrNull(FqNames.vmInject, module)
+}
+
+internal fun KtClassOrObject.fragmentInjectConstructor(
+  module: ModuleDescriptor
+): KtConstructor<*>? {
+  return annotatedConstructorOrNull(FqNames.fragmentInject, module)
+}
+
+internal fun KtClassOrObject.injectConstructor(
+  module: ModuleDescriptor
+): KtConstructor<*>? {
+  return annotatedConstructorOrNull(FqNames.inject, module)
+}
+
+internal fun KtClassOrObject.annotatedConstructorOrNull(
+  annotationFqName: FqName,
+  module: ModuleDescriptor
+): KtConstructor<*>? {
   val constructors = allConstructors.filter {
-    it.hasAnnotation(FqNames.vmInject, module)
+    it.hasAnnotation(annotationFqName, module)
   }
 
   return when (constructors.size) {
     0 -> null
-    1 -> if (constructors[0].hasAnnotation(FqNames.vmInject, module)) constructors[0] else null
+    1 -> if (constructors[0].hasAnnotation(annotationFqName, module)) constructors[0] else null
     else -> throw TangleCompilationException(
       "Types may only contain one injected constructor.",
       element = this
@@ -57,11 +87,21 @@ internal fun KtClassOrObject.vmInjectConstructor(module: ModuleDescriptor): KtCo
   }
 }
 
-internal fun KtAnnotationEntry.fromSavedStateName(): String? {
+internal fun KtAnnotationEntry.tangleParamName(): String? {
   return findAnnotationArgument<KtStringTemplateExpression>(name = "name", index = 0)
     ?.entries
     ?.firstOrNull()
     ?.text
+}
+
+internal fun ValueParameterDescriptor.requireTangleParamName(): String {
+  return annotations.findAnnotation(FqNames.tangleParam)
+    ?.argumentValue("name")
+    ?.value
+    ?.toString()
+    ?: throw TangleCompilationException(
+      "could not find a @TangleParam annotation for parameter `${name.asString()}`"
+    )
 }
 
 internal fun List<KtCallableDeclaration>.mapToParameter(module: ModuleDescriptor): List<Parameter> =
@@ -93,20 +133,9 @@ internal fun List<KtCallableDeclaration>.mapToParameter(module: ModuleDescriptor
       else -> parameter.requireTypeReference(module).requireTypeName(module)
     }.withJvmSuppressWildcardsIfNeeded(parameter, module)
 
-    val savedStateKey = parameter
-      .findAnnotation(FqNames.fromSavedState, module)
-      ?.fromSavedStateName()
-
-    val assistedAnnotation = parameter.findAnnotation(FqNames.tangleParam, module)
-    val assistedIdentifier =
-      (assistedAnnotation?.valueArguments?.firstOrNull() as? KtValueArgument)
-        ?.children
-        ?.filterIsInstance<KtStringTemplateExpression>()
-        ?.single()
-        ?.children
-        ?.first()
-        ?.text
-        ?: ""
+    val bundleParamName = parameter
+      .findAnnotation(FqNames.tangleParam, module)
+      ?.tangleParamName()
 
     Parameter(
       name = parameter.name ?: "param$index",
@@ -115,10 +144,7 @@ internal fun List<KtCallableDeclaration>.mapToParameter(module: ModuleDescriptor
       lazyTypeName = typeName.wrapInLazy(),
       isWrappedInProvider = isWrappedInProvider,
       isWrappedInLazy = isWrappedInLazy,
-      isFromSavedState = savedStateKey != null,
-      fromSavedStateName = savedStateKey,
-      isAssisted = assistedAnnotation != null,
-      assistedIdentifier = assistedIdentifier,
+      tangleParamName = bundleParamName,
       annotationEntries = annotations
     )
   }
@@ -249,10 +275,10 @@ internal fun List<Parameter>.asArgumentList(
             // container is a joined type), therefore we use `.lazy(..)` to convert the Provider
             // to a Lazy. Assisted parameters behave differently and the Lazy type is not changed
             // to a Provider and we can simply use the parameter name in the argument list.
-            parameter.isWrappedInLazy && parameter.isAssisted -> parameter.name
+            //         parameter.isWrappedInLazy && parameter.isAssisted -> parameter.name
             parameter.isWrappedInLazy -> "${FqNames.daggerDoubleCheckString}.lazy(${parameter.name})"
-            parameter.isFromSavedState -> parameter.name
-            parameter.isAssisted -> parameter.name
+            parameter.isTangleParam -> parameter.name
+            //         parameter.isAssisted -> parameter.name
             else -> "${parameter.name}.get()"
           }
         }

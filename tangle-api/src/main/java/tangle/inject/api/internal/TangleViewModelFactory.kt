@@ -21,9 +21,9 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
-import tangle.inject.annotations.InternalTangleApi
-import tangle.inject.api.TangleComponent
+import tangle.inject.annotations.internal.InternalTangleApi
 import tangle.inject.api.TangleComponents
+import tangle.inject.api.TangleViewModelComponent
 import tangle.inject.api.ViewModelKey
 
 @InternalTangleApi
@@ -42,8 +42,8 @@ class TangleViewModelFactory(
         handle: SavedStateHandle
       ): T {
         val component = TangleComponents
-          .get<TangleComponent>()
-          .tangleSubcomponentFactory
+          .get<TangleViewModelComponent>()
+          .tangleViewModelSubcomponentFactory
           .create(handle)
 
         val provider = component.viewModelProviderMap[modelClass]
@@ -75,7 +75,7 @@ class TangleViewModelFactory(
       defaultArgs: Bundle?,
       defaultFactory: ViewModelProvider.Factory
     ): ViewModelProvider.Factory {
-      val keys = TangleComponents.get<TangleComponent>()
+      val keys = TangleComponents.get<TangleViewModelComponent>()
         .viewModelKeys
 
       return TangleViewModelFactory(

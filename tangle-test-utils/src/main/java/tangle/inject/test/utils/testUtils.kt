@@ -17,8 +17,11 @@ package tangle.inject.test.utils
 
 import com.squareup.anvil.annotations.ExperimentalAnvilApi
 import com.tschuchort.compiletesting.KotlinCompilation.Result
+import dagger.internal.Factory
+import org.jetbrains.kotlin.utils.addToStdlib.cast
 import java.lang.reflect.Executable
 import java.lang.reflect.Member
+import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 
@@ -38,6 +41,25 @@ val Member.isAbstract: Boolean
 fun <T : Any> Class<T>.createInstance(
   vararg initargs: Any?
 ): T = declaredConstructors.single().use { it.newInstance(*initargs) } as T
+
+@Suppress("UNCHECKED_CAST")
+fun <T : Any> Class<T>.newInstanceStatic(
+  vararg initargs: Any?
+): T = declaredMethods.filter { it.isStatic }
+  .single { it.name == "newInstance" }
+  .invoke(null, *initargs) as T
+
+@Suppress("UNCHECKED_CAST")
+fun <T : Any> Class<T>.createStatic(
+  vararg initargs: Any?
+): T = declaredMethods.filter { it.isStatic }
+  .single { it.name == "create" }
+  .invoke(null, *initargs) as T
+
+@Suppress("UNCHECKED_CAST")
+fun <T> T.factoryGet(
+  vararg initargs: Any?
+): Any = cast<Factory<*>>().get()
 
 inline fun <T, E : Executable> E.use(block: (E) -> T): T {
   // Deprecated since Java 9, but many projects still use JDK 8 for compilation.
@@ -114,8 +136,29 @@ val Result.myViewModelClass: Class<*>
 val Result.myFragmentClass: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.MyFragment")
 
+val Result.myFragmentFactoryClass: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.MyFragment.Factory")
+
+val Result.myFragmentFactoryImplClass: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.MyFragment_Factory_Impl")
+
+val Result.tangleUnitFragmentModuleClass: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.Tangle_Unit_Fragment_Module")
+
+val Result.tangleUnitFragmentInjectModuleClass: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.Tangle_Unit_FragmentInject_Module")
+
+val Result.tangleUnitFragmentModuleCompanionClass: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.Tangle_Unit_Fragment_Module\$Companion")
+
 val Result.anyQualifier: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.AnyQualifier")
+
+val Result.bindMyFragment: Method
+  get() = tangleUnitFragmentModuleClass.getDeclaredMethod("bindMyFragment", myFragmentClass)
+
+val Result.provideMyFragment: Method
+  get() = tangleUnitFragmentModuleCompanionClass.getDeclaredMethod("provideMyFragment")
 
 @Suppress("UNCHECKED_CAST")
 val Result.bindingKey: Class<out Annotation>
@@ -141,3 +184,6 @@ private fun Class<*>.contributedProperties(packagePrefix: String): List<KClass<*
     }
     .filterIsInstance<KClass<*>>()
 }
+
+fun Method.annotationClasses() = annotations.map { it.annotationClass }
+fun Class<*>.annotationClasses() = annotations.map { it.annotationClass }

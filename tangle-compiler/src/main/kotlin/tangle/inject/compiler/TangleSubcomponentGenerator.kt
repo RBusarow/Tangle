@@ -56,7 +56,7 @@ class TangleSubcomponentGenerator : CodeGenerator {
 
     val content = FileSpec.buildFile(packageName, className) {
       TypeSpec.interfaceBuilder(subcomponentClassName)
-        .addSuperinterface(ClassNames.tangleSubcomponent)
+        .addSuperinterface(ClassNames.tangleViewModelSubcomponent)
         .addAnnotation(
           AnnotationSpec.builder(ClassNames.mergeSubomponent)
             .addMember("%T::class", ClassNames.tangleScope)
@@ -64,7 +64,7 @@ class TangleSubcomponentGenerator : CodeGenerator {
         )
         .addType(
           TypeSpec.interfaceBuilder("Factory")
-            .addSuperinterface(ClassNames.tangleSubcomponentFactory)
+            .addSuperinterface(ClassNames.tangleViewModelSubcomponentFactory)
             .addAnnotation(ClassNames.subcomponentFactory)
             .addFunction(
               FunSpec.builder("create")

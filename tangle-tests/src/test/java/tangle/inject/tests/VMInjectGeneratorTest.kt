@@ -185,7 +185,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `provider is generated for a SavedStateHandle argument wrapped in Provider and a FromSavedState argument`() =
+  fun `provider is generated for a SavedStateHandle argument wrapped in Provider and a TangleParam argument`() =
     test {
       compile(
         """
@@ -194,14 +194,14 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
       import tangle.inject.annotations.ContributesViewModel
-      import tangle.inject.annotations.FromSavedState
+      import tangle.inject.annotations.TangleParam
       import tangle.inject.annotations.VMInject
       import javax.inject.Provider
 
       @ContributesViewModel(Unit::class)
       class MyViewModel @VMInject constructor(
         savedStateHandle: Provider<SavedStateHandle>,
-        @FromSavedState("name") val name: String
+        @TangleParam("name") val name: String
       ) : ViewModel()
      """
       ) {
@@ -218,7 +218,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `provider is generated for an argument named savedStateHandleProvider and a FromSavedState argument`() =
+  fun `provider is generated for an argument named savedStateHandleProvider and a TangleParam argument`() =
     test {
       compile(
         """
@@ -227,13 +227,13 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
       import tangle.inject.annotations.ContributesViewModel
-      import tangle.inject.annotations.FromSavedState
+      import tangle.inject.annotations.TangleParam
       import tangle.inject.annotations.VMInject
       import javax.inject.Provider
 
       @ContributesViewModel(Unit::class)
       class MyViewModel @VMInject constructor(
-        @FromSavedState("name") val name: String,
+        @TangleParam("name") val name: String,
         savedStateHandleProvider: String
       ) : ViewModel()
      """
@@ -253,7 +253,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `nullable FromSavedState-annotated arguments are just null if missing`() =
+  fun `nullable TangleParam-annotated arguments are just null if missing`() =
     test {
       compile(
         """
@@ -262,12 +262,12 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
       import tangle.inject.annotations.ContributesViewModel
-      import tangle.inject.annotations.FromSavedState
+      import tangle.inject.annotations.TangleParam
       import tangle.inject.annotations.VMInject
 
       @ContributesViewModel(Unit::class)
       class MyViewModel @VMInject constructor(
-        @FromSavedState("name") val name: String?
+        @TangleParam("name") val name: String?
       ) : ViewModel()
      """
       ) {
@@ -282,7 +282,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `provider is generated for a FromSavedState argument`() =
+  fun `provider is generated for a TangleParam argument`() =
     test {
       compile(
         """
@@ -291,12 +291,12 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
       import tangle.inject.annotations.ContributesViewModel
-      import tangle.inject.annotations.FromSavedState
+      import tangle.inject.annotations.TangleParam
       import tangle.inject.annotations.VMInject
 
       @ContributesViewModel(Unit::class)
       class MyViewModel @VMInject constructor(
-        @FromSavedState("name") val name: String
+        @TangleParam("name") val name: String
       ) : ViewModel()
      """
       ) {
@@ -313,7 +313,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `provider is generated with SavedStateHandle and FromSavedState arguments`() =
+  fun `provider is generated with SavedStateHandle and TangleParam arguments`() =
     test {
       compile(
         """
@@ -322,13 +322,13 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
       import tangle.inject.annotations.ContributesViewModel
-      import tangle.inject.annotations.FromSavedState
+      import tangle.inject.annotations.TangleParam
       import tangle.inject.annotations.VMInject
 
       @ContributesViewModel(Unit::class)
       class MyViewModel @VMInject constructor(
         savedStateHandle: SavedStateHandle,
-        @FromSavedState("name") val name: String
+        @TangleParam("name") val name: String
       ) : ViewModel()
      """
       ) {
@@ -345,7 +345,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `provider is generated with two FromSavedState arguments`() =
+  fun `provider is generated with two TangleParam arguments`() =
     test {
       compile(
         """
@@ -354,13 +354,13 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
       import tangle.inject.annotations.ContributesViewModel
-      import tangle.inject.annotations.FromSavedState
+      import tangle.inject.annotations.TangleParam
       import tangle.inject.annotations.VMInject
 
       @ContributesViewModel(Unit::class)
       class MyViewModel @VMInject constructor(
-        @FromSavedState("firstName") val firstName: String,
-        @FromSavedState("lastName") val lastName: String
+        @TangleParam("firstName") val firstName: String,
+        @TangleParam("lastName") val lastName: String
       ) : ViewModel()
      """
       ) {
@@ -384,7 +384,7 @@ class VMInjectGeneratorTest : BaseTest() {
     }
 
   @TestFactory
-  fun `provider is generated with two FromSavedState arguments of different types`() =
+  fun `provider is generated with two TangleParam arguments of different types`() =
     test {
       compile(
         """
@@ -393,13 +393,13 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
       import tangle.inject.annotations.ContributesViewModel
-      import tangle.inject.annotations.FromSavedState
+      import tangle.inject.annotations.TangleParam
       import tangle.inject.annotations.VMInject
 
       @ContributesViewModel(Unit::class)
       class MyViewModel @VMInject constructor(
-        @FromSavedState("name") val name: String,
-        @FromSavedState("age") val age: Int
+        @TangleParam("name") val name: String,
+        @TangleParam("age") val age: Int
       ) : ViewModel()
      """
       ) {

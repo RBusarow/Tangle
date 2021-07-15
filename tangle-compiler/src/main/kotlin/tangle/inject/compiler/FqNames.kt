@@ -19,10 +19,9 @@ import com.squareup.anvil.annotations.MergeComponent
 import com.squareup.anvil.compiler.internal.fqName
 import dagger.Provides
 import dagger.internal.DoubleCheck
-import tangle.inject.annotations.ContributesViewModel
-import tangle.inject.annotations.FromSavedState
-import tangle.inject.annotations.TangleParam
-import tangle.inject.annotations.VMInject
+import dagger.internal.Factory
+import org.jetbrains.kotlin.name.FqName
+import tangle.inject.annotations.*
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Qualifier
@@ -30,9 +29,14 @@ import javax.inject.Qualifier
 internal object FqNames {
 
   val vmInject = VMInject::class.fqName
+  val fragmentInject = FragmentInject::class.fqName
+  val fragmentInjectFactory = FragmentInjectFactory::class.fqName
   val contributesViewModel = ContributesViewModel::class.fqName
+  val contributesFragment = ContributesFragment::class.fqName
   val tangleParam = TangleParam::class.fqName
-  val fromSavedState = FromSavedState::class.fqName
+
+  // val fromSavedState = FromSavedState::class.fqName
+  // val bundleParam = BundleParam::class.fqName
   val mergeComponent = MergeComponent::class.fqName
   val jvmSuppressWildcards = JvmSuppressWildcards::class.fqName
   val provider = Provider::class.fqName
@@ -41,4 +45,12 @@ internal object FqNames {
   val inject = Inject::class.fqName
   val qualifier = Qualifier::class.fqName
   val daggerDoubleCheckString = DoubleCheck::class.java.canonicalName
+  val daggerFactory = Factory::class.java.canonicalName
+  val bundle = FqName("android.os.Bundle")
+  val iBinder = FqName("android.os.IBinder")
+  val parcelable = FqName("android.os.Parcelable")
+  val size = FqName("android.util.Size")
+  val sizeF = FqName("android.util.SizeF")
+
+  val androidxFragment = FqName("androidx.fragment.app.Fragment")
 }

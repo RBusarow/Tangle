@@ -32,7 +32,7 @@ import java.io.File
 
 @Suppress("unused")
 @AutoService(CodeGenerator::class)
-class TangleComponentGenerator : CodeGenerator {
+class TangleViewModelComponentGenerator : CodeGenerator {
 
   override fun isApplicable(context: AnvilContext): Boolean = true
 
@@ -59,7 +59,7 @@ class TangleComponentGenerator : CodeGenerator {
 
     val content = FileSpec.buildFile(packageName, className) {
       TypeSpec.interfaceBuilder(componentClassName)
-        .addSuperinterface(ClassNames.tangleComponent)
+        .addSuperinterface(ClassNames.tangleViewModelComponent)
         .addAnnotation(
           AnnotationSpec.Companion.builder(ClassNames.contributesTo)
             .addMember("%T::class", scope.asClassName(module))

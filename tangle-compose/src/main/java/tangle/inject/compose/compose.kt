@@ -22,7 +22,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
-import tangle.inject.annotations.InternalTangleApi
+import tangle.inject.annotations.internal.InternalTangleApi
 import tangle.inject.api.internal.TangleViewModelFactory
 
 /**

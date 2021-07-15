@@ -15,10 +15,12 @@
 
 package tangle.inject.annotations
 
-import javax.inject.Qualifier
 import kotlin.annotation.AnnotationRetention.BINARY
 import kotlin.annotation.AnnotationRetention.RUNTIME
-import kotlin.annotation.AnnotationTarget.*
+import kotlin.annotation.AnnotationTarget.CLASS
+import kotlin.annotation.AnnotationTarget.CONSTRUCTOR
+import kotlin.annotation.AnnotationTarget.FIELD
+import kotlin.annotation.AnnotationTarget.VALUE_PARAMETER
 import kotlin.reflect.KClass
 
 @Target(CONSTRUCTOR)
@@ -43,27 +45,4 @@ public annotation class ContributesViewModel(
 
 @Target(VALUE_PARAMETER, FIELD)
 @Retention(BINARY)
-public annotation class FromSavedState(val name: String)
-
-@Target(VALUE_PARAMETER, FIELD)
-@Retention(BINARY)
-public annotation class TangleParam
-public abstract class TangleScope private constructor()
-
-@Qualifier
-@Retention(BINARY)
-@Target(PROPERTY_GETTER, FIELD, FUNCTION)
-public annotation class TangleViewModelProviderMap {
-  @Qualifier
-  @Retention(BINARY)
-  @Target(PROPERTY_GETTER, FIELD, FUNCTION)
-  public annotation class KeySet
-}
-
-/**
- * This is an internal implementation for Tangle.  Do not use.
- */
-@RequiresOptIn
-@Retention(AnnotationRetention.BINARY)
-@Target(CLASS, FUNCTION, PROPERTY)
-public annotation class InternalTangleApi
+public annotation class TangleParam(val name: String)
