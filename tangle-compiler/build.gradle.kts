@@ -16,7 +16,7 @@
 plugins {
   javaLibrary
   id("com.vanniktech.maven.publish")
-  id("com.google.devtools.ksp")
+  kotlin("kapt")
 }
 
 dependencies {
@@ -38,7 +38,7 @@ dependencies {
   testImplementation(libs.bundles.kotest)
   testImplementation(libs.google.dagger.compiler)
   testImplementation(libs.kotlin.compile.testing)
-  ksp(libs.google.auto.service.ksp)
+  kapt(libs.google.auto.service.processor)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()

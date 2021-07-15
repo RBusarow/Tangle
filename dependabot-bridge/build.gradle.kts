@@ -22,7 +22,7 @@ dependencies {
   dependencySync("com.android.tools.build:gradle:4.2.1")
 
   dependencySync("androidx.activity:activity-ktx:1.2.3")
-  dependencySync("androidx.activity:activity-compose:1.3.0-rc01")
+  dependencySync("androidx.activity:activity-compose:1.3.0-rc02")
   dependencySync("androidx.annotation:annotation:1.2.0")
   dependencySync("androidx.appcompat:appcompat:1.3.0")
   dependencySync("androidx.arch.core:core-testing:2.1.0")
@@ -117,12 +117,12 @@ dependencies {
   dependencySync("io.kotest:kotest-property-jvm:4.6.1")
   dependencySync("io.kotest:kotest-runner-junit5-jvm:4.6.1")
 
-  dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.20")
-  dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.20")
-  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.20")
-  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.20")
-  dependencySync("org.jetbrains.kotlin:kotlin-reflect:1.5.20")
-  dependencySync("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.20")
+  dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.10")
+  dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.10")
+  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.10")
+  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
+  dependencySync("org.jetbrains.kotlin:kotlin-reflect:1.5.10")
+  dependencySync("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.10")
 
   dependencySync("com.squareup:kotlinpoet:1.9.0")
 
