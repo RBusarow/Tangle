@@ -193,3 +193,34 @@ subprojects {
     }
   }
 }
+
+apply(plugin = "kotlinx-knit")
+
+extensions.configure<kotlinx.knit.KnitPluginExtension> {
+
+  rootDir = rootProject.rootDir
+
+  files = fileTree(project.rootDir) {
+    include(
+      "**/*.md",
+      "**/*.kt",
+      "**/*.kts"
+    )
+    exclude(
+      "**/node_modules/**",
+      "**/build/**",
+      "**/.gradle/**"
+    )
+  }
+
+  moduleRoots = listOf(".")
+
+  moduleDocs = "build/dokka"
+  moduleMarkers = listOf("build.gradle", "build.gradle.kts")
+  siteRoot = "https://rbusarow.github.io/Tangle/api"
+}
+
+// Build API docs for all modules with dokka before running Knit
+tasks.withType<kotlinx.knit.KnitTask>().configureEach {
+  dependsOn(tasks.findByName("dokkaHtmlMultiModule"))
+}
