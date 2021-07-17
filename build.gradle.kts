@@ -154,3 +154,38 @@ apiValidation {
    */
   nonPublicMarkers.add("tangle.inject.annotations.InternalTangleApi")
 }
+
+subprojects {
+
+  if (File("$projectDir/src").exists()) {
+    apply(plugin = "org.jetbrains.dokka")
+
+    val proj = this
+
+    proj.tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask>().configureEach {
+
+      dependsOn(allprojects.mapNotNull { it.tasks.findByName("compileKotlin") })
+
+      dokkaSourceSets {
+
+        getByName("main") {
+
+          if (File("${proj.projectDir}/README.md").exists()) {
+            includes.from(files("${proj.projectDir}/README.md"))
+          }
+
+          sourceLink {
+            localDirectory.set(file("src/main"))
+
+            val modulePath = proj.path.replace(":", "/").replaceFirst("/", "")
+
+            // URL showing where the source code can be accessed through the web browser
+            remoteUrl.set(uri("https://github.com/RBusarow/Tangle/blob/main/$modulePath/src/main").toURL())
+            // Suffix which is used to append the line number to the URL. Use #L for GitHub
+            remoteLineSuffix.set("#L")
+          }
+        }
+      }
+    }
+  }
+}
