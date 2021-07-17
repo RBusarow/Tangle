@@ -24,12 +24,13 @@ android {
   }
   composeOptions {
     kotlinCompilerVersion = "1.5.10"
-    kotlinCompilerExtensionVersion = "1.0.0-rc01"
+    kotlinCompilerExtensionVersion = "1.0.0-rc02"
   }
 }
 
 dependencies {
 
+  api(libs.androidx.compose.compiler)
   api(libs.androidx.compose.runtime)
   api(libs.androidx.lifecycle.viewModel.core)
   api(libs.androidx.navigation.common)

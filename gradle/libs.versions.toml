@@ -44,6 +44,8 @@ androidx-appcompat = "androidx.appcompat:appcompat:1.3.0"
 
 androidx-arch-test-core = "androidx.arch.core:core-testing:2.1.0"
 
+androidx-compose-compiler = { module = "androidx.compose.compiler:compiler", version.ref = "androidx-compose" }
+
 androidx-compose-foundation = { module = "androidx.compose.foundation:foundation", version.ref = "androidx-compose" }
 
 androidx-compose-material-core = { module = "androidx.compose.material:material", version.ref = "androidx-compose" }
@@ -110,7 +112,7 @@ google-auto-common = "com.google.auto:auto-common:1.1"
 google-auto-service-annotations = "com.google.auto.service:auto-service-annotations:1.0"
 google-auto-service-processor = "com.google.auto.service:auto-service:1.0"
 
-google-auto-service-ksp = "dev.zacsweers.autoservice:auto-service-ksp:0.5.2"
+google-auto-service-ksp = "dev.zacsweers.autoservice:auto-service-ksp:0.5.3"
 
 google-dagger-api = { module = "com.google.dagger:dagger", version.ref = "google-dagger" }
 google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "google-dagger" }
