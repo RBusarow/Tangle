@@ -142,7 +142,7 @@ dependencies {
 
   dependencySync("net.swiftzer.semver:semver:1.1.1")
 
-  dependencySync("dev.zacsweers.autoservice:auto-service-ksp:0.5.2")
+  dependencySync("dev.zacsweers.autoservice:auto-service-ksp:0.5.3")
   dependencySync("com.jakewharton.timber:timber:4.7.1")
 
 }
