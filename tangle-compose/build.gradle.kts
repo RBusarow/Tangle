@@ -41,4 +41,3 @@ dependencies {
   implementation(libs.androidx.savedstate)
   implementation(projects.tangleApi)
 }
-

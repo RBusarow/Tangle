@@ -16,6 +16,8 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import io.gitlab.arturbosch.detekt.detekt
+import org.jlleitschuh.gradle.ktlint.KtlintExtension
+import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
 
 buildscript {
   repositories {
@@ -31,7 +33,7 @@ buildscript {
     classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.10-1.0.0-beta02")
     classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
     classpath("org.jetbrains.kotlinx:kotlinx-knit:0.3.0")
-    classpath("org.jmailen.gradle:kotlinter-gradle:3.4.5")
+    classpath("org.jlleitschuh.gradle:ktlint-gradle:10.1.0")
   }
 }
 
@@ -118,20 +120,22 @@ tasks.named(
 }
 
 allprojects {
-  apply(plugin = "org.jmailen.kotlinter")
+  apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
-  extensions.configure<org.jmailen.gradle.kotlinter.KotlinterExtension> {
+  configure<KtlintExtension> {
+    debug.set(false)
 
-    ignoreFailures = false
-    reporters = arrayOf("checkstyle", "plain")
-    experimentalRules = true
-    disabledRules = arrayOf(
-      "no-multi-spaces",
-      "no-wildcard-imports",
-      "max-line-length", // manually formatting still does this, and KTLint will still wrap long chains when possible
-      "filename", // same as Detekt's MatchingDeclarationName, except Detekt's version can be suppressed and this can't
-      "experimental:argument-list-wrapping" // doesn't work half the time
+    disabledRules.set(
+      setOf(
+        "no-wildcard-imports",
+        "max-line-length", // manually formatting still does this, and KTLint will still wrap long chains when possible
+        "filename", // same as Detekt's MatchingDeclarationName, but Detekt's version can be suppressed and this can't
+        "experimental:argument-list-wrapping" // doesn't work half the time
+      )
     )
+  }
+  tasks.withType<BaseKtLintCheckTask> {
+    workerMaxHeapSize.set("512m")
   }
 }
 
