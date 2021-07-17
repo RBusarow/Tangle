@@ -1,27 +1,38 @@
+public abstract interface annotation class tangle/inject/annotations/ContributesFragment : java/lang/annotation/Annotation {
+	public abstract fun replaces ()[Ljava/lang/Class;
+	public abstract fun scope ()Ljava/lang/Class;
+}
+
 public abstract interface annotation class tangle/inject/annotations/ContributesViewModel : java/lang/annotation/Annotation {
 	public abstract fun replaces ()[Ljava/lang/Class;
 	public abstract fun scope ()Ljava/lang/Class;
 }
 
-public abstract interface annotation class tangle/inject/annotations/FromSavedState : java/lang/annotation/Annotation {
-	public abstract fun name ()Ljava/lang/String;
+public abstract interface annotation class tangle/inject/annotations/FragmentInject : java/lang/annotation/Annotation {
 }
 
-public abstract interface annotation class tangle/inject/annotations/InternalTangleApi : java/lang/annotation/Annotation {
+public abstract interface annotation class tangle/inject/annotations/FragmentInjectFactory : java/lang/annotation/Annotation {
 }
 
 public abstract interface annotation class tangle/inject/annotations/TangleParam : java/lang/annotation/Annotation {
-}
-
-public abstract class tangle/inject/annotations/TangleScope {
-}
-
-public abstract interface annotation class tangle/inject/annotations/TangleViewModelProviderMap : java/lang/annotation/Annotation {
-}
-
-public abstract interface annotation class tangle/inject/annotations/TangleViewModelProviderMap$KeySet : java/lang/annotation/Annotation {
+	public abstract fun name ()Ljava/lang/String;
 }
 
 public abstract interface annotation class tangle/inject/annotations/VMInject : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class tangle/inject/annotations/internal/InternalTangleApi : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class tangle/inject/annotations/internal/TangleFragmentProviderMap : java/lang/annotation/Annotation {
+}
+
+public abstract class tangle/inject/annotations/internal/TangleScope {
+}
+
+public abstract interface annotation class tangle/inject/annotations/internal/TangleViewModelProviderMap : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class tangle/inject/annotations/internal/TangleViewModelProviderMap$KeySet : java/lang/annotation/Annotation {
 }
 
