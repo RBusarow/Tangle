@@ -7,6 +7,7 @@ public final class tangle/inject/compiler/PsiKt {
 	public static final fun qualifierArgumentsOrNull (Lorg/jetbrains/kotlin/psi/KtAnnotationEntry;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/Map;
 	public static final fun requireClassDescriptor (Lorg/jetbrains/kotlin/name/FqName;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;
 	public static final fun requireTypeReference (Lorg/jetbrains/kotlin/psi/KtCallableDeclaration;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/psi/KtTypeReference;
+	public static final fun scope (Lorg/jetbrains/kotlin/psi/KtAnnotationEntry;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/name/FqName;
 }
 
 public final class tangle/inject/compiler/TangleCompilationException : org/jetbrains/kotlin/codegen/CompilationException {
@@ -16,12 +17,6 @@ public final class tangle/inject/compiler/TangleCompilationException : org/jetbr
 	public synthetic fun <init> (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Lorg/jetbrains/kotlin/descriptors/annotations/AnnotationDescriptor;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public synthetic fun <init> (Lorg/jetbrains/kotlin/descriptors/annotations/AnnotationDescriptor;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-}
-
-public final class tangle/inject/compiler/TangleComponentGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
-	public fun <init> ()V
-	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
-	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
 }
 
 public final class tangle/inject/compiler/TangleSubcomponentGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
@@ -36,7 +31,70 @@ public final class tangle/inject/compiler/TangleSubcomponentModuleGenerator : co
 	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
 }
 
+public final class tangle/inject/compiler/TangleViewModelComponentGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
+	public fun <init> ()V
+	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
+	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+
 public final class tangle/inject/compiler/VMInjectGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
+	public fun <init> ()V
+	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
+	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+
+public final class tangle/inject/compiler/fragments/BundleSafe : java/lang/Enum {
+	public static final field ARRAY Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field BOOLEAN Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field BOOLEAN_ARRAY Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field BUNDLE Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field BYTE Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field BYTE_ARRAY Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field CHAR Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field CHAR_ARRAY Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field CHAR_SEQUENCE Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field Companion Ltangle/inject/compiler/fragments/BundleSafe$Companion;
+	public static final field DOUBLE Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field DOUBLE_ARRAY Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field FLOAT Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field FLOAT_ARRAY Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field IBINDER Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field INT Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field INT_ARRAY Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field LONG Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field LONG_ARRAY Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field PARCELABLE Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field SERIALIZABLE Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field SHORT Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field SHORT_ARRAY Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field SIZE Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field SIZE_F Ltangle/inject/compiler/fragments/BundleSafe;
+	public static final field STRING Ltangle/inject/compiler/fragments/BundleSafe;
+	public final fun getClassName ()Lcom/squareup/kotlinpoet/TypeName;
+	public final fun getFqName ()Lorg/jetbrains/kotlin/name/FqName;
+	public static fun valueOf (Ljava/lang/String;)Ltangle/inject/compiler/fragments/BundleSafe;
+	public static fun values ()[Ltangle/inject/compiler/fragments/BundleSafe;
+}
+
+public final class tangle/inject/compiler/fragments/BundleSafe$Companion {
+	public final fun contains (Lcom/squareup/kotlinpoet/TypeName;)Z
+	public final fun contains (Lorg/jetbrains/kotlin/name/FqName;)Z
+	public final fun fromTypeNameOrNull (Lcom/squareup/kotlinpoet/TypeName;)Ltangle/inject/compiler/fragments/BundleSafe;
+}
+
+public final class tangle/inject/compiler/fragments/ContributesFragmentGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
+	public fun <init> ()V
+	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
+	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+
+public final class tangle/inject/compiler/fragments/FragmentInjectGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
+	public fun <init> ()V
+	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
+	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+
+public final class tangle/inject/compiler/fragments/TangleFragmentFactoryModuleGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
 	public fun <init> ()V
 	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
 	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z

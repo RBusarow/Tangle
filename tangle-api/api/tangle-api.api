@@ -5,9 +5,8 @@ public final class tangle/inject/api/BuildConfig {
 	public fun <init> ()V
 }
 
-public abstract interface class tangle/inject/api/TangleComponent {
-	public abstract fun getTangleSubcomponentFactory ()Ltangle/inject/api/TangleSubcomponent$Factory;
-	public abstract fun getViewModelKeys ()Ljava/util/Set;
+public abstract interface annotation class tangle/inject/api/FragmentKey : java/lang/annotation/Annotation {
+	public abstract fun value ()Ljava/lang/Class;
 }
 
 public final class tangle/inject/api/TangleComponents {
@@ -16,12 +15,26 @@ public final class tangle/inject/api/TangleComponents {
 	public static final fun get (Ljava/lang/Class;)Ljava/lang/Object;
 }
 
-public abstract interface class tangle/inject/api/TangleSubcomponent {
+public final class tangle/inject/api/TangleFragmentFactory : androidx/fragment/app/FragmentFactory {
+	public fun <init> (Ljava/util/Map;Ljava/util/Map;)V
+	public fun instantiate (Ljava/lang/ClassLoader;Ljava/lang/String;)Landroidx/fragment/app/Fragment;
+}
+
+public final class tangle/inject/api/TangleKt {
+	public static final fun arg (Landroidx/fragment/app/Fragment;Ljava/lang/String;)Lkotlin/Lazy;
+}
+
+public abstract interface class tangle/inject/api/TangleViewModelComponent {
+	public abstract fun getTangleViewModelSubcomponentFactory ()Ltangle/inject/api/TangleViewModelSubcomponent$Factory;
+	public abstract fun getViewModelKeys ()Ljava/util/Set;
+}
+
+public abstract interface class tangle/inject/api/TangleViewModelSubcomponent {
 	public abstract fun getViewModelProviderMap ()Ljava/util/Map;
 }
 
-public abstract interface class tangle/inject/api/TangleSubcomponent$Factory {
-	public abstract fun create (Landroidx/lifecycle/SavedStateHandle;)Ltangle/inject/api/TangleSubcomponent;
+public abstract interface class tangle/inject/api/TangleViewModelSubcomponent$Factory {
+	public abstract fun create (Landroidx/lifecycle/SavedStateHandle;)Ltangle/inject/api/TangleViewModelSubcomponent;
 }
 
 public abstract interface annotation class tangle/inject/api/ViewModelKey : java/lang/annotation/Annotation {
