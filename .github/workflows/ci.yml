@@ -84,7 +84,7 @@ jobs:
           java-version: 14
 
       - name: all tests
-        run: ./gradlew apiCheck testJvm --rerun-tasks --no-daemon
+        run: ./gradlew stJvm --rerun-tasks --no-daemon
 
   tests-windows:
 
