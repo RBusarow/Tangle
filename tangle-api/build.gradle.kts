@@ -27,7 +27,6 @@ dependencies {
   api(libs.androidx.fragment.ktx)
   api(libs.androidx.lifecycle.viewModel.savedstate)
   implementation(libs.androidx.lifecycle.viewModel.core)
-
 }
 
 kotlin {

@@ -58,9 +58,9 @@ jobs:
           commit_message: Update dependencies from dependabot
           commit_options: '--no-verify --signoff'
 
-      # formats all src files
+      # formats all kotlin files
       - name: KtLint format
-        run: ./gradlew formatKotlin
+        run: ./gradlew ktlintformat -q
 
       # If KtLint generated changes, commit and push those changes.
       - name: commit changes
