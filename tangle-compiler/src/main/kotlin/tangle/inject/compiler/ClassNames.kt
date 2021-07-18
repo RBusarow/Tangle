@@ -14,32 +14,30 @@ import dagger.internal.InstanceFactory
 import dagger.multibindings.IntoMap
 import dagger.multibindings.IntoSet
 import dagger.multibindings.Multibinds
-import tangle.inject.annotations.internal.InternalTangleApi
-import tangle.inject.annotations.internal.TangleFragmentProviderMap
-import tangle.inject.annotations.internal.TangleScope
-import tangle.inject.annotations.internal.TangleViewModelProviderMap
 import javax.inject.Inject
 import javax.inject.Provider
 
-@OptIn(InternalTangleApi::class)
-internal object ClassNames {
+object ClassNames {
 
-  val tangleViewModelComponent = ClassName("tangle.inject.api", "TangleViewModelComponent")
-  val tangleViewModelSubcomponent = ClassName("tangle.inject.api", "TangleViewModelSubcomponent")
+  val tangleViewModelComponent = ClassName("tangle.viewmodel", "TangleViewModelComponent")
+  val tangleViewModelSubcomponent = ClassName("tangle.viewmodel", "TangleViewModelSubcomponent")
   val tangleViewModelSubcomponentFactory = tangleViewModelSubcomponent.nestedClass("Factory")
-  val tangleViewModelKey = ClassName("tangle.inject.api", "ViewModelKey")
-  val tangleViewModelProviderMap = TangleViewModelProviderMap::class.asClassName()
-  val tangleViewModelProviderMapKeySet = TangleViewModelProviderMap.KeySet::class.asClassName()
-  val tangleFragmentFactory = ClassName("tangle.inject.api", "TangleFragmentFactory")
-  val tangleFragmentSubcomponent = ClassName("tangle.inject.api", "TangleFragmentSubcomponent")
+  val tangleViewModelKey = ClassName("tangle.viewmodel", "ViewModelKey")
+  val tangleViewModelProviderMap =
+    ClassName("tangle.viewmodel", "TangleViewModelProviderMap")
+  val tangleViewModelProviderMapKeySet =
+    ClassName("tangle.viewmodel", "TangleViewModelProviderMap", "KeySet")
+  val tangleFragmentFactory = ClassName("tangle.fragment", "TangleFragmentFactory")
+  val tangleFragmentSubcomponent = ClassName("tangle.fragment", "TangleFragmentSubcomponent")
   val tangleFragmentSubcomponentFactory = tangleFragmentSubcomponent.nestedClass("Factory")
-  val tangleFragmentKey = ClassName("tangle.inject.api", "FragmentKey")
-  val tangleFragmentProviderMap = TangleFragmentProviderMap::class.asClassName()
+  val tangleFragmentKey = ClassName("tangle.fragment", "FragmentKey")
+  val tangleFragmentProviderMap =
+    ClassName("tangle.fragment", "TangleFragmentProviderMap")
 
-  val internalTangleApi = ClassName("tangle.inject.annotations.internal", "InternalTangleApi")
+  val internalTangleApi = ClassName("tangle.inject", "InternalTangleApi")
   val optIn = ClassName("kotlin", "OptIn")
 
-  val tangleScope = TangleScope::class.asClassName()
+  val tangleScope = ClassName("tangle.inject", "TangleScope")
 
   val androidxViewModel = ClassName("androidx.lifecycle", "ViewModel")
   val androidxFragment = ClassName("androidx.fragment.app", "Fragment")

@@ -35,7 +35,6 @@ dependencies {
   api(libs.kotlin.compiler)
   api(libs.square.kotlinPoet)
 
-  api(projects.tangleAnnotations)
   api(projects.tangleCompiler)
 
   compileOnly(libs.google.auto.service.processor)

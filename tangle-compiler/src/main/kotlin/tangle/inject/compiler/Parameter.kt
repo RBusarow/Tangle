@@ -19,7 +19,7 @@ import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
 import org.jetbrains.kotlin.psi.KtAnnotationEntry
 
-internal data class Parameter(
+data class Parameter(
   val name: String,
   val typeName: TypeName,
   val providerTypeName: ParameterizedTypeName,
@@ -33,12 +33,12 @@ internal data class Parameter(
   val isTangleParam: Boolean = tangleParamName != null
 }
 
-internal fun List<Parameter>.uniqueName(base: String, attempt: Int = 0): String {
+fun List<Parameter>.uniqueName(base: String, attempt: Int = 0): String {
   return map { it.name }.uniqueName(base, attempt)
 }
 
 @JvmName("uniqueNameStrings")
-internal fun List<String>.uniqueName(base: String, attempt: Int = 0): String {
+fun List<String>.uniqueName(base: String, attempt: Int = 0): String {
   val maybeName = if (attempt == 0) base else "$base$attempt"
   val unique = none { it == maybeName }
   return if (unique) maybeName else uniqueName(base, attempt + 1)

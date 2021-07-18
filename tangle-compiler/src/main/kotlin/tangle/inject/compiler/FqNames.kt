@@ -21,22 +21,19 @@ import dagger.Provides
 import dagger.internal.DoubleCheck
 import dagger.internal.Factory
 import org.jetbrains.kotlin.name.FqName
-import tangle.inject.annotations.*
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Qualifier
 
-internal object FqNames {
+object FqNames {
 
-  val vmInject = VMInject::class.fqName
-  val fragmentInject = FragmentInject::class.fqName
-  val fragmentInjectFactory = FragmentInjectFactory::class.fqName
-  val contributesViewModel = ContributesViewModel::class.fqName
-  val contributesFragment = ContributesFragment::class.fqName
-  val tangleParam = TangleParam::class.fqName
+  val vmInject = FqName("tangle.viewmodel.VMInject")
+  val fragmentInject = FqName("tangle.fragment.FragmentInject")
+  val fragmentInjectFactory = FqName("tangle.fragment.FragmentInjectFactory")
+  val contributesViewModel = FqName("tangle.viewmodel.ContributesViewModel")
+  val contributesFragment = FqName("tangle.fragment.ContributesFragment")
+  val tangleParam = FqName("tangle.inject.TangleParam")
 
-  // val fromSavedState = FromSavedState::class.fqName
-  // val bundleParam = BundleParam::class.fqName
   val mergeComponent = MergeComponent::class.fqName
   val jvmSuppressWildcards = JvmSuppressWildcards::class.fqName
   val provider = Provider::class.fqName

@@ -53,17 +53,17 @@ fun KtAnnotationEntry.scope(module: ModuleDescriptor): FqName {
     }
 }
 
-internal fun KtClassOrObject.vmInjectConstructor(module: ModuleDescriptor): KtConstructor<*>? {
+fun KtClassOrObject.vmInjectConstructor(module: ModuleDescriptor): KtConstructor<*>? {
   return annotatedConstructorOrNull(FqNames.vmInject, module)
 }
 
-internal fun KtClassOrObject.fragmentInjectConstructor(
+fun KtClassOrObject.fragmentInjectConstructor(
   module: ModuleDescriptor
 ): KtConstructor<*>? {
   return annotatedConstructorOrNull(FqNames.fragmentInject, module)
 }
 
-internal fun KtClassOrObject.injectConstructor(
+fun KtClassOrObject.injectConstructor(
   module: ModuleDescriptor
 ): KtConstructor<*>? {
   return annotatedConstructorOrNull(FqNames.inject, module)
@@ -94,7 +94,7 @@ internal fun KtAnnotationEntry.tangleParamName(): String? {
     ?.text
 }
 
-internal fun ValueParameterDescriptor.requireTangleParamName(): String {
+fun ValueParameterDescriptor.requireTangleParamName(): String {
   return annotations.findAnnotation(FqNames.tangleParam)
     ?.argumentValue("name")
     ?.value
@@ -104,7 +104,7 @@ internal fun ValueParameterDescriptor.requireTangleParamName(): String {
     )
 }
 
-internal fun List<KtCallableDeclaration>.mapToParameter(module: ModuleDescriptor): List<Parameter> =
+fun List<KtCallableDeclaration>.mapToParameter(module: ModuleDescriptor): List<Parameter> =
   mapIndexed { index, parameter ->
     val typeElement = parameter.typeReference?.typeElement
     val typeFqName = typeElement?.fqNameOrNull(module)
@@ -159,11 +159,11 @@ fun KtAnnotationEntry.qualifierArgumentsOrNull(module: ModuleDescriptor) = typeR
   ?.findAnnotation(FqNames.qualifier)
   ?.allValueArguments
 
-internal fun TypeName.wrapInProvider(): ParameterizedTypeName {
+fun TypeName.wrapInProvider(): ParameterizedTypeName {
   return Provider::class.asClassName().parameterizedBy(this)
 }
 
-internal fun TypeName.wrapInLazy(): ParameterizedTypeName {
+fun TypeName.wrapInLazy(): ParameterizedTypeName {
   return Lazy::class.asClassName().parameterizedBy(this)
 }
 
@@ -233,7 +233,7 @@ internal fun KtTypeReference.requireTypeName(
   anvilRequireTypeName(module)
 }
 
-internal fun FqName.asClassName(module: ModuleDescriptor): ClassName = delegateToAnvilUnsafe {
+fun FqName.asClassName(module: ModuleDescriptor): ClassName = delegateToAnvilUnsafe {
   anvilAsClassName(module)
 }
 
@@ -261,7 +261,7 @@ internal inline fun <T, R> T.delegateToAnvilUnsafe(action: T.() -> R): R = try {
  * ```
  * Set [includeModule] to true if a Dagger module instance is part of the argument list.
  */
-internal fun List<Parameter>.asArgumentList(
+fun List<Parameter>.asArgumentList(
   asProvider: Boolean,
   includeModule: Boolean
 ): String {
