@@ -42,13 +42,13 @@ class TangleCompilationException(
   ) : this(message, cause = cause, element = annotationDescriptor.identifier)
 }
 
-internal val ClassDescriptor.identifier: PsiElement?
+val ClassDescriptor.identifier: PsiElement?
   get() = (findPsi() as? PsiNameIdentifierOwner)?.identifyingElement
 
-internal val AnnotationDescriptor.identifier: PsiElement?
+val AnnotationDescriptor.identifier: PsiElement?
   get() = (source as? KotlinSourceElement)?.psi
 
-internal inline fun require(
+inline fun require(
   value: Boolean,
   classDescriptor: ClassDescriptor,
   cause: Throwable? = null,
@@ -62,7 +62,7 @@ internal inline fun require(
   }
 }
 
-internal inline fun require(
+inline fun require(
   value: Boolean,
   classDescriptorPromise: () -> ClassDescriptor,
   cause: Throwable? = null,
@@ -76,7 +76,7 @@ internal inline fun require(
   }
 }
 
-internal inline fun require(
+inline fun require(
   value: Boolean,
   annotationDescriptor: AnnotationDescriptor,
   cause: Throwable? = null,
@@ -90,7 +90,7 @@ internal inline fun require(
   }
 }
 
-internal inline fun require(
+inline fun require(
   value: Boolean,
   element: PsiElement? = null,
   cause: Throwable? = null,

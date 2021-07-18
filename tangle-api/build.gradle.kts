@@ -21,7 +21,6 @@ plugins {
 dependencies {
 
   api(libs.google.dagger.api)
-  api(projects.tangleAnnotations)
 
   api(libs.androidx.savedstate)
   api(libs.androidx.fragment.ktx)

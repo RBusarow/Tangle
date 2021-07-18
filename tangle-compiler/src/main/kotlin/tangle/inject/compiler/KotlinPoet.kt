@@ -73,7 +73,7 @@ fun FileSpec.Companion.buildFile(
   .writeToString()
   .addGeneratedByComment()
 
-internal fun KtAnnotationEntry.toAnnotationSpec(module: ModuleDescriptor): AnnotationSpec {
+fun KtAnnotationEntry.toAnnotationSpec(module: ModuleDescriptor): AnnotationSpec {
   return AnnotationSpec
     .builder(this.typeReference!!.requireFqName(module).asClassName(module))
     .apply {

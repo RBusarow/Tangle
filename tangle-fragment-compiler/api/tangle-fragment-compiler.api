@@ -1,0 +1,57 @@
+public final class tangle/fragment/compiler/BundleSafe : java/lang/Enum {
+	public static final field ARRAY Ltangle/fragment/compiler/BundleSafe;
+	public static final field BOOLEAN Ltangle/fragment/compiler/BundleSafe;
+	public static final field BOOLEAN_ARRAY Ltangle/fragment/compiler/BundleSafe;
+	public static final field BUNDLE Ltangle/fragment/compiler/BundleSafe;
+	public static final field BYTE Ltangle/fragment/compiler/BundleSafe;
+	public static final field BYTE_ARRAY Ltangle/fragment/compiler/BundleSafe;
+	public static final field CHAR Ltangle/fragment/compiler/BundleSafe;
+	public static final field CHAR_ARRAY Ltangle/fragment/compiler/BundleSafe;
+	public static final field CHAR_SEQUENCE Ltangle/fragment/compiler/BundleSafe;
+	public static final field Companion Ltangle/fragment/compiler/BundleSafe$Companion;
+	public static final field DOUBLE Ltangle/fragment/compiler/BundleSafe;
+	public static final field DOUBLE_ARRAY Ltangle/fragment/compiler/BundleSafe;
+	public static final field FLOAT Ltangle/fragment/compiler/BundleSafe;
+	public static final field FLOAT_ARRAY Ltangle/fragment/compiler/BundleSafe;
+	public static final field IBINDER Ltangle/fragment/compiler/BundleSafe;
+	public static final field INT Ltangle/fragment/compiler/BundleSafe;
+	public static final field INT_ARRAY Ltangle/fragment/compiler/BundleSafe;
+	public static final field LONG Ltangle/fragment/compiler/BundleSafe;
+	public static final field LONG_ARRAY Ltangle/fragment/compiler/BundleSafe;
+	public static final field PARCELABLE Ltangle/fragment/compiler/BundleSafe;
+	public static final field SERIALIZABLE Ltangle/fragment/compiler/BundleSafe;
+	public static final field SHORT Ltangle/fragment/compiler/BundleSafe;
+	public static final field SHORT_ARRAY Ltangle/fragment/compiler/BundleSafe;
+	public static final field SIZE Ltangle/fragment/compiler/BundleSafe;
+	public static final field SIZE_F Ltangle/fragment/compiler/BundleSafe;
+	public static final field STRING Ltangle/fragment/compiler/BundleSafe;
+	public final fun getClassName ()Lcom/squareup/kotlinpoet/TypeName;
+	public final fun getFqName ()Lorg/jetbrains/kotlin/name/FqName;
+	public static fun valueOf (Ljava/lang/String;)Ltangle/fragment/compiler/BundleSafe;
+	public static fun values ()[Ltangle/fragment/compiler/BundleSafe;
+}
+
+public final class tangle/fragment/compiler/BundleSafe$Companion {
+	public final fun contains (Lcom/squareup/kotlinpoet/TypeName;)Z
+	public final fun contains (Lorg/jetbrains/kotlin/name/FqName;)Z
+	public final fun fromTypeNameOrNull (Lcom/squareup/kotlinpoet/TypeName;)Ltangle/fragment/compiler/BundleSafe;
+}
+
+public final class tangle/fragment/compiler/ContributesFragmentGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
+	public fun <init> ()V
+	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
+	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+
+public final class tangle/fragment/compiler/FragmentInjectGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
+	public fun <init> ()V
+	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
+	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+
+public final class tangle/fragment/compiler/TangleFragmentFactoryModuleGenerator : com/squareup/anvil/compiler/api/CodeGenerator {
+	public fun <init> ()V
+	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
+	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+

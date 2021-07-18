@@ -1,0 +1,34 @@
+public final class tangle/fragment/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public abstract interface annotation class tangle/fragment/ContributesFragment : java/lang/annotation/Annotation {
+	public abstract fun replaces ()[Ljava/lang/Class;
+	public abstract fun scope ()Ljava/lang/Class;
+}
+
+public abstract interface annotation class tangle/fragment/FragmentInject : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class tangle/fragment/FragmentInjectFactory : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class tangle/fragment/FragmentKey : java/lang/annotation/Annotation {
+	public abstract fun value ()Ljava/lang/Class;
+}
+
+public final class tangle/fragment/TangleFragmentFactory : androidx/fragment/app/FragmentFactory {
+	public fun <init> (Ljava/util/Map;Ljava/util/Map;)V
+	public fun instantiate (Ljava/lang/ClassLoader;Ljava/lang/String;)Landroidx/fragment/app/Fragment;
+}
+
+public abstract interface annotation class tangle/fragment/TangleFragmentProviderMap : java/lang/annotation/Annotation {
+}
+
+public final class tangle/inject/api/ArgKt {
+	public static final fun arg (Landroidx/fragment/app/Fragment;Ljava/lang/String;)Lkotlin/Lazy;
+}
+

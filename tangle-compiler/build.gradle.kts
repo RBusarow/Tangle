@@ -31,7 +31,6 @@ dependencies {
   implementation(libs.anvil.annotations)
   implementation(libs.anvil.compiler.utils)
   implementation(libs.google.dagger.api)
-  implementation(projects.tangleAnnotations)
 
   testImplementation(libs.anvil.compiler.core)
   testImplementation(libs.bundles.hermit)
