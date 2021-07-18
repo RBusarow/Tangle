@@ -4,6 +4,7 @@ import com.squareup.anvil.annotations.ContributesTo
 import com.squareup.anvil.annotations.MergeComponent
 import com.squareup.anvil.annotations.MergeSubcomponent
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.asClassName
@@ -17,71 +18,79 @@ import dagger.multibindings.Multibinds
 import javax.inject.Inject
 import javax.inject.Provider
 
-object ClassNames {
+public object ClassNames {
 
-  val tangleViewModelComponent = ClassName("tangle.viewmodel", "TangleViewModelComponent")
-  val tangleViewModelSubcomponent = ClassName("tangle.viewmodel", "TangleViewModelSubcomponent")
-  val tangleViewModelSubcomponentFactory = tangleViewModelSubcomponent.nestedClass("Factory")
-  val tangleViewModelKey = ClassName("tangle.viewmodel", "ViewModelKey")
-  val tangleViewModelProviderMap =
+  public val tangleViewModelComponent: ClassName =
+    ClassName("tangle.viewmodel", "TangleViewModelComponent")
+  public val tangleViewModelSubcomponent: ClassName =
+    ClassName("tangle.viewmodel", "TangleViewModelSubcomponent")
+  public val tangleViewModelSubcomponentFactory: ClassName =
+    tangleViewModelSubcomponent.nestedClass("Factory")
+  public val tangleViewModelKey: ClassName = ClassName("tangle.viewmodel", "ViewModelKey")
+  public val tangleViewModelProviderMap: ClassName =
     ClassName("tangle.viewmodel", "TangleViewModelProviderMap")
-  val tangleViewModelProviderMapKeySet =
+  public val tangleViewModelProviderMapKeySet: ClassName =
     ClassName("tangle.viewmodel", "TangleViewModelProviderMap", "KeySet")
-  val tangleFragmentFactory = ClassName("tangle.fragment", "TangleFragmentFactory")
-  val tangleFragmentSubcomponent = ClassName("tangle.fragment", "TangleFragmentSubcomponent")
-  val tangleFragmentSubcomponentFactory = tangleFragmentSubcomponent.nestedClass("Factory")
-  val tangleFragmentKey = ClassName("tangle.fragment", "FragmentKey")
-  val tangleFragmentProviderMap =
+  public val tangleFragmentFactory: ClassName =
+    ClassName("tangle.fragment", "TangleFragmentFactory")
+  public val tangleFragmentSubcomponent: ClassName =
+    ClassName("tangle.fragment", "TangleFragmentSubcomponent")
+  public val tangleFragmentSubcomponentFactory: ClassName =
+    tangleFragmentSubcomponent.nestedClass("Factory")
+  public val tangleFragmentKey: ClassName = ClassName("tangle.fragment", "FragmentKey")
+  public val tangleFragmentProviderMap: ClassName =
     ClassName("tangle.fragment", "TangleFragmentProviderMap")
 
-  val internalTangleApi = ClassName("tangle.inject", "InternalTangleApi")
-  val optIn = ClassName("kotlin", "OptIn")
+  public val internalTangleApi: ClassName = ClassName("tangle.inject", "InternalTangleApi")
+  public val optIn: ClassName = ClassName("kotlin", "OptIn")
 
-  val tangleScope = ClassName("tangle.inject", "TangleScope")
+  public val tangleScope: ClassName = ClassName("tangle.inject", "TangleScope")
 
-  val androidxViewModel = ClassName("androidx.lifecycle", "ViewModel")
-  val androidxFragment = ClassName("androidx.fragment.app", "Fragment")
-  val androidxFragmentFactory = ClassName("androidx.fragment.app", "FragmentFactory")
-  val androidxSavedStateHandle = ClassName("androidx.lifecycle", "SavedStateHandle")
+  public val androidxViewModel: ClassName = ClassName("androidx.lifecycle", "ViewModel")
+  public val androidxFragment: ClassName = ClassName("androidx.fragment.app", "Fragment")
+  public val androidxFragmentFactory: ClassName =
+    ClassName("androidx.fragment.app", "FragmentFactory")
+  public val androidxSavedStateHandle: ClassName =
+    ClassName("androidx.lifecycle", "SavedStateHandle")
 
-  val javaClassOutFragment = Class::class.asClassName()
+  public val javaClassOutFragment: ParameterizedTypeName = Class::class.asClassName()
     .parameterizedBy(TypeVariableName("out·${androidxFragment.canonicalName}"))
-  val javaClassOutVM = Class::class.asClassName()
+  public val javaClassOutVM: ParameterizedTypeName = Class::class.asClassName()
     .parameterizedBy(TypeVariableName("out·${androidxViewModel.canonicalName}"))
 
-  val fragmentMap = Map::class.asClassName().parameterizedBy(
+  public val fragmentMap: ParameterizedTypeName = Map::class.asClassName().parameterizedBy(
     javaClassOutFragment,
     androidxFragment.jvmSuppressWildcards()
   )
-  val provider = Provider::class.asClassName()
-  val fragmentProviderMap = Map::class.asClassName().parameterizedBy(
+  public val provider: ClassName = Provider::class.asClassName()
+  public val fragmentProviderMap: ParameterizedTypeName = Map::class.asClassName().parameterizedBy(
     javaClassOutFragment,
     provider.parameterizedBy(androidxFragment.jvmSuppressWildcards()).jvmSuppressWildcards()
   )
 
-  val daggerFactory = Factory::class.asClassName()
-  val contributesTo = ContributesTo::class.asClassName()
-  val mergeComponent = MergeComponent::class.asClassName()
-  val mergeSubomponent = MergeSubcomponent::class.asClassName()
-  val binds = Binds::class.asClassName()
-  val bindsInstance = BindsInstance::class.asClassName()
-  val subcomponentFactory = Subcomponent.Factory::class.asClassName()
-  val intoMap = IntoMap::class.asClassName()
-  val intoSet = IntoSet::class.asClassName()
-  val provides = Provides::class.asClassName()
-  val module = Module::class.asClassName()
-  val multibinds = Multibinds::class.asClassName()
+  public val daggerFactory: ClassName = Factory::class.asClassName()
+  public val contributesTo: ClassName = ContributesTo::class.asClassName()
+  public val mergeComponent: ClassName = MergeComponent::class.asClassName()
+  public val mergeSubomponent: ClassName = MergeSubcomponent::class.asClassName()
+  public val binds: ClassName = Binds::class.asClassName()
+  public val bindsInstance: ClassName = BindsInstance::class.asClassName()
+  public val subcomponentFactory: ClassName = Subcomponent.Factory::class.asClassName()
+  public val intoMap: ClassName = IntoMap::class.asClassName()
+  public val intoSet: ClassName = IntoSet::class.asClassName()
+  public val provides: ClassName = Provides::class.asClassName()
+  public val module: ClassName = Module::class.asClassName()
+  public val multibinds: ClassName = Multibinds::class.asClassName()
 
-  val instanceFactory = InstanceFactory::class.asClassName()
+  public val instanceFactory: ClassName = InstanceFactory::class.asClassName()
 
-  val inject = Inject::class.asClassName()
-  val jvmStatic = JvmStatic::class.asClassName()
-  val providerSavedStateHandle = Provider::class.asClassName()
+  public val inject: ClassName = Inject::class.asClassName()
+  public val jvmStatic: ClassName = JvmStatic::class.asClassName()
+  public val providerSavedStateHandle: ParameterizedTypeName = Provider::class.asClassName()
     .parameterizedBy(androidxSavedStateHandle)
 
-  val bundle = ClassName("android.os", "Bundle")
-  val iBinder = ClassName("android.os", "IBinder")
-  val parcelable = ClassName("android.os", "Parcelable")
-  val size = ClassName("android.util", "Size")
-  val sizeF = ClassName("android.util", "SizeF")
+  public val bundle: ClassName = ClassName("android.os", "Bundle")
+  public val iBinder: ClassName = ClassName("android.os", "IBinder")
+  public val parcelable: ClassName = ClassName("android.os", "Parcelable")
+  public val size: ClassName = ClassName("android.util", "Size")
+  public val sizeF: ClassName = ClassName("android.util", "SizeF")
 }

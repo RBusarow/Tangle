@@ -269,6 +269,183 @@ class FragmentInjectGeneratorTest : BaseTest() {
   }
 
   @TestFactory
+  fun `factory performs member injection in injected class`() = test {
+    compile(
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.TangleParam
+      import javax.inject.Inject
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor() : Fragment() {
+
+        @Inject lateinit var id: String
+
+        @FragmentInjectFactory
+        interface Factory {
+          fun create(
+            @TangleParam("name") name: String
+          ): MyFragment
+        }
+      }
+     """
+    ) {
+      val factoryClass = myFragmentClass.factoryClass()
+
+      val factoryInstance = factoryClass.createStatic(Provider { "id value" })
+
+      factoryInstance::class.java shouldBe factoryClass
+
+      val fragment = factoryInstance.factoryGet()
+
+      fragment::class.java shouldBe myFragmentClass
+
+      myFragmentClass.methods
+        .first { it.name == "getId" }
+        .invoke(fragment) shouldBe "id value"
+    }
+  }
+
+  @TestFactory
+  fun `factory performs member injection of lateinit var in super class`() = test {
+    compile(
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.TangleParam
+      import javax.inject.Inject
+
+      abstract class BaseFragment : Fragment() {
+        @Inject lateinit var baseId: String
+      }
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor() : BaseFragment() {
+
+        @Inject lateinit var id: String
+
+        @FragmentInjectFactory
+        interface Factory {
+          fun create(
+            @TangleParam("name") name: String
+          ): MyFragment
+        }
+      }
+     """
+    ) {
+      val factoryClass = myFragmentClass.factoryClass()
+
+      val factoryInstance = factoryClass.createStatic(Provider { "id value" })
+
+      factoryInstance::class.java shouldBe factoryClass
+
+      val fragment = factoryInstance.factoryGet()
+
+      fragment::class.java shouldBe myFragmentClass
+
+      myFragmentClass.methods
+        .first { it.name == "getId" }
+        .invoke(fragment) shouldBe "id value"
+    }
+  }
+
+  @TestFactory
+  fun `factory performs member injection of nullable var in super class`() = test {
+    compile(
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.TangleParam
+      import javax.inject.Inject
+
+      abstract class BaseFragment : Fragment() {
+        @Inject var baseId: String? = null
+      }
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor() : BaseFragment() {
+
+        @Inject lateinit var id: String
+
+        @FragmentInjectFactory
+        interface Factory {
+          fun create(
+            @TangleParam("name") name: String
+          ): MyFragment
+        }
+      }
+     """
+    ) {
+      val factoryClass = myFragmentClass.factoryClass()
+
+      val factoryInstance = factoryClass.createStatic(Provider { "id value" })
+
+      factoryInstance::class.java shouldBe factoryClass
+
+      val fragment = factoryInstance.factoryGet()
+
+      fragment::class.java shouldBe myFragmentClass
+
+      myFragmentClass.methods
+        .first { it.name == "getId" }
+        .invoke(fragment) shouldBe "id value"
+    }
+  }
+
+  @TestFactory
+  fun `factory performs member injection of Delegates-notNull var in super class`() = test {
+    compile(
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.TangleParam
+      import javax.inject.Inject
+      import kotlin.properties.Delegates
+
+      abstract class BaseFragment : Fragment() {
+        @Inject var baseId: String by Delegates.notNull()
+      }
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor() : BaseFragment() {
+
+        @Inject lateinit var id: String
+
+        @FragmentInjectFactory
+        interface Factory {
+          fun create(
+            @TangleParam("name") name: String
+          ): MyFragment
+        }
+      }
+     """
+    ) {
+      val factoryClass = myFragmentClass.factoryClass()
+
+      val factoryInstance = factoryClass.createStatic(Provider { "id value" })
+
+      factoryInstance::class.java shouldBe factoryClass
+
+      val fragment = factoryInstance.factoryGet()
+
+      fragment::class.java shouldBe myFragmentClass
+
+      myFragmentClass.methods
+        .first { it.name == "getId" }
+        .invoke(fragment) shouldBe "id value"
+    }
+  }
+
+  @TestFactory
   fun `factory is generated with only TangleParam arguments`() = test {
     compile(
       """

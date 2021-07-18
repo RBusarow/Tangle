@@ -33,7 +33,8 @@ internal sealed class FragmentInjectParams {
     val fragmentFactoryClassNameString: String,
     val fragmentFactoryClassName: ClassName,
     val constructor: KtConstructor<*>,
-    val injectedParams: List<Parameter>,
+    val constructorParams: List<Parameter>,
+    val memberInjectedParams: List<Parameter>,
     val typeParameters: List<TypeVariableName>,
     val fragmentClassSimpleName: String,
     val fragmentTypeName: TypeName
@@ -55,10 +56,10 @@ internal sealed class FragmentInjectParams {
 
         val scopeName = fragmentClass.scope(FqNames.contributesFragment, module)
 
-        val allFragmentConstructorParams = constructor.valueParameters
-          .mapToParameter(module)
+        val memberInjectParameters = fragmentClassDescriptor.memberInjectedProperties(module)
 
-        val injectedParams = allFragmentConstructorParams
+        val allFragmentConstructorParams = constructor.valueParameters
+          .mapToParameters(module)
 
         val typeParameters = fragmentClass.typeVariableNames(module)
 
@@ -79,7 +80,8 @@ internal sealed class FragmentInjectParams {
           fragmentFactoryClassNameString = fragmentFactoryClassNameString,
           fragmentFactoryClassName = fragmentFactoryClassName,
           constructor = constructor,
-          injectedParams = injectedParams,
+          constructorParams = allFragmentConstructorParams,
+          memberInjectedParams = memberInjectParameters,
           typeParameters = typeParameters,
           fragmentClassSimpleName = fragmentClassSimpleName,
           fragmentTypeName = fragmentTypeName
@@ -125,7 +127,7 @@ internal sealed class FragmentInjectParams {
 
         require(
           value = contributesAnnotation != null,
-          classDescriptorPromise = { fragmentClass.requireClassDescriptor(module) }
+          declarationDescriptor = { fragmentClass.requireClassDescriptor(module) }
         ) {
           "@${FqNames.fragmentInject.shortName().asString()}-annotated Fragments must also " +
             "have a `${FqNames.contributesFragment.asString()}` class annotation."

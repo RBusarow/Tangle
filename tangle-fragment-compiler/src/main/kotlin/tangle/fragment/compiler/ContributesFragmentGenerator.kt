@@ -56,7 +56,7 @@ class ContributesFragmentGenerator : CodeGenerator {
             "`@${FqNames.inject.asString()}` or `@${FqNames.fragmentInject.asString()}`."
         }
 
-        val injectedParams = Fragment.create(module, clazz, constructor).injectedParams
+        val injectedParams = Fragment.create(module, clazz, constructor).constructorParams
 
         Binding(
           injectedParams = injectedParams,

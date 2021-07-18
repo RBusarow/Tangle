@@ -108,7 +108,7 @@ class VMInjectGenerator : CodeGenerator {
 
     val scopeName = clazz.scope(FqNames.contributesViewModel, module)
 
-    val viewModelConstructorParams = constructor.valueParameters.mapToParameter(module)
+    val viewModelConstructorParams = constructor.valueParameters.mapToParameters(module)
 
     val (injectedParams, savedStateParams) = viewModelConstructorParams
       .partition { !it.isTangleParam }
@@ -147,9 +147,7 @@ class VMInjectGenerator : CodeGenerator {
         )
         .applyEach(providerConstructorParams) { parameter ->
 
-          val qualifierAnnotationSpecs = parameter.annotationEntries
-            .filter { it.isQualifier(module) }
-            .map { it.toAnnotationSpec(module) }
+          val qualifierAnnotationSpecs = parameter.qualifiers
 
           addProperty(
             PropertySpec.builder(parameter.name, parameter.providerTypeName)
@@ -193,7 +191,7 @@ class VMInjectGenerator : CodeGenerator {
       isWrappedInProvider = true,
       isWrappedInLazy = false,
       tangleParamName = null,
-      annotationEntries = emptyList()
+      qualifiers = emptyList()
     )
   }
 

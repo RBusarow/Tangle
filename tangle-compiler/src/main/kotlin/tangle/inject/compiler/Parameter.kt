@@ -15,6 +15,7 @@
 
 package tangle.inject.compiler
 
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
 import org.jetbrains.kotlin.psi.KtAnnotationEntry
@@ -27,7 +28,7 @@ data class Parameter(
   val isWrappedInProvider: Boolean,
   val isWrappedInLazy: Boolean,
   val tangleParamName: String?,
-  val annotationEntries: List<KtAnnotationEntry>
+  val qualifiers: List<AnnotationSpec>
 ) {
 
   val isTangleParam: Boolean = tangleParamName != null
