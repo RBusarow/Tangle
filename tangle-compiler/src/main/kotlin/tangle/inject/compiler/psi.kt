@@ -28,12 +28,10 @@ import dagger.Lazy
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.descriptors.resolveClassByFqName
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation.FROM_BACKEND
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.resolve.annotations.argumentValue
 import javax.inject.Provider
 import com.squareup.anvil.compiler.internal.asClassName as anvilAsClassName
 import com.squareup.anvil.compiler.internal.requireFqName as anvilRequireFqName
@@ -94,17 +92,9 @@ internal fun KtAnnotationEntry.tangleParamName(): String? {
     ?.text
 }
 
-fun ValueParameterDescriptor.requireTangleParamName(): String {
-  return annotations.findAnnotation(FqNames.tangleParam)
-    ?.argumentValue("name")
-    ?.value
-    ?.toString()
-    ?: throw TangleCompilationException(
-      "could not find a @TangleParam annotation for parameter `${name.asString()}`"
-    )
-}
-
-fun List<KtCallableDeclaration>.mapToParameter(module: ModuleDescriptor): List<Parameter> =
+fun List<KtCallableDeclaration>.mapToParameters(
+  module: ModuleDescriptor
+): List<ContructorInjectParameter> =
   mapIndexed { index, parameter ->
     val typeElement = parameter.typeReference?.typeElement
     val typeFqName = typeElement?.fqNameOrNull(module)
@@ -133,19 +123,21 @@ fun List<KtCallableDeclaration>.mapToParameter(module: ModuleDescriptor): List<P
       else -> parameter.requireTypeReference(module).requireTypeName(module)
     }.withJvmSuppressWildcardsIfNeeded(parameter, module)
 
-    val bundleParamName = parameter
+    val tangleParamName = parameter
       .findAnnotation(FqNames.tangleParam, module)
       ?.tangleParamName()
 
-    Parameter(
+    val qualifiers = annotations.qualifierAnnotationSpecs(module)
+
+    ContructorInjectParameter(
       name = parameter.name ?: "param$index",
       typeName = typeName,
       providerTypeName = typeName.wrapInProvider(),
       lazyTypeName = typeName.wrapInLazy(),
       isWrappedInProvider = isWrappedInProvider,
       isWrappedInLazy = isWrappedInLazy,
-      tangleParamName = bundleParamName,
-      annotationEntries = annotations
+      tangleParamName = tangleParamName,
+      qualifiers = qualifiers
     )
   }
 
@@ -276,7 +268,7 @@ fun List<Parameter>.asArgumentList(
             // to a Lazy. Assisted parameters behave differently and the Lazy type is not changed
             // to a Provider and we can simply use the parameter name in the argument list.
             //         parameter.isWrappedInLazy && parameter.isAssisted -> parameter.name
-            parameter.isWrappedInLazy -> "${FqNames.daggerDoubleCheckString}.lazy(${parameter.name})"
+            parameter.isWrappedInLazy -> "${FqNames.daggerDoubleCheck}.lazy(${parameter.name})"
             parameter.isTangleParam -> parameter.name
             //         parameter.isAssisted -> parameter.name
             else -> "${parameter.name}.get()"

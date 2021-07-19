@@ -41,7 +41,7 @@ object FqNames {
   val daggerProvides = Provides::class.fqName
   val inject = Inject::class.fqName
   val qualifier = Qualifier::class.fqName
-  val daggerDoubleCheckString = DoubleCheck::class.java.canonicalName
+  val daggerDoubleCheck = DoubleCheck::class.java.canonicalName
   val daggerFactory = Factory::class.java.canonicalName
   val bundle = FqName("android.os.Bundle")
   val iBinder = FqName("android.os.IBinder")

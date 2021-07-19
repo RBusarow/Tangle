@@ -68,10 +68,8 @@ class FragmentInjectGenerator : CodeGenerator {
             ) {
               "@${FqNames.fragmentInject.shortName().asString()} must only be applied " +
                 "to the constructor of a Fragment, and that fragment must have a corresponding " +
-                "${
-                FqNames.fragmentInjectFactory.shortName()
-                  .asString()
-                }-annotated factory interface."
+                FqNames.fragmentInjectFactory.shortName().asString() +
+                "-annotated factory interface."
             }
           }
 
@@ -84,7 +82,7 @@ class FragmentInjectGenerator : CodeGenerator {
 
       when (params) {
         is Factory -> createFactoryImplementation(codeGenDir, params, params.fragmentParams, module)
-        is Fragment -> createFragmentFactory(codeGenDir, module, params)
+        is Fragment -> createFragmentFactory(codeGenDir, params)
       }
     }
 
@@ -110,15 +108,18 @@ class FragmentInjectGenerator : CodeGenerator {
     return generated + daggerModules
   }
 
+  @Suppress("ComplexMethod")
   private fun createFragmentFactory(
     codeGenDir: File,
-    module: ModuleDescriptor,
-    fragmentParams: FragmentInjectParams.Fragment
+    fragmentParams: Fragment
   ): GeneratedFile {
     val packageName = fragmentParams.packageName
     val fragmentFactoryClassNameString = fragmentParams.fragmentFactoryClassNameString
 
-    val typeSpecBuilder = if (fragmentParams.injectedParams.isEmpty()) {
+    val factoryConstructorParams =
+      fragmentParams.constructorParams + fragmentParams.memberInjectedParams
+
+    val typeSpecBuilder = if (factoryConstructorParams.isEmpty()) {
       TypeSpec.objectBuilder(fragmentParams.fragmentFactoryClassName)
     } else {
       TypeSpec.classBuilder(fragmentParams.fragmentFactoryClassName)
@@ -127,7 +128,7 @@ class FragmentInjectGenerator : CodeGenerator {
     fun TypeSpec.Builder.addStatic(
       action: TypeSpec.Builder.() -> TypeSpec.Builder
     ) = apply {
-      if (fragmentParams.injectedParams.isEmpty()) {
+      if (factoryConstructorParams.isEmpty()) {
         action()
       } else {
         addType(
@@ -138,59 +139,53 @@ class FragmentInjectGenerator : CodeGenerator {
       }
     }
 
-    val createFunction = FunSpec
-      .builder("create")
-      .addAnnotation(ClassNames.jvmStatic)
-      .applyEach(fragmentParams.injectedParams) { param ->
+    val createFunction = FunSpec("create") {
+      addAnnotation(ClassNames.jvmStatic)
+      factoryConstructorParams.forEach { param ->
         addParameter(param.name, param.providerTypeName)
       }
-      .returns(fragmentParams.fragmentFactoryClassName)
-      .apply {
-        if (fragmentParams.injectedParams.isEmpty()) {
-          addStatement("return·this")
-        } else {
-          val createArguments = fragmentParams.injectedParams.asArgumentList(false, false)
-          addStatement(
-            "return·%T($createArguments)",
-            fragmentParams.fragmentFactoryClassName
-          )
-        }
-      }
-      .build()
+      returns(fragmentParams.fragmentFactoryClassName)
 
-    val newInstanceFunction = FunSpec
-      .builder("newInstance")
-      .addAnnotation(ClassNames.jvmStatic)
-      .applyEach(fragmentParams.injectedParams) { param ->
+      if (factoryConstructorParams.isEmpty()) {
+        addStatement("return·this")
+      } else {
+        val createArguments = factoryConstructorParams.asArgumentList(false, false)
+        addStatement(
+          "return·%T($createArguments)",
+          fragmentParams.fragmentFactoryClassName
+        )
+      }
+    }
+
+    val newInstanceFunction = FunSpec("newInstance") {
+      addAnnotation(ClassNames.jvmStatic)
+      fragmentParams.constructorParams.forEach { param ->
         addParameter(param.name, param.typeName)
       }
-      .returns(fragmentParams.fragmentClassName)
-      .apply {
-        val injectArguments = fragmentParams.injectedParams.asArgumentList(false, false)
-        addStatement("return·%T($injectArguments)", fragmentParams.fragmentClassName)
-      }
-      .build()
+      returns(fragmentParams.fragmentClassName)
+
+      val injectArguments = fragmentParams.constructorParams.asArgumentList(false, false)
+      addStatement("return·%T($injectArguments)", fragmentParams.fragmentClassName)
+    }
 
     val content = FileSpec.buildFile(packageName, fragmentFactoryClassNameString) {
       typeSpecBuilder
         .applyEach(fragmentParams.typeParameters) { addTypeVariable(it) }
         .addSuperinterface(ClassNames.daggerFactory.parameterizedBy(fragmentParams.fragmentTypeName))
         .apply {
-          if (fragmentParams.injectedParams.isNotEmpty()) {
+          if (factoryConstructorParams.isNotEmpty()) {
             primaryConstructor(
               FunSpec.constructorBuilder()
-                .applyEach(fragmentParams.injectedParams) { parameter ->
+                .applyEach(factoryConstructorParams) { parameter ->
                   addParameter(parameter.name, parameter.providerTypeName)
                 }
                 .build()
             )
           }
         }
-        .applyEach(fragmentParams.injectedParams) { parameter ->
+        .applyEach(factoryConstructorParams) { parameter ->
 
-          val qualifierAnnotationSpecs = parameter.annotationEntries
-            .filter { it.isQualifier(module) }
-            .map { it.toAnnotationSpec(module) }
+          val qualifierAnnotationSpecs = parameter.qualifiers
 
           addProperty(
             PropertySpec.builder(parameter.name, parameter.providerTypeName)
@@ -200,19 +195,40 @@ class FragmentInjectGenerator : CodeGenerator {
               .build()
           )
         }
-        .addFunction(
-          FunSpec.builder("get")
-            .addModifiers(OVERRIDE)
-            .returns(returnType = fragmentParams.fragmentClassName)
-            .apply {
-              val getterArguments = fragmentParams.injectedParams.asArgumentList(
-                asProvider = true,
-                includeModule = false
-              )
-              addStatement("return·newInstance($getterArguments)", fragmentParams.fragmentClassName)
+        .addFunction("get") {
+          addModifiers(OVERRIDE)
+          returns(returnType = fragmentParams.fragmentClassName)
+
+          val newInstanceArguments = fragmentParams.constructorParams.asArgumentList(
+            asProvider = true,
+            includeModule = false
+          )
+          if (fragmentParams.memberInjectedParams.isEmpty()) {
+            addStatement(
+              "return·newInstance($newInstanceArguments)",
+              fragmentParams.fragmentClassName
+            )
+          } else {
+            addStatement("val instance = newInstance($newInstanceArguments)")
+
+            val memberInjectParameters = fragmentParams.memberInjectedParams
+
+            memberInjectParameters.forEach { parameter ->
+
+              val propertyName = parameter.name
+              val functionName = "inject${propertyName.capitalize()}"
+
+              val param = when {
+                parameter.isWrappedInProvider -> parameter.name
+                parameter.isWrappedInLazy -> "${FqNames.daggerDoubleCheck}.lazy(${parameter.name})"
+                else -> parameter.name + ".get()"
+              }
+
+              addStatement("%T.$functionName(instance, $param)", parameter.memberInjectorClass)
             }
-            .build()
-        )
+            addStatement("return instance")
+          }
+        }
         .addStatic {
           addFunction(createFunction)
           addFunction(newInstanceFunction)
@@ -352,27 +368,27 @@ class FragmentInjectGenerator : CodeGenerator {
           )
           .applyEach(factoryImpls) { params ->
 
-            val args = params.fragmentParams.injectedParams.asArgumentList(
+            val factoryConstructorParams =
+              params.fragmentParams.constructorParams + params.fragmentParams.memberInjectedParams
+
+            val args = factoryConstructorParams.asArgumentList(
               asProvider = false,
               includeModule = false
             )
-
             addFunction(
-              FunSpec.builder(
-                "provide${params.factoryInterfaceClassName.simpleNames.joinToString("_")}"
+              "provide${params.factoryInterfaceClassName.simpleNames.joinToString("_")}"
+            ) {
+              addAnnotation(ClassNames.provides)
+              factoryConstructorParams.forEach { argument ->
+                addParameter(argument.name, argument.typeName.wrapInProvider())
+              }
+              returns(params.factoryInterfaceClassName)
+              addStatement(
+                "return·%T.create(%T.create($args)).get()",
+                params.factoryImplClassName,
+                params.fragmentFactoryClassName
               )
-                .addAnnotation(ClassNames.provides)
-                .applyEach(params.fragmentParams.injectedParams) { argument ->
-                  addParameter(argument.name, argument.typeName.wrapInProvider())
-                }
-                .returns(params.factoryInterfaceClassName)
-                .addStatement(
-                  "return·%T.create(%T.create($args)).get()",
-                  params.factoryImplClassName,
-                  params.fragmentFactoryClassName
-                )
-                .build()
-            )
+            }
           }
           .build()
       )

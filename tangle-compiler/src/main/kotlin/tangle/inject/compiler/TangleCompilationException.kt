@@ -19,6 +19,7 @@ import org.jetbrains.kotlin.codegen.CompilationException
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.com.intellij.psi.PsiNameIdentifierOwner
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor
 import org.jetbrains.kotlin.js.resolve.diagnostics.findPsi
 import org.jetbrains.kotlin.resolve.source.KotlinSourceElement
@@ -29,17 +30,18 @@ class TangleCompilationException(
   cause: Throwable? = null,
   element: PsiElement? = null
 ) : CompilationException(message, cause, element) {
-  constructor(
-    classDescriptor: ClassDescriptor,
-    message: String,
-    cause: Throwable? = null
-  ) : this(message, cause = cause, element = classDescriptor.identifier)
 
   constructor(
     annotationDescriptor: AnnotationDescriptor,
     message: String,
     cause: Throwable? = null
   ) : this(message, cause = cause, element = annotationDescriptor.identifier)
+
+  constructor(
+    declarationDescriptor: DeclarationDescriptor,
+    message: String,
+    cause: Throwable? = null
+  ) : this(message, cause = cause, element = declarationDescriptor.findPsi())
 }
 
 val ClassDescriptor.identifier: PsiElement?
@@ -50,7 +52,7 @@ val AnnotationDescriptor.identifier: PsiElement?
 
 inline fun require(
   value: Boolean,
-  classDescriptor: ClassDescriptor,
+  declarationDescriptor: DeclarationDescriptor,
   cause: Throwable? = null,
   lazyMessage: () -> String
 ) {
@@ -58,13 +60,13 @@ inline fun require(
     returns() implies value
   }
   if (!value) {
-    throw TangleCompilationException(lazyMessage(), cause, classDescriptor.identifier)
+    throw TangleCompilationException(lazyMessage(), cause, declarationDescriptor.findPsi())
   }
 }
 
 inline fun require(
   value: Boolean,
-  classDescriptorPromise: () -> ClassDescriptor,
+  declarationDescriptor: () -> DeclarationDescriptor,
   cause: Throwable? = null,
   lazyMessage: () -> String
 ) {
@@ -72,7 +74,7 @@ inline fun require(
     returns() implies value
   }
   if (!value) {
-    throw TangleCompilationException(lazyMessage(), cause, classDescriptorPromise().identifier)
+    throw TangleCompilationException(lazyMessage(), cause, declarationDescriptor().findPsi())
   }
 }
 

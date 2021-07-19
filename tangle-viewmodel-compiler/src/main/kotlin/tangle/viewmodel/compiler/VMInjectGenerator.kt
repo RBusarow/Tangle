@@ -108,7 +108,7 @@ class VMInjectGenerator : CodeGenerator {
 
     val scopeName = clazz.scope(FqNames.contributesViewModel, module)
 
-    val viewModelConstructorParams = constructor.valueParameters.mapToParameter(module)
+    val viewModelConstructorParams = constructor.valueParameters.mapToParameters(module)
 
     val (injectedParams, savedStateParams) = viewModelConstructorParams
       .partition { !it.isTangleParam }
@@ -147,9 +147,7 @@ class VMInjectGenerator : CodeGenerator {
         )
         .applyEach(providerConstructorParams) { parameter ->
 
-          val qualifierAnnotationSpecs = parameter.annotationEntries
-            .filter { it.isQualifier(module) }
-            .map { it.toAnnotationSpec(module) }
+          val qualifierAnnotationSpecs = parameter.qualifiers
 
           addProperty(
             PropertySpec.builder(parameter.name, parameter.providerTypeName)
@@ -184,8 +182,10 @@ class VMInjectGenerator : CodeGenerator {
     )
   }
 
-  private fun createSavedStateParameter(viewModelConstructorParams: List<Parameter>): Parameter {
-    return Parameter(
+  private fun createSavedStateParameter(
+    viewModelConstructorParams: List<ContructorInjectParameter>
+  ): ContructorInjectParameter {
+    return ContructorInjectParameter(
       name = viewModelConstructorParams.uniqueName("savedStateHandleProvider"),
       typeName = ClassNames.androidxSavedStateHandle,
       providerTypeName = ClassNames.androidxSavedStateHandle.wrapInProvider(),
@@ -193,14 +193,14 @@ class VMInjectGenerator : CodeGenerator {
       isWrappedInProvider = true,
       isWrappedInLazy = false,
       tangleParamName = null,
-      annotationEntries = emptyList()
+      qualifiers = emptyList()
     )
   }
 
   private fun generateGetFunction(
-    savedStateParam: Parameter,
+    savedStateParam: ContructorInjectParameter,
     viewModelClassName: TypeName,
-    params: List<Parameter>
+    params: List<ContructorInjectParameter>
   ): FunSpec {
     val allArguments = params.asArgumentList(
       asProvider = true,
@@ -269,7 +269,7 @@ class VMInjectGenerator : CodeGenerator {
               FunSpec
                 .builder(
                   name = "provide${
-                  generatedFile.viewModelClassName.simpleNames.joinToString("_")
+                    generatedFile.viewModelClassName.simpleNames.joinToString("_")
                   }Key"
                 )
                 .returns(ClassNames.javaClassOutVM)
@@ -338,7 +338,7 @@ class VMInjectGenerator : CodeGenerator {
                   FunSpec
                     .builder(
                       name = "provide${
-                      generatedFile.viewModelClassName.simpleNames.joinToString("_")
+                        generatedFile.viewModelClassName.simpleNames.joinToString("_")
                       }"
                     )
                     .addParameter("provider", generatedFile.providerImplClassName)

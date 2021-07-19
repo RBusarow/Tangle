@@ -44,6 +44,10 @@ tasks.withType<KotlinCompile>()
     }
   }
 
+kotlin {
+  // explicitApi()
+}
+
 tasks.withType<Test> {
   useJUnitPlatform()
 

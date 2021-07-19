@@ -18,20 +18,16 @@ package tangle.inject.compiler
 import com.squareup.anvil.compiler.internal.argumentType
 import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.classDescriptorForType
-import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.FileSpec
-import com.squareup.kotlinpoet.MemberName
+import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
+import org.jetbrains.kotlin.builtins.isFunctionType
+import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.descriptors.findClassAcrossModuleDependencies
-import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.descriptors.PropertyDescriptor
 import org.jetbrains.kotlin.psi.KtAnnotationEntry
-import org.jetbrains.kotlin.resolve.constants.ConstantValue
 import org.jetbrains.kotlin.resolve.constants.EnumValue
 import org.jetbrains.kotlin.resolve.constants.KClassValue
-import org.jetbrains.kotlin.resolve.constants.KClassValue.Value.NormalClass
-import org.jetbrains.kotlin.types.ErrorType
-import org.jetbrains.kotlin.types.KotlinType
+import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 import java.io.ByteArrayOutputStream
 
 inline fun <T : Any, E> T.applyEach(elements: Iterable<E>, block: T.(E) -> Unit): T {
@@ -73,11 +69,46 @@ fun FileSpec.Companion.buildFile(
   .writeToString()
   .addGeneratedByComment()
 
-fun KtAnnotationEntry.toAnnotationSpec(module: ModuleDescriptor): AnnotationSpec {
-  return AnnotationSpec
-    .builder(this.typeReference!!.requireFqName(module).asClassName(module))
-    .apply {
-      qualifierArgumentsOrNull(module)!!.forEach { (name, value) ->
+fun TypeSpec.Builder.addFunction(
+  name: String,
+  block: FunSpec.Builder.() -> Unit
+): TypeSpec.Builder = addFunction(
+  FunSpec.builder(name)
+    .apply { block() }
+    .build()
+)
+
+fun FunSpec(
+  name: String,
+  block: FunSpec.Builder.() -> Unit
+): FunSpec = FunSpec.builder(name)
+  .apply { block() }
+  .build()
+
+fun AnnotationSpec(
+  name: ClassName,
+  block: AnnotationSpec.Builder.() -> Unit
+): AnnotationSpec = AnnotationSpec.builder(name)
+  .apply { block() }
+  .build()
+
+fun List<KtAnnotationEntry>.qualifierAnnotationSpecs(
+  module: ModuleDescriptor
+): List<AnnotationSpec> = mapNotNull {
+
+  val fqName = it.requireFqName(module)
+
+  if (fqName == FqNames.inject) return@mapNotNull null
+
+  val classDescriptor = fqName.requireClassDescriptor(module)
+
+  val qualifierAnnotation = classDescriptor.annotations
+    .findAnnotation(FqNames.qualifier)
+    ?: return@mapNotNull null
+
+  AnnotationSpec(classDescriptor.asClassName()) {
+    qualifierAnnotation.allValueArguments
+      .forEach { (name, value) ->
         when (value) {
           is KClassValue -> {
             val className = value.argumentType(module).classDescriptorForType()
@@ -96,32 +127,29 @@ fun KtAnnotationEntry.toAnnotationSpec(module: ModuleDescriptor): AnnotationSpec
           else -> addMember("${name.asString()} = $value")
         }
       }
-    }
-    .build()
+  }
 }
 
-internal fun ConstantValue<*>.argumentType(module: ModuleDescriptor): KotlinType {
-  val argumentType = getType(module).argumentType()
-  if (argumentType !is ErrorType) return argumentType
+internal fun TypeName.withJvmSuppressWildcardsIfNeeded(
+  callableMemberDescriptor: CallableMemberDescriptor
+): TypeName {
+  // If the parameter is annotated with @JvmSuppressWildcards, then add the annotation
+  // to our type so that this information is forwarded when our Factory is compiled.
+  val hasJvmSuppressWildcards = callableMemberDescriptor.hasAnnotation(FqNames.jvmSuppressWildcards)
 
-  // Handle inner classes explicitly. When resolving the Kotlin type of inner class from
-  // dependencies the compiler might fail. It tries to load my.package.Class$Inner and fails
-  // whereas is should load my.package.Class.Inner.
-  val normalClass = this.value
-  if (normalClass !is NormalClass) return argumentType
+  // Add the @JvmSuppressWildcards annotation even for simple generic return types like
+  // Set<String>. This avoids some edge cases where Dagger chokes.
+  val isGenericType = callableMemberDescriptor.typeParameters.isNotEmpty()
 
-  val classId = normalClass.value.classId
+  val type = callableMemberDescriptor.safeAs<PropertyDescriptor>()?.type
+    ?: callableMemberDescriptor.valueParameters.first().type
 
-  return module
-    .findClassAcrossModuleDependencies(
-      classId = ClassId(
-        classId.packageFqName,
-        FqName(classId.relativeClassName.asString().replace('$', '.')),
-        false
-      )
-    )
-    ?.defaultType
-    ?: throw TangleCompilationException(
-      "Couldn't resolve class across module dependencies for class ID: $classId"
-    )
+  // Same for functions.
+  val isFunctionType = type.isFunctionType
+
+  return when {
+    hasJvmSuppressWildcards || isGenericType -> this.jvmSuppressWildcards()
+    isFunctionType -> this.jvmSuppressWildcards()
+    else -> this
+  }
 }
