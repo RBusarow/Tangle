@@ -3,6 +3,7 @@ package tangle.inject.tests
 import com.tschuchort.compiletesting.KotlinCompilation.ExitCode.COMPILATION_ERROR
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.TestFactory
 import tangle.inject.test.utils.*
 import javax.inject.Provider
@@ -472,6 +473,77 @@ class FragmentInjectGeneratorTest : BaseTest() {
   }
 
   @TestFactory
+  fun `factory performs member injection of dagger lazy property`() = test {
+    compile(
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.TangleParam
+      import javax.inject.Inject
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor() : Fragment() {
+
+        @Inject lateinit var names: dagger.Lazy<List<String>>
+
+        @FragmentInjectFactory
+        interface Factory {
+          fun create(
+            @TangleParam("name") name: String
+          ): MyFragment
+        }
+      }
+     """
+    ) {
+      val factoryClass = myFragmentClass.factoryClass()
+
+      val constructor = factoryClass.declaredConstructors.single()
+
+      val factoryInstance = constructor.newInstance(Provider { listOf("name") })
+
+      factoryClass.getterFunction().invoke(factoryInstance)::class.java shouldBe myFragmentClass
+
+      factoryClass.createStatic(Provider { listOf("name") })::class.java shouldBe factoryClass
+      factoryClass.newInstanceStatic()::class.java shouldBe myFragmentClass
+    }
+  }
+
+  @Disabled // blocked by Anvil bug https://github.com/square/anvil/issues/343
+  @TestFactory
+  fun `factory performs member injection of dagger lazy lateinit var in super class`() = test {
+    compile(
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.TangleParam
+      import javax.inject.Inject
+
+      abstract class BaseFragment : Fragment() {
+        @Inject lateinit var names: dagger.Lazy<List<String>>
+      }
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @Inject constructor() : BaseFragment()
+     """
+    ) {
+      val factoryClass = myFragmentClass.factoryClass()
+
+      val constructor = factoryClass.declaredConstructors.single()
+
+      val factoryInstance = constructor.newInstance(Provider { listOf("name") })
+
+      factoryClass.getterFunction().invoke(factoryInstance)::class.java shouldBe myFragmentClass
+
+      factoryClass.createStatic(Provider { listOf("name") })::class.java shouldBe factoryClass
+      factoryClass.newInstanceStatic(dagger.Lazy { listOf("name") })::class.java shouldBe myFragmentClass
+    }
+  }
+
+  @TestFactory
   fun `factory is generated with only TangleParam arguments`() = test {
     compile(
       """
@@ -537,6 +609,40 @@ class FragmentInjectGeneratorTest : BaseTest() {
 
       factoryClass.createStatic(Provider { 1 })::class.java shouldBe factoryClass
       factoryClass.newInstanceStatic(1)::class.java shouldBe myFragmentClass
+    }
+  }
+
+  @TestFactory
+  fun `factory is generated with a dagger Lazy argument`() = test {
+    compile(
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor(
+        names: dagger.Lazy<List<String>>
+      ) : Fragment(){
+
+        @FragmentInjectFactory
+        interface Factory {
+          fun create(): MyFragment
+        }
+      }
+     """
+    ) {
+      val factoryClass = myFragmentClass.factoryClass()
+
+      val constructor = factoryClass.declaredConstructors.single()
+
+      val factoryInstance = constructor.newInstance(Provider { listOf("name") })
+
+      factoryClass.getterFunction().invoke(factoryInstance)::class.java shouldBe myFragmentClass
+
+      factoryClass.createStatic(Provider { listOf("name") })::class.java shouldBe factoryClass
+      factoryClass.newInstanceStatic(dagger.Lazy { listOf("name") })::class.java shouldBe myFragmentClass
     }
   }
 

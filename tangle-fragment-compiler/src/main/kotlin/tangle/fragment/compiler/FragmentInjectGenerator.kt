@@ -160,7 +160,11 @@ class FragmentInjectGenerator : CodeGenerator {
     val newInstanceFunction = FunSpec("newInstance") {
       addAnnotation(ClassNames.jvmStatic)
       fragmentParams.constructorParams.forEach { param ->
-        addParameter(param.name, param.typeName)
+        val paramType = when {
+          param.isWrappedInLazy -> param.lazyTypeName
+          else -> param.typeName
+        }
+        addParameter(param.name, paramType)
       }
       returns(fragmentParams.fragmentClassName)
 

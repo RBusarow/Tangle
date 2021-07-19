@@ -4,6 +4,7 @@ package tangle.inject.compiler
 
 import com.squareup.anvil.compiler.internal.argumentType
 import com.squareup.anvil.compiler.internal.asClassName
+import com.squareup.anvil.compiler.internal.asTypeName
 import com.squareup.anvil.compiler.internal.classDescriptorForType
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
@@ -31,6 +32,10 @@ import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 fun ClassDescriptor.isFragment() = defaultType
   .supertypes()
   .any { it.classDescriptorForType().fqNameSafe == FqNames.androidxFragment }
+
+fun ClassDescriptor.isViewModel() = defaultType
+  .supertypes()
+  .any { it.classDescriptorForType().fqNameSafe == FqNames.androidxViewModel }
 
 fun ClassDescriptor.memberInjectedParameters(
   module: ModuleDescriptor
@@ -92,8 +97,6 @@ fun PropertyDescriptor.hasAnnotation(annotationFqName: FqName): Boolean {
 
 fun PropertyDescriptor.isNullable() = type.nullability() == NULLABLE
 fun KotlinType.isNullable() = nullability() == NULLABLE
-fun KotlinType.toClassName(): ClassName = classDescriptorForType()
-  .asClassName()
 
 fun KotlinType.fqNameOrNull(): FqName? = classDescriptorForType()
   .fqNameOrNull()
@@ -130,31 +133,6 @@ fun ValueParameterDescriptor.requireTangleParamName(): String {
       this,
       "could not find a @TangleParam annotation for parameter `${name.asString()}`"
     )
-}
-
-fun AnnotationDescriptor.toAnnotationSpec(
-  module: ModuleDescriptor
-): AnnotationSpec = AnnotationSpec(type.toClassName()) {
-  qualifierArgumentsOrNull()
-    ?.forEach { (name, value) ->
-      when (value) {
-        is KClassValue -> {
-          val className = value.argumentType(module).classDescriptorForType()
-            .asClassName()
-          addMember("${name.asString()} = %T::class", className)
-        }
-        is EnumValue -> {
-          val enumMember = MemberName(
-            enclosingClassName = value.enumClassId.asSingleFqName()
-              .asClassName(module),
-            simpleName = value.enumEntryName.asString()
-          )
-          addMember("${name.asString()} = %M", enumMember)
-        }
-        // String, int, long, ... other primitives.
-        else -> addMember("${name.asString()} = $value")
-      }
-    }
 }
 
 fun List<AnnotationDescriptor>.qualifierAnnotationSpecs(
@@ -213,7 +191,7 @@ fun List<CallableMemberDescriptor>.mapToParameters(
     val type = callableMemberDescriptor.safeAs<PropertyDescriptor>()?.type
       ?: callableMemberDescriptor.valueParameters.first().type
 
-    val typeFqName = callableMemberDescriptor.fqNameOrNull()
+    val typeFqName = type.fqNameOrNull()
 
     val isWrappedInProvider = typeFqName == FqNames.provider
     val isWrappedInLazy = typeFqName == FqNames.daggerLazy
@@ -221,15 +199,13 @@ fun List<CallableMemberDescriptor>.mapToParameters(
     val annotations = callableMemberDescriptor.annotations.toList()
 
     val typeName = when {
-      type.isNullable() -> type.toClassName()
+      type.isNullable() -> type.asTypeName()
         .copy(nullable = true)
 
       isWrappedInLazy || isWrappedInProvider ->
-        callableMemberDescriptor.typeParameters
-          .first()
-          .boundClassName()
+        type.argumentType().asTypeName()
 
-      else -> type.toClassName()
+      else -> type.asTypeName()
     }.withJvmSuppressWildcardsIfNeeded(callableMemberDescriptor)
 
     val tangleParamName = callableMemberDescriptor.tangleParamNameOrNull()

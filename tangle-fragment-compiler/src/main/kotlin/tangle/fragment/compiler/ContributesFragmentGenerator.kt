@@ -114,7 +114,11 @@ class ContributesFragmentGenerator : CodeGenerator {
               .addAnnotation(ClassNames.provides)
               .addAnnotation(ClassNames.tangleFragmentProviderMap)
               .applyEach(binding.injectedParams) { argument ->
-                addParameter(argument.name, argument.typeName)
+                val paramType = when {
+                  argument.isWrappedInLazy -> argument.lazyTypeName
+                  else -> argument.typeName
+                }
+                addParameter(argument.name, paramType)
               }
               .returns(binding.fragmentClassName)
               .addStatement("return·%T.newInstance($args)", factoryImplClassName)

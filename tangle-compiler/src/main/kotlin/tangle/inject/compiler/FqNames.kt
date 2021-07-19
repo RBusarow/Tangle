@@ -28,10 +28,13 @@ import javax.inject.Qualifier
 object FqNames {
 
   val vmInject = FqName("tangle.viewmodel.VMInject")
+  val vmInjectFactory = FqName("tangle.viewmodel.VMInjectFactory")
+  val contributesViewModel = FqName("tangle.viewmodel.ContributesViewModel")
+
   val fragmentInject = FqName("tangle.fragment.FragmentInject")
   val fragmentInjectFactory = FqName("tangle.fragment.FragmentInjectFactory")
-  val contributesViewModel = FqName("tangle.viewmodel.ContributesViewModel")
   val contributesFragment = FqName("tangle.fragment.ContributesFragment")
+
   val tangleParam = FqName("tangle.inject.TangleParam")
 
   val mergeComponent = MergeComponent::class.fqName
@@ -50,4 +53,5 @@ object FqNames {
   val sizeF = FqName("android.util.SizeF")
 
   val androidxFragment = FqName("androidx.fragment.app.Fragment")
+  val androidxViewModel = FqName("androidx.lifecycle.ViewModel")
 }
