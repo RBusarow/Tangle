@@ -23,8 +23,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.SERVICE_TOKEN }}
-          # fetch all branches -- necessary in order for changedModules to work
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           fetch-depth: 0
 
       - name: Set up JDK
@@ -42,8 +42,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.SERVICE_TOKEN }}
-          # fetch all branches -- necessary in order for changedModules to work
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           fetch-depth: 0
 
       - name: Set up JDK
@@ -79,8 +79,8 @@ jobs:
     steps:
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.SERVICE_TOKEN }}
-          # fetch all branches -- necessary in order for changedModules to work
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           fetch-depth: 0
 
       - name: Set up JDK
@@ -99,8 +99,8 @@ jobs:
 
       - uses: actions/checkout@v2
         with:
-          token: ${{ secrets.SERVICE_TOKEN }}
-          # fetch all branches -- necessary in order for changedModules to work
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           fetch-depth: 0
 
       - name: Set up JDK
