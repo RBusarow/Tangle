@@ -92,7 +92,9 @@ internal fun KtAnnotationEntry.tangleParamName(): String? {
     ?.text
 }
 
-fun List<KtCallableDeclaration>.mapToParameters(module: ModuleDescriptor): List<Parameter> =
+fun List<KtCallableDeclaration>.mapToParameters(
+  module: ModuleDescriptor
+): List<ContructorInjectParameter> =
   mapIndexed { index, parameter ->
     val typeElement = parameter.typeReference?.typeElement
     val typeFqName = typeElement?.fqNameOrNull(module)
@@ -127,7 +129,7 @@ fun List<KtCallableDeclaration>.mapToParameters(module: ModuleDescriptor): List<
 
     val qualifiers = annotations.qualifierAnnotationSpecs(module)
 
-    Parameter(
+    ContructorInjectParameter(
       name = parameter.name ?: "param$index",
       typeName = typeName,
       providerTypeName = typeName.wrapInProvider(),

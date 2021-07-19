@@ -182,8 +182,10 @@ class VMInjectGenerator : CodeGenerator {
     )
   }
 
-  private fun createSavedStateParameter(viewModelConstructorParams: List<Parameter>): Parameter {
-    return Parameter(
+  private fun createSavedStateParameter(
+    viewModelConstructorParams: List<ContructorInjectParameter>
+  ): ContructorInjectParameter {
+    return ContructorInjectParameter(
       name = viewModelConstructorParams.uniqueName("savedStateHandleProvider"),
       typeName = ClassNames.androidxSavedStateHandle,
       providerTypeName = ClassNames.androidxSavedStateHandle.wrapInProvider(),
@@ -196,9 +198,9 @@ class VMInjectGenerator : CodeGenerator {
   }
 
   private fun generateGetFunction(
-    savedStateParam: Parameter,
+    savedStateParam: ContructorInjectParameter,
     viewModelClassName: TypeName,
-    params: List<Parameter>
+    params: List<ContructorInjectParameter>
   ): FunSpec {
     val allArguments = params.asArgumentList(
       asProvider = true,
@@ -267,7 +269,7 @@ class VMInjectGenerator : CodeGenerator {
               FunSpec
                 .builder(
                   name = "provide${
-                  generatedFile.viewModelClassName.simpleNames.joinToString("_")
+                    generatedFile.viewModelClassName.simpleNames.joinToString("_")
                   }Key"
                 )
                 .returns(ClassNames.javaClassOutVM)
@@ -336,7 +338,7 @@ class VMInjectGenerator : CodeGenerator {
                   FunSpec
                     .builder(
                       name = "provide${
-                      generatedFile.viewModelClassName.simpleNames.joinToString("_")
+                        generatedFile.viewModelClassName.simpleNames.joinToString("_")
                       }"
                     )
                     .addParameter("provider", generatedFile.providerImplClassName)

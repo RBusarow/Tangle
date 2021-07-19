@@ -36,7 +36,7 @@ abstract class BaseTest : HermitJUnit5() {
     this.testInfo = testInfo
   }
 
-  inline fun test(crossinline action: TestScope.() -> Unit) = listOf(true/*, false*/)
+  inline fun test(crossinline action: TestScope.() -> Unit) = listOf(true, false)
     .map { useAnvilFactoryGen ->
       val name = if (useAnvilFactoryGen) "anvil" else "dagger"
       DynamicTest.dynamicTest(name) {

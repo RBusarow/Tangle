@@ -21,18 +21,13 @@ import com.squareup.anvil.compiler.internal.classDescriptorForType
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import org.jetbrains.kotlin.builtins.isFunctionType
+import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.descriptors.PropertyDescriptor
-import org.jetbrains.kotlin.descriptors.findClassAcrossModuleDependencies
-import org.jetbrains.kotlin.name.ClassId
-import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtAnnotationEntry
-import org.jetbrains.kotlin.resolve.constants.ConstantValue
 import org.jetbrains.kotlin.resolve.constants.EnumValue
 import org.jetbrains.kotlin.resolve.constants.KClassValue
-import org.jetbrains.kotlin.resolve.constants.KClassValue.Value.NormalClass
-import org.jetbrains.kotlin.types.ErrorType
-import org.jetbrains.kotlin.types.KotlinType
+import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 import java.io.ByteArrayOutputStream
 
 inline fun <T : Any, E> T.applyEach(elements: Iterable<E>, block: T.(E) -> Unit): T {
@@ -135,73 +130,22 @@ fun List<KtAnnotationEntry>.qualifierAnnotationSpecs(
   }
 }
 
-fun KtAnnotationEntry.toAnnotationSpec(module: ModuleDescriptor): AnnotationSpec {
-  return AnnotationSpec
-    .builder(this.typeReference!!.requireFqName(module).asClassName(module))
-    .apply {
-      qualifierArgumentsOrNull(module)
-        ?.forEach { (name, value) ->
-          when (value) {
-            is KClassValue -> {
-              val className = value.argumentType(module).classDescriptorForType()
-                .asClassName()
-              addMember("${name.asString()} = %T::class", className)
-            }
-            is EnumValue -> {
-              val enumMember = MemberName(
-                enclosingClassName = value.enumClassId.asSingleFqName()
-                  .asClassName(module),
-                simpleName = value.enumEntryName.asString()
-              )
-              addMember("${name.asString()} = %M", enumMember)
-            }
-            // String, int, long, ... other primitives.
-            else -> addMember("${name.asString()} = $value")
-          }
-        }
-    }
-    .build()
-}
-
-internal fun ConstantValue<*>.argumentType(module: ModuleDescriptor): KotlinType {
-  val argumentType = getType(module).argumentType()
-  if (argumentType !is ErrorType) return argumentType
-
-  // Handle inner classes explicitly. When resolving the Kotlin type of inner class from
-  // dependencies the compiler might fail. It tries to load my.package.Class$Inner and fails
-  // whereas is should load my.package.Class.Inner.
-  val normalClass = this.value
-  if (normalClass !is NormalClass) return argumentType
-
-  val classId = normalClass.value.classId
-
-  return module
-    .findClassAcrossModuleDependencies(
-      classId = ClassId(
-        classId.packageFqName,
-        FqName(classId.relativeClassName.asString().replace('$', '.')),
-        false
-      )
-    )
-    ?.defaultType
-    ?: throw TangleCompilationException(
-      "Couldn't resolve class across module dependencies for class ID: $classId"
-    )
-}
-
 internal fun TypeName.withJvmSuppressWildcardsIfNeeded(
-  propertyDescriptor: PropertyDescriptor
+  callableMemberDescriptor: CallableMemberDescriptor
 ): TypeName {
   // If the parameter is annotated with @JvmSuppressWildcards, then add the annotation
   // to our type so that this information is forwarded when our Factory is compiled.
-  val hasJvmSuppressWildcards = propertyDescriptor.hasAnnotation(FqNames.jvmSuppressWildcards)
+  val hasJvmSuppressWildcards = callableMemberDescriptor.hasAnnotation(FqNames.jvmSuppressWildcards)
 
   // Add the @JvmSuppressWildcards annotation even for simple generic return types like
   // Set<String>. This avoids some edge cases where Dagger chokes.
-  val isGenericType = propertyDescriptor.typeParameters.isNotEmpty()
+  val isGenericType = callableMemberDescriptor.typeParameters.isNotEmpty()
+
+  val type = callableMemberDescriptor.safeAs<PropertyDescriptor>()?.type
+    ?: callableMemberDescriptor.valueParameters.first().type
 
   // Same for functions.
-  val isFunctionType = propertyDescriptor.type.isFunctionType
+  val isFunctionType = type.isFunctionType
 
   return when {
     hasJvmSuppressWildcards || isGenericType -> this.jvmSuppressWildcards()

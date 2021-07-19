@@ -82,7 +82,7 @@ class FragmentInjectGenerator : CodeGenerator {
 
       when (params) {
         is Factory -> createFactoryImplementation(codeGenDir, params, params.fragmentParams, module)
-        is Fragment -> createFragmentFactory(codeGenDir, module, params)
+        is Fragment -> createFragmentFactory(codeGenDir, params)
       }
     }
 
@@ -108,10 +108,10 @@ class FragmentInjectGenerator : CodeGenerator {
     return generated + daggerModules
   }
 
+  @Suppress("ComplexMethod")
   private fun createFragmentFactory(
     codeGenDir: File,
-    module: ModuleDescriptor,
-    fragmentParams: FragmentInjectParams.Fragment
+    fragmentParams: Fragment
   ): GeneratedFile {
     val packageName = fragmentParams.packageName
     val fragmentFactoryClassNameString = fragmentParams.fragmentFactoryClassNameString
@@ -213,13 +213,9 @@ class FragmentInjectGenerator : CodeGenerator {
 
             val memberInjectParameters = fragmentParams.memberInjectedParams
 
-            val memberInjectorClassName =
-              "${fragmentParams.fragmentClassSimpleName}_MembersInjector"
-            val memberInjectorClass = ClassName(packageName, memberInjectorClassName)
-            memberInjectParameters.forEachIndexed { index, parameter ->
+            memberInjectParameters.forEach { parameter ->
 
-              val property = memberInjectParameters[index]
-              val propertyName = property.name
+              val propertyName = parameter.name
               val functionName = "inject${propertyName.capitalize()}"
 
               val param = when {
@@ -228,7 +224,7 @@ class FragmentInjectGenerator : CodeGenerator {
                 else -> parameter.name + ".get()"
               }
 
-              addStatement("%T.$functionName(instance, $param)", memberInjectorClass)
+              addStatement("%T.$functionName(instance, $param)", parameter.memberInjectorClass)
             }
             addStatement("return instance")
           }

@@ -183,7 +183,7 @@ class ContributesFragmentGenerator : CodeGenerator {
   }
 
   internal data class Binding(
-    val injectedParams: List<Parameter>,
+    val injectedParams: List<ContructorInjectParameter>,
     val packageName: String,
     val scopeName: FqName,
     val fragmentClass: KtClassOrObject,

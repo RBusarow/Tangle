@@ -340,7 +340,10 @@ class FragmentInjectGeneratorTest : BaseTest() {
     ) {
       val factoryClass = myFragmentClass.factoryClass()
 
-      val factoryInstance = factoryClass.createStatic(Provider { "id value" })
+      val factoryInstance = factoryClass.createStatic(
+        Provider { "baseId value" },
+        Provider { "id value" }
+      )
 
       factoryInstance::class.java shouldBe factoryClass
 
@@ -351,11 +354,15 @@ class FragmentInjectGeneratorTest : BaseTest() {
       myFragmentClass.methods
         .first { it.name == "getId" }
         .invoke(fragment) shouldBe "id value"
+
+      myFragmentClass.methods
+        .first { it.name == "getBaseId" }
+        .invoke(fragment) shouldBe "baseId value"
     }
   }
 
   @TestFactory
-  fun `factory performs member injection of nullable var in super class`() = test {
+  fun `factory performs member injection of lateinit var in intermediary super class`() = test {
     compile(
       """
       package tangle.inject.tests
@@ -365,12 +372,16 @@ class FragmentInjectGeneratorTest : BaseTest() {
       import tangle.inject.TangleParam
       import javax.inject.Inject
 
-      abstract class BaseFragment : Fragment() {
-        @Inject var baseId: String? = null
+      abstract class BaseFragment : Fragment()
+
+      abstract class MidFragment : BaseFragment() {
+        @Inject lateinit var baseId: String
       }
 
       @ContributesFragment(Unit::class)
-      class MyFragment @FragmentInject constructor() : BaseFragment() {
+      class MyFragment @FragmentInject constructor(
+        val number: Int
+      ) : MidFragment() {
 
         @Inject lateinit var id: String
 
@@ -385,7 +396,11 @@ class FragmentInjectGeneratorTest : BaseTest() {
     ) {
       val factoryClass = myFragmentClass.factoryClass()
 
-      val factoryInstance = factoryClass.createStatic(Provider { "id value" })
+      val factoryInstance = factoryClass.createStatic(
+        Provider { 23 },
+        Provider { "baseId value" },
+        Provider { "id value" }
+      )
 
       factoryInstance::class.java shouldBe factoryClass
 
@@ -396,11 +411,15 @@ class FragmentInjectGeneratorTest : BaseTest() {
       myFragmentClass.methods
         .first { it.name == "getId" }
         .invoke(fragment) shouldBe "id value"
+
+      myFragmentClass.methods
+        .first { it.name == "getBaseId" }
+        .invoke(fragment) shouldBe "baseId value"
     }
   }
 
   @TestFactory
-  fun `factory performs member injection of Delegates-notNull var in super class`() = test {
+  fun `factory performs member injection of lateinit var in grand-super class`() = test {
     compile(
       """
       package tangle.inject.tests
@@ -409,14 +428,15 @@ class FragmentInjectGeneratorTest : BaseTest() {
       import tangle.fragment.*
       import tangle.inject.TangleParam
       import javax.inject.Inject
-      import kotlin.properties.Delegates
 
       abstract class BaseFragment : Fragment() {
-        @Inject var baseId: String by Delegates.notNull()
+        @Inject lateinit var baseId: String
       }
 
+      abstract class MidFragment : BaseFragment()
+
       @ContributesFragment(Unit::class)
-      class MyFragment @FragmentInject constructor() : BaseFragment() {
+      class MyFragment @FragmentInject constructor() : MidFragment() {
 
         @Inject lateinit var id: String
 
@@ -431,7 +451,9 @@ class FragmentInjectGeneratorTest : BaseTest() {
     ) {
       val factoryClass = myFragmentClass.factoryClass()
 
-      val factoryInstance = factoryClass.createStatic(Provider { "id value" })
+      val factoryInstance = factoryClass.createStatic(
+        Provider { "baseId value" }, Provider { "id value" }
+      )
 
       factoryInstance::class.java shouldBe factoryClass
 
@@ -442,6 +464,10 @@ class FragmentInjectGeneratorTest : BaseTest() {
       myFragmentClass.methods
         .first { it.name == "getId" }
         .invoke(fragment) shouldBe "id value"
+
+      myFragmentClass.methods
+        .first { it.name == "getBaseId" }
+        .invoke(fragment) shouldBe "baseId value"
     }
   }
 

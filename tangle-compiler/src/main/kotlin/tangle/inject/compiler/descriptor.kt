@@ -1,3 +1,5 @@
+@file:Suppress("TooManyFunctions")
+
 package tangle.inject.compiler
 
 import com.squareup.anvil.compiler.internal.argumentType
@@ -8,38 +10,78 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.MemberName
 import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor
-import org.jetbrains.kotlin.incremental.components.NoLookupLocation.FROM_BACKEND
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.annotations.argumentValue
 import org.jetbrains.kotlin.resolve.constants.EnumValue
 import org.jetbrains.kotlin.resolve.constants.KClassValue
 import org.jetbrains.kotlin.resolve.descriptorUtil.annotationClass
 import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameOrNull
 import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameSafe
+import org.jetbrains.kotlin.resolve.descriptorUtil.getAllSuperClassifiers
+import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
 import org.jetbrains.kotlin.resolve.scopes.MemberScope
 import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.types.typeUtil.TypeNullability.NULLABLE
 import org.jetbrains.kotlin.types.typeUtil.nullability
 import org.jetbrains.kotlin.types.typeUtil.representativeUpperBound
 import org.jetbrains.kotlin.types.typeUtil.supertypes
+import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 fun ClassDescriptor.isFragment() = defaultType
   .supertypes()
   .any { it.classDescriptorForType().fqNameSafe == FqNames.androidxFragment }
 
-fun ClassDescriptor.memberInjectedProperties(): List<PropertyDescriptor> =
-  unsubstitutedMemberScope.memberInjectedProperties()
+fun ClassDescriptor.memberInjectedParameters(
+  module: ModuleDescriptor
+): List<MemberInjectParameter> =
+  memberInjectedProperties(module)
+    .mapToParameters(module, true)
 
 fun ClassDescriptor.memberInjectedProperties(
   module: ModuleDescriptor
-): List<Parameter> =
-  unsubstitutedMemberScope.memberInjectedProperties()
-    .mapToParameters(module)
+): List<CallableMemberDescriptor> {
 
-fun MemberScope.memberInjectedProperties(): List<PropertyDescriptor> =
-  getVariableNames()
-    .flatMap { getContributedVariables(it, FROM_BACKEND) }
+  val names = mutableListOf<String>()
+
+  return getAllSuperClassifiers()
+    // no point in parsing android/androidx classes for injected params, so skip them
+    .filter { it.containingPackage()?.asString()?.startsWith("android") == false }
+    .toList()
+    .reversed()
+    .fold(mutableMapOf<Name, CallableMemberDescriptor>()) { acc, classifierDescriptor ->
+
+      classifierDescriptor.fqNameSafe
+        .requireClassDescriptor(module)
+        .unsubstitutedMemberScope
+        .also {
+
+          val t = it.getContributedDescriptors(DescriptorKindFilter.VARIABLES)
+          names.addAll(t.map { it.toString() })
+        }
+        .memberInjectedProperties()
+        .forEach {
+          if (!acc.contains(it.name)) {
+            acc[it.name] = it
+          }
+        }
+      acc
+    }
+    .values
+    .toList()
+}
+
+fun MemberScope.memberInjectedProperties(): List<PropertyDescriptor> {
+
+  return getContributedDescriptors(DescriptorKindFilter.VARIABLES)
+    .filterIsInstance<PropertyDescriptor>()
     .filter { it.hasAnnotation(FqNames.inject) }
+}
+
+fun CallableMemberDescriptor.hasAnnotation(annotationFqName: FqName): Boolean {
+
+  return annotations.hasAnnotation(annotationFqName)
+}
 
 fun PropertyDescriptor.hasAnnotation(annotationFqName: FqName): Boolean {
 
@@ -60,14 +102,14 @@ fun TypeParameterDescriptor.boundClassName(): ClassName = representativeUpperBou
   .classDescriptorForType()
   .asClassName()
 
-fun PropertyDescriptor.tangleParamNameOrNull(): String? {
+fun CallableMemberDescriptor.tangleParamNameOrNull(): String? {
   return annotations.findAnnotation(FqNames.tangleParam)
     ?.argumentValue("name")
     ?.value
     ?.toString()
 }
 
-fun PropertyDescriptor.requireTangleParamName(): String {
+fun CallableMemberDescriptor.requireTangleParamName(): String {
   return tangleParamNameOrNull()
     ?: throw TangleCompilationException(
       this,
@@ -112,7 +154,6 @@ fun AnnotationDescriptor.toAnnotationSpec(
         // String, int, long, ... other primitives.
         else -> addMember("${name.asString()} = $value")
       }
-
     }
 }
 
@@ -153,8 +194,6 @@ fun List<AnnotationDescriptor>.qualifierAnnotationSpecs(
   }
 }
 
-fun AnnotationDescriptor.isQualifier() = qualifierArgumentsOrNull() != null
-
 fun AnnotationDescriptor.qualifierArgumentsOrNull() = type
   .classDescriptorForType()
   // Often entries are annotated with @Inject, in this case we know it's not a qualifier and we
@@ -164,41 +203,63 @@ fun AnnotationDescriptor.qualifierArgumentsOrNull() = type
   ?.findAnnotation(FqNames.qualifier)
   ?.allValueArguments
 
-fun List<PropertyDescriptor>.mapToParameters(
-  module: ModuleDescriptor
-) = mapIndexed { index, propertyDescriptor ->
+fun List<CallableMemberDescriptor>.mapToParameters(
+  module: ModuleDescriptor,
+  asMembers: Boolean = false
+): List<MemberInjectParameter> {
 
-  val type = propertyDescriptor.type
-  val typeFqName = propertyDescriptor.fqNameOrNull()
+  return mapIndexed { index, callableMemberDescriptor ->
 
-  val isWrappedInProvider = typeFqName == FqNames.provider
-  val isWrappedInLazy = typeFqName == FqNames.daggerLazy
+    val type = callableMemberDescriptor.safeAs<PropertyDescriptor>()?.type
+      ?: callableMemberDescriptor.valueParameters.first().type
 
-  val annotations = propertyDescriptor.annotations.toList()
+    val typeFqName = callableMemberDescriptor.fqNameOrNull()
 
-  val typeName = when {
-    propertyDescriptor.isNullable() -> type.toClassName()
-      .copy(nullable = true)
+    val isWrappedInProvider = typeFqName == FqNames.provider
+    val isWrappedInLazy = typeFqName == FqNames.daggerLazy
 
-    isWrappedInLazy || isWrappedInProvider -> propertyDescriptor.typeParameters
-      .first()
-      .boundClassName()
+    val annotations = callableMemberDescriptor.annotations.toList()
 
-    else -> type.toClassName()
-  }.withJvmSuppressWildcardsIfNeeded(propertyDescriptor)
+    val typeName = when {
+      type.isNullable() -> type.toClassName()
+        .copy(nullable = true)
 
-  val tangleParamName = propertyDescriptor.tangleParamNameOrNull()
+      isWrappedInLazy || isWrappedInProvider ->
+        callableMemberDescriptor.typeParameters
+          .first()
+          .boundClassName()
 
-  val qualifiers = annotations.qualifierAnnotationSpecs(module)
+      else -> type.toClassName()
+    }.withJvmSuppressWildcardsIfNeeded(callableMemberDescriptor)
 
-  Parameter(
-    name = propertyDescriptor.name.asString(),
-    typeName = typeName,
-    providerTypeName = typeName.wrapInProvider(),
-    lazyTypeName = typeName.wrapInLazy(),
-    isWrappedInProvider = isWrappedInProvider,
-    isWrappedInLazy = isWrappedInLazy,
-    tangleParamName = tangleParamName,
-    qualifiers = qualifiers
-  )
+    val tangleParamName = callableMemberDescriptor.tangleParamNameOrNull()
+
+    val qualifiers = annotations.qualifierAnnotationSpecs(module)
+
+    val containingDeclaration = callableMemberDescriptor.containingDeclaration
+    val packageName = containingDeclaration.requireContainingPackage().asString()
+
+    val containingClass = containingDeclaration.fqNameSafe.asClassName(module)
+    val memberInjectorClassName =
+      "${containingClass}_MembersInjector"
+    val memberInjectorClass = ClassName(packageName, memberInjectorClassName)
+
+    MemberInjectParameter(
+      name = callableMemberDescriptor.name.asString(),
+      typeName = typeName,
+      providerTypeName = typeName.wrapInProvider(),
+      lazyTypeName = typeName.wrapInLazy(),
+      isWrappedInProvider = isWrappedInProvider,
+      isWrappedInLazy = isWrappedInLazy,
+      tangleParamName = tangleParamName,
+      qualifiers = qualifiers,
+      memberInjectorClass = memberInjectorClass
+    )
+  }
 }
+
+fun DeclarationDescriptor.requireContainingPackage() = containingPackage()
+  ?: throw TangleCompilationException(
+    this,
+    "Cannot determine the package name for ${fqNameSafe.asString()}."
+  )

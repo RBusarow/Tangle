@@ -33,8 +33,8 @@ internal sealed class FragmentInjectParams {
     val fragmentFactoryClassNameString: String,
     val fragmentFactoryClassName: ClassName,
     val constructor: KtConstructor<*>,
-    val constructorParams: List<Parameter>,
-    val memberInjectedParams: List<Parameter>,
+    val constructorParams: List<ContructorInjectParameter>,
+    val memberInjectedParams: List<MemberInjectParameter>,
     val typeParameters: List<TypeVariableName>,
     val fragmentClassSimpleName: String,
     val fragmentTypeName: TypeName
@@ -56,7 +56,7 @@ internal sealed class FragmentInjectParams {
 
         val scopeName = fragmentClass.scope(FqNames.contributesFragment, module)
 
-        val memberInjectParameters = fragmentClassDescriptor.memberInjectedProperties(module)
+        val memberInjectParameters = fragmentClassDescriptor.memberInjectedParameters(module)
 
         val allFragmentConstructorParams = constructor.valueParameters
           .mapToParameters(module)
