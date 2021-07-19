@@ -269,7 +269,7 @@ class VMInjectGenerator : CodeGenerator {
               FunSpec
                 .builder(
                   name = "provide${
-                    generatedFile.viewModelClassName.simpleNames.joinToString("_")
+                  generatedFile.viewModelClassName.simpleNames.joinToString("_")
                   }Key"
                 )
                 .returns(ClassNames.javaClassOutVM)
@@ -338,7 +338,7 @@ class VMInjectGenerator : CodeGenerator {
                   FunSpec
                     .builder(
                       name = "provide${
-                        generatedFile.viewModelClassName.simpleNames.joinToString("_")
+                      generatedFile.viewModelClassName.simpleNames.joinToString("_")
                       }"
                     )
                     .addParameter("provider", generatedFile.providerImplClassName)
