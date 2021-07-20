@@ -70,7 +70,7 @@ dependencies {
   dependencySync("com.google.auto.service:auto-service:1.0")
   dependencySync("com.google.auto:auto-common:1.1")
   dependencySync("com.google.dagger:dagger-compiler:2.38")
-  dependencySync("com.google.dagger:dagger:2.37")
+  dependencySync("com.google.dagger:dagger:2.38")
   dependencySync("com.jakewharton.timber:timber:4.7.1")
   dependencySync("com.rickbusarow.hermit:hermit-core:0.9.5")
   dependencySync("com.rickbusarow.hermit:hermit-coroutines:0.9.5")
