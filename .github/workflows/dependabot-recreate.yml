@@ -1,6 +1,5 @@
-name: "Auto-recreate Dependabot merge conflicts"
+name: "check for Dependabot merge conflicts"
 on:
-  push:
   pull_request_target:
     types: [synchronize]
 
