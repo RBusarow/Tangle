@@ -4,7 +4,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import javax.inject.Provider
 
-class TangleFragmentFactory(
+public class TangleFragmentFactory(
   private val providerMap: Map<Class<out Fragment>, Provider<@JvmSuppressWildcards Fragment>>,
   @TangleFragmentProviderMap
   private val assistedProviderMap: Map<Class<out Fragment>, Provider<@JvmSuppressWildcards Fragment>>

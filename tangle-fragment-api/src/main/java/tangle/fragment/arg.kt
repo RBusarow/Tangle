@@ -1,8 +1,8 @@
-package tangle.inject.api
+package tangle.fragment
 
 import androidx.fragment.app.Fragment
 
-fun <A : Any> Fragment.arg(bundleKey: String) = lazy {
+public fun <A : Any> Fragment.arg(bundleKey: String): Lazy<A> = lazy {
   @Suppress("UNCHECKED_CAST")
   (arguments?.get(bundleKey) as? A)
     ?: throw IllegalStateException("Bundle does not contain key: $bundleKey")

@@ -32,7 +32,7 @@ import tangle.viewmodel.tangle
  * the NavController back stack.
  */
 @Composable
-inline fun <reified VM : ViewModel> tangle(
+public inline fun <reified VM : ViewModel> tangle(
   viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
     "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
   }
