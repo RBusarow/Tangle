@@ -9,6 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: check if PR has conflict
+        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         uses: eps1lon/actions-label-merge-conflict@releases/2.x
         with:
           dirtyLabel: "PR: needs recreation"
