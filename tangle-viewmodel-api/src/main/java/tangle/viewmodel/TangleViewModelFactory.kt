@@ -24,7 +24,7 @@ import androidx.savedstate.SavedStateRegistryOwner
 import tangle.inject.InternalTangleApi
 
 @InternalTangleApi
-class TangleViewModelFactory(
+public class TangleViewModelFactory(
   owner: SavedStateRegistryOwner,
   defaultArgs: Bundle?,
   private val tangleViewModelKeys: Set<Class<*>>,
@@ -65,9 +65,9 @@ class TangleViewModelFactory(
     }
   }
 
-  companion object {
+  public companion object {
 
-    operator fun invoke(
+    public operator fun invoke(
       owner: SavedStateRegistryOwner,
       defaultArgs: Bundle?,
       defaultFactory: ViewModelProvider.Factory

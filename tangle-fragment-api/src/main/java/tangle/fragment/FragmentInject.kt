@@ -37,4 +37,4 @@ public annotation class ContributesFragment(
 )
 @Retention(AnnotationRetention.RUNTIME)
 @MapKey
-annotation class FragmentKey(val value: KClass<out Fragment>)
+public annotation class FragmentKey(val value: KClass<out Fragment>)
