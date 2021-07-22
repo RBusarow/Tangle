@@ -9,7 +9,7 @@ import org.jetbrains.kotlin.config.CompilerConfigurationKey
 
 @AutoService(CommandLineProcessor::class)
 class TangleCommandLineProcessor : CommandLineProcessor {
-  override val pluginId: String = "tangle.compiler"
+  override val pluginId: String = "com.squareup.anvil.compiler"
 
   override val pluginOptions: Collection<AbstractCliOption> = listOf(
     CliOption(
