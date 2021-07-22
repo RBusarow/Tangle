@@ -13,5 +13,5 @@ jobs:
         with:
           dirtyLabel: "PR: needs recreation"
           removeOnDirtyLabel: "PR: ready to ship"
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          repoToken: "${{ secrets.PERSONAL_ACCESS_TOKEN }}"
           commentOnDirty: "@Dependabot recreate"
