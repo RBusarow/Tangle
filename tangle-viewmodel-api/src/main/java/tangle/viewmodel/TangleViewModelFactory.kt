@@ -23,6 +23,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
 import tangle.inject.InternalTangleApi
 
+/** @suppress */
 @InternalTangleApi
 public class TangleViewModelFactory(
   owner: SavedStateRegistryOwner,
@@ -31,6 +32,7 @@ public class TangleViewModelFactory(
   private val delegateFactory: ViewModelProvider.Factory
 ) : ViewModelProvider.Factory {
 
+  /** @suppress */
   private val tangleFactory: AbstractSavedStateViewModelFactory =
     object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
       override fun <T : ViewModel?> create(
@@ -38,7 +40,7 @@ public class TangleViewModelFactory(
         modelClass: Class<T>,
         handle: SavedStateHandle
       ): T {
-        val component = TangleComponents
+        val component = TangleGraph
           .get<TangleViewModelComponent>()
           .tangleViewModelSubcomponentFactory
           .create(handle)
@@ -57,6 +59,7 @@ public class TangleViewModelFactory(
       }
     }
 
+  /** @suppress */
   override fun <T : ViewModel?> create(modelClass: Class<T>): T {
     return if (tangleViewModelKeys.contains(modelClass)) {
       tangleFactory.create(modelClass)
@@ -65,14 +68,16 @@ public class TangleViewModelFactory(
     }
   }
 
+  /** @suppress */
   public companion object {
 
+    /** @suppress */
     public operator fun invoke(
       owner: SavedStateRegistryOwner,
       defaultArgs: Bundle?,
       defaultFactory: ViewModelProvider.Factory
     ): ViewModelProvider.Factory {
-      val keys = TangleComponents.get<TangleViewModelComponent>()
+      val keys = TangleGraph.get<TangleViewModelComponent>()
         .viewModelKeys
 
       return TangleViewModelFactory(

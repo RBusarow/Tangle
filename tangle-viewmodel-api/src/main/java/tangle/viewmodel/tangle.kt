@@ -14,7 +14,7 @@ import kotlin.LazyThreadSafetyMode.NONE
  *    val viewModel: MyViewModel by tangle()
  * }
  * ```
- *
+ * @sample samples.TangleFragmentDelegateSample.byTangleSample
  * @return lazy [ViewModel] instance of the specified type, injected by Tangle/Anvil/Dagger
  */
 @OptIn(InternalTangleApi::class)

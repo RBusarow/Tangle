@@ -69,6 +69,7 @@ include(
   ":tangle-gradle-plugin",
   ":tangle-test-utils",
   ":tangle-viewmodel-api",
+  ":tangle-viewmodel-api:samples",
   ":tangle-viewmodel-compiler",
   ":tangle-viewmodel-compose",
   ":tangle-viewmodel-tests"
