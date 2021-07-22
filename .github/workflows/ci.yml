@@ -1,7 +1,7 @@
 name: CI
 
 on:
-  pull_request_target
+  pull_request
 
 jobs:
 
@@ -50,16 +50,6 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 14
-
-      - name: Copy Dependabot dependencies to toml
-        run: ./gradlew dependencysync
-
-      # If the copy generated changes, commit and push those changes.
-      - name: commit changes
-        uses: stefanzweifel/git-auto-commit-action@v4
-        with:
-          commit_message: Update dependencies from dependabot
-          commit_options: '--no-verify --signoff'
 
       # formats all kotlin files
       - name: KtLint format
