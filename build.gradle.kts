@@ -34,6 +34,7 @@ buildscript {
     classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
     classpath("org.jetbrains.kotlinx:kotlinx-knit:0.3.0")
     classpath("org.jlleitschuh.gradle:ktlint-gradle:10.1.0")
+    classpath("com.squareup.anvil:gradle-plugin:2.3.3")
   }
 }
 

@@ -13,19 +13,15 @@
  * limitations under the License.
  */
 
-package tangle.viewmodel
+@file:Suppress("EXPERIMENTAL_API_USAGE")
 
-import androidx.lifecycle.ViewModel
-import dagger.MapKey
-import kotlin.reflect.KClass
+package samples
 
-/** @suppress */
-@Target(
-  AnnotationTarget.FUNCTION,
-  AnnotationTarget.PROPERTY_GETTER,
-  AnnotationTarget.PROPERTY_SETTER,
-  AnnotationTarget.CLASS
-)
-@Retention(AnnotationRetention.RUNTIME)
-@MapKey
-public annotation class ViewModelKey(val value: KClass<out ViewModel>)
+import io.kotest.matchers.shouldBe
+import org.junit.Test
+
+public typealias Sample = Test
+
+public infix fun Any?.shouldPrint(
+  expected: String
+): Unit = toString() shouldBe expected
