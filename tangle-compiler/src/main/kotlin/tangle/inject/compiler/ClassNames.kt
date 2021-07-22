@@ -12,9 +12,7 @@ import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import dagger.*
 import dagger.internal.Factory
 import dagger.internal.InstanceFactory
-import dagger.multibindings.IntoMap
-import dagger.multibindings.IntoSet
-import dagger.multibindings.Multibinds
+import dagger.multibindings.*
 import javax.inject.Inject
 import javax.inject.Provider
 
@@ -26,7 +24,7 @@ public object ClassNames {
     ClassName("tangle.viewmodel", "TangleViewModelSubcomponent")
   public val tangleViewModelSubcomponentFactory: ClassName =
     tangleViewModelSubcomponent.nestedClass("Factory")
-  public val tangleViewModelKey: ClassName = ClassName("tangle.viewmodel", "ViewModelKey")
+
   public val tangleViewModelProviderMap: ClassName =
     ClassName("tangle.viewmodel", "TangleViewModelProviderMap")
   public val tangleViewModelProviderMapKeySet: ClassName =
@@ -68,18 +66,20 @@ public object ClassNames {
     provider.parameterizedBy(androidxFragment.jvmSuppressWildcards()).jvmSuppressWildcards()
   )
 
-  public val daggerFactory: ClassName = Factory::class.asClassName()
-  public val contributesTo: ClassName = ContributesTo::class.asClassName()
-  public val mergeComponent: ClassName = MergeComponent::class.asClassName()
-  public val mergeSubomponent: ClassName = MergeSubcomponent::class.asClassName()
   public val binds: ClassName = Binds::class.asClassName()
   public val bindsInstance: ClassName = BindsInstance::class.asClassName()
-  public val subcomponentFactory: ClassName = Subcomponent.Factory::class.asClassName()
+  public val classKey: ClassName = ClassKey::class.asClassName()
+  public val contributesTo: ClassName = ContributesTo::class.asClassName()
+  public val daggerFactory: ClassName = Factory::class.asClassName()
   public val intoMap: ClassName = IntoMap::class.asClassName()
   public val intoSet: ClassName = IntoSet::class.asClassName()
-  public val provides: ClassName = Provides::class.asClassName()
+  public val mergeComponent: ClassName = MergeComponent::class.asClassName()
+  public val mergeSubomponent: ClassName = MergeSubcomponent::class.asClassName()
   public val module: ClassName = Module::class.asClassName()
   public val multibinds: ClassName = Multibinds::class.asClassName()
+  public val provides: ClassName = Provides::class.asClassName()
+  public val stringKey: ClassName = StringKey::class.asClassName()
+  public val subcomponentFactory: ClassName = Subcomponent.Factory::class.asClassName()
 
   public val instanceFactory: ClassName = InstanceFactory::class.asClassName()
 
