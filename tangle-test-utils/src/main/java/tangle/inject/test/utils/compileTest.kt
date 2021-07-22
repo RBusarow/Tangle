@@ -28,6 +28,7 @@ import dagger.Subcomponent
 import dagger.internal.codegen.ComponentProcessor
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlin.config.JvmTarget
+import tangle.inject.compiler.TangleCommandLineProcessor
 import java.io.File
 import java.io.OutputStream
 import java.lang.reflect.Method
@@ -56,7 +57,7 @@ fun compileAnvil(
       useOldBackend = !useIR
       inheritClassPath = true
       jvmTarget = JvmTarget.JVM_1_8.description
-      verbose = false
+      verbose = true
       this.allWarningsAsErrors = allWarningsAsErrors
       this.messageOutputStream = messageOutputStream
 
@@ -69,13 +70,19 @@ fun compileAnvil(
       }
 
       val anvilCommandLineProcessor = AnvilCommandLineProcessor()
-      commandLineProcessors = listOf(anvilCommandLineProcessor)
+      val tangleCommandLineProcessor = TangleCommandLineProcessor()
+      commandLineProcessors = listOf(anvilCommandLineProcessor, tangleCommandLineProcessor)
 
       pluginOptions = listOf(
         PluginOption(
           pluginId = anvilCommandLineProcessor.pluginId,
           optionName = "src-gen-dir",
           optionValue = File(workingDir, "build/anvil").absolutePath
+        ),
+        PluginOption(
+          pluginId = tangleCommandLineProcessor.pluginId,
+          optionName = "fooo",
+          optionValue = "true"
         ),
         PluginOption(
           pluginId = anvilCommandLineProcessor.pluginId,

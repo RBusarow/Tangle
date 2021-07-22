@@ -48,6 +48,7 @@ dependencies {
   compileOnly(libs.kotlin.reflect)
 
   implementation(libs.kotlin.annotation.processing)
+  implementation(libs.kotlin.gradle.pluginApi)
   implementation(libs.kotlin.compiler)
   implementation(libs.kotlin.reflect)
   implementation(libs.kotlin.stdlib.jdk8)
