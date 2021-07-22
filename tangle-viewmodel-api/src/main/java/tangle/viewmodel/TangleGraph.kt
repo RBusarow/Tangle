@@ -8,17 +8,6 @@ import tangle.inject.InternalTangleApi
  *
  * This should be initialized as soon as possible after initializing the AppComponent.
  *
- * ```
- * class MyApplication : Application() {
- *
- *   override fun onCreate() {
- *     val appComponent = DaggerMyAppComponent.create()
- *
- *     TangleGraph.init(appComponent)
- *   }
- * }
- * ```
- *
  * @sample samples.TangleGraphSample.initializeTangleGraph
  * @since 0.10.0
  */
