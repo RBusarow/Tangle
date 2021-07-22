@@ -21,6 +21,7 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
+import dagger.multibindings.ClassKey
 import tangle.inject.InternalTangleApi
 
 /** @suppress */
@@ -47,7 +48,7 @@ public class TangleViewModelFactory(
 
         val provider = component.viewModelProviderMap[modelClass]
           ?: throw IllegalStateException(
-            "A ${ViewModelKey::class.java.simpleName} exists for ${modelClass.name}, " +
+            "A ${ClassKey::class.java.simpleName} exists for ${modelClass.name}, " +
               "but it can't be found in the map.\n\n" +
               "Bound viewModels:\n" +
               component.viewModelProviderMap.keys.joinToString {
