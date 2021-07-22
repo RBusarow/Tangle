@@ -322,7 +322,7 @@ class VMInjectGenerator : CodeGenerator {
                 .addAnnotation(ClassNames.binds)
                 .addAnnotation(ClassNames.intoMap)
                 .addAnnotation(
-                  AnnotationSpec.builder(ClassNames.tangleViewModelKey)
+                  AnnotationSpec.builder(ClassNames.classKey)
                     .addMember("%T::class", generatedFile.viewModelClassName)
                     .build()
                 )
