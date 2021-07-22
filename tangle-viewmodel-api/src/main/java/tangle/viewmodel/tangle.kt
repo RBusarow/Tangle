@@ -9,11 +9,6 @@ import kotlin.LazyThreadSafetyMode.NONE
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.
  *
- * ```
- * class MyFragment: Fragment() {
- *    val viewModel: MyViewModel by tangle()
- * }
- * ```
  * @sample samples.TangleFragmentDelegateSample.byTangleSample
  * @return lazy [ViewModel] instance of the specified type, injected by Tangle/Anvil/Dagger
  */
