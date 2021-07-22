@@ -19,8 +19,6 @@ plugins {
   id("com.squareup.anvil")
 }
 
-// sourceSets["test"].java.srcDir("test")
-
 dependencies {
 
   anvil(projects.tangleViewmodelCompiler)
