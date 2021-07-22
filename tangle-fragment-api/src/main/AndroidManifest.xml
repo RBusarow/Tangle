@@ -13,4 +13,4 @@
   ~ limitations under the License.
   -->
 
-<manifest package="tangle.fragment"/>
+<manifest package="tangle.fragment.api"/>
