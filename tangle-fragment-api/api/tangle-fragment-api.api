@@ -1,8 +1,5 @@
-public final class tangle/fragment/BuildConfig {
-	public static final field BUILD_TYPE Ljava/lang/String;
-	public static final field DEBUG Z
-	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
-	public fun <init> ()V
+public final class tangle/fragment/ArgKt {
+	public static final fun arg (Landroidx/fragment/app/Fragment;Ljava/lang/String;)Lkotlin/Lazy;
 }
 
 public abstract interface annotation class tangle/fragment/ContributesFragment : java/lang/annotation/Annotation {
@@ -28,7 +25,10 @@ public final class tangle/fragment/TangleFragmentFactory : androidx/fragment/app
 public abstract interface annotation class tangle/fragment/TangleFragmentProviderMap : java/lang/annotation/Annotation {
 }
 
-public final class tangle/inject/api/ArgKt {
-	public static final fun arg (Landroidx/fragment/app/Fragment;Ljava/lang/String;)Lkotlin/Lazy;
+public final class tangle/fragment/api/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
 }
 

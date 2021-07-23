@@ -66,6 +66,25 @@ jobs:
           commit_message: Apply KtLint format
           commit_options: '--no-verify --signoff'
 
+  api-check:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+
+      - name: all tests
+        run: ./gradlew apicheck --no-daemon
+
   tests-ubuntu:
 
     runs-on: ubuntu-latest
