@@ -27,12 +27,11 @@ apply(plugin = "org.jetbrains.kotlin.android")
 
 @Suppress("MagicNumber")
 configure<TestedExtension> {
-  compileSdkVersion(30)
+  compileSdkVersion(31)
 
   defaultConfig {
     minSdkVersion(21)
-    targetSdkVersion(30)
-    versionName = "1.0.0-beta09"
+    targetSdkVersion(31)
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
