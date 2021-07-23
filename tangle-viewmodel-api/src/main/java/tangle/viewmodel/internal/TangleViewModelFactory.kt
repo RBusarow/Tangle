@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package tangle.viewmodel
+package tangle.viewmodel.internal
 
 import android.os.Bundle
 import androidx.lifecycle.AbstractSavedStateViewModelFactory
@@ -23,6 +23,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.savedstate.SavedStateRegistryOwner
 import dagger.multibindings.ClassKey
 import tangle.inject.InternalTangleApi
+import tangle.viewmodel.TangleGraph
+import tangle.viewmodel.TangleViewModelComponent
 
 /** @suppress */
 @InternalTangleApi
