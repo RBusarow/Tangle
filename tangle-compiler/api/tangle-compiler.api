@@ -7,6 +7,7 @@ public final class tangle/inject/compiler/ClassNames {
 	public final fun getBinds ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getBindsInstance ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getBundle ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun getClassKey ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getContributesTo ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getDaggerFactory ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getFragmentMap ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
@@ -31,6 +32,7 @@ public final class tangle/inject/compiler/ClassNames {
 	public final fun getProvides ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getSize ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getSizeF ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun getStringKey ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getSubcomponentFactory ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleFragmentFactory ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleFragmentKey ()Lcom/squareup/kotlinpoet/ClassName;
@@ -39,24 +41,75 @@ public final class tangle/inject/compiler/ClassNames {
 	public final fun getTangleFragmentSubcomponentFactory ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleScope ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleViewModelComponent ()Lcom/squareup/kotlinpoet/ClassName;
-	public final fun getTangleViewModelKey ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleViewModelProviderMap ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleViewModelProviderMapKeySet ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleViewModelSubcomponent ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleViewModelSubcomponentFactory ()Lcom/squareup/kotlinpoet/ClassName;
 }
 
-public final class tangle/inject/compiler/CompilerUtilsKt {
+public final class tangle/inject/compiler/ContructorInjectParameter : tangle/inject/compiler/Parameter {
+	public fun <init> (Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;)V
+	public final fun component1 ()Ljava/lang/String;
+	public final fun component2 ()Lcom/squareup/kotlinpoet/TypeName;
+	public final fun component3 ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
+	public final fun component4 ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
+	public final fun component5 ()Z
+	public final fun component6 ()Z
+	public final fun component7 ()Ljava/lang/String;
+	public final fun component8 ()Ljava/util/List;
+	public final fun copy (Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;)Ltangle/inject/compiler/ContructorInjectParameter;
+	public static synthetic fun copy$default (Ltangle/inject/compiler/ContructorInjectParameter;Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;ILjava/lang/Object;)Ltangle/inject/compiler/ContructorInjectParameter;
+	public fun equals (Ljava/lang/Object;)Z
+	public fun getLazyTypeName ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
+	public fun getName ()Ljava/lang/String;
+	public fun getProviderTypeName ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
+	public fun getQualifiers ()Ljava/util/List;
+	public fun getTangleParamName ()Ljava/lang/String;
+	public fun getTypeName ()Lcom/squareup/kotlinpoet/TypeName;
+	public fun hashCode ()I
+	public fun isWrappedInLazy ()Z
+	public fun isWrappedInProvider ()Z
+	public fun toString ()Ljava/lang/String;
+}
+
+public final class tangle/inject/compiler/ContructorInjectParameterKt {
+	public static final fun uniqueName (Ljava/util/List;Ljava/lang/String;I)Ljava/lang/String;
+	public static synthetic fun uniqueName$default (Ljava/util/List;Ljava/lang/String;IILjava/lang/Object;)Ljava/lang/String;
+	public static final fun uniqueNameStrings (Ljava/util/List;Ljava/lang/String;I)Ljava/lang/String;
+	public static synthetic fun uniqueNameStrings$default (Ljava/util/List;Ljava/lang/String;IILjava/lang/Object;)Ljava/lang/String;
+}
+
+public final class tangle/inject/compiler/DescriptorKt {
+	public static final fun boundClassName (Lorg/jetbrains/kotlin/descriptors/TypeParameterDescriptor;)Lcom/squareup/kotlinpoet/ClassName;
+	public static final fun fqNameOrNull (Lorg/jetbrains/kotlin/types/KotlinType;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun hasAnnotation (Lorg/jetbrains/kotlin/descriptors/CallableMemberDescriptor;Lorg/jetbrains/kotlin/name/FqName;)Z
+	public static final fun hasAnnotation (Lorg/jetbrains/kotlin/descriptors/PropertyDescriptor;Lorg/jetbrains/kotlin/name/FqName;)Z
 	public static final fun isFragment (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;)Z
+	public static final fun isNullable (Lorg/jetbrains/kotlin/descriptors/PropertyDescriptor;)Z
+	public static final fun isNullable (Lorg/jetbrains/kotlin/types/KotlinType;)Z
+	public static final fun isViewModel (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;)Z
+	public static final fun mapToParameters (Ljava/util/List;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Z)Ljava/util/List;
+	public static synthetic fun mapToParameters$default (Ljava/util/List;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;ZILjava/lang/Object;)Ljava/util/List;
+	public static final fun memberInjectedParameters (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/List;
+	public static final fun memberInjectedProperties (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/List;
+	public static final fun memberInjectedProperties (Lorg/jetbrains/kotlin/resolve/scopes/MemberScope;)Ljava/util/List;
+	public static final fun qualifierAnnotationSpecs (Ljava/util/List;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/List;
+	public static final fun qualifierArgumentsOrNull (Lorg/jetbrains/kotlin/descriptors/annotations/AnnotationDescriptor;)Ljava/util/Map;
+	public static final fun requireContainingPackage (Lorg/jetbrains/kotlin/descriptors/DeclarationDescriptor;)Lorg/jetbrains/kotlin/name/FqName;
+	public static final fun requireTangleParamName (Lorg/jetbrains/kotlin/descriptors/CallableMemberDescriptor;)Ljava/lang/String;
+	public static final fun requireTangleParamName (Lorg/jetbrains/kotlin/descriptors/ValueParameterDescriptor;)Ljava/lang/String;
+	public static final fun tangleParamNameOrNull (Lorg/jetbrains/kotlin/descriptors/CallableMemberDescriptor;)Ljava/lang/String;
+	public static final fun tangleParamNameOrNull (Lorg/jetbrains/kotlin/descriptors/ValueParameterDescriptor;)Ljava/lang/String;
 }
 
 public final class tangle/inject/compiler/FqNames {
 	public static final field INSTANCE Ltangle/inject/compiler/FqNames;
 	public final fun getAndroidxFragment ()Lorg/jetbrains/kotlin/name/FqName;
+	public final fun getAndroidxViewModel ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun getBundle ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun getContributesFragment ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun getContributesViewModel ()Lorg/jetbrains/kotlin/name/FqName;
-	public final fun getDaggerDoubleCheckString ()Ljava/lang/String;
+	public final fun getDaggerDoubleCheck ()Ljava/lang/String;
 	public final fun getDaggerFactory ()Ljava/lang/String;
 	public final fun getDaggerLazy ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun getDaggerProvides ()Lorg/jetbrains/kotlin/name/FqName;
@@ -73,21 +126,20 @@ public final class tangle/inject/compiler/FqNames {
 	public final fun getSizeF ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun getTangleParam ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun getVmInject ()Lorg/jetbrains/kotlin/name/FqName;
+	public final fun getVmInjectFactory ()Lorg/jetbrains/kotlin/name/FqName;
 }
 
 public final class tangle/inject/compiler/KotlinPoetKt {
+	public static final fun AnnotationSpec (Lcom/squareup/kotlinpoet/ClassName;Lkotlin/jvm/functions/Function1;)Lcom/squareup/kotlinpoet/AnnotationSpec;
+	public static final fun FunSpec (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lcom/squareup/kotlinpoet/FunSpec;
+	public static final fun addFunction (Lcom/squareup/kotlinpoet/TypeSpec$Builder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lcom/squareup/kotlinpoet/TypeSpec$Builder;
 	public static final fun applyEach (Ljava/lang/Object;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function2;)Ljava/lang/Object;
 	public static final fun buildFile (Lcom/squareup/kotlinpoet/FileSpec$Companion;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
-	public static final fun toAnnotationSpec (Lorg/jetbrains/kotlin/psi/KtAnnotationEntry;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lcom/squareup/kotlinpoet/AnnotationSpec;
+	public static final fun qualifierAnnotationSpecs (Ljava/util/List;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/List;
 }
 
-public final class tangle/inject/compiler/MemberNames {
-	public static final field INSTANCE Ltangle/inject/compiler/MemberNames;
-	public final fun getBundleOf ()Lcom/squareup/kotlinpoet/MemberName;
-}
-
-public final class tangle/inject/compiler/Parameter {
-	public fun <init> (Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;)V
+public final class tangle/inject/compiler/MemberInjectParameter : tangle/inject/compiler/Parameter {
+	public fun <init> (Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;Lcom/squareup/kotlinpoet/ClassName;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lcom/squareup/kotlinpoet/TypeName;
 	public final fun component3 ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
@@ -96,27 +148,38 @@ public final class tangle/inject/compiler/Parameter {
 	public final fun component6 ()Z
 	public final fun component7 ()Ljava/lang/String;
 	public final fun component8 ()Ljava/util/List;
-	public final fun copy (Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;)Ltangle/inject/compiler/Parameter;
-	public static synthetic fun copy$default (Ltangle/inject/compiler/Parameter;Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;ILjava/lang/Object;)Ltangle/inject/compiler/Parameter;
+	public final fun component9 ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun copy (Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;Lcom/squareup/kotlinpoet/ClassName;)Ltangle/inject/compiler/MemberInjectParameter;
+	public static synthetic fun copy$default (Ltangle/inject/compiler/MemberInjectParameter;Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;Lcom/squareup/kotlinpoet/ClassName;ILjava/lang/Object;)Ltangle/inject/compiler/MemberInjectParameter;
 	public fun equals (Ljava/lang/Object;)Z
-	public final fun getAnnotationEntries ()Ljava/util/List;
-	public final fun getLazyTypeName ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
-	public final fun getName ()Ljava/lang/String;
-	public final fun getProviderTypeName ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
-	public final fun getTangleParamName ()Ljava/lang/String;
-	public final fun getTypeName ()Lcom/squareup/kotlinpoet/TypeName;
+	public fun getLazyTypeName ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
+	public final fun getMemberInjectorClass ()Lcom/squareup/kotlinpoet/ClassName;
+	public fun getName ()Ljava/lang/String;
+	public fun getProviderTypeName ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
+	public fun getQualifiers ()Ljava/util/List;
+	public fun getTangleParamName ()Ljava/lang/String;
+	public fun getTypeName ()Lcom/squareup/kotlinpoet/TypeName;
 	public fun hashCode ()I
-	public final fun isTangleParam ()Z
-	public final fun isWrappedInLazy ()Z
-	public final fun isWrappedInProvider ()Z
+	public fun isWrappedInLazy ()Z
+	public fun isWrappedInProvider ()Z
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class tangle/inject/compiler/ParameterKt {
-	public static final fun uniqueName (Ljava/util/List;Ljava/lang/String;I)Ljava/lang/String;
-	public static synthetic fun uniqueName$default (Ljava/util/List;Ljava/lang/String;IILjava/lang/Object;)Ljava/lang/String;
-	public static final fun uniqueNameStrings (Ljava/util/List;Ljava/lang/String;I)Ljava/lang/String;
-	public static synthetic fun uniqueNameStrings$default (Ljava/util/List;Ljava/lang/String;IILjava/lang/Object;)Ljava/lang/String;
+public final class tangle/inject/compiler/MemberNames {
+	public static final field INSTANCE Ltangle/inject/compiler/MemberNames;
+	public final fun getBundleOf ()Lcom/squareup/kotlinpoet/MemberName;
+}
+
+public abstract class tangle/inject/compiler/Parameter {
+	public abstract fun getLazyTypeName ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
+	public abstract fun getName ()Ljava/lang/String;
+	public abstract fun getProviderTypeName ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
+	public abstract fun getQualifiers ()Ljava/util/List;
+	public abstract fun getTangleParamName ()Ljava/lang/String;
+	public abstract fun getTypeName ()Lcom/squareup/kotlinpoet/TypeName;
+	public final fun isTangleParam ()Z
+	public abstract fun isWrappedInLazy ()Z
+	public abstract fun isWrappedInProvider ()Z
 }
 
 public final class tangle/inject/compiler/PsiKt {
@@ -124,10 +187,9 @@ public final class tangle/inject/compiler/PsiKt {
 	public static final fun asClassName (Lorg/jetbrains/kotlin/name/FqName;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lcom/squareup/kotlinpoet/ClassName;
 	public static final fun fragmentInjectConstructor (Lorg/jetbrains/kotlin/psi/KtClassOrObject;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/psi/KtConstructor;
 	public static final fun injectConstructor (Lorg/jetbrains/kotlin/psi/KtClassOrObject;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/psi/KtConstructor;
-	public static final fun mapToParameter (Ljava/util/List;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/List;
+	public static final fun mapToParameters (Ljava/util/List;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/List;
 	public static final fun qualifierArgumentsOrNull (Lorg/jetbrains/kotlin/psi/KtAnnotationEntry;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/Map;
 	public static final fun requireClassDescriptor (Lorg/jetbrains/kotlin/name/FqName;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;
-	public static final fun requireTangleParamName (Lorg/jetbrains/kotlin/descriptors/ValueParameterDescriptor;)Ljava/lang/String;
 	public static final fun requireTypeReference (Lorg/jetbrains/kotlin/psi/KtCallableDeclaration;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/psi/KtTypeReference;
 	public static final fun scope (Lorg/jetbrains/kotlin/psi/KtAnnotationEntry;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/name/FqName;
 	public static final fun vmInjectConstructor (Lorg/jetbrains/kotlin/psi/KtClassOrObject;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Lorg/jetbrains/kotlin/psi/KtConstructor;
@@ -138,8 +200,8 @@ public final class tangle/inject/compiler/PsiKt {
 public final class tangle/inject/compiler/TangleCompilationException : org/jetbrains/kotlin/codegen/CompilationException {
 	public fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;)V
 	public synthetic fun <init> (Ljava/lang/String;Ljava/lang/Throwable;Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
-	public fun <init> (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;Ljava/lang/String;Ljava/lang/Throwable;)V
-	public synthetic fun <init> (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
+	public fun <init> (Lorg/jetbrains/kotlin/descriptors/DeclarationDescriptor;Ljava/lang/String;Ljava/lang/Throwable;)V
+	public synthetic fun <init> (Lorg/jetbrains/kotlin/descriptors/DeclarationDescriptor;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 	public fun <init> (Lorg/jetbrains/kotlin/descriptors/annotations/AnnotationDescriptor;Ljava/lang/String;Ljava/lang/Throwable;)V
 	public synthetic fun <init> (Lorg/jetbrains/kotlin/descriptors/annotations/AnnotationDescriptor;Ljava/lang/String;Ljava/lang/Throwable;ILkotlin/jvm/internal/DefaultConstructorMarker;)V
 }
@@ -149,11 +211,11 @@ public final class tangle/inject/compiler/TangleCompilationExceptionKt {
 	public static final fun getIdentifier (Lorg/jetbrains/kotlin/descriptors/annotations/AnnotationDescriptor;)Lorg/jetbrains/kotlin/com/intellij/psi/PsiElement;
 	public static final fun require (ZLkotlin/jvm/functions/Function0;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static final fun require (ZLorg/jetbrains/kotlin/com/intellij/psi/PsiElement;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
-	public static final fun require (ZLorg/jetbrains/kotlin/descriptors/ClassDescriptor;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
+	public static final fun require (ZLorg/jetbrains/kotlin/descriptors/DeclarationDescriptor;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static final fun require (ZLorg/jetbrains/kotlin/descriptors/annotations/AnnotationDescriptor;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;)V
 	public static synthetic fun require$default (ZLkotlin/jvm/functions/Function0;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public static synthetic fun require$default (ZLorg/jetbrains/kotlin/com/intellij/psi/PsiElement;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
-	public static synthetic fun require$default (ZLorg/jetbrains/kotlin/descriptors/ClassDescriptor;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
+	public static synthetic fun require$default (ZLorg/jetbrains/kotlin/descriptors/DeclarationDescriptor;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 	public static synthetic fun require$default (ZLorg/jetbrains/kotlin/descriptors/annotations/AnnotationDescriptor;Ljava/lang/Throwable;Lkotlin/jvm/functions/Function0;ILjava/lang/Object;)V
 }
 
