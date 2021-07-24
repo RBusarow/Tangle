@@ -1,6 +1,5 @@
 package tangle.inject.tests
 
-import com.tschuchort.compiletesting.KotlinCompilation.ExitCode.COMPILATION_ERROR
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Disabled
@@ -22,9 +21,9 @@ class FragmentInjectGeneratorTest : BaseTest() {
 
       @ContributesFragment(Unit::class)
       class MyFragment @FragmentInject constructor() : Fragment()
-      """
+      """,
+      shouldFail = true
     ) {
-      exitCode shouldBe COMPILATION_ERROR
 
       messages shouldContain "@FragmentInject must only be applied to the constructor " +
         "of a Fragment, and that fragment must have a corresponding " +
@@ -50,9 +49,9 @@ class FragmentInjectGeneratorTest : BaseTest() {
           fun create(@TangleParam("name") name: String): MyFragment
         }
       }
-      """
+      """,
+      shouldFail = true
     ) {
-      exitCode shouldBe COMPILATION_ERROR
 
       messages shouldContain "The @FragmentInjectFactory-annotated interface " +
         "`tangle.inject.tests.MyFragment.Factory` must be defined inside a Fragment " +
@@ -76,9 +75,9 @@ class FragmentInjectGeneratorTest : BaseTest() {
         @FragmentInjectFactory
         interface Factory
       }
-      """
+      """,
+      shouldFail = true
     ) {
-      exitCode shouldBe COMPILATION_ERROR
 
       messages shouldContain "@FragmentInjectFactory-annotated types must have exactly one " +
         "abstract function -- without a default implementation -- " +
@@ -106,9 +105,9 @@ class FragmentInjectGeneratorTest : BaseTest() {
           fun create2(@TangleParam("name") name: String): MyFragment
         }
       }
-      """
+      """,
+      shouldFail = true
     ) {
-      exitCode shouldBe COMPILATION_ERROR
 
       messages shouldContain "@FragmentInjectFactory-annotated types must have exactly one " +
         "abstract function -- without a default implementation -- " +
@@ -135,9 +134,9 @@ class FragmentInjectGeneratorTest : BaseTest() {
           fun create(@TangleParam("name") name: String)
         }
       }
-      """
+      """,
+      shouldFail = true
     ) {
-      exitCode shouldBe COMPILATION_ERROR
 
       messages shouldContain "Return type of 'create' is not a subtype of the return type " +
         "of the overridden member 'public abstract fun create(name: String): Unit " +
@@ -235,9 +234,9 @@ class FragmentInjectGeneratorTest : BaseTest() {
           fun create(@TangleParam("name") name: String): MyFragment
         }
       }
-      """
+      """,
+      shouldFail = true
     ) {
-      exitCode shouldBe COMPILATION_ERROR
 
       messages shouldContain "@FragmentInject-annotated Fragments must also have " +
         "a `tangle.fragment.ContributesFragment` class annotation."
@@ -261,9 +260,9 @@ class FragmentInjectGeneratorTest : BaseTest() {
           fun create(name: String): MyFragment
         }
       }
-      """
+      """,
+      shouldFail = true
     ) {
-      exitCode shouldBe COMPILATION_ERROR
 
       messages shouldContain "could not find a @TangleParam annotation for parameter `name`"
     }
@@ -705,9 +704,9 @@ class FragmentInjectGeneratorTest : BaseTest() {
           ): MyFragment
         }
       }
-     """
+     """,
+      shouldFail = true
     ) {
-      exitCode shouldBe COMPILATION_ERROR
 
       messages shouldContain "Tangle found Fragment runtime arguments which cannot " +
         "be inserted into a Bundle: [name: tangle.inject.tests.Illegal]"
