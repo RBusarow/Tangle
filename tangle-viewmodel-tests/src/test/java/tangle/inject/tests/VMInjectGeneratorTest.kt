@@ -30,7 +30,7 @@ class VMInjectGeneratorTest : BaseTest() {
       package tangleViewModel.inject.tests
 
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.viewmodel.VMInject
 
       class MyViewModel @VMInject constructor() : ViewModel()
      """
@@ -51,7 +51,7 @@ class VMInjectGeneratorTest : BaseTest() {
       package tangleViewModel.inject.tests
 
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.viewmodel.VMInject
 
       class MyViewModel @VMInject constructor(
         name: String
@@ -75,7 +75,7 @@ class VMInjectGeneratorTest : BaseTest() {
       package tangleViewModel.inject.tests
 
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.viewmodel.VMInject
 
       class MyViewModel @VMInject constructor(
         names: List<String>
@@ -100,7 +100,7 @@ class VMInjectGeneratorTest : BaseTest() {
       package tangleViewModel.inject.tests
 
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.viewmodel.VMInject
 
       class MyViewModel @VMInject constructor(
         names: dagger.Lazy<String>
@@ -125,7 +125,7 @@ class VMInjectGeneratorTest : BaseTest() {
       package tangleViewModel.inject.tests
 
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.viewmodel.VMInject
 
       class MyViewModel @VMInject constructor(
         names: dagger.Lazy<List<String>>
@@ -151,7 +151,7 @@ class VMInjectGeneratorTest : BaseTest() {
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.viewmodel.VMInject
 
       class MyViewModel @VMInject constructor(
         savedStateHandle: SavedStateHandle
@@ -177,8 +177,8 @@ class VMInjectGeneratorTest : BaseTest() {
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.inject.TangleParam
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.VMInject
       import javax.inject.Provider
       import javax.inject.Inject
 
@@ -209,8 +209,8 @@ class VMInjectGeneratorTest : BaseTest() {
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.inject.TangleParam
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.VMInject
       import javax.inject.Provider
 
       class MyViewModel @VMInject constructor(
@@ -242,8 +242,8 @@ class VMInjectGeneratorTest : BaseTest() {
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.inject.TangleParam
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.VMInject
 
       class MyViewModel @VMInject constructor(
         @TangleParam("name") val name: String?
@@ -269,8 +269,8 @@ class VMInjectGeneratorTest : BaseTest() {
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.inject.TangleParam
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.VMInject
 
       class MyViewModel @VMInject constructor(
         @TangleParam("name") val name: String
@@ -298,8 +298,8 @@ class VMInjectGeneratorTest : BaseTest() {
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.inject.TangleParam
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.VMInject
 
       class MyViewModel @VMInject constructor(
         savedStateHandle: SavedStateHandle,
@@ -328,8 +328,8 @@ class VMInjectGeneratorTest : BaseTest() {
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.inject.TangleParam
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.VMInject
 
       class MyViewModel @VMInject constructor(
         @TangleParam("firstName") val firstName: String,
@@ -365,8 +365,8 @@ class VMInjectGeneratorTest : BaseTest() {
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.inject.TangleParam
-      import tangleViewModel.viewmodel.VMInject
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.VMInject
 
       class MyViewModel @VMInject constructor(
         @TangleParam("name") val name: String,

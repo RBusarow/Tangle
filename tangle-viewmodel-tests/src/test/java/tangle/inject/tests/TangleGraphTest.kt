@@ -33,8 +33,8 @@ class TangleGraphTest : BaseTest() {
 
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.viewmodel.VMInject
-      import tangleViewModel.viewmodel.TangleGraph
+      import tangle.viewmodel.VMInject
+      import tangle.viewmodel.TangleGraph
       import javax.inject.Singleton
 
       class MyViewModel @VMInject constructor() : ViewModel()
@@ -62,8 +62,8 @@ class TangleGraphTest : BaseTest() {
 
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.viewmodel.VMInject
-      import tangleViewModel.viewmodel.TangleGraph
+      import tangle.viewmodel.VMInject
+      import tangle.viewmodel.TangleGraph
       import javax.inject.Singleton
 
       class MyViewModel @VMInject constructor() : ViewModel()
@@ -92,8 +92,8 @@ class TangleGraphTest : BaseTest() {
 
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.viewmodel.VMInject
-      import tangleViewModel.viewmodel.TangleGraph
+      import tangle.viewmodel.VMInject
+      import tangle.viewmodel.TangleGraph
       import javax.inject.Singleton
 
       class MyViewModel @VMInject constructor() : ViewModel()

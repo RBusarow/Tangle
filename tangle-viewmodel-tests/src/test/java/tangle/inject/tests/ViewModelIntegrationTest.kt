@@ -4,6 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
+import tangle.inject.InternalTangleApi
 import tangle.inject.test.utils.BaseTest
 import tangle.inject.test.utils.createFunction
 import tangle.inject.test.utils.daggerAppComponent
@@ -19,8 +20,8 @@ class ViewModelIntegrationTest : BaseTest() {
 
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.viewmodel.VMInject
-      import tangleViewModel.viewmodel.TangleGraph
+      import tangle.viewmodel.VMInject
+      import tangle.viewmodel.TangleGraph
       import javax.inject.Singleton
 
       class MyViewModel @VMInject constructor() : ViewModel()
@@ -51,8 +52,8 @@ class ViewModelIntegrationTest : BaseTest() {
 
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel
-      import tangleViewModel.viewmodel.VMInject
-      import tangleViewModel.viewmodel.TangleGraph
+      import tangle.viewmodel.VMInject
+      import tangle.viewmodel.TangleGraph
       import javax.inject.Singleton
 
       class MyViewModel @VMInject constructor() : ViewModel()
