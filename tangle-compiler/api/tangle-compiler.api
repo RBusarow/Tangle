@@ -34,6 +34,7 @@ public final class tangle/inject/compiler/ClassNames {
 	public final fun getSizeF ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getStringKey ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getSubcomponentFactory ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun getTangleAppScope ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleFragmentFactory ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleFragmentKey ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleFragmentProviderMap ()Lcom/squareup/kotlinpoet/ClassName;
@@ -41,10 +42,12 @@ public final class tangle/inject/compiler/ClassNames {
 	public final fun getTangleFragmentSubcomponentFactory ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleScope ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleViewModelComponent ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun getTangleViewModelKeysSubcomponent ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun getTangleViewModelKeysSubcomponentFactory ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun getTangleViewModelMapSubcomponent ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun getTangleViewModelMapSubcomponentFactory ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleViewModelProviderMap ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleViewModelProviderMapKeySet ()Lcom/squareup/kotlinpoet/ClassName;
-	public final fun getTangleViewModelSubcomponent ()Lcom/squareup/kotlinpoet/ClassName;
-	public final fun getTangleViewModelSubcomponentFactory ()Lcom/squareup/kotlinpoet/ClassName;
 }
 
 public final class tangle/inject/compiler/ContructorInjectParameter : tangle/inject/compiler/Parameter {
@@ -102,6 +105,15 @@ public final class tangle/inject/compiler/DescriptorKt {
 	public static final fun tangleParamNameOrNull (Lorg/jetbrains/kotlin/descriptors/ValueParameterDescriptor;)Ljava/lang/String;
 }
 
+public abstract interface class tangle/inject/compiler/FileGenerator {
+	public abstract fun createGeneratedFile (Ljava/io/File;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/squareup/anvil/compiler/api/GeneratedFile;
+	public abstract fun generate (Ljava/io/File;Ljava/lang/Object;)Lcom/squareup/anvil/compiler/api/GeneratedFile;
+}
+
+public final class tangle/inject/compiler/FileGenerator$DefaultImpls {
+	public static fun createGeneratedFile (Ltangle/inject/compiler/FileGenerator;Ljava/io/File;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/squareup/anvil/compiler/api/GeneratedFile;
+}
+
 public final class tangle/inject/compiler/FqNames {
 	public static final field INSTANCE Ltangle/inject/compiler/FqNames;
 	public final fun getAndroidxFragment ()Lorg/jetbrains/kotlin/name/FqName;
@@ -124,6 +136,7 @@ public final class tangle/inject/compiler/FqNames {
 	public final fun getQualifier ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun getSize ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun getSizeF ()Lorg/jetbrains/kotlin/name/FqName;
+	public final fun getTangleAppScope ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun getTangleParam ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun getVmInject ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun getVmInjectFactory ()Lorg/jetbrains/kotlin/name/FqName;
