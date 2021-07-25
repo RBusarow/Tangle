@@ -33,3 +33,10 @@ article {
     margin-left: auto;
     margin-right: auto;
 }
+
+/* For large screens, make the container a bit larger than Docusaurus default */
+@media (min-width: 1650px) {
+  .container {
+    max-width: 1500px;
+  }
+}
