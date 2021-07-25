@@ -76,6 +76,9 @@ inline fun <T, E : Executable> E.use(block: (E) -> T): T {
 
 const val MODULE_PACKAGE_PREFIX = "anvil.module"
 
+val Result.daggerAppComponent: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.DaggerAppComponent")
+
 val Result.contributingInterface: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.ContributingInterface")
 

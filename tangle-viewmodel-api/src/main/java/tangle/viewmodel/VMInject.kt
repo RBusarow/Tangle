@@ -16,27 +16,27 @@
 package tangle.viewmodel
 
 import kotlin.annotation.AnnotationRetention.BINARY
-import kotlin.annotation.AnnotationRetention.RUNTIME
-import kotlin.annotation.AnnotationTarget.CLASS
 import kotlin.annotation.AnnotationTarget.CONSTRUCTOR
-import kotlin.reflect.KClass
 
+/**
+ * Annotates the constructor of a [ViewModel][androidx.lifecycle.ViewModel]
+ * which will be injected via Tangle.
+ *
+ * These ViewModels are scoped to the [TangleViewModelMapSubcomponent],
+ * which can be accessed via the [tangleViewModel] delegate function.
+ *
+ * @sample samples.VMInjectSample.vmInjectSample
+ * @since 0.10.0
+ */
 @Target(CONSTRUCTOR)
 @Retention(BINARY)
 @MustBeDocumented
 public annotation class VMInject
 
-@Target(CLASS)
-@Retention(RUNTIME)
-public annotation class ContributesViewModel(
-  /**
-   * The scope in which to include this module.
-   */
-  val scope: KClass<*>,
-  /**
-   * This contributed module will replace these contributed classes. The array is allowed to
-   * include other contributed bindings, multibindings and Dagger modules. All replaced classes
-   * must use the same scope.
-   */
-  val replaces: Array<KClass<*>> = []
-)
+// TODO - support factories with a "DelicateTangleApi" annotation
+/*
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.BINARY)
+@MustBeDocumented
+public annotation class VMInjectFactory
+*/

@@ -24,7 +24,6 @@ import androidx.savedstate.SavedStateRegistryOwner
 import dagger.multibindings.ClassKey
 import tangle.inject.InternalTangleApi
 import tangle.viewmodel.TangleGraph
-import tangle.viewmodel.TangleViewModelComponent
 
 /** @suppress */
 @InternalTangleApi
@@ -43,17 +42,16 @@ public class TangleViewModelFactory(
         modelClass: Class<T>,
         handle: SavedStateHandle
       ): T {
-        val component = TangleGraph
-          .get<TangleViewModelComponent>()
-          .tangleViewModelSubcomponentFactory
+        val subcomponent = TangleGraph
+          .tangleViewModelSubcomponentFactory()
           .create(handle)
 
-        val provider = component.viewModelProviderMap[modelClass]
+        val provider = subcomponent.viewModelProviderMap[modelClass]
           ?: throw IllegalStateException(
             "A ${ClassKey::class.java.simpleName} exists for ${modelClass.name}, " +
               "but it can't be found in the map.\n\n" +
               "Bound viewModels:\n" +
-              component.viewModelProviderMap.keys.joinToString {
+              subcomponent.viewModelProviderMap.keys.joinToString {
                 it.canonicalName?.toString() ?: "null"
               }
           )
@@ -80,13 +78,11 @@ public class TangleViewModelFactory(
       defaultArgs: Bundle?,
       defaultFactory: ViewModelProvider.Factory
     ): ViewModelProvider.Factory {
-      val keys = TangleGraph.get<TangleViewModelComponent>()
-        .viewModelKeys
 
       return TangleViewModelFactory(
         owner,
         defaultArgs,
-        keys,
+        TangleGraph.tangleViewModelKeys,
         defaultFactory
       )
     }

@@ -42,3 +42,22 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
       )
     }
   }
+
+// https://youtrack.jetbrains.com/issue/KT-37652
+tasks
+  .matching { it is org.jetbrains.kotlin.gradle.tasks.KotlinCompile }
+  .configureEach {
+    val task = this
+    val shouldEnable = !task.name.contains("test", ignoreCase = true)
+    val kotlinCompile = task as org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
+    if (shouldEnable && !project.hasProperty("kotlin.optOutExplicitApi")) {
+      if ("-Xexplicit-api=strict" !in kotlinCompile.kotlinOptions.freeCompilerArgs) {
+        kotlinCompile.kotlinOptions.freeCompilerArgs += "-Xexplicit-api=strict"
+      }
+    } else {
+      kotlinCompile.kotlinOptions.freeCompilerArgs = kotlinCompile.kotlinOptions
+        .freeCompilerArgs
+        .filterNot { it == "-Xexplicit-api=strict" }
+    }
+  }

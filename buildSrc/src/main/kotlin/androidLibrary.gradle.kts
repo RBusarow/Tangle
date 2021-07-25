@@ -89,19 +89,6 @@ tasks.withType<KotlinCompile>()
     }
   }
 
-// https://youtrack.jetbrains.com/issue/KT-37652
-tasks
-  .matching { it is KotlinCompile && !it.name.contains("test", ignoreCase = true) }
-  .configureEach {
-    val task = this
-    if (!project.hasProperty("kotlin.optOutExplicitApi")) {
-      val kotlinCompile = task as KotlinCompile
-      if ("-Xexplicit-api=strict" !in kotlinCompile.kotlinOptions.freeCompilerArgs) {
-        kotlinCompile.kotlinOptions.freeCompilerArgs += "-Xexplicit-api=strict"
-      }
-    }
-  }
-
 tasks.withType<Test> {
   useJUnitPlatform()
 

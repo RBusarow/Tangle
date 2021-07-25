@@ -1,21 +1,27 @@
 package samples
 
+import androidx.activity.ComponentActivity
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import tangle.viewmodel.ContributesViewModel
-import tangle.viewmodel.VMInject
-import tangle.viewmodel.tangle
+import tangle.viewmodel.tangleViewModel
 
-public class TangleFragmentDelegateSample {
+class TangleFragmentDelegateSample {
 
   @Sample
-  public fun byTangleSample() {
+  fun byTangleViewModelSample() {
     class MyFragment : Fragment() {
 
-      val viewModel: MyViewModel by tangle()
+      val viewModel: MyViewModel by tangleViewModel()
     }
   }
 }
 
-@ContributesViewModel(Unit::class)
-public class MyViewModel @VMInject constructor() : ViewModel()
+class TangleActivityDelegateSample {
+
+  @Sample
+  fun byTangleViewModelSample() {
+    class MyActivity : ComponentActivity() {
+
+      val viewModel: MyViewModel by tangleViewModel()
+    }
+  }
+}

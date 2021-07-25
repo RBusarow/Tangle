@@ -58,7 +58,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
     kotlinOptions {
 
       freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
+        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi",
+        "-Xopt-in=tangleViewModel.inject.InternalTangleApi"
       )
     }
   }
