@@ -1,30 +1,33 @@
-public abstract interface annotation class tangle/viewmodel/ContributesViewModel : java/lang/annotation/Annotation {
-	public abstract fun replaces ()[Ljava/lang/Class;
-	public abstract fun scope ()Ljava/lang/Class;
-}
-
 public final class tangle/viewmodel/TangleGraph {
 	public static final field INSTANCE Ltangle/viewmodel/TangleGraph;
 	public final fun init (Ljava/lang/Object;)V
 }
 
 public abstract interface class tangle/viewmodel/TangleViewModelComponent {
-	public abstract fun getTangleViewModelSubcomponentFactory ()Ltangle/viewmodel/TangleViewModelSubcomponent$Factory;
+	public abstract fun getTangleViewModelKeysSubcomponentFactory ()Ltangle/viewmodel/TangleViewModelKeysSubcomponent$Factory;
+	public abstract fun getTangleViewModelMapSubcomponentFactory ()Ltangle/viewmodel/TangleViewModelMapSubcomponent$Factory;
+}
+
+public abstract interface class tangle/viewmodel/TangleViewModelKeysSubcomponent {
 	public abstract fun getViewModelKeys ()Ljava/util/Set;
+}
+
+public abstract interface class tangle/viewmodel/TangleViewModelKeysSubcomponent$Factory {
+	public abstract fun create ()Ltangle/viewmodel/TangleViewModelKeysSubcomponent;
+}
+
+public abstract interface class tangle/viewmodel/TangleViewModelMapSubcomponent {
+	public abstract fun getViewModelProviderMap ()Ljava/util/Map;
+}
+
+public abstract interface class tangle/viewmodel/TangleViewModelMapSubcomponent$Factory {
+	public abstract fun create (Landroidx/lifecycle/SavedStateHandle;)Ltangle/viewmodel/TangleViewModelMapSubcomponent;
 }
 
 public abstract interface annotation class tangle/viewmodel/TangleViewModelProviderMap : java/lang/annotation/Annotation {
 }
 
 public abstract interface annotation class tangle/viewmodel/TangleViewModelProviderMap$KeySet : java/lang/annotation/Annotation {
-}
-
-public abstract interface class tangle/viewmodel/TangleViewModelSubcomponent {
-	public abstract fun getViewModelProviderMap ()Ljava/util/Map;
-}
-
-public abstract interface class tangle/viewmodel/TangleViewModelSubcomponent$Factory {
-	public abstract fun create (Landroidx/lifecycle/SavedStateHandle;)Ltangle/viewmodel/TangleViewModelSubcomponent;
 }
 
 public abstract interface annotation class tangle/viewmodel/VMInject : java/lang/annotation/Annotation {

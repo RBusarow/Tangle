@@ -32,6 +32,7 @@ dependencies {
   api(libs.javax.annotation.jsr250.api)
   api(libs.kotlin.annotation.processing)
   api(libs.kotlin.compile.testing)
+  api(libs.kotlin.reflect)
   api(libs.kotlin.compiler)
   api(libs.square.kotlinPoet)
 
@@ -48,7 +49,8 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
     kotlinOptions {
 
       freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
+        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi",
+        "-Xopt-in=tangle.inject.InternalTangleApi"
       )
     }
   }

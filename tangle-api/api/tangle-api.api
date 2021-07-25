@@ -12,6 +12,9 @@ public abstract interface annotation class tangle/inject/TangleParam : java/lang
 	public abstract fun name ()Ljava/lang/String;
 }
 
-public abstract class tangle/inject/TangleScope {
+public abstract class tangle/inject/internal/TangleAppScope {
+}
+
+public abstract class tangle/inject/internal/TangleScope {
 }
 

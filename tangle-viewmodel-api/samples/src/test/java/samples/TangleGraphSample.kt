@@ -16,14 +16,12 @@
 package samples
 
 import android.app.Application
-import dagger.BindsInstance
-import dagger.Component
 import tangle.viewmodel.TangleGraph
 
-public class TangleGraphSample {
+class TangleGraphSample {
 
   @Sample
-  public fun initializeTangleGraph() {
+  fun initializeTangleGraph() {
     class MyApplication : Application() {
 
       override fun onCreate() {
@@ -35,14 +33,5 @@ public class TangleGraphSample {
         TangleGraph.init(appComponent)
       }
     }
-  }
-}
-
-@Component
-public interface MyAppComponent {
-  @Component.Factory
-  public interface Factory {
-
-    public fun create(@BindsInstance application: Application): MyAppComponent
   }
 }

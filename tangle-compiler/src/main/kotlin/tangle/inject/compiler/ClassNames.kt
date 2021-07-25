@@ -20,10 +20,14 @@ public object ClassNames {
 
   public val tangleViewModelComponent: ClassName =
     ClassName("tangle.viewmodel", "TangleViewModelComponent")
-  public val tangleViewModelSubcomponent: ClassName =
-    ClassName("tangle.viewmodel", "TangleViewModelSubcomponent")
-  public val tangleViewModelSubcomponentFactory: ClassName =
-    tangleViewModelSubcomponent.nestedClass("Factory")
+  public val tangleViewModelMapSubcomponent: ClassName =
+    ClassName("tangle.viewmodel", "TangleViewModelMapSubcomponent")
+  public val tangleViewModelMapSubcomponentFactory: ClassName =
+    tangleViewModelMapSubcomponent.nestedClass("Factory")
+  public val tangleViewModelKeysSubcomponent: ClassName =
+    ClassName("tangle.viewmodel", "TangleViewModelKeysSubcomponent")
+  public val tangleViewModelKeysSubcomponentFactory: ClassName =
+    tangleViewModelKeysSubcomponent.nestedClass("Factory")
 
   public val tangleViewModelProviderMap: ClassName =
     ClassName("tangle.viewmodel", "TangleViewModelProviderMap")
@@ -42,7 +46,8 @@ public object ClassNames {
   public val internalTangleApi: ClassName = ClassName("tangle.inject", "InternalTangleApi")
   public val optIn: ClassName = ClassName("kotlin", "OptIn")
 
-  public val tangleScope: ClassName = ClassName("tangle.inject", "TangleScope")
+  public val tangleScope: ClassName = ClassName("tangle.inject.internal", "TangleScope")
+  public val tangleAppScope: ClassName = ClassName("tangle.inject.internal", "TangleAppScope")
 
   public val androidxViewModel: ClassName = ClassName("androidx.lifecycle", "ViewModel")
   public val androidxFragment: ClassName = ClassName("androidx.fragment.app", "Fragment")

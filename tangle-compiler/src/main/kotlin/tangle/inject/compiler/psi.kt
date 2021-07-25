@@ -129,8 +129,16 @@ fun List<KtCallableDeclaration>.mapToParameters(
 
     val qualifiers = annotations.qualifierAnnotationSpecs(module)
 
+    val baseName = parameter.name ?: "param$index"
+
+    val name = when {
+      isWrappedInLazy -> "${baseName}Lazy"
+      isWrappedInProvider -> "${baseName}Provider"
+      else -> baseName
+    }
+
     ContructorInjectParameter(
-      name = parameter.name ?: "param$index",
+      name = name,
       typeName = typeName,
       providerTypeName = typeName.wrapInProvider(),
       lazyTypeName = typeName.wrapInLazy(),
@@ -267,10 +275,9 @@ fun List<Parameter>.asArgumentList(
             // container is a joined type), therefore we use `.lazy(..)` to convert the Provider
             // to a Lazy. Assisted parameters behave differently and the Lazy type is not changed
             // to a Provider and we can simply use the parameter name in the argument list.
-            //         parameter.isWrappedInLazy && parameter.isAssisted -> parameter.name
+            parameter.isWrappedInLazy && parameter.isTangleParam -> parameter.name
             parameter.isWrappedInLazy -> "${FqNames.daggerDoubleCheck}.lazy(${parameter.name})"
             parameter.isTangleParam -> parameter.name
-            //         parameter.isAssisted -> parameter.name
             else -> "${parameter.name}.get()"
           }
         }
