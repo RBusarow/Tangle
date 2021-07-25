@@ -11,7 +11,7 @@ better flexibility of Anvil.
 Since Tangle is an extension upon Anvil, its code generation will be applied to **Kotlin** files
 only.
 
-``` Kotlin
+```kotlin
 @ContributesViewModel(AppScope::class)
 class MyViewModel @VMInject constructor(
   val myRepository: MyRepository,
@@ -44,7 +44,7 @@ ____
 The `TangleComponents` holder needs to be initialized with an application-scoped Dagger Component in
 order to complete the graph.
 
-``` Kotlin
+```kotlin
 class MyApplication : Application() {
 
   override fun onCreate() {
@@ -145,7 +145,7 @@ just inject `null`.
 
 Given this code:
 
-``` Kotlin
+```kotlin
 @ContributesViewModel(AppScope::class)
 class MyViewModel @VMInject constructor(
   @FromSavedState("userId")
@@ -157,7 +157,7 @@ class MyViewModel @VMInject constructor(
 
 Tangle will generate this Provider:
 
-``` Kotlin
+```kotlin
 public class MyViewModel_Provider @Inject constructor(
   private val savedStateHandle: Provider<SavedStateHandle>
 ) : Provider<MyViewModel> {
@@ -178,7 +178,7 @@ public class MyViewModel_Provider @Inject constructor(
 Tangle supports ViewModel "injection" in composables in a manner very similar to Hilt's
 navigation/viewModel artifact. It will scope the ViewModel to the composable's `NavBackStackEntry`.
 
-``` Kotlin
+```kotlin
 @Composable
 fun MyComposable(
   navController: NavController,
