@@ -29,7 +29,7 @@ class TangleGraphTest : BaseTest() {
   @Test
   fun `should hold viewModel keys`() = compileWithDagger(
     """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel
@@ -58,7 +58,7 @@ class TangleGraphTest : BaseTest() {
   @Test
   fun `viewModel keys should persist`() = compileWithDagger(
     """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel
@@ -88,7 +88,7 @@ class TangleGraphTest : BaseTest() {
   @Test
   fun `should provide ViewModel map subcomponent factory`() = compileWithDagger(
     """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel

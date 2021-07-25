@@ -4,7 +4,6 @@ import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
-import tangle.inject.InternalTangleApi
 import tangle.inject.test.utils.BaseTest
 import tangle.inject.test.utils.createFunction
 import tangle.inject.test.utils.daggerAppComponent
@@ -16,7 +15,7 @@ class ViewModelIntegrationTest : BaseTest() {
   @Test
   fun `viewmodel is multi-bound into TangleScope`() = compileWithDagger(
     """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel
@@ -48,7 +47,7 @@ class ViewModelIntegrationTest : BaseTest() {
   @Test
   fun `viewmodel key is multi-bound into TangleAppScope`() = compileWithDagger(
     """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel

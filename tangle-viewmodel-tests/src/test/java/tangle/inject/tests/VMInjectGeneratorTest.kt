@@ -27,7 +27,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated without arguments`() = test {
     compile(
       """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
@@ -48,7 +48,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated for an argument`() = test {
     compile(
       """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
@@ -72,7 +72,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated for a generic argument`() = test {
     compile(
       """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
@@ -97,7 +97,7 @@ class VMInjectGeneratorTest : BaseTest() {
     test {
       compile(
         """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
@@ -122,7 +122,7 @@ class VMInjectGeneratorTest : BaseTest() {
     test {
       compile(
         """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
@@ -147,7 +147,7 @@ class VMInjectGeneratorTest : BaseTest() {
     test {
       compile(
         """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
@@ -173,7 +173,7 @@ class VMInjectGeneratorTest : BaseTest() {
     test {
       compile(
         """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
@@ -205,7 +205,7 @@ class VMInjectGeneratorTest : BaseTest() {
     test {
       compile(
         """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
@@ -238,7 +238,7 @@ class VMInjectGeneratorTest : BaseTest() {
     test {
       compile(
         """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
@@ -265,7 +265,7 @@ class VMInjectGeneratorTest : BaseTest() {
     test {
       compile(
         """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
@@ -294,7 +294,7 @@ class VMInjectGeneratorTest : BaseTest() {
     test {
       compile(
         """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
@@ -324,7 +324,7 @@ class VMInjectGeneratorTest : BaseTest() {
     test {
       compile(
         """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
@@ -361,7 +361,7 @@ class VMInjectGeneratorTest : BaseTest() {
     test {
       compile(
         """
-      package tangleViewModel.inject.tests
+      package tangle.inject.tests
 
       import androidx.lifecycle.SavedStateHandle
       import androidx.lifecycle.ViewModel
