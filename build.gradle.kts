@@ -168,7 +168,7 @@ apiValidation {
 
 subprojects {
 
-  if (File("$projectDir/src").exists()) {
+  if (File("$projectDir/src").exists() && !path.endsWith("samples")) {
     apply(plugin = "org.jetbrains.dokka")
 
     val proj = this
@@ -180,6 +180,10 @@ subprojects {
       dokkaSourceSets {
 
         getByName("main") {
+
+          if (File("${proj.projectDir}/samples").exists()) {
+            samples.setFrom("${proj.projectDir}/samples")
+          }
 
           if (File("${proj.projectDir}/README.md").exists()) {
             includes.from(files("${proj.projectDir}/README.md"))
