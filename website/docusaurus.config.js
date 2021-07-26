@@ -3,7 +3,7 @@ module.exports = {
   tagline: "Android dependency injection using Anvil",
   url: "https://rbusarow.github.io/",
   baseUrl: "/Tangle/",
-  onBrokenLinks: "throw",
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "rbusarow", // Usually your GitHub org/user name.
@@ -34,6 +34,11 @@ module.exports = {
           position: "left",
         },
         {
+          to: 'CHANGELOG',
+          label: 'Change Log',
+          position: 'right'
+        },
+        {
           type: "docsVersionDropdown",
           position: "right",
           dropdownActiveClassDisabled: true,
@@ -50,8 +55,8 @@ module.exports = {
           position: "right",
         },
         {
-          href: "https://github.com/rbusarow/Tangle/",
           label: "GitHub",
+          href: "https://github.com/rbusarow/Tangle/",
           position: "right",
         },
       ],
@@ -65,6 +70,14 @@ module.exports = {
       additionalLanguages: ["kotlin", "groovy"],
     },
   },
+  plugins: [
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        toExtensions: ['html'],
+      },
+    ],
+  ],
   presets: [
     [
       "@docusaurus/preset-classic",
