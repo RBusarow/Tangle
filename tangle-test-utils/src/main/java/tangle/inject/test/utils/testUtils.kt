@@ -24,6 +24,7 @@ import java.lang.reflect.Member
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
+import kotlin.reflect.full.memberProperties
 
 @ExperimentalAnvilApi
 val Member.isStatic: Boolean
@@ -190,3 +191,5 @@ private fun Class<*>.contributedProperties(packagePrefix: String): List<KClass<*
 
 fun Method.annotationClasses() = annotations.map { it.annotationClass }
 fun Class<*>.annotationClasses() = annotations.map { it.annotationClass }
+fun KClass<*>.property(name: String) = memberProperties
+  .first { it.name == name }
