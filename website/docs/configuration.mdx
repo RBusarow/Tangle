@@ -4,7 +4,7 @@ sidebar_label: Configuration
 ---
 
 
-The `TangleComponents` holder needs to be initialized with an application-scoped Dagger Component in
+The `TangleGraph` holder needs to be initialized with an application-scoped Dagger Component in
 order to complete the graph.
 
 ```kotlin
@@ -16,7 +16,7 @@ class MyApplication : Application() {
     val myAppComponent = DaggerAppComponent.factory()
       .create(this)
 
-    TangleComponents.add(myAppComponent)
+    TangleGraph.init(myAppComponent)
   }
 }
 ```
@@ -64,8 +64,8 @@ tangle {
 
 You can also just add dependencies yourself, without applying the plugin.
 
-Note that `tangle-api` is an Android library, and `tangle-compiler` generates Android-specific code,
-so they should only be added to Android modules.
+Note that Tangle is specifically for Android and has Android-specific dependencies,
+so it should only be added to Android modules.
 
 ```kotlin
 // any Android module's build.gradle.kts
@@ -78,14 +78,15 @@ plugins {
 
 dependencies {
 
-  api("com.rickbusarow.tangle:tangle-annotations:0.11.0")
+  // Fragments
+  api("com.rickbusarow.tangle:tangle-fragment-api:0.11.0")
+  anvil("com.rickbusarow.tangle:tangle-fragment-compiler:0.11.0")
 
-  implementation("com.rickbusarow.tangle:tangle-api:0.11.0")
+  // ViewModels
+  api("com.rickbusarow.tangle:tangle-viewmodel-api:0.11.0")
+  anvil("com.rickbusarow.tangle:tangle-viewmodel-compiler:0.11.0")
 
   // optional Compose support
-  implementation("com.rickbusarow.tangle:tangle-compose:0.11.0")
-
-  // `anvil` adds the compiler extension to the Anvil plugin's list of code generators
-  anvil("com.rickbusarow.tangle:tangle-compiler:0.11.0")
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.11.0")
 }
 ```

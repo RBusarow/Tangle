@@ -14,7 +14,13 @@
  */
 
 module.exports = {
-  Basics: ["quickstart", "configuration"],
-//  ViewModels: [ ],
+  Basics: [
+    "quickstart",
+    "configuration"
+  ],
+  ViewModels: [
+    "viewModels/viewModels",
+    "viewModels/compose",
+  ],
 //  Fragments: [ ],
 };
