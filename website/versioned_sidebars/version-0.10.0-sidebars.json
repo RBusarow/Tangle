@@ -7,10 +7,12 @@
     {
       "type": "doc",
       "id": "version-0.10.0/configuration"
-    },
+    }
+  ],
+  "version-0.10.0/ViewModels": [
     {
       "type": "doc",
-      "id": "version-0.10.0/changelog"
+      "id": "version-0.10.0/viewModels/viewModels"
     }
   ]
 }

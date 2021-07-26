@@ -28,9 +28,15 @@ module.exports = {
       //      },
       items: [
         {
+          label: "Basics",
           type: "doc",
           docId: "quickstart",
-          label: "Basics",
+          position: "left",
+        },
+        {
+          label: "ViewModels",
+          type: "doc",
+          docId: "viewModels/viewModels",
           position: "left",
         },
         {
