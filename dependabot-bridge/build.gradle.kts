@@ -68,7 +68,7 @@ dependencies {
   dependencySync("com.google.accompanist:accompanist-coil:0.14.0")
   dependencySync("com.google.auto.service:auto-service-annotations:1.0")
   dependencySync("com.google.auto.service:auto-service:1.0")
-  dependencySync("com.google.auto:auto-common:1.1")
+  dependencySync("com.google.auto:auto-common:1.1.2")
   dependencySync("com.google.dagger:dagger-compiler:2.38.1")
   dependencySync("com.google.dagger:dagger:2.38.1")
   dependencySync("com.jakewharton.timber:timber:4.7.1")
