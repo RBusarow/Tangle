@@ -29,9 +29,11 @@ import tangle.viewmodel.internal.TangleViewModelFactory
  * Returns an existing [VMInject][tangle.viewmodel.VMInject]-annotated [ViewModel]
  * or creates a new one scoped to the current navigation graph present on
  * the NavController back stack.
+ *
+ * @since 0.10.0
  */
 @Composable
-public inline fun <reified VM : ViewModel> tangle(
+public inline fun <reified VM : ViewModel> tangleViewModel(
   viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
     "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
   }
