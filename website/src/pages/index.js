@@ -9,7 +9,6 @@ import styles from "./styles.module.css";
 const features = [
   {
     title: "Builds upon Anvil and Dagger",
-    imageUrl: "img/syringe-solid.svg",
     description: (
       <>
         Docusaurus was designed from the ground up to be easily installed and
@@ -19,7 +18,6 @@ const features = [
   },
   {
     title: "Android ViewModels",
-    imageUrl: "img/power-off-solid.svg",
     description: (
       <>
         Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
@@ -29,7 +27,6 @@ const features = [
   },
   {
     title: "Fragments",
-    imageUrl: "img/coffee-solid.svg",
     description: (
       <>
         Extend or customize your website layout by reusing React. Docusaurus can
@@ -39,7 +36,6 @@ const features = [
   },
   {
     title: "Compose",
-    imageUrl: "img/undraw_docusaurus_react.svg",
     description: (
       <>
         Extend or customize your website layout by reusing React. Docusaurus can
@@ -81,7 +77,7 @@ function Home() {
                         'button button--outline button--secondary button--lg',
                         styles.gettingStartedButton,
                      )}
-                     to={useBaseUrl('docs/quickstart')}>
+                     to={useBaseUrl('docs')}>
                      Get Started
                   </Link>
 
@@ -95,9 +91,8 @@ function Home() {
             </div>
          </header>
          <main>
-            <section className={styles.features}>
+            <div className={styles.badges}>
                <div className="container">
-                  <div className="row">
                      <a href="https://search.maven.org/search?q=g:com.rickbusarow.tangle">
                         <img
                            src="https://img.shields.io/maven-central/v/com.rickbusarow.tangle/tangle-api.svg?label=release&style=for-the-badge&color=aa0055"
@@ -112,6 +107,11 @@ function Home() {
                            alt="license"/>
                      </a>
                   </div>
+            </div>
+         </main>
+         <main>
+            <section className={styles.features}>
+               <div className="container">
                   <div className="row">
                      {features.map((props, idx) => (
                         <Feature key={idx} {...props} />
