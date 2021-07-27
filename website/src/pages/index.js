@@ -138,6 +138,14 @@ function Home() {
             </a>
 
             &nbsp;
+            
+            <a href="https://plugins.gradle.org/plugin/com.rickbusarow.tangle">
+              <img 
+                src="https://img.shields.io/gradle-plugin-portal/v/com.rickbusarow.tangle?style=for-the-badge"
+                alt="Gradle Plugin Portal" />
+            </a>
+            
+            &nbsp;
 
             <a href="https://github.com/rbusarow/tangle/blob/main/LICENSE">
               <img
