@@ -1,6 +1,6 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.rickbusarow.tangle/tangle-api/badge.svg)](https://search.maven.org/search?q=com.rickbusarow.tangle)
-![CI](https://github.com/RBusarow/hermit/workflows/CI/badge.svg)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+![Maven Central](https://img.shields.io/maven-central/v/com.rickbusarow.tangle/tangle-api?style=flat-square)
+![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.rickbusarow.tangle?style=flat-square)
+[![License](https://img.shields.io/badge/license-apache2.0-blue?style=flat-square.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ___
 
