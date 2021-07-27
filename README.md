@@ -1,5 +1,5 @@
-![Maven Central](https://img.shields.io/maven-central/v/com.rickbusarow.tangle/tangle-api?style=flat-square)
-![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.rickbusarow.tangle?style=flat-square)
+[![Maven Central](https://img.shields.io/maven-central/v/com.rickbusarow.tangle/tangle-api?style=flat-square)](https://search.maven.org/search?q=com.rickbusarow.tangle)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.rickbusarow.tangle?style=flat-square)](https://plugins.gradle.org/plugin/com.rickbusarow.tangle)
 [![License](https://img.shields.io/badge/license-apache2.0-blue?style=flat-square.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ___
