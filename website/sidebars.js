@@ -20,7 +20,10 @@ module.exports = {
   ],
   ViewModels: [
     "viewModels/viewModels",
+    "viewModels/savedStateHandle",
     "viewModels/compose",
   ],
-//  Fragments: [ ],
+  Fragments: [
+    "fragments/fragments",
+  ],
 };

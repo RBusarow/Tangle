@@ -40,6 +40,12 @@ module.exports = {
           position: "left",
         },
         {
+          label: "Fragments",
+          type: "doc",
+          docId: "fragments/fragments",
+          position: "left",
+        },
+        {
           to: 'CHANGELOG',
           label: 'ChangeLog',
           position: 'right'

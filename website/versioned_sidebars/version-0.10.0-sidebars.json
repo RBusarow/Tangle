@@ -14,5 +14,11 @@
       "type": "doc",
       "id": "version-0.10.0/viewModels/viewModels"
     }
+  ],
+  "version-0.10.0/Fragments": [
+    {
+      "type": "doc",
+      "id": "version-0.10.0/fragments/fragments"
+    }
   ]
 }

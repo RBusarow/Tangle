@@ -28,11 +28,11 @@ class MyFragment @FragmentInject constructor(
     ),
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Use constructor injection in <code>Fragment</code>s, with optional AssistedInject-like
+        factories for type-safe <code>Bundle</code> arguments.  Bindings are created automatically.
       </>
     ),
-    dest: "docs/next/viewModels/compose"
+    dest: "docs/next/fragments/fragments"
   },
   {
     title: "ViewModels",
@@ -41,12 +41,17 @@ class MyFragment @FragmentInject constructor(
   val repository: MyRepository,
   @TangleParam("userId")
   val userId: String
-) : ViewModel()`
+) : ViewModel()
+
+class MyFragment : Fragment() {
+  val viewModel: MyViewModel by tangleViewModel()
+}`
     ),
     description: (
       <>
-        Docusaurus lets you focus on your docs, and we&apos;ll do the chores. Go
-        ahead and move your docs into the <code>docs</code> directory.
+        Inject <code>ViewModel</code>s, including scoped <code>SavedStateHandle</code> arguments.
+        Use the <code>TangleParam</code> annotation to automatically extract
+        navigation/<code>Bundle</code> arguments and inject them explicitly.
       </>
     ),
     dest: "docs/viewModels/viewModels"
@@ -64,8 +69,8 @@ fun MyComposable(
     ),
     description: (
       <>
-        Extend or customize your website layout by reusing React. Docusaurus can
-        be extended while reusing the same header and footer.
+        Use the <code>tangleViewModel</code> composable function to inject scoped
+        <code>ViewModel</code>s.
       </>
     ),
     dest: "docs/next/viewModels/compose"
@@ -102,9 +107,7 @@ function Home() {
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <p className={clsx(styles.heroSlogan)}>
-            <strong>Tangle</strong> is an extension upon the <strong>Anvil</strong> compiler plugin
-            for <strong>Kotlin</strong>. It creates <strong>Dagger</strong> bindings for
-            <strong>Android</strong> framework types.
+            <strong>Tangle</strong> generates Android bindings using Anvil.
           </p>
           <div className={styles.buttons}>
             <Link
