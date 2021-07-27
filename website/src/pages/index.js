@@ -8,7 +8,7 @@ import styles from "./styles.module.css";
 
 const features = [
   {
-    title: "CoroutineDispatcher Injection",
+    title: "Builds upon Anvil and Dagger",
     imageUrl: "img/syringe-solid.svg",
     description: (
       <>
@@ -18,7 +18,7 @@ const features = [
     ),
   },
   {
-    title: "Better Android Lifecycle Awareness",
+    title: "Android ViewModels",
     imageUrl: "img/power-off-solid.svg",
     description: (
       <>
@@ -28,7 +28,7 @@ const features = [
     ),
   },
   {
-    title: "Android Espresso",
+    title: "Fragments",
     imageUrl: "img/coffee-solid.svg",
     description: (
       <>
@@ -38,7 +38,7 @@ const features = [
     ),
   },
   {
-    title: "Test Utilities",
+    title: "Compose",
     imageUrl: "img/undraw_docusaurus_react.svg",
     description: (
       <>
@@ -65,33 +65,63 @@ function Feature({ imageUrl, title, description }) {
 }
 
 function Home() {
-  const context = useDocusaurusContext();
-  const { siteConfig = {} } = context;
-  return (
-    <Layout
-      //      noFooter={true}
-      title={`${siteConfig.title}`}
-      description="Description will go into a meta tag in <head />"
-    >
-      <header className={clsx("hero hero--primary", styles.heroBanner)}>
-        <div className="container">
-          <h1 className="hero__title">{siteConfig.title}</h1>
-          <p className="hero__subtitle">{siteConfig.tagline}</p>
-          <div className={styles.buttons}>
-            <Link
-              className={clsx(
-                "button button--outline button--secondary button--lg",
-                styles.getStarted
-              )}
-              to={useBaseUrl("docs/")}
-            >
-              Get Started
-            </Link>
-          </div>
-        </div>
-      </header>
-    </Layout>
-  );
+   const context = useDocusaurusContext();
+   const {siteConfig = {}} = context;
+   return (
+      <Layout
+         title={`${siteConfig.title}`}
+         description="Description will go into a meta tag in <head />"
+         >
+         <header className={clsx('hero hero--primary', styles.heroBanner)}>
+            <div className="container">
+               <p className="hero__subtitle">{siteConfig.tagline}</p>
+               <div className={styles.buttons}>
+                  <Link
+                     className={clsx(
+                        'button button--outline button--secondary button--lg',
+                        styles.gettingStartedButton,
+                     )}
+                     to={useBaseUrl('docs/quickstart')}>
+                     Get Started
+                  </Link>
+
+                  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+
+                  <iframe
+                     src="https://ghbtns.com/github-btn.html?user=rbusarow&repo=tangle&type=star&count=true&size=large"
+                     frameBorder="0" scrolling="0" width="170" height="30" title="GitHub"/>
+
+               </div>
+            </div>
+         </header>
+         <main>
+            <section className={styles.features}>
+               <div className="container">
+                  <div className="row">
+                     <a href="https://search.maven.org/search?q=g:com.rickbusarow.tangle">
+                        <img
+                           src="https://img.shields.io/maven-central/v/com.rickbusarow.tangle/tangle-api.svg?label=release&style=for-the-badge&color=aa0055"
+                           alt="version badge"/>
+                     </a>
+
+                     &nbsp;
+
+                     <a href="https://github.com/rbusarow/tangle/blob/main/LICENSE">
+                        <img
+                           src="https://img.shields.io/badge/license-apache2.0-blue?style=for-the-badge"
+                           alt="license"/>
+                     </a>
+                  </div>
+                  <div className="row">
+                     {features.map((props, idx) => (
+                        <Feature key={idx} {...props} />
+                     ))}
+                  </div>
+               </div>
+            </section>
+         </main>
+      </Layout>
+   );
 }
 
 export default Home;
