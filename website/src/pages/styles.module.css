@@ -39,12 +39,11 @@
 .badges {
   text-align: center;
   padding: 2rem;
-  text-align: center;
 }
 
 .features {
   margin: auto;
-  text-align: center;
+  text-align: left;
   display: flex;
   align-items: center;
   padding: 2rem 0;
@@ -62,9 +61,9 @@
   color: var(--ifm-color-white) !important;
 }
 
-.heroSlogan strong {
-  color: #4dbf4d;
-}
+/*.heroSlogan strong {*/
+/*  color: #8000ff;*/
+/*}*/
 
 .gettingStartedButton {
   background: #ffffff;

@@ -1,6 +1,6 @@
 module.exports = {
   title: "Tangle",
-  tagline: "Android dependency injection using Anvil and Dagger",
+  tagline: "Life's too short to wait for Kapt.",
   url: "https://rbusarow.github.io/",
   baseUrl: "/Tangle/",
   onBrokenLinks: 'warn',
