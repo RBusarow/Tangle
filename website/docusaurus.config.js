@@ -1,6 +1,6 @@
 module.exports = {
   title: "Tangle",
-  tagline: "Android dependency injection using Anvil",
+  tagline: "Life's too short to wait for Kapt.",
   url: "https://rbusarow.github.io/",
   baseUrl: "/Tangle/",
   onBrokenLinks: 'warn',
@@ -22,10 +22,10 @@ module.exports = {
     },
     navbar: {
       title: "Tangle",
-      //      logo: {
-      //        alt: 'Tangle Logo',
-      //        src: 'img/logo.svg',
-      //      },
+         logo: {
+           alt: 'Tangle Logo',
+           src: 'img/logo.png',
+         },
       items: [
         {
           label: "Basics",
@@ -41,7 +41,7 @@ module.exports = {
         },
         {
           to: 'CHANGELOG',
-          label: 'Change Log',
+          label: 'ChangeLog',
           position: 'right'
         },
         {
@@ -73,7 +73,7 @@ module.exports = {
     prism: {
       theme: require("prism-react-renderer/themes/github"),
       darkTheme: require("prism-react-renderer/themes/dracula"),
-      additionalLanguages: ["kotlin", "groovy"],
+      additionalLanguages: ["kotlin", "groovy", "java"],
     },
   },
   plugins: [
@@ -90,13 +90,11 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
-          editUrl: "https://github.com/rbusarow/Tangle/",
+          editUrl: "https://github.com/rbusarow/Tangle",
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
-          editUrl: "https://github.com/rbusarow/Tangle/",
+          editUrl: "https://github.com/rbusarow/Tangle",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
