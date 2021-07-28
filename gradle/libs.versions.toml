@@ -109,7 +109,7 @@ anvil-plugin = { module = "com.squareup.anvil:gradle-plugin", version.ref = "anv
 codehaus-groovy-core = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
 codehaus-groovy-xml = { module = "org.codehaus.groovy:groovy-xml", version.ref = "groovy" }
 
-google-accompanist-coil = "com.google.accompanist:accompanist-coil:0.14.0"
+google-accompanist-coil = "com.google.accompanist:accompanist-coil:0.15.0"
 
 google-auto-common = "com.google.auto:auto-common:1.1.2"
 
