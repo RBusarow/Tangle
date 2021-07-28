@@ -29,7 +29,7 @@ dependencies {
   dependencySync("androidx.compose.material:material-icons-core:1.0.0-rc02")
   dependencySync("androidx.compose.material:material-icons-extended:1.0.0-rc02")
   dependencySync("androidx.compose.material:material:1.0.0-rc02")
-  dependencySync("androidx.compose.runtime:runtime:1.0.0-rc02")
+  dependencySync("androidx.compose.runtime:runtime:1.0.0")
   dependencySync("androidx.compose.ui:ui-test-junit4:1.0.0-rc02")
   dependencySync("androidx.compose.ui:ui-tooling:1.0.0-rc02")
   dependencySync("androidx.compose.ui:ui:1.0.0-rc02")
