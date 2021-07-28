@@ -19,7 +19,7 @@ plugins {
 
 dependencies {
 
-  dependencySync("androidx.activity:activity-compose:1.3.0-rc02")
+  dependencySync("androidx.activity:activity-compose:1.3.0")
   dependencySync("androidx.activity:activity-ktx:1.3.0")
   dependencySync("androidx.annotation:annotation:1.2.0")
   dependencySync("androidx.appcompat:appcompat:1.3.1")
