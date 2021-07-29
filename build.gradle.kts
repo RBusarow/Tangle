@@ -28,7 +28,7 @@ buildscript {
     maven("https://oss.sonatype.org/content/repositories/snapshots")
   }
   dependencies {
-    classpath("com.android.tools.build:gradle:4.2.2")
+    classpath("com.android.tools.build:gradle:7.0.0")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
     classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.10-1.0.0-beta02")
     classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
