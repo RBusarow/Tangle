@@ -30,8 +30,8 @@ configure<TestedExtension> {
   compileSdkVersion(31)
 
   defaultConfig {
-    minSdkVersion(21)
-    targetSdkVersion(31)
+    minSdk = 21
+    targetSdk = 31
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
