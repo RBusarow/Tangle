@@ -17,11 +17,27 @@
 
 package samples
 
-import io.kotest.matchers.shouldBe
+import android.app.Application
+import androidx.lifecycle.ViewModel
+import dagger.BindsInstance
+import dagger.Component
 import org.junit.Test
+import tangle.viewmodel.VMInject
+import javax.inject.Inject
 
-public typealias Sample = Test
+typealias Sample = Test
 
-public infix fun Any?.shouldPrint(
-  expected: String
-): Unit = toString() shouldBe expected
+abstract class AppScope private constructor()
+
+class MyViewModel @VMInject constructor() : ViewModel()
+
+class MyRepository @Inject constructor()
+
+@Component
+interface MyAppComponent {
+  @Component.Factory
+  interface Factory {
+
+    fun create(@BindsInstance application: Application): MyAppComponent
+  }
+}

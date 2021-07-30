@@ -36,6 +36,7 @@ object FqNames {
   val contributesFragment = FqName("tangle.fragment.ContributesFragment")
 
   val tangleParam = FqName("tangle.inject.TangleParam")
+  val tangleAppScope = FqName("tangle.inject.internal.TangleAppScope")
 
   val mergeComponent = MergeComponent::class.fqName
   val jvmSuppressWildcards = JvmSuppressWildcards::class.fqName

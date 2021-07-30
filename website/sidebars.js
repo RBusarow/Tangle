@@ -14,7 +14,16 @@
  */
 
 module.exports = {
-  Basics: ["quickstart", "configuration", "changelog"],
-//  ViewModels: [ ],
-//  Fragments: [ ],
+  Basics: [
+    "quickstart",
+    "configuration"
+  ],
+  ViewModels: [
+    "viewModels/viewModels",
+    "viewModels/savedStateHandle",
+    "viewModels/compose",
+  ],
+  Fragments: [
+    "fragments/fragments",
+  ],
 };

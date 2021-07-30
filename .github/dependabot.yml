@@ -10,7 +10,7 @@ updates:
     schedule:
       interval: "daily"
 
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 20
     labels:
       - "dependencies"
       # Add default Kodiak `merge.automerge_label`

@@ -47,23 +47,21 @@ fun ClassDescriptor.memberInjectedProperties(
   module: ModuleDescriptor
 ): List<CallableMemberDescriptor> {
 
-  val names = mutableListOf<String>()
-
   return getAllSuperClassifiers()
+    .toList()
+    // start parsing at the class which is extended by the target class,
+    // so that the last class is the root of the hierarchy
+    .reversed()
     // no point in parsing android/androidx classes for injected params, so skip them
     .filter { it.containingPackage()?.asString()?.startsWith("android") == false }
-    .toList()
-    .reversed()
+    // look for any @Inject-annotated members.
+    // Upstream properties are parsed before the properties they override.
+    // If a property has already been added from a downstream class, then ignore it.
     .fold(mutableMapOf<Name, CallableMemberDescriptor>()) { acc, classifierDescriptor ->
 
       classifierDescriptor.fqNameSafe
         .requireClassDescriptor(module)
         .unsubstitutedMemberScope
-        .also {
-
-          val t = it.getContributedDescriptors(DescriptorKindFilter.VARIABLES)
-          names.addAll(t.map { it.toString() })
-        }
         .memberInjectedProperties()
         .forEach {
           if (!acc.contains(it.name)) {

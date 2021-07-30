@@ -27,12 +27,11 @@ apply(plugin = "org.jetbrains.kotlin.android")
 
 @Suppress("MagicNumber")
 configure<TestedExtension> {
-  compileSdkVersion(30)
+  compileSdkVersion(31)
 
   defaultConfig {
     minSdkVersion(21)
-    targetSdkVersion(30)
-    versionName = "1.0.0-beta09"
+    targetSdkVersion(31)
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
@@ -87,19 +86,6 @@ tasks.withType<KotlinCompile>()
         "-Xinline-classes",
         "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
       )
-    }
-  }
-
-// https://youtrack.jetbrains.com/issue/KT-37652
-tasks
-  .matching { it is KotlinCompile && !it.name.contains("test", ignoreCase = true) }
-  .configureEach {
-    val task = this
-    if (!project.hasProperty("kotlin.optOutExplicitApi")) {
-      val kotlinCompile = task as KotlinCompile
-      if ("-Xexplicit-api=strict" !in kotlinCompile.kotlinOptions.freeCompilerArgs) {
-        kotlinCompile.kotlinOptions.freeCompilerArgs += "-Xexplicit-api=strict"
-      }
     }
   }
 

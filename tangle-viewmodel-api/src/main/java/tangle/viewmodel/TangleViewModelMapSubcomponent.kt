@@ -3,6 +3,7 @@ package tangle.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import tangle.inject.InternalTangleApi
+import tangle.viewmodel.internal.TangleViewModelFactory
 import javax.inject.Provider
 
 /**
@@ -14,17 +15,15 @@ import javax.inject.Provider
  *
  * @since 0.10.0
  */
-public interface TangleViewModelSubcomponent {
+public interface TangleViewModelMapSubcomponent {
   /** @suppress */
   @OptIn(InternalTangleApi::class)
   @get:TangleViewModelProviderMap
-  public val viewModelProviderMap:
-    Map<Class<out ViewModel>, Provider<@JvmSuppressWildcards ViewModel>>
+  public val viewModelProviderMap: Map<Class<*>, Provider<@JvmSuppressWildcards ViewModel>>
 
   /** @suppress */
   public interface Factory {
     /** @suppress */
-    public fun create(savedStateHandle: SavedStateHandle):
-      TangleViewModelSubcomponent
+    public fun create(savedStateHandle: SavedStateHandle): TangleViewModelMapSubcomponent
   }
 }

@@ -1,9 +1,9 @@
 module.exports = {
   title: "Tangle",
-  tagline: "Android dependency injection using Anvil",
+  tagline: "Life's too short to wait for Kapt.",
   url: "https://rbusarow.github.io/",
   baseUrl: "/Tangle/",
-  onBrokenLinks: "throw",
+  onBrokenLinks: 'warn',
   onBrokenMarkdownLinks: "warn",
   favicon: "img/favicon.ico",
   organizationName: "rbusarow", // Usually your GitHub org/user name.
@@ -22,16 +22,33 @@ module.exports = {
     },
     navbar: {
       title: "Tangle",
-      //      logo: {
-      //        alt: 'Tangle Logo',
-      //        src: 'img/logo.svg',
-      //      },
+         logo: {
+           alt: 'Tangle Logo',
+           src: 'img/logo.png',
+         },
       items: [
         {
+          label: "Basics",
           type: "doc",
           docId: "quickstart",
-          label: "Basics",
           position: "left",
+        },
+        {
+          label: "ViewModels",
+          type: "doc",
+          docId: "viewModels/viewModels",
+          position: "left",
+        },
+        {
+          label: "Fragments",
+          type: "doc",
+          docId: "fragments/fragments",
+          position: "left",
+        },
+        {
+          to: 'CHANGELOG',
+          label: 'ChangeLog',
+          position: 'right'
         },
         {
           type: "docsVersionDropdown",
@@ -50,8 +67,8 @@ module.exports = {
           position: "right",
         },
         {
-          href: "https://github.com/rbusarow/Tangle/",
           label: "GitHub",
+          href: "https://github.com/rbusarow/Tangle/",
           position: "right",
         },
       ],
@@ -62,22 +79,28 @@ module.exports = {
     prism: {
       theme: require("prism-react-renderer/themes/github"),
       darkTheme: require("prism-react-renderer/themes/dracula"),
-      additionalLanguages: ["kotlin", "groovy"],
+      additionalLanguages: ["kotlin", "groovy", "java"],
     },
   },
+  plugins: [
+    [
+      '@docusaurus/plugin-client-redirects',
+      {
+        toExtensions: ['html'],
+      },
+    ],
+  ],
   presets: [
     [
       "@docusaurus/preset-classic",
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
-          editUrl: "https://github.com/rbusarow/Tangle/",
+          editUrl: "https://github.com/rbusarow/Tangle",
         },
         blog: {
           showReadingTime: true,
-          // Please change this to your repo.
-          editUrl: "https://github.com/rbusarow/Tangle/",
+          editUrl: "https://github.com/rbusarow/Tangle",
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),

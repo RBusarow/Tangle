@@ -205,7 +205,7 @@ fun Collection<KClass<*>>.withoutAnvilModule(): List<KClass<*>> =
   filterNot { it.qualifiedName!!.startsWith("anvil.module") }
 
 fun Any.invokeGet(vararg args: Any?): Any {
-  val method = this::class.java.declaredMethods.single { it.name == "get" }
+  val method = this::class.java.declaredMethods.first { it.name == "get" }
   return method.invoke(this, *args)
 }
 

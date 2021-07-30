@@ -1,6 +1,7 @@
 package tangle.viewmodel
 
 import tangle.inject.InternalTangleApi
+import tangle.viewmodel.internal.TangleViewModelFactory
 
 /**
  * Holds a reference to the application's Dagger graph,
@@ -11,11 +12,17 @@ import tangle.inject.InternalTangleApi
  * @sample samples.TangleGraphSample.initializeTangleGraph
  * @since 0.10.0
  */
+@OptIn(InternalTangleApi::class)
 public object TangleGraph {
 
-  @PublishedApi
-  @Suppress("ObjectPropertyNaming")
-  internal val _components: MutableSet<Any> = mutableSetOf()
+  private val components: MutableSet<Any> = mutableSetOf()
+
+  internal val tangleViewModelKeys by lazy {
+    get<TangleViewModelComponent>()
+      .tangleViewModelKeysSubcomponentFactory
+      .create()
+      .viewModelKeys
+  }
 
   /**
    * Sets a reference to the application's Dagger graph,
@@ -28,8 +35,11 @@ public object TangleGraph {
    * @since 0.10.0
    */
   public fun init(component: Any) {
-    _components.add(component)
+    components.add(component)
   }
+
+  internal fun tangleViewModelSubcomponentFactory() = get<TangleViewModelComponent>()
+    .tangleViewModelMapSubcomponentFactory
 
   /**
    * Used to retrieve a Component of a given type.
@@ -38,8 +48,7 @@ public object TangleGraph {
    *
    * @since 0.10.0
    */
-  @InternalTangleApi
-  public inline fun <reified T> get(): T = _components
+  private inline fun <reified T> get(): T = components
     .filterIsInstance<T>()
     .single()
 }

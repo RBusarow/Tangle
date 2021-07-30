@@ -1,6 +1,6 @@
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.rickbusarow.tangle/tangle-api/badge.svg)](https://search.maven.org/search?q=com.rickbusarow.tangle)
-![CI](https://github.com/RBusarow/hermit/workflows/CI/badge.svg)
-[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+[![Maven Central](https://img.shields.io/maven-central/v/com.rickbusarow.tangle/tangle-api?style=flat-square)](https://search.maven.org/search?q=com.rickbusarow.tangle)
+[![Gradle Plugin Portal](https://img.shields.io/gradle-plugin-portal/v/com.rickbusarow.tangle?style=flat-square)](https://plugins.gradle.org/plugin/com.rickbusarow.tangle)
+[![License](https://img.shields.io/badge/license-apache2.0-blue?style=flat-square.svg)](https://opensource.org/licenses/Apache-2.0)
 
 ___
 
@@ -11,7 +11,7 @@ better flexibility of Anvil.
 Since Tangle is an extension upon Anvil, its code generation will be applied to **Kotlin** files
 only.
 
-``` Kotlin
+```kotlin
 @ContributesViewModel(AppScope::class)
 class MyViewModel @VMInject constructor(
   val myRepository: MyRepository,
@@ -44,7 +44,7 @@ ____
 The `TangleComponents` holder needs to be initialized with an application-scoped Dagger Component in
 order to complete the graph.
 
-``` Kotlin
+```kotlin
 class MyApplication : Application() {
 
   override fun onCreate() {
@@ -145,7 +145,7 @@ just inject `null`.
 
 Given this code:
 
-``` Kotlin
+```kotlin
 @ContributesViewModel(AppScope::class)
 class MyViewModel @VMInject constructor(
   @FromSavedState("userId")
@@ -157,7 +157,7 @@ class MyViewModel @VMInject constructor(
 
 Tangle will generate this Provider:
 
-``` Kotlin
+```kotlin
 public class MyViewModel_Provider @Inject constructor(
   private val savedStateHandle: Provider<SavedStateHandle>
 ) : Provider<MyViewModel> {
@@ -178,7 +178,7 @@ public class MyViewModel_Provider @Inject constructor(
 Tangle supports ViewModel "injection" in composables in a manner very similar to Hilt's
 navigation/viewModel artifact. It will scope the ViewModel to the composable's `NavBackStackEntry`.
 
-``` Kotlin
+```kotlin
 @Composable
 fun MyComposable(
   navController: NavController,

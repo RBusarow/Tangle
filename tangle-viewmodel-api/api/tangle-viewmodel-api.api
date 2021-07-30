@@ -1,34 +1,27 @@
-public final class tangle/inject/api/BuildConfig {
-	public static final field BUILD_TYPE Ljava/lang/String;
-	public static final field DEBUG Z
-	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
-	public fun <init> ()V
-}
-
-public abstract interface annotation class tangle/viewmodel/ContributesViewModel : java/lang/annotation/Annotation {
-	public abstract fun replaces ()[Ljava/lang/Class;
-	public abstract fun scope ()Ljava/lang/Class;
-}
-
-public final class tangle/viewmodel/TangleComponents {
-	public static final field INSTANCE Ltangle/viewmodel/TangleComponents;
-	public final fun add (Ljava/lang/Object;)V
-	public static final fun get (Ljava/lang/Class;)Ljava/lang/Object;
+public final class tangle/viewmodel/TangleGraph {
+	public static final field INSTANCE Ltangle/viewmodel/TangleGraph;
+	public final fun init (Ljava/lang/Object;)V
 }
 
 public abstract interface class tangle/viewmodel/TangleViewModelComponent {
-	public abstract fun getTangleViewModelSubcomponentFactory ()Ltangle/viewmodel/TangleViewModelSubcomponent$Factory;
+	public abstract fun getTangleViewModelKeysSubcomponentFactory ()Ltangle/viewmodel/TangleViewModelKeysSubcomponent$Factory;
+	public abstract fun getTangleViewModelMapSubcomponentFactory ()Ltangle/viewmodel/TangleViewModelMapSubcomponent$Factory;
+}
+
+public abstract interface class tangle/viewmodel/TangleViewModelKeysSubcomponent {
 	public abstract fun getViewModelKeys ()Ljava/util/Set;
 }
 
-public final class tangle/viewmodel/TangleViewModelFactory : androidx/lifecycle/ViewModelProvider$Factory {
-	public static final field Companion Ltangle/viewmodel/TangleViewModelFactory$Companion;
-	public fun <init> (Landroidx/savedstate/SavedStateRegistryOwner;Landroid/os/Bundle;Ljava/util/Set;Landroidx/lifecycle/ViewModelProvider$Factory;)V
-	public fun create (Ljava/lang/Class;)Landroidx/lifecycle/ViewModel;
+public abstract interface class tangle/viewmodel/TangleViewModelKeysSubcomponent$Factory {
+	public abstract fun create ()Ltangle/viewmodel/TangleViewModelKeysSubcomponent;
 }
 
-public final class tangle/viewmodel/TangleViewModelFactory$Companion {
-	public final fun invoke (Landroidx/savedstate/SavedStateRegistryOwner;Landroid/os/Bundle;Landroidx/lifecycle/ViewModelProvider$Factory;)Landroidx/lifecycle/ViewModelProvider$Factory;
+public abstract interface class tangle/viewmodel/TangleViewModelMapSubcomponent {
+	public abstract fun getViewModelProviderMap ()Ljava/util/Map;
+}
+
+public abstract interface class tangle/viewmodel/TangleViewModelMapSubcomponent$Factory {
+	public abstract fun create (Landroidx/lifecycle/SavedStateHandle;)Ltangle/viewmodel/TangleViewModelMapSubcomponent;
 }
 
 public abstract interface annotation class tangle/viewmodel/TangleViewModelProviderMap : java/lang/annotation/Annotation {
@@ -37,18 +30,23 @@ public abstract interface annotation class tangle/viewmodel/TangleViewModelProvi
 public abstract interface annotation class tangle/viewmodel/TangleViewModelProviderMap$KeySet : java/lang/annotation/Annotation {
 }
 
-public abstract interface class tangle/viewmodel/TangleViewModelSubcomponent {
-	public abstract fun getViewModelProviderMap ()Ljava/util/Map;
-}
-
-public abstract interface class tangle/viewmodel/TangleViewModelSubcomponent$Factory {
-	public abstract fun create (Landroidx/lifecycle/SavedStateHandle;)Ltangle/viewmodel/TangleViewModelSubcomponent;
-}
-
 public abstract interface annotation class tangle/viewmodel/VMInject : java/lang/annotation/Annotation {
 }
 
-public abstract interface annotation class tangle/viewmodel/ViewModelKey : java/lang/annotation/Annotation {
-	public abstract fun value ()Ljava/lang/Class;
+public final class tangle/viewmodel/api/BuildConfig {
+	public static final field BUILD_TYPE Ljava/lang/String;
+	public static final field DEBUG Z
+	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
+	public fun <init> ()V
+}
+
+public final class tangle/viewmodel/internal/TangleViewModelFactory : androidx/lifecycle/ViewModelProvider$Factory {
+	public static final field Companion Ltangle/viewmodel/internal/TangleViewModelFactory$Companion;
+	public fun <init> (Landroidx/savedstate/SavedStateRegistryOwner;Landroid/os/Bundle;Ljava/util/Set;Landroidx/lifecycle/ViewModelProvider$Factory;)V
+	public fun create (Ljava/lang/Class;)Landroidx/lifecycle/ViewModel;
+}
+
+public final class tangle/viewmodel/internal/TangleViewModelFactory$Companion {
+	public final fun invoke (Landroidx/savedstate/SavedStateRegistryOwner;Landroid/os/Bundle;Landroidx/lifecycle/ViewModelProvider$Factory;)Landroidx/lifecycle/ViewModelProvider$Factory;
 }
 

@@ -28,7 +28,7 @@ buildscript {
     maven("https://oss.sonatype.org/content/repositories/snapshots")
   }
   dependencies {
-    classpath("com.android.tools.build:gradle:4.2.2")
+    classpath("com.android.tools.build:gradle:7.0.0")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
     classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.10-1.0.0-beta02")
     classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
@@ -43,7 +43,7 @@ plugins {
   id("com.github.ben-manes.versions") version "0.39.0"
   id("io.gitlab.arturbosch.detekt") version "1.17.1"
   id("org.jetbrains.dokka") version "1.5.0"
-  id("com.osacky.doctor") version "0.7.0"
+  id("com.osacky.doctor") version "0.7.1"
   id("com.dorongold.task-tree") version "2.1.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.6.0"
   base
@@ -168,7 +168,7 @@ apiValidation {
 
 subprojects {
 
-  if (File("$projectDir/src").exists()) {
+  if (File("$projectDir/src").exists() && !path.endsWith("samples")) {
     apply(plugin = "org.jetbrains.dokka")
 
     val proj = this
@@ -180,6 +180,10 @@ subprojects {
       dokkaSourceSets {
 
         getByName("main") {
+
+          if (File("${proj.projectDir}/samples").exists()) {
+            samples.setFrom("${proj.projectDir}/samples")
+          }
 
           if (File("${proj.projectDir}/README.md").exists()) {
             includes.from(files("${proj.projectDir}/README.md"))

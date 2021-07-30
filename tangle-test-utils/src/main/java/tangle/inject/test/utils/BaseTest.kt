@@ -17,9 +17,10 @@ package tangle.inject.test.utils
 
 import com.tschuchort.compiletesting.KotlinCompilation
 import com.tschuchort.compiletesting.KotlinCompilation.ExitCode.COMPILATION_ERROR
+import com.tschuchort.compiletesting.KotlinCompilation.ExitCode.OK
 import hermit.test.junit.HermitJUnit5
+import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestInfo
@@ -45,8 +46,37 @@ abstract class BaseTest : HermitJUnit5() {
     }
 
   @Suppress("NewApi")
+  protected fun compileWithDagger(
+    vararg sources: String,
+    shouldFail: Boolean = false,
+    block: KotlinCompilation.Result.() -> Unit = { }
+  ) {
+    fun String.clean() = replace("[^a-zA-Z0-9]".toRegex(), "_")
+
+    val className = testInfo.testClass.get().simpleName
+
+    val testName = testInfo.displayName
+      .clean()
+      .replace("_{2,}".toRegex(), "_")
+      .removeSuffix("_")
+
+    val workingDir = File("build/test-builds/$className/$testName")
+
+    compileAnvil(
+      sources = sources,
+      enableDaggerAnnotationProcessor = true,
+      generateDaggerFactories = false,
+      // Many constructor parameters are unused.
+      allWarningsAsErrors = false,
+      block = { checkExitCode(shouldFail).block() },
+      workingDir = workingDir
+    )
+  }
+
+  @Suppress("NewApi")
   protected fun TestScope.compile(
     vararg sources: String,
+    shouldFail: Boolean = false,
     block: KotlinCompilation.Result.() -> Unit = { }
   ): KotlinCompilation.Result {
     fun String.clean() = replace("[^a-zA-Z0-9]".toRegex(), "_")
@@ -68,15 +98,21 @@ abstract class BaseTest : HermitJUnit5() {
       generateDaggerFactories = useAnvilFactories,
       // Many constructor parameters are unused.
       allWarningsAsErrors = false,
-      block = block,
+      block = { checkExitCode(shouldFail).block() },
       workingDir = workingDir
     )
   }
 
-  infix fun KotlinCompilation.Result.shouldFailWithMessage(message: String) {
-    exitCode shouldBe COMPILATION_ERROR
+  fun KotlinCompilation.Result.checkExitCode(shouldFail: Boolean) = apply {
+    val expectedCode = if (shouldFail) {
+      COMPILATION_ERROR
+    } else {
+      OK
+    }
 
-    messages shouldContain message
+    messages.asClue {
+      exitCode shouldBe expectedCode
+    }
   }
 
   data class TestScope(val useAnvilFactories: Boolean)

@@ -1,5 +1,5 @@
 {
-  "name": "modulecheck",
+  "name": "tangle",
   "version": "0.10.0",
   "private": true,
   "scripts": {
@@ -13,8 +13,11 @@
   },
   "dependencies": {
     "@docusaurus/core": "^2.0.0-beta.3",
+    "@docusaurus/plugin-client-redirects": "^2.0.0-beta.3",
     "@docusaurus/preset-classic": "^2.0.0-beta.3",
+    "@docusaurus/theme-search-algolia": "^2.0.0-beta.3",
     "@mdx-js/react": "^1.6.21",
+    "babel-preset-es2015": "^6.24.1",
     "clsx": "^1.1.1",
     "react": "^16.8.4",
     "react-dom": "^16.8.4"

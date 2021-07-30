@@ -10,6 +10,7 @@ dispatch = "1.0.0-beta09"
 detekt = "1.17.0"
 dokka = "1.4.10"
 gradleDoctor = "0.7.0"
+groovy = "3.0.8"
 hermit = "0.9.5"
 jUnit = "5.7.2"
 knit = "0.2.3"
@@ -25,22 +26,25 @@ targetSdk = "30"
 taskTree = "1.5"
 versionName = "0.11.0"
 
-androidx-compose = "1.0.0-rc02"
+androidx-compose = "1.0.0"
+androidx-fragment-version = "1.3.6"
 androidx-lifecycle = "2.3.1"
+androidx-navigation-version = "2.4.0-alpha05"
 androidx-room = "2.3.0"
 androidx-test-espresso = "3.4.0"
+androidx-test-version = "1.4.0"
 
-google-dagger = "2.37"
+google-dagger = "2.38.1"
 
 [libraries]
-androidGradlePlugin = "com.android.tools.build:gradle:4.2.1"
+androidGradlePlugin = "com.android.tools.build:gradle:7.0.0"
 
-androidx-activity-compose = "androidx.activity:activity-compose:1.3.0-rc02"
-androidx-activity-ktx = "androidx.activity:activity-ktx:1.2.3"
+androidx-activity-compose = "androidx.activity:activity-compose:1.3.0"
+androidx-activity-ktx = "androidx.activity:activity-ktx:1.3.0"
 
 androidx-annotations = "androidx.annotation:annotation:1.2.0"
 
-androidx-appcompat = "androidx.appcompat:appcompat:1.3.0"
+androidx-appcompat = "androidx.appcompat:appcompat:1.3.1"
 
 androidx-arch-test-core = "androidx.arch.core:core-testing:2.1.0"
 
@@ -62,9 +66,9 @@ androidx-constraintLayout = "androidx.constraintlayout:constraintlayout:2.0.4"
 
 androidx-coreKtx = "androidx.core:core-ktx:1.6.0"
 
-androidx-fragment-core = "androidx.fragment:fragment:1.3.5"
-androidx-fragment-ktx = "androidx.fragment:fragment-ktx:1.3.5"
-androidx-fragment-testing = "androidx.fragment:fragment-testing:1.3.5"
+androidx-fragment-core = { module = "androidx.fragment:fragment", version.ref = "androidx-fragment-version" }
+androidx-fragment-ktx = { module = "androidx.fragment:fragment-ktx", version.ref = "androidx-fragment-version" }
+androidx-fragment-testing = { module = "androidx.fragment:fragment-testing", version.ref = "androidx-fragment-version" }
 
 androidx-lifecycle-common = { module = "androidx.lifecycle:lifecycle-common", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-liveData = { module = "androidx.lifecycle:lifecycle-livedata-core", version.ref = "androidx-lifecycle" }
@@ -76,16 +80,16 @@ androidx-lifecycle-viewModel-core = { module = "androidx.lifecycle:lifecycle-vie
 androidx-lifecycle-viewModel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewModel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-lifecycle" }
 
-androidx-navigation-common = "androidx.navigation:navigation-common:2.4.0-alpha04"
-androidx-navigation-compose = "androidx.navigation:navigation-compose:2.4.0-alpha04"
-androidx-navigation-runtime-ktx = "androidx.navigation:navigation-runtime-ktx:2.3.5"
+androidx-navigation-common = { module = "androidx.navigation:navigation-common", version.ref = "androidx-navigation-version" }
+androidx-navigation-compose = { module = "androidx.navigation:navigation-compose", version.ref = "androidx-navigation-version" }
+androidx-navigation-runtime-ktx = { module = "androidx.navigation:navigation-runtime-ktx", version.ref = "androidx-navigation-version" }
 
 androidx-savedstate = "androidx.savedstate:savedstate:1.1.0"
 
-androidx-test-core = "androidx.test:core:1.4.0"
-androidx-test-orchestrator = "androidx.test:orchestrator:1.4.0"
-androidx-test-rules = "androidx.test:rules:1.4.0"
-androidx-test-runner = "androidx.test:runner:1.4.0"
+androidx-test-core = { module = "androidx.test:core", version.ref = "androidx-test-version" }
+androidx-test-orchestrator = { module = "androidx.test:orchestrator", version.ref = "androidx-test-version" }
+androidx-test-rules = { module = "androidx.test:rules", version.ref = "androidx-test-version" }
+androidx-test-runner = { module = "androidx.test:runner", version.ref = "androidx-test-version" }
 
 androidx-test-espresso-contrib = { module = "androidx.test.espresso:espresso-contrib", version.ref = "androidx-test-espresso" }
 androidx-test-espresso-core = { module = "androidx.test.espresso:espresso-core", version.ref = "androidx-test-espresso" }
@@ -94,7 +98,7 @@ androidx-test-espresso-intents = { module = "androidx.test.espresso:espresso-int
 androidx-test-espresso-web = { module = "androidx.test.espresso:espresso-web", version.ref = "androidx-test-espresso" }
 
 androidx-test-jUnit = "androidx.test.ext:junit:1.1.3"
-androidx-test-truth = "androidx.test.ext:truth:1.4.0"
+androidx-test-truth = { module = "androidx.test.ext:truth", version.ref = "androidx-test-version" }
 
 anvil-annotations = { module = "com.squareup.anvil:annotations", version.ref = "anvil" }
 anvil-compiler-api = { module = "com.squareup.anvil:compiler-api", version.ref = "anvil" }
@@ -102,12 +106,12 @@ anvil-compiler-core = { module = "com.squareup.anvil:compiler", version.ref = "a
 anvil-compiler-utils = { module = "com.squareup.anvil:compiler-utils", version.ref = "anvil" }
 anvil-plugin = { module = "com.squareup.anvil:gradle-plugin", version.ref = "anvil" }
 
-codehaus-groovy-core = "org.codehaus.groovy:groovy:3.0.8"
-codehaus-groovy-xml = "org.codehaus.groovy:groovy-xml:3.0.8"
+codehaus-groovy-core = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
+codehaus-groovy-xml = { module = "org.codehaus.groovy:groovy-xml", version.ref = "groovy" }
 
-google-accompanist-coil = "com.google.accompanist:accompanist-coil:0.14.0"
+google-accompanist-coil = "com.google.accompanist:accompanist-coil:0.15.0"
 
-google-auto-common = "com.google.auto:auto-common:1.1"
+google-auto-common = "com.google.auto:auto-common:1.1.2"
 
 google-auto-service-annotations = "com.google.auto.service:auto-service-annotations:1.0"
 google-auto-service-processor = "com.google.auto.service:auto-service:1.0"
