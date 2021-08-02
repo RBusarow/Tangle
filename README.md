@@ -77,7 +77,7 @@ pluginManagement {
 // top-level build.gradle.kts
 
 plugins {
-  id("com.rickbusarow.tangle") version "0.11.0"
+  id("com.rickbusarow.tangle") version "0.11.1"
 }
 ```
 
@@ -115,15 +115,15 @@ plugins {
 
 dependencies {
 
-  api("com.rickbusarow.tangle:tangle-annotations:0.11.0")
+  api("com.rickbusarow.tangle:tangle-annotations:0.11.1")
 
-  implementation("com.rickbusarow.tangle:tangle-api:0.11.0")
+  implementation("com.rickbusarow.tangle:tangle-api:0.11.1")
 
   // optional Compose support
-  implementation("com.rickbusarow.tangle:tangle-compose:0.11.0")
+  implementation("com.rickbusarow.tangle:tangle-compose:0.11.1")
 
   // `anvil` adds the compiler extension to the Anvil plugin's list of code generators
-  anvil("com.rickbusarow.tangle:tangle-compiler:0.11.0")
+  anvil("com.rickbusarow.tangle:tangle-compiler:0.11.1")
 }
 ```
 
