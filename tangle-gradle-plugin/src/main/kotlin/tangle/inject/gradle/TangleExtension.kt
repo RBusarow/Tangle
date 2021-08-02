@@ -27,8 +27,16 @@ public abstract class TangleExtension @Inject constructor(
   public val composeEnabled: Property<Boolean> =
     objectFactory.property(Boolean::class.java)
       .convention(COMPOSE_ENABLED)
+  public val fragmentsEnabled: Property<Boolean> =
+    objectFactory.property(Boolean::class.java)
+      .convention(FRAGMENTS_ENABLED)
+  public val viewModelsEnabled: Property<Boolean> =
+    objectFactory.property(Boolean::class.java)
+      .convention(VIEWMODELS_ENABLED)
 
   internal companion object {
     const val COMPOSE_ENABLED = false
+    const val FRAGMENTS_ENABLED = true
+    const val VIEWMODELS_ENABLED = true
   }
 }

@@ -1,7 +1,11 @@
 public abstract class tangle/inject/gradle/TangleExtension {
 	public static final field COMPOSE_ENABLED Z
+	public static final field FRAGMENTS_ENABLED Z
+	public static final field VIEWMODELS_ENABLED Z
 	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
 	public final fun getComposeEnabled ()Lorg/gradle/api/provider/Property;
+	public final fun getFragmentsEnabled ()Lorg/gradle/api/provider/Property;
+	public final fun getViewModelsEnabled ()Lorg/gradle/api/provider/Property;
 }
 
 public class tangle/inject/gradle/TanglePlugin : org/gradle/api/plugins/BasePlugin {
