@@ -1,5 +1,5 @@
 {
-  "version-0.10.0/Basics": [
+  "version-0.10.0/Docs": [
     {
       "type": "doc",
       "id": "version-0.10.0/quickstart"
@@ -7,18 +7,17 @@
     {
       "type": "doc",
       "id": "version-0.10.0/configuration"
-    }
-  ],
-  "version-0.10.0/ViewModels": [
+    },
     {
-      "type": "doc",
-      "id": "version-0.10.0/viewModels/viewModels"
-    }
-  ],
-  "version-0.10.0/Fragments": [
-    {
-      "type": "doc",
-      "id": "version-0.10.0/fragments/fragments"
+      "collapsed": false,
+      "type": "category",
+      "label": "ViewModels",
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-0.10.0/viewModels/viewModels"
+        }
+      ]
     }
   ]
 }

@@ -107,7 +107,7 @@ function Home() {
       <header className={clsx('hero hero--primary', styles.heroBanner)}>
         <div className="container">
           <p className={clsx(styles.heroSlogan)}>
-            <strong>Tangle</strong> generates Android bindings using Anvil.
+            <strong>Tangle</strong> binds Android components for Dagger with Anvil.
           </p>
           <div className={styles.buttons}>
             <Link
@@ -133,18 +133,18 @@ function Home() {
           <div className="container">
             <a href="https://search.maven.org/search?q=g:com.rickbusarow.tangle">
               <img
-                src="https://img.shields.io/maven-central/v/com.rickbusarow.tangle/tangle-api.svg?label=release&style=for-the-badge&color=aa0055"
+                src="https://img.shields.io/maven-central/v/com.rickbusarow.tangle/tangle-api.svg?label=maven&style=for-the-badge&color=aa0055"
                 alt="version badge"/>
             </a>
 
             &nbsp;
-            
+
             <a href="https://plugins.gradle.org/plugin/com.rickbusarow.tangle">
-              <img 
+              <img
                 src="https://img.shields.io/gradle-plugin-portal/v/com.rickbusarow.tangle?style=for-the-badge"
                 alt="Gradle Plugin Portal" />
             </a>
-            
+
             &nbsp;
 
             <a href="https://github.com/rbusarow/tangle/blob/main/LICENSE">
