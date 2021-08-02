@@ -115,15 +115,16 @@ plugins {
 
 dependencies {
 
-  api("com.rickbusarow.tangle:tangle-annotations:0.11.1")
+  // Fragments
+  api("com.rickbusarow.tangle:tangle-fragment-api:0.11.1")
+  anvil("com.rickbusarow.tangle:tangle-fragment-compiler:0.11.1")
 
-  implementation("com.rickbusarow.tangle:tangle-api:0.11.1")
+  // ViewModels
+  api("com.rickbusarow.tangle:tangle-viewmodel-api:0.11.1")
+  anvil("com.rickbusarow.tangle:tangle-viewmodel-compiler:0.11.1")
 
   // optional Compose support
-  implementation("com.rickbusarow.tangle:tangle-compose:0.11.1")
-
-  // `anvil` adds the compiler extension to the Anvil plugin's list of code generators
-  anvil("com.rickbusarow.tangle:tangle-compiler:0.11.1")
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.11.1")
 }
 ```
 
