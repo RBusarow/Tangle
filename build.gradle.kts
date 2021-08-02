@@ -163,12 +163,20 @@ apiValidation {
    * Typically, it is all kinds of `@InternalApi` annotations that mark
    * effectively private API that cannot be actually private for technical reasons.
    */
-  nonPublicMarkers.add("tangle.inject.annotations.InternalTangleApi")
+  nonPublicMarkers.add("tangle.api.internal.InternalTangleApi")
 }
 
 subprojects {
 
-  if (File("$projectDir/src").exists() && !path.endsWith("samples")) {
+  val includeSubproject = when {
+    path == ":tangle-test-utils" -> false
+    path.endsWith("samples") -> false
+    path.endsWith("tests") -> false
+    path.endsWith("compiler") -> false
+    else -> File("$projectDir/src").exists()
+  }
+
+  if (includeSubproject) {
     apply(plugin = "org.jetbrains.dokka")
 
     val proj = this
@@ -228,7 +236,7 @@ extensions.configure<kotlinx.knit.KnitPluginExtension> {
 
   moduleDocs = "build/dokka"
   moduleMarkers = listOf("build.gradle", "build.gradle.kts")
-  siteRoot = "https://rbusarow.github.io/Tangle/api"
+  siteRoot = "https://rbusarow.github.io/Tangle/api/"
 }
 
 // Build API docs for all modules with dokka before running Knit

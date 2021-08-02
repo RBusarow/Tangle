@@ -14,16 +14,27 @@
  */
 
 module.exports = {
-  Basics: [
+  Docs: [
     "quickstart",
-    "configuration"
-  ],
-  ViewModels: [
-    "viewModels/viewModels",
-    "viewModels/savedStateHandle",
-    "viewModels/compose",
-  ],
-  Fragments: [
-    "fragments/fragments",
+    "configuration",
+    {
+      type: "category",
+      label: "ViewModels",
+      collapsed: false,
+      items: [
+        "viewModels/viewModels",
+        "viewModels/savedStateHandle",
+        "viewModels/compose",
+      ],
+    },
+    {
+      type: "category",
+      label: "Fragments",
+      collapsed: false,
+      items: [
+        "fragments/fragments",
+        "fragments/bundles",
+      ],
+    },
   ],
 };

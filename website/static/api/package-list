@@ -1,0 +1,14 @@
+$dokka.format:html-v1
+$dokka.linkExtension:html
+
+module:tangle-api
+tangle.inject
+tangle.inject.internal
+module:tangle-fragment-api
+tangle.fragment
+module:tangle-gradle-plugin
+tangle.inject.gradle
+module:tangle-viewmodel-api
+tangle.viewmodel
+module:tangle-viewmodel-compose
+tangle.inject.compose
