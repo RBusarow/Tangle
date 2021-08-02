@@ -18,11 +18,8 @@ package tangle.inject.gradle
 import com.android.build.gradle.BaseExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Project
-import org.gradle.api.plugins.AppliedPlugin
 import org.gradle.api.plugins.BasePlugin
-import org.gradle.api.plugins.PluginManager
 import org.gradle.kotlin.dsl.findByType
-import java.util.concurrent.atomic.AtomicBoolean
 
 public open class TanglePlugin : BasePlugin() {
 
