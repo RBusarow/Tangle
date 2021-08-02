@@ -1,0 +1,48 @@
+{
+  "version-0.11.0/Docs": [
+    {
+      "type": "doc",
+      "id": "version-0.11.0/quickstart"
+    },
+    {
+      "type": "doc",
+      "id": "version-0.11.0/configuration"
+    },
+    {
+      "type": "category",
+      "label": "ViewModels",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-0.11.0/viewModels/viewModels"
+        },
+        {
+          "type": "doc",
+          "id": "version-0.11.0/viewModels/savedStateHandle"
+        },
+        {
+          "type": "doc",
+          "id": "version-0.11.0/viewModels/compose"
+        }
+      ],
+      "collapsible": true
+    },
+    {
+      "type": "category",
+      "label": "Fragments",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-0.11.0/fragments/fragments"
+        },
+        {
+          "type": "doc",
+          "id": "version-0.11.0/fragments/bundles"
+        }
+      ],
+      "collapsible": true
+    }
+  ]
+}
