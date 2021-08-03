@@ -1,4 +1,4 @@
-name: Release
+name: Release to Maven and Portal
 
 on:
   workflow_dispatch:
@@ -21,17 +21,20 @@ jobs:
         with:
           java-version: 14
 
-      - name: Publish release
+      - name: Publish Maven release
         run: ./gradlew publish --no-daemon --no-parallel
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
 
-      - name: Close release
+      - name: Close Maven release
         run: ./gradlew closeAndReleaseRepository --no-daemon --no-parallel
         env:
           ORG_GRADLE_PROJECT_mavenCentralUsername: ${{ secrets.SONATYPE_NEXUS_USERNAME }}
           ORG_GRADLE_PROJECT_mavenCentralPassword: ${{ secrets.SONATYPE_NEXUS_PASSWORD }}
+
+      - name: Publish to Gradle Plugin Portal
+        run: ./gradlew publishPlugins
 
       - name: Create new website docs version
         run: ./gradlew versionDocs
