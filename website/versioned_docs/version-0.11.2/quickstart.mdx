@@ -1,0 +1,97 @@
+---
+id: quickstart
+title: Quick Start
+sidebar_label: Quick Start
+slug: /
+---
+
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## Dependencies
+
+<Tabs groupId="language"
+defaultValue="Kotlin"
+values={[
+{label: 'Kotlin', value: 'Kotlin'}, {label: 'Groovy', value: 'Groovy'},
+]}>
+
+   <TabItem value="Kotlin">
+
+```kotlin
+// settings.gradle.kts
+
+pluginManagement {
+  repositories {
+    gradlePluginPortal()
+  }
+}
+```
+
+```kotlin
+// top-level build.gradle.kts
+
+plugins {
+  id("com.rickbusarow.tangle") version "0.11.2"
+}
+```
+
+```kotlin
+// any Android module's build.gradle.kts
+
+plugins {
+  id("android-library") // or application, etc.
+  kotlin("android")
+  id("com.squareup.anvil")
+  id("com.rickbusarow.tangle")
+}
+
+// optional
+tangle {
+  composeEnabled.set(true) // default is false
+  fragmentsEnabled.set(true) // default is true
+  viewModelsEnabled.set(true) // default is true
+}
+```
+
+   </TabItem>
+
+<TabItem value="Groovy">
+
+```groovy
+// settings.gradle
+
+pluginManagement {
+  repositories {
+    gradlePluginPortal()
+  }
+}
+```
+
+```groovy
+// top-level build.gradle
+
+plugins {
+  id "com.rickbusarow.module-check" version "0.11.2"
+}
+```
+
+```groovy
+// any Android module's build.gradle
+
+plugins {
+  id 'android-library' // or application, etc.
+  kotlin("android")
+  id 'com.squareup.anvil'
+  id 'com.rickbusarow.tangle'
+}
+
+// optional
+tangle {
+  composeEnabled = true // default is false
+}
+```
+
+   </TabItem>
+</Tabs>
