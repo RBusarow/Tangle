@@ -243,3 +243,14 @@ extensions.configure<kotlinx.knit.KnitPluginExtension> {
 tasks.withType<kotlinx.knit.KnitTask>().configureEach {
   dependsOn(tasks.findByName("dokkaHtmlMultiModule"))
 }
+
+val startSite by tasks.registering(Exec::class) {
+  workingDir("./website")
+  commandLine("npm", "run", "start")
+}
+
+val versionDocs by tasks.registering(Exec::class) {
+  workingDir("./website")
+  val version = libs.versions.versionName.get()
+  commandLine("npm", "run", "docusaurus", "docs:version", version)
+}
