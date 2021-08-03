@@ -1,3 +1,25 @@
+# 0.11.2
+### Changes
+
+### 🐛 Bug Fixes
+
+- create default multi-bindings for ViewModels [@RBusarow](https://github.com/RBusarow) ([#116](https://github.com/rbusarow/Tangle/pull/116))
+
+### 🧰 Maintenance
+
+- create a github action for releasing [@RBusarow](https://github.com/RBusarow) ([#118](https://github.com/rbusarow/Tangle/pull/118))
+- update changelogs [@RBusarow](https://github.com/RBusarow) ([#117](https://github.com/rbusarow/Tangle/pull/117))
+
+### ℹ️ Website
+
+- update version to 0.11.2 [@RBusarow](https://github.com/RBusarow) ([#119](https://github.com/rbusarow/Tangle/pull/119))
+- update changelogs [@RBusarow](https://github.com/RBusarow) ([#117](https://github.com/rbusarow/Tangle/pull/117))
+
+### Contributors
+
+@RBusarow
+
+
 # 0.11.1
 ### Changes
 
