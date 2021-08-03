@@ -1,6 +1,29 @@
+# 0.11.1
+### Changes
 
+- create 0.11.1 version for website docs [@RBusarow](https://github.com/RBusarow) [#111](https://github.com/rbusarow/Tangle/pull/111)
 
-## 0.10.0
+### 🐛 Bug Fixes
+
+- update applied paths in TanglePlugin [@RBusarow](https://github.com/RBusarow) [#110](https://github.com/rbusarow/Tangle/pull/110)
+
+### 🧰 Maintenance
+
+- Bump constraintlayout from 2.0.4 to 2.1.0 (Dependabot) [#108](https://github.com/rbusarow/Tangle/pull/108)
+- update version to 0.11.1 [@RBusarow](https://github.com/RBusarow) [#109](https://github.com/rbusarow/Tangle/pull/109)
+- add release-drafter [@RBusarow](https://github.com/RBusarow) [#106](https://github.com/rbusarow/Tangle/pull/106)
+
+# 0.11.0
+
+- add `require` function which throws TangleCompilationException [#6](https://github.com/rbusarow/Tangle/pull/6)
+- Docusaurus [#7](https://github.com/rbusarow/Tangle/pull/7)
+- update api dump [#47](https://github.com/rbusarow/Tangle/pull/47)
+- replace kotlinter with ktlint-gradle [#45](https://github.com/rbusarow/Tangle/pull/45)
+- initial Dokka setup [#46](https://github.com/rbusarow/Tangle/pull/46)
+- basic knit setup [#48](https://github.com/rbusarow/Tangle/pull/48)
+- automatically deploy website for every merge into main [#49](https://github.com/rbusarow/Tangle/pull/49)
+
+# 0.10.0
 
 Initial release
 
