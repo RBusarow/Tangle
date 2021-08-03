@@ -19,6 +19,7 @@ class ViewModelMergeComponentCodeGenerator : CodeGenerator {
     ViewModelMapSubcomponentGenerator(),
     ViewModelKeysSubcomponentGenerator(),
     ViewModelSubcomponentModuleGenerator(),
+    ViewModelMergeComponentModuleGenerator(),
     ViewModelComponentGenerator()
   )
 

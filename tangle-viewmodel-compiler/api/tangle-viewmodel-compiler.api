@@ -134,9 +134,10 @@ public final class tangle/viewmodel/compiler/ViewModelTangleScopeModuleGenerator
 
 public final class tangle/viewmodel/compiler/components/MergeComponentParams {
 	public static final field Companion Ltangle/viewmodel/compiler/components/MergeComponentParams$Companion;
-	public fun <init> (Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/lang/String;Lorg/jetbrains/kotlin/name/FqName;Lcom/squareup/kotlinpoet/ClassName;Lorg/jetbrains/kotlin/psi/KtClassOrObject;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;)V
+	public fun <init> (Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/lang/String;Lorg/jetbrains/kotlin/name/FqName;Lcom/squareup/kotlinpoet/ClassName;Lorg/jetbrains/kotlin/psi/KtClassOrObject;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;)V
 	public final fun component1 ()Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;
 	public final fun component10 ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun component11 ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun component2 ()Ljava/lang/String;
 	public final fun component3 ()Lorg/jetbrains/kotlin/name/FqName;
 	public final fun component4 ()Lcom/squareup/kotlinpoet/ClassName;
@@ -145,8 +146,8 @@ public final class tangle/viewmodel/compiler/components/MergeComponentParams {
 	public final fun component7 ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun component8 ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun component9 ()Lcom/squareup/kotlinpoet/ClassName;
-	public final fun copy (Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/lang/String;Lorg/jetbrains/kotlin/name/FqName;Lcom/squareup/kotlinpoet/ClassName;Lorg/jetbrains/kotlin/psi/KtClassOrObject;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;)Ltangle/viewmodel/compiler/components/MergeComponentParams;
-	public static synthetic fun copy$default (Ltangle/viewmodel/compiler/components/MergeComponentParams;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/lang/String;Lorg/jetbrains/kotlin/name/FqName;Lcom/squareup/kotlinpoet/ClassName;Lorg/jetbrains/kotlin/psi/KtClassOrObject;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;ILjava/lang/Object;)Ltangle/viewmodel/compiler/components/MergeComponentParams;
+	public final fun copy (Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/lang/String;Lorg/jetbrains/kotlin/name/FqName;Lcom/squareup/kotlinpoet/ClassName;Lorg/jetbrains/kotlin/psi/KtClassOrObject;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;)Ltangle/viewmodel/compiler/components/MergeComponentParams;
+	public static synthetic fun copy$default (Ltangle/viewmodel/compiler/components/MergeComponentParams;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/lang/String;Lorg/jetbrains/kotlin/name/FqName;Lcom/squareup/kotlinpoet/ClassName;Lorg/jetbrains/kotlin/psi/KtClassOrObject;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;Lcom/squareup/kotlinpoet/ClassName;ILjava/lang/Object;)Ltangle/viewmodel/compiler/components/MergeComponentParams;
 	public fun equals (Ljava/lang/Object;)Z
 	public final fun getComponentClass ()Lorg/jetbrains/kotlin/psi/KtClassOrObject;
 	public final fun getComponentClassName ()Lcom/squareup/kotlinpoet/ClassName;
@@ -154,6 +155,7 @@ public final class tangle/viewmodel/compiler/components/MergeComponentParams {
 	public final fun getKeysSubcomponentFactoryClassName ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getMapSubcomponentClassName ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getMapSubcomponentFactoryClassName ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun getMergeComponentModuleClassName ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getModule ()Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;
 	public final fun getPackageName ()Ljava/lang/String;
 	public final fun getScopeClassName ()Lcom/squareup/kotlinpoet/ClassName;
@@ -192,6 +194,13 @@ public final class tangle/viewmodel/compiler/components/ViewModelMergeComponentC
 	public fun generateCode (Ljava/io/File;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Ljava/util/Collection;)Ljava/util/Collection;
 	public final fun getFileGenerators ()Ljava/util/List;
 	public fun isApplicable (Lcom/squareup/anvil/compiler/api/AnvilContext;)Z
+}
+
+public final class tangle/viewmodel/compiler/components/ViewModelMergeComponentModuleGenerator : tangle/inject/compiler/FileGenerator {
+	public fun <init> ()V
+	public fun createGeneratedFile (Ljava/io/File;Ljava/lang/String;Ljava/lang/String;Ljava/lang/String;)Lcom/squareup/anvil/compiler/api/GeneratedFile;
+	public synthetic fun generate (Ljava/io/File;Ljava/lang/Object;)Lcom/squareup/anvil/compiler/api/GeneratedFile;
+	public fun generate (Ljava/io/File;Ltangle/viewmodel/compiler/components/MergeComponentParams;)Lcom/squareup/anvil/compiler/api/GeneratedFile;
 }
 
 public final class tangle/viewmodel/compiler/components/ViewModelSubcomponentModuleGenerator : tangle/inject/compiler/FileGenerator {

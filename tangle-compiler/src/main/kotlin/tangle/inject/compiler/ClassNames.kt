@@ -3,11 +3,8 @@ package tangle.inject.compiler
 import com.squareup.anvil.annotations.ContributesTo
 import com.squareup.anvil.annotations.MergeComponent
 import com.squareup.anvil.annotations.MergeSubcomponent
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.ParameterizedTypeName
+import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import com.squareup.kotlinpoet.TypeVariableName
-import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import dagger.*
 import dagger.internal.Factory
@@ -60,7 +57,16 @@ public object ClassNames {
     .parameterizedBy(TypeVariableName("out·${androidxFragment.canonicalName}"))
   public val javaClassOutVM: ParameterizedTypeName = Class::class.asClassName()
     .parameterizedBy(TypeVariableName("out·${androidxViewModel.canonicalName}"))
+  public val javaClassWildcard: ParameterizedTypeName = Class::class.asClassName()
+    .parameterizedBy(TypeVariableName("*"))
 
+  public val viewModelClassSet: ParameterizedTypeName = Set::class.asClassName().parameterizedBy(
+    javaClassOutVM
+  )
+  public val viewModelMap: ParameterizedTypeName = Map::class.asClassName().parameterizedBy(
+    javaClassWildcard,
+    androidxViewModel.jvmSuppressWildcards()
+  )
   public val fragmentMap: ParameterizedTypeName = Map::class.asClassName().parameterizedBy(
     javaClassOutFragment,
     androidxFragment.jvmSuppressWildcards()

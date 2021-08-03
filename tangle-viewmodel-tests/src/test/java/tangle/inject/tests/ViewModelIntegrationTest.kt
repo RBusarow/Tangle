@@ -72,4 +72,23 @@ class ViewModelIntegrationTest : BaseTest() {
 
     keysSubcomponent.viewModelKeys shouldBe setOf(myViewModelClass)
   }
+
+  @Test
+  fun `empty multibindings are created if no ViewModels are bound`() = compileWithDagger(
+    """
+      package tangle.inject.tests
+
+      import com.squareup.anvil.annotations.MergeComponent
+      import javax.inject.Singleton
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent
+     """
+  ) {
+
+    val component = daggerAppComponent.createFunction()
+      .invoke(null)
+      .cast<TangleViewModelComponent>()
+  }
 }

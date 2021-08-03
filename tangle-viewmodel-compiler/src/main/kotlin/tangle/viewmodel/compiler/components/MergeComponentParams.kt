@@ -21,6 +21,7 @@ data class MergeComponentParams(
   val mapSubcomponentClassName: ClassName,
   val mapSubcomponentFactoryClassName: ClassName,
   val componentClassName: ClassName,
+  val mergeComponentModuleClassName: ClassName,
 ) {
   companion object {
     fun create(clazz: KtClassOrObject, module: ModuleDescriptor): MergeComponentParams {
@@ -38,6 +39,8 @@ data class MergeComponentParams(
       val mapSubcomponentFactoryClassName = mapSubcomponentClassName.nestedClass("Factory")
       val componentClassName =
         ClassName(packageName, "${clazz.generateClassName()}TangleViewModelComponent")
+      val mergeComponentModuleClassName =
+        ClassName(packageName, "${clazz.generateClassName()}TangleViewModelModule")
 
       return MergeComponentParams(
         module = module,
@@ -49,7 +52,8 @@ data class MergeComponentParams(
         keysSubcomponentFactoryClassName = keysSubcomponentFactoryClassName,
         mapSubcomponentClassName = mapSubcomponentClassName,
         mapSubcomponentFactoryClassName = mapSubcomponentFactoryClassName,
-        componentClassName = componentClassName
+        componentClassName = componentClassName,
+        mergeComponentModuleClassName = mergeComponentModuleClassName
       )
     }
   }
