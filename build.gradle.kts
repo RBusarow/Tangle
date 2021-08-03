@@ -246,11 +246,11 @@ tasks.withType<kotlinx.knit.KnitTask>().configureEach {
 
 val startSite by tasks.registering(Exec::class) {
   workingDir("./website")
-  commandLine( "npm", "run", "start")
+  commandLine("npm", "run", "start")
 }
 
 val versionDocs by tasks.registering(Exec::class) {
   workingDir("./website")
   val version = libs.versions.versionName.get()
-  commandLine("npm" ,"run" ,"docusaurus" ,"docs:version", version)
+  commandLine("npm", "run", "docusaurus", "docs:version", version)
 }
