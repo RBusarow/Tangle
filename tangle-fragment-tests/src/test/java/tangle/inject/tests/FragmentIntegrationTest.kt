@@ -7,7 +7,12 @@ import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
 import tangle.fragment.TangleFragmentProviderMap
-import tangle.inject.test.utils.*
+import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.createFunction
+import tangle.inject.test.utils.daggerAppComponent
+import tangle.inject.test.utils.invokeGet
+import tangle.inject.test.utils.myFragmentClass
+import tangle.inject.test.utils.property
 import javax.inject.Provider
 import kotlin.reflect.KProperty1
 
@@ -225,4 +230,18 @@ class FragmentIntegrationTest : BaseTest() {
 
       fragment::class.java shouldBe myFragmentClass
     }
+
+  @Test
+  fun `empty multibindings are created if no ViewModels are bound`() = compileWithDagger(
+    """
+      package tangle.inject.tests
+
+      import com.squareup.anvil.annotations.MergeComponent
+      import javax.inject.Singleton
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent
+     """
+  )
 }
