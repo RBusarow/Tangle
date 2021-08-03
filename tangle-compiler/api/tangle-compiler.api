@@ -20,6 +20,7 @@ public final class tangle/inject/compiler/ClassNames {
 	public final fun getIntoSet ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getJavaClassOutFragment ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
 	public final fun getJavaClassOutVM ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
+	public final fun getJavaClassWildcard ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
 	public final fun getJvmStatic ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getMergeComponent ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getMergeSubomponent ()Lcom/squareup/kotlinpoet/ClassName;
@@ -48,6 +49,8 @@ public final class tangle/inject/compiler/ClassNames {
 	public final fun getTangleViewModelMapSubcomponentFactory ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleViewModelProviderMap ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getTangleViewModelProviderMapKeySet ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun getViewModelClassSet ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
+	public final fun getViewModelMap ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
 }
 
 public final class tangle/inject/compiler/ContructorInjectParameter : tangle/inject/compiler/Parameter {
