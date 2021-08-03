@@ -90,6 +90,5 @@ class ViewModelIntegrationTest : BaseTest() {
     val component = daggerAppComponent.createFunction()
       .invoke(null)
       .cast<TangleViewModelComponent>()
-
   }
 }

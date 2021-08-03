@@ -53,7 +53,7 @@ data class MergeComponentParams(
         mapSubcomponentClassName = mapSubcomponentClassName,
         mapSubcomponentFactoryClassName = mapSubcomponentFactoryClassName,
         componentClassName = componentClassName,
-          mergeComponentModuleClassName = mergeComponentModuleClassName
+        mergeComponentModuleClassName = mergeComponentModuleClassName
       )
     }
   }
