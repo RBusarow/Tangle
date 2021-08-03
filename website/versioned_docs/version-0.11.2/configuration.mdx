@@ -1,0 +1,94 @@
+---
+id: configuration
+sidebar_label: Configuration
+---
+
+
+The `TangleGraph` holder needs to be initialized with an application-scoped Dagger Component in
+order to complete the graph.
+
+```kotlin
+class MyApplication : Application() {
+
+  override fun onCreate() {
+    super.onCreate()
+
+    val myAppComponent = DaggerAppComponent.factory()
+      .create(this)
+
+    TangleGraph.init(myAppComponent)
+  }
+}
+```
+
+### Gradle plugin
+
+The simple way to apply Tangle is to just apply the gradle plugin. It will automatically add the
+dependencies and perform some basic validation of your module's configuration.
+
+```kotlin
+// settings.gradle.kts
+
+pluginManagement {
+  repositories {
+    gradlePluginPortal()
+  }
+}
+```
+
+```kotlin
+// top-level build.gradle.kts
+
+plugins {
+  id("com.rickbusarow.tangle") version "0.11.2"
+}
+```
+
+```kotlin
+// any Android module's build.gradle.kts
+
+plugins {
+  id("android-library") // or application, etc.
+  kotlin("android")
+  id("com.squareup.anvil")
+  id("com.rickbusarow.tangle")
+}
+
+// optional
+tangle {
+  composeEnabled.set(true) // default is false
+  fragmentsEnabled.set(true) // default is true
+  viewModelsEnabled.set(true) // default is true
+}
+```
+
+### Explicit dependencies
+
+You can also just add dependencies yourself, without applying the plugin.
+
+Note that Tangle is specifically for Android and has Android-specific dependencies,
+so it should only be added to Android modules.
+
+```kotlin
+// any Android module's build.gradle.kts
+
+plugins {
+  id("android-library") // or application, etc.
+  kotlin("android")
+  id("com.squareup.anvil")
+}
+
+dependencies {
+
+  // Fragments
+  api("com.rickbusarow.tangle:tangle-fragment-api:0.11.2")
+  anvil("com.rickbusarow.tangle:tangle-fragment-compiler:0.11.2")
+
+  // ViewModels
+  api("com.rickbusarow.tangle:tangle-viewmodel-api:0.11.2")
+  anvil("com.rickbusarow.tangle:tangle-viewmodel-compiler:0.11.2")
+
+  // optional Compose support
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.11.2")
+}
+```
