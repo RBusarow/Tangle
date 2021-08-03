@@ -134,12 +134,12 @@ gradlePlugin {
 pluginBundle {
   website = "https://github.com/RBusarow/Tangle"
   vcsUrl = "https://github.com/RBusarow/Tangle"
-  description = "Fast dependency graph validation for gradle"
+  description = "Create Android component bindings for Dagger with Anvil"
   tags = listOf("android", "dagger2", "kotlin", "kotlin-compiler-plugin")
 
   plugins {
     getByName("tangle") {
-      displayName = "Hilt-like ViewModel injection using the Anvil compiler plugin"
+      displayName = "Create Android component bindings for Dagger with Anvil"
     }
   }
 }
