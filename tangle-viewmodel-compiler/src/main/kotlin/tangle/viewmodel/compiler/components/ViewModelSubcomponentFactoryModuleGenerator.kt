@@ -5,20 +5,41 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.TypeSpec
+import org.jetbrains.kotlin.descriptors.resolveClassByFqName
+import org.jetbrains.kotlin.incremental.components.NoLookupLocation.FROM_BACKEND
+import org.jetbrains.kotlin.name.FqName
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
 import java.io.File
 
-class ViewModelSubcomponentModuleGenerator : FileGenerator<MergeComponentParams> {
+class ViewModelSubcomponentFactoryModuleGenerator : FileGenerator<MergeComponentParams> {
 
   override fun generate(
     codeGenDir: File,
     params: MergeComponentParams
-  ): GeneratedFile {
+  ): GeneratedFile? {
 
-    val packageName = params.packageName
+    val moduleFqName =
+      FqName(
+        "${params.subcomponentModulePackageName}.${params.subcomponentModuleClassName.simpleName}"
+      )
+
+    // If the (Dagger) Module for this scope already exists in a different Gradle module,
+    // it can't be created again here without creating a duplicate binding
+    // for the TangleFragmentFactory.
+    val alreadyCreated = listOf(params.module)
+      .plus(params.module.allDependencyModules)
+      .any { depMod ->
+        depMod.resolveClassByFqName(moduleFqName, FROM_BACKEND) != null
+      }
+
+    if (alreadyCreated) {
+      return null
+    }
+
+    val packageName = params.subcomponentModulePackageName
 
     val className = params.subcomponentModuleClassName
 
@@ -43,23 +64,21 @@ class ViewModelSubcomponentModuleGenerator : FileGenerator<MergeComponentParams>
             .build()
         )
         .addFunction(
-          "bind${params.mapSubcomponentFactoryClassName.simpleNames.joinToString("_")}IntoSet"
+          "bind_${params.mapSubcomponentFactoryClassName.simpleNames.joinToString("_")}IntoSet"
         ) {
           addModifiers(KModifier.ABSTRACT)
           returns(ClassNames.tangleViewModelMapSubcomponentFactory)
           addParameter("factory", params.mapSubcomponentFactoryClassName)
           addAnnotation(ClassNames.binds)
-          addAnnotation(ClassNames.intoSet)
           build()
         }
         .addFunction(
-          "bind${params.keysSubcomponentFactoryClassName.simpleNames.joinToString("_")}IntoSet"
+          "bind_${params.keysSubcomponentFactoryClassName.simpleNames.joinToString("_")}IntoSet"
         ) {
           addModifiers(KModifier.ABSTRACT)
           returns(ClassNames.tangleViewModelKeysSubcomponentFactory)
           addParameter("factory", params.keysSubcomponentFactoryClassName)
           addAnnotation(ClassNames.binds)
-          addAnnotation(ClassNames.intoSet)
           build()
         }
         .build()
@@ -69,20 +88,3 @@ class ViewModelSubcomponentModuleGenerator : FileGenerator<MergeComponentParams>
     return createGeneratedFile(codeGenDir, packageName, className.simpleName, content)
   }
 }
-
-/*
-@ContributesTo(Unit::class)
-@Named("kotlin.Unit")
-@Module(subcomponents = [UnitTangleViewModelMapSubcomponent::class, UnitTangleViewModelKeysSubcomponent::class])
-public interface UnitTangleViewModelSubcomponentModule {
-  @Binds
-  public
-      fun bindUnitTangleViewModelMapSubcomponent_Factory(factory: UnitTangleViewModelMapSubcomponent.Factory):
-      TangleViewModelMapSubcomponent.Factory
-
-  @Binds
-  public
-      fun bindUnitTangleViewModelKeysSubcomponent_Factory(factory: UnitTangleViewModelKeysSubcomponent.Factory):
-      TangleViewModelKeysSubcomponent.Factory
-}
- */

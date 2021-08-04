@@ -92,7 +92,7 @@ class TangleFragmentFactoryModuleGenerator : CodeGenerator {
         }
         .addType(
           TypeSpec.companionObjectBuilder()
-            .addFunction("provide${ClassNames.tangleFragmentFactory.simpleName}") {
+            .addFunction("provide_${ClassNames.tangleFragmentFactory.simpleName}") {
               addAnnotation(ClassNames.provides)
               addParameter("providerMap", ClassNames.fragmentProviderMap)
               addParameter(

@@ -64,7 +64,7 @@ class FragmentInjectModuleGenerationTest : BaseTest() {
       tangleUnitFragmentInjectModuleClass
         .kotlin
         .functions
-        .first { it.name == "provideMyFragment_Factory" }
+        .first { it.name == "provide_MyFragment_Factory" }
         .call(tangleUnitFragmentInjectModuleClass.kotlin.objectInstance)!!::class.java shouldBe myFragmentFactoryImplClass
     }
   }

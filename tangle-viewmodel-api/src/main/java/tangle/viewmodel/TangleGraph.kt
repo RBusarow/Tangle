@@ -19,8 +19,7 @@ public object TangleGraph {
 
   internal val tangleViewModelKeys by lazy {
     get<TangleViewModelComponent>()
-      .tangleViewModelKeysSubcomponentFactories
-      .first()
+      .tangleViewModelKeysSubcomponentFactory
       .create()
       .viewModelKeys
   }
@@ -40,8 +39,7 @@ public object TangleGraph {
   }
 
   internal fun tangleViewModelSubcomponentFactory() = get<TangleViewModelComponent>()
-    .tangleViewModelMapSubcomponentFactories
-    .first()
+    .tangleViewModelMapSubcomponentFactory
 
   /**
    * Used to retrieve a Component of a given type.

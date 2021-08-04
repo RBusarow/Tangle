@@ -21,7 +21,7 @@ import java.io.File
 
 fun interface FileGenerator<T> {
 
-  fun generate(codeGenDir: File, params: T): GeneratedFile
+  fun generate(codeGenDir: File, params: T): GeneratedFile?
 
   /**
    * Write [content] into a new file for the given [packageName] and [fileName]. [fileName] usually

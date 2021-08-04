@@ -17,7 +17,7 @@ public interface TangleViewModelComponent {
    * @since 0.10.0
    */
   @InternalTangleApi
-  public val tangleViewModelMapSubcomponentFactories: Set<TangleViewModelMapSubcomponent.Factory>
+  public val tangleViewModelMapSubcomponentFactory: TangleViewModelMapSubcomponent.Factory
 
   /**
    * Referenced by [TangleViewModelFactory] in order to create
@@ -26,5 +26,5 @@ public interface TangleViewModelComponent {
    * @since 0.10.0
    */
   @InternalTangleApi
-  public val tangleViewModelKeysSubcomponentFactories: Set<TangleViewModelKeysSubcomponent.Factory>
+  public val tangleViewModelKeysSubcomponentFactory: TangleViewModelKeysSubcomponent.Factory
 }

@@ -110,7 +110,7 @@ class ContributesFragmentGenerator : CodeGenerator {
           val factoryImplClassName = ClassName(binding.packageName, fragmentFactoryClassNameString)
 
           addFunction(
-            FunSpec.builder(name = "provide${binding.fragmentClassName.simpleNames.joinToString("_")}")
+            FunSpec.builder(name = "provide_${binding.fragmentClassName.simpleNames.joinToString("_")}")
               .addAnnotation(ClassNames.provides)
               .addAnnotation(ClassNames.tangleFragmentProviderMap)
               .applyEach(binding.injectedParams) { argument ->
@@ -144,7 +144,7 @@ class ContributesFragmentGenerator : CodeGenerator {
               .build()
 
             addFunction(
-              FunSpec.builder(name = "bind${binding.fragmentClassName.simpleNames.joinToString("_")}")
+              FunSpec.builder(name = "bind_${binding.fragmentClassName.simpleNames.joinToString("_")}")
                 .addModifiers(KModifier.ABSTRACT)
                 .returns(ClassNames.androidxFragment)
                 .apply {

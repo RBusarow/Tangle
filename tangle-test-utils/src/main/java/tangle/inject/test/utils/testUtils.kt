@@ -162,35 +162,10 @@ val Result.anyQualifier: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.AnyQualifier")
 
 val Result.bindMyFragment: Method
-  get() = tangleUnitFragmentModuleClass.getDeclaredMethod("bindMyFragment", myFragmentClass)
+  get() = tangleUnitFragmentModuleClass.getDeclaredMethod("bind_MyFragment", myFragmentClass)
 
 val Result.provideMyFragment: Method
-  get() = tangleUnitFragmentModuleCompanionClass.getDeclaredMethod("provideMyFragment")
-
-@Suppress("UNCHECKED_CAST")
-val Result.bindingKey: Class<out Annotation>
-  get() = classLoader.loadClass("tangle.inject.tests.BindingKey") as Class<out Annotation>
-
-private fun Class<*>.contributedProperties(packagePrefix: String): List<KClass<*>>? {
-  // The capitalize() doesn't make sense, I don't know where this is coming from. Maybe it's a
-  // bug in the compile testing library?
-  @Suppress("DEPRECATION")
-  val className = canonicalName.replace('.', '_')
-    .capitalize() + "Kt"
-
-  val clazz = try {
-    classLoader.loadClass("$packagePrefix.${packageName()}$className")
-  } catch (e: ClassNotFoundException) {
-    return null
-  }
-
-  return clazz.declaredFields
-    .map {
-      it.isAccessible = true
-      it.get(null)
-    }
-    .filterIsInstance<KClass<*>>()
-}
+  get() = tangleUnitFragmentModuleCompanionClass.getDeclaredMethod("provide_MyFragment")
 
 fun Method.annotationClasses() = annotations.map { it.annotationClass }
 fun Class<*>.annotationClasses() = annotations.map { it.annotationClass }

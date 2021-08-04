@@ -35,8 +35,7 @@ class ViewModelIntegrationTest : BaseTest() {
       .invoke(null)
       .cast<TangleViewModelComponent>()
 
-    val mapSubcomponent = component.tangleViewModelMapSubcomponentFactories
-      .first()
+    val mapSubcomponent = component.tangleViewModelMapSubcomponentFactory
       .create(SavedStateHandle())
 
     val map = mapSubcomponent.viewModelProviderMap
@@ -68,8 +67,7 @@ class ViewModelIntegrationTest : BaseTest() {
       .invoke(null)
       .cast<TangleViewModelComponent>()
 
-    val keysSubcomponent = component.tangleViewModelKeysSubcomponentFactories
-      .first()
+    val keysSubcomponent = component.tangleViewModelKeysSubcomponentFactory
       .create()
 
     keysSubcomponent.viewModelKeys shouldBe setOf(myViewModelClass)
@@ -97,6 +95,54 @@ class ViewModelIntegrationTest : BaseTest() {
       @Singleton
       @MergeComponent(Unit::class)
       interface AppComponent2
+     """
+    )
+
+  @Test
+  fun `pre-existing Subcomponent factory Module in classpath should not get duplicate bindings`() =
+    compileWithDagger(
+      """
+      package tangle.inject.tests
+
+      import com.squareup.anvil.annotations.MergeComponent
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.*
+      import javax.inject.*
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @Inject constructor(
+        val factory: TangleFragmentFactory
+      ) : Fragment()
+     """,
+      """
+      package tangle.viewmodel
+
+      import com.squareup.anvil.annotations.ContributesTo
+      import dagger.Binds
+      import dagger.Module
+      import kotlin.Suppress
+      import kotlin.Unit
+      import tangle.inject.tests.Unit_Tangle_ViewModel_Keys_Subcomponent
+      import tangle.inject.tests.Unit_Tangle_ViewModel_Map_Subcomponent
+
+      @ContributesTo(Unit::class)
+      @Module(subcomponents = [Unit_Tangle_ViewModel_Map_Subcomponent::class, Unit_Tangle_ViewModel_Keys_Subcomponent::class])
+      public interface Unit_Tangle_ViewModel_SubcomponentFactory_Module {
+        @Binds
+        public
+            fun bindUnit_Tangle_ViewModel_Map_Subcomponent_FactoryIntoSet(factory: Unit_Tangle_ViewModel_Map_Subcomponent.Factory):
+            TangleViewModelMapSubcomponent.Factory
+
+        @Binds
+        public
+            fun bindUnit_Tangle_ViewModel_Keys_Subcomponent_FactoryIntoSet(factory: Unit_Tangle_ViewModel_Keys_Subcomponent.Factory):
+            TangleViewModelKeysSubcomponent.Factory
+      }
      """
     )
 
