@@ -35,9 +35,12 @@ import kotlin.reflect.KClass
 
 /**
  * Helpful for testing code generators in unit tests end to end.
+ *
+ * Borrowed from Anvil with some slight adaptations
+ * https://github.com/square/anvil/blob/399fcae9bd4bbf6f76ab675743848b0f06af7c11/compiler-utils/src/testFixtures/java/com/squareup/anvil/compiler/internal/testing/TestUtils.kt#L27
  */
 @Suppress("LongParameterList")
-fun compileAnvil(
+fun compileTangle(
   vararg sources: String,
   enableDaggerAnnotationProcessor: Boolean = false,
   generateDaggerFactories: Boolean = false,

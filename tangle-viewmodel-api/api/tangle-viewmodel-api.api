@@ -4,8 +4,8 @@ public final class tangle/viewmodel/TangleGraph {
 }
 
 public abstract interface class tangle/viewmodel/TangleViewModelComponent {
-	public abstract fun getTangleViewModelKeysSubcomponentFactory ()Ltangle/viewmodel/TangleViewModelKeysSubcomponent$Factory;
-	public abstract fun getTangleViewModelMapSubcomponentFactory ()Ltangle/viewmodel/TangleViewModelMapSubcomponent$Factory;
+	public abstract fun getTangleViewModelKeysSubcomponentFactories ()Ljava/util/Set;
+	public abstract fun getTangleViewModelMapSubcomponentFactories ()Ljava/util/Set;
 }
 
 public abstract interface class tangle/viewmodel/TangleViewModelKeysSubcomponent {

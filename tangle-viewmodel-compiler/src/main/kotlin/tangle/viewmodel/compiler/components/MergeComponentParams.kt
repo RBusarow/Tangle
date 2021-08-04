@@ -1,14 +1,14 @@
 package tangle.viewmodel.compiler.components
 
-import com.squareup.anvil.compiler.internal.generateClassName
+import com.squareup.anvil.compiler.internal.requireFqName
 import com.squareup.anvil.compiler.internal.safePackageString
 import com.squareup.anvil.compiler.internal.scope
+import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtClassOrObject
-import tangle.inject.compiler.FqNames
-import tangle.inject.compiler.asClassName
+import tangle.inject.compiler.*
 
 data class MergeComponentParams(
   val module: ModuleDescriptor,
@@ -22,6 +22,8 @@ data class MergeComponentParams(
   val mapSubcomponentFactoryClassName: ClassName,
   val componentClassName: ClassName,
   val mergeComponentModuleClassName: ClassName,
+  val subcomponentModuleClassName: ClassName,
+  val scopeQualifier: AnnotationSpec
 ) {
   companion object {
     fun create(clazz: KtClassOrObject, module: ModuleDescriptor): MergeComponentParams {
@@ -30,17 +32,30 @@ data class MergeComponentParams(
 
       val scopeFqName = clazz.scope(FqNames.mergeComponent, module)
       val scopeClassName = scopeFqName.asClassName(module)
+      val scopeQualifier = AnnotationSpec(ClassNames.named) {
+        addMember("%S", "${clazz.requireFqName().asString()}--${scopeClassName.canonicalName}")
+      }
+
+      val base = scopeClassName.generateSimpleNameString()
 
       val keysSubcomponentClassName =
-        ClassName(packageName, "${clazz.generateClassName()}TangleViewModelKeysSubcomponent")
+        ClassName(packageName, "${base}_Tangle_ViewModel_Keys_Subcomponent")
+
       val keysSubcomponentFactoryClassName = keysSubcomponentClassName.nestedClass("Factory")
+
       val mapSubcomponentClassName =
-        ClassName(packageName, "${clazz.generateClassName()}TangleViewModelMapSubcomponent")
+        ClassName(packageName, "${base}_Tangle_ViewModel_Map_Subcomponent")
+
       val mapSubcomponentFactoryClassName = mapSubcomponentClassName.nestedClass("Factory")
+
       val componentClassName =
-        ClassName(packageName, "${clazz.generateClassName()}TangleViewModelComponent")
+        ClassName(packageName, "${base}_Tangle_ViewModel_Component")
+
       val mergeComponentModuleClassName =
-        ClassName(packageName, "${clazz.generateClassName()}TangleViewModelModule")
+        ClassName(packageName, "${base}_Tangle_ViewModel_Module")
+
+      val subcomponentModuleClassName =
+        ClassName(packageName, "${base}_Tangle_ViewModel_Subcomponent_Module")
 
       return MergeComponentParams(
         module = module,
@@ -53,7 +68,9 @@ data class MergeComponentParams(
         mapSubcomponentClassName = mapSubcomponentClassName,
         mapSubcomponentFactoryClassName = mapSubcomponentFactoryClassName,
         componentClassName = componentClassName,
-        mergeComponentModuleClassName = mergeComponentModuleClassName
+        mergeComponentModuleClassName = mergeComponentModuleClassName,
+        subcomponentModuleClassName = subcomponentModuleClassName,
+        scopeQualifier = scopeQualifier
       )
     }
   }

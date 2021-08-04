@@ -80,6 +80,9 @@ const val MODULE_PACKAGE_PREFIX = "anvil.module"
 val Result.daggerAppComponent: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.DaggerAppComponent")
 
+val Result.daggerAppComponent2: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.DaggerAppComponent2")
+
 val Result.contributingInterface: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.ContributingInterface")
 

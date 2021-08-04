@@ -45,9 +45,15 @@ dependencies {
   implementation(libs.kotlin.compiler)
   implementation(libs.kotlin.reflect)
   implementation(libs.square.kotlinPoet)
+
   implementation(projects.tangleApi)
   implementation(projects.tangleCompiler)
+
+  implementation(projects.tangleFragmentApi)
+  implementation(projects.tangleFragmentCompiler)
+
   implementation(projects.tangleTestUtils)
+
   implementation(projects.tangleViewmodelApi)
   implementation(projects.tangleViewmodelCompiler)
 }

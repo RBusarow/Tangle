@@ -1,3 +1,7 @@
+public final class tangle/inject/compiler/ApplyKt {
+	public static final fun applyEach (Ljava/lang/Object;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function2;)Ljava/lang/Object;
+}
+
 public final class tangle/inject/compiler/ClassNames {
 	public static final field INSTANCE Ltangle/inject/compiler/ClassNames;
 	public final fun getAndroidxFragment ()Lcom/squareup/kotlinpoet/ClassName;
@@ -26,6 +30,7 @@ public final class tangle/inject/compiler/ClassNames {
 	public final fun getMergeSubomponent ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getModule ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getMultibinds ()Lcom/squareup/kotlinpoet/ClassName;
+	public final fun getNamed ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getOptIn ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getParcelable ()Lcom/squareup/kotlinpoet/ClassName;
 	public final fun getProvider ()Lcom/squareup/kotlinpoet/ClassName;
@@ -149,8 +154,9 @@ public final class tangle/inject/compiler/KotlinPoetKt {
 	public static final fun AnnotationSpec (Lcom/squareup/kotlinpoet/ClassName;Lkotlin/jvm/functions/Function1;)Lcom/squareup/kotlinpoet/AnnotationSpec;
 	public static final fun FunSpec (Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lcom/squareup/kotlinpoet/FunSpec;
 	public static final fun addFunction (Lcom/squareup/kotlinpoet/TypeSpec$Builder;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Lcom/squareup/kotlinpoet/TypeSpec$Builder;
-	public static final fun applyEach (Ljava/lang/Object;Ljava/lang/Iterable;Lkotlin/jvm/functions/Function2;)Ljava/lang/Object;
 	public static final fun buildFile (Lcom/squareup/kotlinpoet/FileSpec$Companion;Ljava/lang/String;Ljava/lang/String;Lkotlin/jvm/functions/Function1;)Ljava/lang/String;
+	public static final fun generateSimpleNameString (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;)Ljava/lang/String;
+	public static synthetic fun generateSimpleNameString$default (Lcom/squareup/kotlinpoet/ClassName;Ljava/lang/String;ILjava/lang/Object;)Ljava/lang/String;
 	public static final fun qualifierAnnotationSpecs (Ljava/util/List;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/List;
 }
 
