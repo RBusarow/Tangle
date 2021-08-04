@@ -18,7 +18,7 @@ class ViewModelMergeComponentCodeGenerator : CodeGenerator {
   val fileGenerators = listOf(
     ViewModelMapSubcomponentGenerator(),
     ViewModelKeysSubcomponentGenerator(),
-    ViewModelSubcomponentModuleGenerator(),
+    ViewModelSubcomponentFactoryModuleGenerator(),
     ViewModelMergeComponentModuleGenerator(),
     ViewModelComponentGenerator()
   )
@@ -33,9 +33,9 @@ class ViewModelMergeComponentCodeGenerator : CodeGenerator {
     .flatMap { it.classesAndInnerClasses(module) }
     .filter { it.hasAnnotation(FqNames.mergeComponent, module) }
     .map { MergeComponentParams.create(it, module) }
-    // .distinctBy { it.scopeFqName }
+    .distinctBy { it.scopeFqName }
     .flatMap { params ->
-      fileGenerators.map { generator ->
+      fileGenerators.mapNotNull { generator ->
         generator.generate(codeGenDir, params)
       }
     }

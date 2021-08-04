@@ -100,7 +100,7 @@ class ContributesFragmentGeneratorTest : BaseTest() {
       val moduleClass = tangleUnitFragmentModuleClass.kotlin
 
       moduleClass.companionObject!!.functions
-        .first { it.name == "provideMyFragment" }
+        .first { it.name == "provide_MyFragment" }
         .call(moduleClass.companionObjectInstance)!!::class.java shouldBe myFragmentClass
     }
   }

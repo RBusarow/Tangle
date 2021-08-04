@@ -380,7 +380,7 @@ class FragmentInjectGenerator : CodeGenerator {
               includeModule = false
             )
             addFunction(
-              "provide${params.factoryInterfaceClassName.simpleNames.joinToString("_")}"
+              "provide_${params.factoryInterfaceClassName.simpleNames.joinToString("_")}"
             ) {
               addAnnotation(ClassNames.provides)
               factoryConstructorParams.forEach { argument ->

@@ -13,6 +13,7 @@ import tangle.inject.compiler.*
 data class MergeComponentParams(
   val module: ModuleDescriptor,
   val packageName: String,
+  val subcomponentModulePackageName: String,
   val scopeFqName: FqName,
   val scopeClassName: ClassName,
   val componentClass: KtClassOrObject,
@@ -54,12 +55,18 @@ data class MergeComponentParams(
       val mergeComponentModuleClassName =
         ClassName(packageName, "${base}_Tangle_ViewModel_Module")
 
+      val subcomponentModulePackageName = "tangle.viewmodel"
+
       val subcomponentModuleClassName =
-        ClassName(packageName, "${base}_Tangle_ViewModel_Subcomponent_Module")
+        ClassName(
+          subcomponentModulePackageName,
+          "${base}_Tangle_ViewModel_SubcomponentFactory_Module"
+        )
 
       return MergeComponentParams(
         module = module,
         packageName = packageName,
+        subcomponentModulePackageName = subcomponentModulePackageName,
         scopeFqName = scopeFqName,
         scopeClassName = scopeClassName,
         componentClass = clazz,
