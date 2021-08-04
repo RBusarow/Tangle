@@ -32,6 +32,7 @@ class TangleFragmentFactoryModuleGenerator : CodeGenerator {
   ): Collection<GeneratedFile> = projectFiles
     .flatMap { it.classesAndInnerClasses(module) }
     .filter { it.hasAnnotation(FqNames.mergeComponent, module) }
+    // fast path for excluding duplicate binding modules if they're in the same source
     .distinctBy { it.scope(FqNames.mergeComponent, module) }
     .mapNotNull { generateComponent(codeGenDir, module, it) }
 
