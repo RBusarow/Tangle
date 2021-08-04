@@ -62,7 +62,7 @@ abstract class BaseTest : HermitJUnit5() {
 
     val workingDir = File("build/test-builds/$className/$testName")
 
-    compileAnvil(
+    compileTangle(
       sources = sources,
       enableDaggerAnnotationProcessor = true,
       generateDaggerFactories = false,
@@ -92,7 +92,7 @@ abstract class BaseTest : HermitJUnit5() {
 
     val workingDir = File("build/test-builds/$className/$compilerType/$testName")
 
-    return compileAnvil(
+    return compileTangle(
       sources = sources,
       enableDaggerAnnotationProcessor = !useAnvilFactories,
       generateDaggerFactories = useAnvilFactories,

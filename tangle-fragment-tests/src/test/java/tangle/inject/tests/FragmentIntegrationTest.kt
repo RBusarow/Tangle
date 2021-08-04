@@ -252,6 +252,7 @@ class FragmentIntegrationTest : BaseTest() {
       package tangle.inject.tests
 
       import com.squareup.anvil.annotations.MergeComponent
+      import androidx.fragment.app.Fragment
       import tangle.fragment.*
       import tangle.inject.*
       import javax.inject.*
