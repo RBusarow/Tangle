@@ -11,6 +11,7 @@ import dagger.internal.Factory
 import dagger.internal.InstanceFactory
 import dagger.multibindings.*
 import javax.inject.Inject
+import javax.inject.Named
 import javax.inject.Provider
 
 public object ClassNames {
@@ -88,6 +89,7 @@ public object ClassNames {
   public val mergeSubomponent: ClassName = MergeSubcomponent::class.asClassName()
   public val module: ClassName = Module::class.asClassName()
   public val multibinds: ClassName = Multibinds::class.asClassName()
+  public val named: ClassName = Named::class.asClassName()
   public val provides: ClassName = Provides::class.asClassName()
   public val stringKey: ClassName = StringKey::class.asClassName()
   public val subcomponentFactory: ClassName = Subcomponent.Factory::class.asClassName()
