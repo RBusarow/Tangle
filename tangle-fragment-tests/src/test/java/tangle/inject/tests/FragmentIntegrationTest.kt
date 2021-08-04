@@ -1,11 +1,11 @@
 package tangle.inject.tests
 
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentFactory
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
+import tangle.fragment.TangleFragmentFactory
 import tangle.fragment.TangleFragmentProviderMap
 import tangle.inject.test.utils.BaseTest
 import tangle.inject.test.utils.createFunction
@@ -20,7 +20,7 @@ interface FragmentComponent {
   @get:TangleFragmentProviderMap
   val tangleProviderMap: Map<Class<out Fragment>, @JvmSuppressWildcards Fragment>
   val providerMap: Map<Class<out Fragment>, @JvmSuppressWildcards Fragment>
-  val fragmentFactory: FragmentFactory
+  val fragmentFactory: TangleFragmentFactory
 }
 
 class FragmentIntegrationTest : BaseTest() {
@@ -232,7 +232,7 @@ class FragmentIntegrationTest : BaseTest() {
     }
 
   @Test
-  fun `empty multibindings are created if no ViewModels are bound`() = compileWithDagger(
+  fun `empty multibindings are created if no Fragments are bound`() = compileWithDagger(
     """
       package tangle.inject.tests
 
@@ -244,4 +244,124 @@ class FragmentIntegrationTest : BaseTest() {
       interface AppComponent
      """
   )
+
+  @Test
+  fun `two components in classpath with same scope should not get duplicate bindings`() =
+    compileWithDagger(
+      """
+      package tangle.inject.tests
+
+      import com.squareup.anvil.annotations.MergeComponent
+      import tangle.fragment.*
+      import tangle.inject.*
+      import javax.inject.*
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @Inject constructor(
+        val factory: TangleFragmentFactory
+      ) : Fragment()
+     """,
+      """
+      package tangle.inject.tests.other
+
+      import com.squareup.anvil.annotations.MergeComponent
+      import javax.inject.Singleton
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent2
+     """
+    )
+
+  @Test
+  fun `pre-existing FragmentFactory Module in classpath should not get duplicate bindings`() =
+    compileWithDagger(
+      """
+      package tangle.inject.tests
+
+      import com.squareup.anvil.annotations.MergeComponent
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.*
+      import javax.inject.*
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @Inject constructor(
+        val factory: TangleFragmentFactory
+      ) : Fragment()
+     """,
+      """
+      package tangle.fragment
+
+      import androidx.fragment.app.Fragment
+      import com.squareup.anvil.annotations.ContributesTo
+      import dagger.Module
+      import dagger.Provides
+      import dagger.multibindings.Multibinds
+      import java.lang.Class
+      import javax.inject.Provider
+      import kotlin.Suppress
+      import kotlin.Unit
+      import kotlin.collections.Map
+      import kotlin.jvm.JvmSuppressWildcards
+
+      @Module
+      @ContributesTo(Unit::class)
+      public interface Unit_Tangle_FragmentFactory_Module {
+        @Multibinds
+        public fun bindProviderMap(): Map<Class<out androidx.fragment.app.Fragment>, @JvmSuppressWildcards
+            Fragment>
+
+        @Multibinds
+        @TangleFragmentProviderMap
+        public fun bindTangleProviderMap(): Map<Class<out androidx.fragment.app.Fragment>,
+            @JvmSuppressWildcards Fragment>
+
+        public companion object {
+          @Provides
+          public
+              fun provideTangleFragmentFactory(providerMap: Map<Class<out androidx.fragment.app.Fragment>,
+              @JvmSuppressWildcards Provider<@JvmSuppressWildcards Fragment>>, @TangleFragmentProviderMap
+              tangleProviderMap: Map<Class<out androidx.fragment.app.Fragment>, @JvmSuppressWildcards
+              Provider<@JvmSuppressWildcards Fragment>>): TangleFragmentFactory =
+              TangleFragmentFactory(providerMap, tangleProviderMap)
+        }
+      }
+     """
+    )
+
+  @Test
+  fun `two components in same package with same scope should not get duplicate bindings`() =
+    compileWithDagger(
+      """
+      package tangle.inject.tests
+
+      import com.squareup.anvil.annotations.MergeComponent
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.*
+      import javax.inject.*
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent2
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @Inject constructor(
+        val factory: TangleFragmentFactory
+      ) : Fragment()
+     """
+    )
 }

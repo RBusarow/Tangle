@@ -1,7 +1,6 @@
 package tangle.viewmodel.compiler.components
 
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.anvil.compiler.internal.generateClassName
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
@@ -19,16 +18,15 @@ class ViewModelSubcomponentModuleGenerator : FileGenerator<MergeComponentParams>
     params: MergeComponentParams
   ): GeneratedFile {
 
-    val clazz = params.componentClass
     val packageName = params.packageName
 
-    val className = "${clazz.generateClassName()}TangleViewModelSubcomponentModule"
+    val className = params.subcomponentModuleClassName
 
     val mapSubcomponentClassName = params.mapSubcomponentClassName
 
     val keysSubcomponentClassName = params.keysSubcomponentClassName
 
-    val content = FileSpec.buildFile(packageName, className) {
+    val content = FileSpec.buildFile(packageName, className.simpleName) {
       TypeSpec.interfaceBuilder(className)
         .addAnnotation(
           AnnotationSpec.builder(ClassNames.contributesTo)
@@ -45,27 +43,46 @@ class ViewModelSubcomponentModuleGenerator : FileGenerator<MergeComponentParams>
             .build()
         )
         .addFunction(
-          "bind${params.mapSubcomponentFactoryClassName.simpleNames.joinToString("_")}"
+          "bind${params.mapSubcomponentFactoryClassName.simpleNames.joinToString("_")}IntoSet"
         ) {
           addModifiers(KModifier.ABSTRACT)
           returns(ClassNames.tangleViewModelMapSubcomponentFactory)
           addParameter("factory", params.mapSubcomponentFactoryClassName)
           addAnnotation(ClassNames.binds)
+          addAnnotation(ClassNames.intoSet)
           build()
         }
         .addFunction(
-          "bind${params.keysSubcomponentFactoryClassName.simpleNames.joinToString("_")}"
+          "bind${params.keysSubcomponentFactoryClassName.simpleNames.joinToString("_")}IntoSet"
         ) {
           addModifiers(KModifier.ABSTRACT)
           returns(ClassNames.tangleViewModelKeysSubcomponentFactory)
           addParameter("factory", params.keysSubcomponentFactoryClassName)
           addAnnotation(ClassNames.binds)
+          addAnnotation(ClassNames.intoSet)
           build()
         }
         .build()
         .let { addType(it) }
     }
 
-    return createGeneratedFile(codeGenDir, packageName, className, content)
+    return createGeneratedFile(codeGenDir, packageName, className.simpleName, content)
   }
 }
+
+/*
+@ContributesTo(Unit::class)
+@Named("kotlin.Unit")
+@Module(subcomponents = [UnitTangleViewModelMapSubcomponent::class, UnitTangleViewModelKeysSubcomponent::class])
+public interface UnitTangleViewModelSubcomponentModule {
+  @Binds
+  public
+      fun bindUnitTangleViewModelMapSubcomponent_Factory(factory: UnitTangleViewModelMapSubcomponent.Factory):
+      TangleViewModelMapSubcomponent.Factory
+
+  @Binds
+  public
+      fun bindUnitTangleViewModelKeysSubcomponent_Factory(factory: UnitTangleViewModelKeysSubcomponent.Factory):
+      TangleViewModelKeysSubcomponent.Factory
+}
+ */

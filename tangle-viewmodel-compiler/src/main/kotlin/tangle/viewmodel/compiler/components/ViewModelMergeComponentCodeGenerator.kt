@@ -33,6 +33,7 @@ class ViewModelMergeComponentCodeGenerator : CodeGenerator {
     .flatMap { it.classesAndInnerClasses(module) }
     .filter { it.hasAnnotation(FqNames.mergeComponent, module) }
     .map { MergeComponentParams.create(it, module) }
+    // .distinctBy { it.scopeFqName }
     .flatMap { params ->
       fileGenerators.map { generator ->
         generator.generate(codeGenDir, params)

@@ -1,9 +1,9 @@
 package tangle.viewmodel.compiler.components
 
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.TypeSpec
+import tangle.inject.compiler.AnnotationSpec
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
 import tangle.inject.compiler.buildFile
@@ -24,9 +24,9 @@ class ViewModelComponentGenerator : FileGenerator<MergeComponentParams> {
       TypeSpec.interfaceBuilder(className)
         .addSuperinterface(ClassNames.tangleViewModelComponent)
         .addAnnotation(
-          AnnotationSpec.Companion.builder(ClassNames.contributesTo)
-            .addMember("%T::class", params.scopeClassName)
-            .build()
+          AnnotationSpec(ClassNames.contributesTo) {
+            addMember("%T::class", params.scopeClassName)
+          }
         )
         .build()
         .let { addType(it) }

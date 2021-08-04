@@ -35,7 +35,8 @@ class ViewModelIntegrationTest : BaseTest() {
       .invoke(null)
       .cast<TangleViewModelComponent>()
 
-    val mapSubcomponent = component.tangleViewModelMapSubcomponentFactory
+    val mapSubcomponent = component.tangleViewModelMapSubcomponentFactories
+      .first()
       .create(SavedStateHandle())
 
     val map = mapSubcomponent.viewModelProviderMap
@@ -67,15 +68,17 @@ class ViewModelIntegrationTest : BaseTest() {
       .invoke(null)
       .cast<TangleViewModelComponent>()
 
-    val keysSubcomponent = component.tangleViewModelKeysSubcomponentFactory
+    val keysSubcomponent = component.tangleViewModelKeysSubcomponentFactories
+      .first()
       .create()
 
     keysSubcomponent.viewModelKeys shouldBe setOf(myViewModelClass)
   }
 
   @Test
-  fun `empty multibindings are created if no ViewModels are bound`() = compileWithDagger(
-    """
+  fun `two components in classpath with same scope should not get duplicate bindings`() =
+    compileWithDagger(
+      """
       package tangle.inject.tests
 
       import com.squareup.anvil.annotations.MergeComponent
@@ -84,11 +87,35 @@ class ViewModelIntegrationTest : BaseTest() {
       @Singleton
       @MergeComponent(Unit::class)
       interface AppComponent
-     """
-  ) {
+     """,
+      """
+      package tangle.inject.tests.other
 
-    val component = daggerAppComponent.createFunction()
-      .invoke(null)
-      .cast<TangleViewModelComponent>()
-  }
+      import com.squareup.anvil.annotations.MergeComponent
+      import javax.inject.Singleton
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent2
+     """
+    )
+
+  @Test
+  fun `two components in same package with same scope should not get duplicate bindings`() =
+    compileWithDagger(
+      """
+      package tangle.inject.tests
+
+      import com.squareup.anvil.annotations.MergeComponent
+      import javax.inject.Singleton
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent2
+     """
+    )
 }
