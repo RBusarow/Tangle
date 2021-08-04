@@ -1,3 +1,15 @@
+# 0.11.3
+### Changes
+
+### 🐛 Bug Fixes
+
+- only create FragmentFactory and _Subcomponent.Factory bindings once in each classpath [@RBusarow](https://github.com/RBusarow) ([#124](https://github.com/rbusarow/Tangle/pull/124))
+  - issue ([#123](https://github.com/rbusarow/Tangle/pull/123))
+
+## Contributors
+
+[@RBusarow](https://github.com/RBusarow)
+
 # 0.11.2
 ### Changes
 
@@ -17,8 +29,7 @@
 
 ### Contributors
 
-@RBusarow
-
+[@RBusarow](https://github.com/RBusarow)
 
 # 0.11.1
 ### Changes
