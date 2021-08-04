@@ -22,7 +22,6 @@ import dagger.internal.DoubleCheck
 import dagger.internal.Factory
 import org.jetbrains.kotlin.name.FqName
 import javax.inject.Inject
-import javax.inject.Named
 import javax.inject.Provider
 import javax.inject.Qualifier
 
