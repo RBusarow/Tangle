@@ -1,12 +1,17 @@
-# 0.11.3
+# 0.11.4
 ### Changes
 
 ### 🐛 Bug Fixes
 
+- fix ViewModel duplicate bindings [@RBusarow](https://github.com/RBusarow) ([#127](https://github.com/rbusarow/Tangle/pull/127))
 - only create FragmentFactory and _Subcomponent.Factory bindings once in each classpath [@RBusarow](https://github.com/RBusarow) ([#124](https://github.com/rbusarow/Tangle/pull/124))
   - issue ([#123](https://github.com/rbusarow/Tangle/pull/123))
 
-## Contributors
+### 🧰 Maintenance
+
+- create `release.sh` [@RBusarow](https://github.com/RBusarow) ([#126](https://github.com/rbusarow/Tangle/pull/126))
+
+### Contributors
 
 [@RBusarow](https://github.com/RBusarow)
 
