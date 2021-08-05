@@ -31,7 +31,7 @@ dependencies {
   dependencySync("androidx.compose.material:material:1.0.0")
   dependencySync("androidx.compose.runtime:runtime:1.0.0")
   dependencySync("androidx.compose.ui:ui-test-junit4:1.0.0")
-  dependencySync("androidx.compose.ui:ui-tooling:1.0.0")
+  dependencySync("androidx.compose.ui:ui-tooling:1.0.1")
   dependencySync("androidx.compose.ui:ui:1.0.0")
   dependencySync("androidx.constraintlayout:constraintlayout:2.1.0")
   dependencySync("androidx.core:core-ktx:1.6.0")
