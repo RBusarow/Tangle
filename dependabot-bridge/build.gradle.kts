@@ -24,7 +24,7 @@ dependencies {
   dependencySync("androidx.annotation:annotation:1.2.0")
   dependencySync("androidx.appcompat:appcompat:1.3.1")
   dependencySync("androidx.arch.core:core-testing:2.1.0")
-  dependencySync("androidx.compose.compiler:compiler:1.0.0")
+  dependencySync("androidx.compose.compiler:compiler:1.0.1")
   dependencySync("androidx.compose.foundation:foundation:1.0.0")
   dependencySync("androidx.compose.material:material-icons-core:1.0.0")
   dependencySync("androidx.compose.material:material-icons-extended:1.0.0")
