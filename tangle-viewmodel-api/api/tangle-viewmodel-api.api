@@ -33,13 +33,6 @@ public abstract interface annotation class tangle/viewmodel/TangleViewModelProvi
 public abstract interface annotation class tangle/viewmodel/VMInject : java/lang/annotation/Annotation {
 }
 
-public final class tangle/viewmodel/api/BuildConfig {
-	public static final field BUILD_TYPE Ljava/lang/String;
-	public static final field DEBUG Z
-	public static final field LIBRARY_PACKAGE_NAME Ljava/lang/String;
-	public fun <init> ()V
-}
-
 public final class tangle/viewmodel/internal/TangleViewModelFactory : androidx/lifecycle/ViewModelProvider$Factory {
 	public static final field Companion Ltangle/viewmodel/internal/TangleViewModelFactory$Companion;
 	public fun <init> (Landroidx/savedstate/SavedStateRegistryOwner;Landroid/os/Bundle;Ljava/util/Set;Landroidx/lifecycle/ViewModelProvider$Factory;)V
