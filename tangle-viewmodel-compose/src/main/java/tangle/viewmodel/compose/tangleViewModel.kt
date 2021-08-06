@@ -8,9 +8,10 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import tangle.inject.InternalTangleApi
+import tangle.viewmodel.internal.TangleViewModelFactory
 
 /**
- * Returns an existing [VMInject][tangle.viewModel.VMInject]-annotated [ViewModel]
+ * Returns an existing [VMInject][tangle.viewmodel.VMInject]-annotated [ViewModel]
  * or creates a new one scoped to the current navigation graph present on
  * the NavController back stack.
  *
