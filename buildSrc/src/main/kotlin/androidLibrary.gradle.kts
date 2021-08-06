@@ -64,6 +64,10 @@ configure<TestedExtension> {
     unitTests.isReturnDefaultValues = true
     animationsDisabled = true
   }
+
+  // don't generate BuildConfig
+  @Suppress("UnstableApiUsage")
+  buildFeatures.buildConfig = false
 }
 
 val ci = !System.getenv("CI").isNullOrBlank()
