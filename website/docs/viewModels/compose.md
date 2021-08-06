@@ -10,6 +10,8 @@ The viewModels are still able to make use of automatic [SavedStateHandle injecti
 including arguments annotated with `@TangleParam`.
 
 ```kotlin
+import tangle.viewmodel.compose.tangleViewModel
+
 @Composable
 fun MyComposable(
   navController: NavController,
