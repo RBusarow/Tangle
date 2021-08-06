@@ -1,4 +1,4 @@
-public final class tangle/inject/compose/ComposeKt {
+public final class tangle/viewmodel/compose/TangleViewModelKt {
 	public static final fun TangleViewModelFactory (Landroidx/navigation/NavBackStackEntry;)Landroidx/lifecycle/ViewModelProvider$Factory;
 }
 
