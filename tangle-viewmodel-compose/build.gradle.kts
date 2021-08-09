@@ -36,6 +36,10 @@ dependencies {
 
   compileOnly(libs.androidx.annotations)
 
+  implementation(libs.androidx.appcompat)
+  implementation(libs.androidx.activity.compose)
+  implementation(libs.androidx.fragment.ktx)
+  implementation(libs.androidx.fragment.core)
   implementation(libs.androidx.lifecycle.viewModel.compose)
   implementation(libs.androidx.savedstate)
   implementation(projects.tangleApi)

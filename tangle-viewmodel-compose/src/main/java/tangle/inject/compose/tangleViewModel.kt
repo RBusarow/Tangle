@@ -27,12 +27,12 @@ import androidx.lifecycle.viewmodel.compose.LocalViewModelStoreOwner
  *
  * @since 0.10.0
  */
+@Suppress("DeprecatedCallableAddReplaceWith")
 @Deprecated(
-  "this is the wrong package name.  Use `tangle.viewmodel.compose.*` instead",
-  ReplaceWith(
-    "tangleViewModel(viewModelStoreOwner)",
-    "tangle.viewmodel.compose.tangleViewModel"
-  )
+  """this is the wrong package name.  Use `tangle.viewmodel.compose.tangleViewModel` instead.
+    |
+    |Please forgive the lack of an auto-fix but IntelliJ can't handle replacing the inline function properly.
+  """
 )
 @Composable
 public inline fun <reified VM : ViewModel> tangleViewModel(
