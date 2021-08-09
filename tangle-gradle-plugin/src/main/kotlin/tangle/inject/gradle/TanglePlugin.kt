@@ -90,7 +90,7 @@ public open class TanglePlugin : BasePlugin() {
 
   internal companion object {
     const val TANGLE_GROUP = "com.rickbusarow.tangle"
-    const val TANGLE_VERSION = "0.11.4"
+    const val TANGLE_VERSION = "0.11.5"
     const val EXTENSION_NAME = "tangle"
     const val KOTLIN_ANDROID_ID = "org.jetbrains.kotlin.android"
     const val ANVIL_ID = "com.squareup.anvil"
