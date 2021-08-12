@@ -14,6 +14,16 @@ module.exports = {
       defaultMode: "light",
       disableSwitch: false,
       respectPrefersColorScheme: true,
+      switchConfig: {
+        darkIcon: '🌙',
+        lightIcon: '☀️',
+        darkIconStyle: {
+          marginLeft: '2px',
+        },
+        lightIconStyle: {
+          marginLeft: '2px',
+        },
+      },
     },
     announcementBar: {
       id: "supportus",
@@ -55,13 +65,13 @@ module.exports = {
           position: "left",
         },
         {
-          label: "Twitter",
           href: "https://twitter.com/rbusarow",
+          className: 'header-twitter-link',
           position: "right",
         },
         {
-          label: "GitHub",
           href: "https://github.com/rbusarow/Tangle/",
+          className: 'header-github-link',
           position: "right",
         },
       ],
