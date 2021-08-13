@@ -71,7 +71,7 @@ dependencies {
   dependencySync("com.google.auto:auto-common:1.1.2")
   dependencySync("com.google.dagger:dagger-compiler:2.38.1")
   dependencySync("com.google.dagger:dagger:2.38.1")
-  dependencySync("com.jakewharton.timber:timber:5.0.0")
+  dependencySync("com.jakewharton.timber:timber:5.0.1")
   dependencySync("com.rickbusarow.hermit:hermit-core:0.9.5")
   dependencySync("com.rickbusarow.hermit:hermit-coroutines:0.9.5")
   dependencySync("com.rickbusarow.hermit:hermit-junit4:0.9.5")
