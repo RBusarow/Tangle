@@ -34,7 +34,7 @@ sealed class Parameter {
     get() = tangleParamName != null
 }
 
-data class ContructorInjectParameter(
+data class ConstructorInjectParameter(
   override val name: String,
   override val typeName: TypeName,
   override val providerTypeName: ParameterizedTypeName,
@@ -58,7 +58,7 @@ data class MemberInjectParameter(
   val memberInjectorClass: ClassName
 ) : Parameter()
 
-fun List<ContructorInjectParameter>.uniqueName(base: String, attempt: Int = 0): String {
+fun List<ConstructorInjectParameter>.uniqueName(base: String, attempt: Int = 0): String {
   return map { it.name }.uniqueName(base, attempt)
 }
 

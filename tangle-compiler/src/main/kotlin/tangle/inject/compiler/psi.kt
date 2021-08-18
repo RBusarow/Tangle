@@ -94,7 +94,7 @@ internal fun KtAnnotationEntry.tangleParamName(): String? {
 
 fun List<KtCallableDeclaration>.mapToParameters(
   module: ModuleDescriptor
-): List<ContructorInjectParameter> =
+): List<ConstructorInjectParameter> =
   mapIndexed { index, parameter ->
     val typeElement = parameter.typeReference?.typeElement
     val typeFqName = typeElement?.fqNameOrNull(module)
@@ -137,7 +137,7 @@ fun List<KtCallableDeclaration>.mapToParameters(
       else -> baseName
     }
 
-    ContructorInjectParameter(
+    ConstructorInjectParameter(
       name = name,
       typeName = typeName,
       providerTypeName = typeName.wrapInProvider(),
