@@ -17,6 +17,7 @@ package tangle.viewmodel
 
 import kotlin.annotation.AnnotationRetention.BINARY
 import kotlin.annotation.AnnotationTarget.CONSTRUCTOR
+import kotlin.reflect.KClass
 
 /**
  * Annotates the constructor of a [ViewModel][androidx.lifecycle.ViewModel]
@@ -33,10 +34,23 @@ import kotlin.annotation.AnnotationTarget.CONSTRUCTOR
 @MustBeDocumented
 public annotation class VMInject
 
-// TODO - support factories with a "DelicateTangleApi" annotation
-/*
 @Target(AnnotationTarget.CLASS)
 @Retention(AnnotationRetention.BINARY)
 @MustBeDocumented
 public annotation class VMInjectFactory
+
+/*
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+public annotation class ContributesViewModel(
+  *//**
+   * The scope in which to bind this [ViewModel][androidx.lifecycle.ViewModel].
+   *//*
+  val scope: KClass<*>
+)
 */
+
+@Target(AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FIELD)
+@Retention(AnnotationRetention.BINARY)
+@MustBeDocumented
+public annotation class VMAssisted

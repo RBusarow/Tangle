@@ -150,11 +150,11 @@ data class Factory(
   val factoryInterfaceClassName: ClassName,
   val viewModelFactoryClassName: ClassName,
   val factoryImplClassName: ClassName,
-  val tangleParams: List<TangleParameter>,
+  val assistedParams: List<AssistedParameter>,
+  val typeParameters: List<TypeVariableName>,
   val functionName: String
 ) : ViewModelInjectParams {
-  data class TangleParameter(
-    val key: String,
+  data class AssistedParameter(
     val name: String,
     val kotlinType: KotlinType,
     val typeName: TypeName
@@ -170,20 +170,6 @@ data class Factory(
       val packageName = factoryInterface.containingKtFile
         .packageFqName
         .safePackageString(dotSuffix = false)
-
-      val contributesAnnotation = viewModelClass.findAnnotation(
-        FqNames.contributesViewModel, module
-      )
-
-      require(
-        value = contributesAnnotation != null,
-        declarationDescriptor = { viewModelClass.requireClassDescriptor(module) }
-      ) {
-        "@${FqNames.vmInject.shortName().asString()}-annotated ViewModels must also " +
-          "have a `${FqNames.contributesViewModel.asString()}` class annotation."
-      }
-
-      val scopeName = viewModelClass.scope(FqNames.contributesViewModel, module)
 
       val viewModelFactoryClassName =
         ClassName(packageName, "${viewModelClass.generateClassName()}_Factory")
@@ -207,25 +193,25 @@ data class Factory(
         "${factoryInterfaceClassName.simpleNames.joinToString("_")}_Impl"
       val factoryImplClassName = ClassName(packageName, factoryImplSimpleName)
 
-      val tangleParams = functionParameters.map {
-        TangleParameter(
-          it.requireTangleParamName(),
+      val assistedParams = functionParameters.map {
+        AssistedParameter(
+          // it.requireTangleParamName(),
           it.name.asString(),
           it.type,
           it.type.asTypeName()
         )
       }
 
-      // tangleParams.checkForBundleSafe(factoryDescriptor)
-
       val functionName = function.name.asString()
 
       val viewModelParams =
         ViewModelParams.create(module, viewModelClass, constructor)
 
+      val typeParameters = factoryInterface.typeVariableNames(module)
+
       return Factory(
         packageName = packageName,
-        scopeName = scopeName,
+        scopeName = FqNames.tangleAppScope,
         viewModelClassName = viewModelParams.viewModelClassName,
         viewModelParams = viewModelParams,
         factoryDescriptor = factoryDescriptor,
@@ -233,7 +219,8 @@ data class Factory(
         factoryInterfaceClassName = factoryInterfaceClassName,
         viewModelFactoryClassName = viewModelFactoryClassName,
         factoryImplClassName = factoryImplClassName,
-        tangleParams = tangleParams,
+        assistedParams = assistedParams,
+        typeParameters = typeParameters,
         functionName = functionName
       )
     }

@@ -18,7 +18,10 @@ package tangle.inject.tests
 import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.TestFactory
-import tangle.inject.test.utils.*
+import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.createFunction
+import tangle.inject.test.utils.factoryClass
+import tangle.inject.test.utils.myViewModelClass
 import javax.inject.Provider
 
 class VMInjectGeneratorTest : BaseTest() {
@@ -156,6 +159,42 @@ class VMInjectGeneratorTest : BaseTest() {
       class MyViewModel @VMInject constructor(
         savedStateHandle: SavedStateHandle
       ) : ViewModel()
+     """
+      ) {
+        val factoryClass = myViewModelClass.factoryClass()
+
+        val constructor = factoryClass.declaredConstructors.single()
+        val factoryInstance = constructor.newInstance(Provider { SavedStateHandle() })
+        val getter = factoryClass.createFunction()
+
+        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+      }
+    }
+
+  @TestFactory
+  fun `factory impl is generated for a VMInjectFactory factory interface`() =
+    test {
+      compile(
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.viewmodel.*
+      import javax.inject.Inject
+
+      class MyRepository @Inject constructor()
+
+      class MyViewModel @VMInject constructor(
+        repository: MyRepository,
+        @VMAssisted name: String
+      ) : ViewModel() {
+
+        @VMInjectFactory
+        interface Factory {
+          fun create(name: String): MyViewModel
+        }
+      }
      """
       ) {
         val factoryClass = myViewModelClass.factoryClass()

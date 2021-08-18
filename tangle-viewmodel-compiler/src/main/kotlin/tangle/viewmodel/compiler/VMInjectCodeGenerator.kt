@@ -4,11 +4,15 @@ import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.api.AnvilContext
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.anvil.compiler.internal.*
-import com.squareup.kotlinpoet.*
+import com.squareup.anvil.compiler.internal.asClassName
+import com.squareup.anvil.compiler.internal.classesAndInnerClasses
+import com.squareup.anvil.compiler.internal.hasAnnotation
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
-import tangle.inject.compiler.*
+import org.jetbrains.kotlin.psi.psiUtil.nonStaticOuterClasses
+import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.TangleCompilationException
+import tangle.inject.compiler.vmInjectConstructor
 import java.io.File
 
 @Suppress("UNUSED")
@@ -23,22 +27,58 @@ class VMInjectCodeGenerator : CodeGenerator {
     projectFiles: Collection<KtFile>
   ): Collection<GeneratedFile> {
 
-    val viewModelParamsList = projectFiles
-      .flatMap { it.classesAndInnerClasses(module) }
-      .mapNotNull {
-        val constructor = it.vmInjectConstructor(module) ?: return@mapNotNull null
-        it to constructor
-      }
-      .map { (viewModelClass, constructor) ->
-        ViewModelParams.create(module, viewModelClass, constructor)
-      }
+    val paramsList = projectFiles
+      .flatMap { file ->
 
-    val viewModels = with(ViewModelFactoryGenerator()) {
-      viewModelParamsList
-        .map { generate(codeGenDir, it) }
+        val factoryParams = file.classesAndInnerClasses(module)
+          .filter { it.hasAnnotation(FqNames.vmInjectFactory, module) }
+          .map { factoryInterface ->
+
+            factoryInterface.nonStaticOuterClasses()
+              .firstOrNull { it.vmInjectConstructor(module) != null }
+              ?.let { viewModelClass ->
+                Factory.create(
+                  module,
+                  factoryInterface,
+                  viewModelClass,
+                  viewModelClass.vmInjectConstructor(module)!!
+                )
+              } ?: throw TangleCompilationException(
+              "The @${FqNames.vmInjectFactory.shortName().asString()}-annotated interface " +
+                "`${factoryInterface.fqName}` must be defined inside a ViewModel " +
+                "which is annotated with `@${FqNames.vmInject.shortName().asString()}`."
+            )
+          }
+
+        val alreadyParsedViewModels = factoryParams
+          .map { it.viewModelClassName }
+          .toSet()
+
+        val viewModelParamsList = file.classesAndInnerClasses(module)
+          .filterNot { it.asClassName() in alreadyParsedViewModels }
+          .mapNotNull { clazz ->
+
+            if (clazz.asClassName() in alreadyParsedViewModels) return@mapNotNull null
+
+            val constructor = clazz.vmInjectConstructor(module) ?: return@mapNotNull null
+
+            ViewModelParams.create(module, clazz, constructor)
+          }
+
+        factoryParams + factoryParams.map { it.viewModelParams } + viewModelParamsList
+      }
+      .toList()
+
+    val generated = paramsList.map { params ->
+
+      when (params) {
+        is Factory -> with(ViewModelFactoryImplGenerator()) { generate(codeGenDir, params) }
+        is ViewModelParams -> with(ViewModelFactoryGenerator()) { generate(codeGenDir, params) }
+      }
     }
 
-    val moduleParams = viewModelParamsList
+    val moduleParams = paramsList
+      .filterIsInstance<ViewModelParams>()
       .groupBy { it.packageName }
       .map { (packageName, byPackageName) ->
 
@@ -56,6 +96,6 @@ class VMInjectCodeGenerator : CodeGenerator {
         .map { generate(codeGenDir, it) }
     }
 
-    return viewModels + tangleScopeModules + tangleAppScopeModules
+    return generated + tangleScopeModules + tangleAppScopeModules
   }
 }
