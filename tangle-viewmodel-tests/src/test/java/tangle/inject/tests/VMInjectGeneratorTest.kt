@@ -183,10 +183,7 @@ class VMInjectGeneratorTest : BaseTest() {
       import tangle.viewmodel.*
       import javax.inject.Inject
 
-      class MyRepository @Inject constructor()
-
       class MyViewModel @VMInject constructor(
-        repository: MyRepository,
         @VMAssisted name: String
       ) : ViewModel() {
 
@@ -200,7 +197,7 @@ class VMInjectGeneratorTest : BaseTest() {
         val factoryClass = myViewModelClass.factoryClass()
 
         val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance(Provider { SavedStateHandle() })
+        val factoryInstance = constructor.newInstance("name")
         val getter = factoryClass.createFunction()
 
         getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass

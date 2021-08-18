@@ -4,6 +4,7 @@ import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.anvil.compiler.internal.capitalize
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier.INTERNAL
+import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import tangle.inject.compiler.*
@@ -23,11 +24,8 @@ internal class ViewModelFactoryImplGenerator : FileGenerator<Factory> {
     val factoryConstructorParams =
       viewModelParams.viewModelFactoryConstructorParams + viewModelParams.memberInjectedParams
 
-    val typeSpecBuilder =
-      TypeSpec.classBuilder(params.viewModelFactoryClassName)
-
     val content = FileSpec.buildFile(packageName, classNameString) {
-      typeSpecBuilder
+      TypeSpec.classBuilder(params.viewModelFactoryClassName)
         .applyEach(params.typeParameters) { addTypeVariable(it) }
         .apply {
           primaryConstructor(
@@ -39,6 +37,7 @@ internal class ViewModelFactoryImplGenerator : FileGenerator<Factory> {
               .build()
           )
         }
+        .addSuperinterface(params.factoryInterfaceClassName)
         .applyEach(factoryConstructorParams) { parameter ->
 
           val qualifierAnnotationSpecs = parameter.qualifiers
@@ -51,7 +50,8 @@ internal class ViewModelFactoryImplGenerator : FileGenerator<Factory> {
               .build()
           )
         }
-        .addFunction("create") {
+        .addFunction(params.functionName) {
+          addModifiers(OVERRIDE)
           returns(returnType = params.viewModelClassName)
 
           val constructorArguments = viewModelParams.viewModelConstructorParams.asArgumentList(
