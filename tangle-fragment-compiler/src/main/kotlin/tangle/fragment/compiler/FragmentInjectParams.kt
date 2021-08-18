@@ -33,7 +33,7 @@ internal sealed class FragmentInjectParams {
     val fragmentFactoryClassNameString: String,
     val fragmentFactoryClassName: ClassName,
     val constructor: KtConstructor<*>,
-    val constructorParams: List<ContructorInjectParameter>,
+    val constructorParams: List<ConstructorInjectParameter>,
     val memberInjectedParams: List<MemberInjectParameter>,
     val typeParameters: List<TypeVariableName>,
     val fragmentClassSimpleName: String,

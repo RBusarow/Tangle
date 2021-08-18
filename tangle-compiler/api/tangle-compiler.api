@@ -58,7 +58,7 @@ public final class tangle/inject/compiler/ClassNames {
 	public final fun getViewModelMap ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
 }
 
-public final class tangle/inject/compiler/ContructorInjectParameter : tangle/inject/compiler/Parameter {
+public final class tangle/inject/compiler/ConstructorInjectParameter : tangle/inject/compiler/Parameter {
 	public fun <init> (Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;)V
 	public final fun component1 ()Ljava/lang/String;
 	public final fun component2 ()Lcom/squareup/kotlinpoet/TypeName;
@@ -68,8 +68,8 @@ public final class tangle/inject/compiler/ContructorInjectParameter : tangle/inj
 	public final fun component6 ()Z
 	public final fun component7 ()Ljava/lang/String;
 	public final fun component8 ()Ljava/util/List;
-	public final fun copy (Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;)Ltangle/inject/compiler/ContructorInjectParameter;
-	public static synthetic fun copy$default (Ltangle/inject/compiler/ContructorInjectParameter;Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;ILjava/lang/Object;)Ltangle/inject/compiler/ContructorInjectParameter;
+	public final fun copy (Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;)Ltangle/inject/compiler/ConstructorInjectParameter;
+	public static synthetic fun copy$default (Ltangle/inject/compiler/ConstructorInjectParameter;Ljava/lang/String;Lcom/squareup/kotlinpoet/TypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;Lcom/squareup/kotlinpoet/ParameterizedTypeName;ZZLjava/lang/String;Ljava/util/List;ILjava/lang/Object;)Ltangle/inject/compiler/ConstructorInjectParameter;
 	public fun equals (Ljava/lang/Object;)Z
 	public fun getLazyTypeName ()Lcom/squareup/kotlinpoet/ParameterizedTypeName;
 	public fun getName ()Ljava/lang/String;
@@ -83,7 +83,7 @@ public final class tangle/inject/compiler/ContructorInjectParameter : tangle/inj
 	public fun toString ()Ljava/lang/String;
 }
 
-public final class tangle/inject/compiler/ContructorInjectParameterKt {
+public final class tangle/inject/compiler/ConstructorInjectParameterKt {
 	public static final fun uniqueName (Ljava/util/List;Ljava/lang/String;I)Ljava/lang/String;
 	public static synthetic fun uniqueName$default (Ljava/util/List;Ljava/lang/String;IILjava/lang/Object;)Ljava/lang/String;
 	public static final fun uniqueNameStrings (Ljava/util/List;Ljava/lang/String;I)Ljava/lang/String;
