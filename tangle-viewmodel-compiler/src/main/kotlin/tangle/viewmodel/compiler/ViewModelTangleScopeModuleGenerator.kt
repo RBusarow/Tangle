@@ -6,6 +6,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier.ABSTRACT
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.TypeSpec.Builder
 import tangle.inject.compiler.*
 import java.io.File
 
@@ -20,6 +21,9 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
 
     val moduleName = "${ClassNames.tangleScope.simpleName}_VMInject_Module"
 
+    val viewModelParams = params.viewModelParamsList.filterIsInstance<ViewModelParams>()
+    val factoryParams = params.viewModelParamsList.filterIsInstance<Factory>()
+
     val content = FileSpec.buildFile(packageName, moduleName) {
       addType(
         TypeSpec
@@ -30,46 +34,75 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
               .addMember("%T::class", ClassNames.tangleScope)
               .build()
           )
-          .applyEach(params.viewModelParamsList) { viewModelParams ->
+          .applyEach(viewModelParams) { params ->
+            addViewModelBinder(params)
+          }
+          .applyEach(factoryParams) { factory ->
+            addViewModelFactoryBinder(factory)
+          }
+          .apply {
+            if (viewModelParams.isNotEmpty()) {
+              addType(
+                TypeSpec.companionObjectBuilder()
+                  .applyEach(viewModelParams) { viewModelParam ->
 
-            addFunction(
-              "multibind_${viewModelParams.viewModelClassName.simpleNames.joinToString("_")}"
-            ) {
+                    addFunction(
+                      "provide_${viewModelParam.viewModelFactoryClassName.simpleNames.joinToString("_")}"
+                    ) {
 
-              addModifiers(ABSTRACT)
-              addParameter("viewModel", viewModelParams.viewModelClassName)
-              returns(ClassNames.androidxViewModel)
-              addAnnotation(ClassNames.binds)
-              addAnnotation(ClassNames.intoMap)
-              addAnnotation(
-                AnnotationSpec.builder(ClassNames.classKey)
-                  .addMember("%T::class", viewModelParams.viewModelClassName)
+                      addParameter("factory", viewModelParam.viewModelFactoryClassName)
+                      returns(viewModelParam.viewModelClassName)
+                      addAnnotation(ClassNames.provides)
+                      addStatement("return·factory.create()")
+                      build()
+                    }
+                  }
                   .build()
               )
-              addAnnotation(ClassNames.tangleViewModelProviderMap)
             }
           }
-          .addType(
-            TypeSpec.companionObjectBuilder()
-              .applyEach(params.viewModelParamsList) { viewModelParams ->
-
-                addFunction(
-                  "provide_${viewModelParams.viewModelFactoryClassName.simpleNames.joinToString("_")}"
-                ) {
-
-                  addParameter("factory", viewModelParams.viewModelFactoryClassName)
-                  returns(viewModelParams.viewModelClassName)
-                  addAnnotation(ClassNames.provides)
-                  addStatement("return·factory.create()")
-                  build()
-                }
-              }
-              .build()
-          )
           .build()
 
       )
     }
     return createGeneratedFile(codeGenDir, packageName, moduleName, content)
+  }
+
+  private fun Builder.addViewModelBinder(viewModelParams: ViewModelParams) = apply {
+    addFunction(
+      "multibind_${viewModelParams.viewModelClassName.simpleNames.joinToString("_")}"
+    ) {
+
+      addModifiers(ABSTRACT)
+      addParameter("viewModel", viewModelParams.viewModelClassName)
+      returns(ClassNames.androidxViewModel)
+      addAnnotation(ClassNames.binds)
+      addAnnotation(ClassNames.intoMap)
+      addAnnotation(
+        AnnotationSpec.builder(ClassNames.classKey)
+          .addMember("%T::class", viewModelParams.viewModelClassName)
+          .build()
+      )
+      addAnnotation(ClassNames.tangleViewModelProviderMap)
+    }
+  }
+
+  private fun Builder.addViewModelFactoryBinder(factoryParams: Factory) = apply {
+    addFunction(
+      "multibind_${factoryParams.viewModelClassName.simpleNames.joinToString("_")}"
+    ) {
+
+      addModifiers(ABSTRACT)
+      addParameter("factory", factoryParams.viewModelFactoryClassName)
+      returns( factoryParams.factoryInterfaceClassName)
+      addAnnotation(ClassNames.binds)
+      addAnnotation(ClassNames.intoMap)
+      addAnnotation(
+        AnnotationSpec.builder(ClassNames.classKey)
+          .addMember("%T::class", factoryParams.factoryInterfaceClassName)
+          .build()
+      )
+      addAnnotation(ClassNames.tangleViewModelFactoryMap)
+    }
   }
 }

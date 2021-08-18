@@ -54,7 +54,7 @@ class VMInjectCodeGenerator : CodeGenerator {
           .map { it.viewModelClassName }
           .toSet()
 
-        val viewModelParamsList = file.classesAndInnerClasses(module)
+        val viewModelParams = file.classesAndInnerClasses(module)
           .filterNot { it.asClassName() in alreadyParsedViewModels }
           .mapNotNull { clazz ->
 
@@ -65,7 +65,7 @@ class VMInjectCodeGenerator : CodeGenerator {
             ViewModelParams.create(module, clazz, constructor)
           }
 
-        factoryParams + factoryParams.map { it.viewModelParams } + viewModelParamsList
+        factoryParams + viewModelParams
       }
       .toList()
 
@@ -78,7 +78,7 @@ class VMInjectCodeGenerator : CodeGenerator {
     }
 
     val moduleParams = paramsList
-      .filterIsInstance<ViewModelParams>()
+      // .filterIsInstance<ViewModelParams>()
       .groupBy { it.packageName }
       .map { (packageName, byPackageName) ->
 

@@ -21,13 +21,14 @@ import tangle.inject.compiler.*
 
 data class TangleScopeModule(
   val packageName: String,
-  val viewModelParamsList: List<ViewModelParams>
+  val viewModelParamsList: List<ViewModelInjectParams>
 )
 
 sealed interface ViewModelInjectParams {
   val packageName: String
   val scopeName: FqName
   val viewModelClassName: ClassName
+  val viewModelFactoryClassName: ClassName
 }
 
 data class ViewModelParams(
@@ -37,7 +38,7 @@ data class ViewModelParams(
   val viewModelClassDescriptor: ClassDescriptor,
   val viewModelConstructorParams: List<ContructorInjectParameter>,
   val viewModelFactoryClassNameString: String,
-  val viewModelFactoryClassName: ClassName,
+  override val viewModelFactoryClassName: ClassName,
   val viewModelFactoryConstructorParams: List<Parameter>,
   val constructor: KtConstructor<*>,
   val memberInjectedParams: List<MemberInjectParameter>,
@@ -69,6 +70,7 @@ data class ViewModelParams(
       val viewModelConstructorParams = constructor.valueParameters.mapToParameters(module)
 
       val (daggerConstructorParams, savedStateParams) = viewModelConstructorParams
+        .filterNot { it.isAssisted }
         .partition { !it.isTangleParam }
 
       val tempSavedStateParam = daggerConstructorParams
@@ -134,7 +136,8 @@ data class ViewModelParams(
         isWrappedInProvider = true,
         isWrappedInLazy = false,
         tangleParamName = null,
-        qualifiers = emptyList()
+        qualifiers = emptyList(),
+        isAssisted = false
       )
     }
   }
@@ -148,7 +151,7 @@ data class Factory(
   val factoryDescriptor: ClassDescriptor,
   val factoryInterface: KtClassOrObject,
   val factoryInterfaceClassName: ClassName,
-  val viewModelFactoryClassName: ClassName,
+  override val viewModelFactoryClassName: ClassName,
   val factoryImplClassName: ClassName,
   val assistedParams: List<AssistedParameter>,
   val typeParameters: List<TypeVariableName>,

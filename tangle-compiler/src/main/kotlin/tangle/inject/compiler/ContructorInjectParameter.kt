@@ -20,15 +20,16 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.TypeName
 
-sealed class Parameter {
-  abstract val name: String
-  abstract val typeName: TypeName
-  abstract val providerTypeName: ParameterizedTypeName
-  abstract val lazyTypeName: ParameterizedTypeName
-  abstract val isWrappedInProvider: Boolean
-  abstract val isWrappedInLazy: Boolean
-  abstract val tangleParamName: String?
-  abstract val qualifiers: List<AnnotationSpec>
+sealed interface Parameter {
+  val name: String
+  val typeName: TypeName
+  val providerTypeName: ParameterizedTypeName
+  val lazyTypeName: ParameterizedTypeName
+  val isWrappedInProvider: Boolean
+  val isWrappedInLazy: Boolean
+  val tangleParamName: String?
+  val qualifiers: List<AnnotationSpec>
+  val isAssisted: Boolean
 
   val isTangleParam: Boolean
     get() = tangleParamName != null
@@ -42,8 +43,9 @@ data class ContructorInjectParameter(
   override val isWrappedInProvider: Boolean,
   override val isWrappedInLazy: Boolean,
   override val tangleParamName: String?,
-  override val qualifiers: List<AnnotationSpec>
-) : Parameter()
+  override val qualifiers: List<AnnotationSpec>,
+  override val isAssisted: Boolean
+) : Parameter
 
 data class MemberInjectParameter(
 
@@ -55,8 +57,9 @@ data class MemberInjectParameter(
   override val isWrappedInLazy: Boolean,
   override val tangleParamName: String?,
   override val qualifiers: List<AnnotationSpec>,
-  val memberInjectorClass: ClassName
-) : Parameter()
+  val memberInjectorClass: ClassName,
+  override val isAssisted: Boolean
+) : Parameter
 
 fun List<ContructorInjectParameter>.uniqueName(base: String, attempt: Int = 0): String {
   return map { it.name }.uniqueName(base, attempt)

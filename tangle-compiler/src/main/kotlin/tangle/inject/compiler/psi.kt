@@ -129,6 +129,8 @@ fun List<KtCallableDeclaration>.mapToParameters(
 
     val qualifiers = annotations.qualifierAnnotationSpecs(module)
 
+    val isAssisted = annotations.any { it.requireFqName(module) == FqNames.vmAssisted }
+
     val baseName = parameter.name ?: "param$index"
 
     val name = when {
@@ -145,7 +147,8 @@ fun List<KtCallableDeclaration>.mapToParameters(
       isWrappedInProvider = isWrappedInProvider,
       isWrappedInLazy = isWrappedInLazy,
       tangleParamName = tangleParamName,
-      qualifiers = qualifiers
+      qualifiers = qualifiers,
+      isAssisted = isAssisted
     )
   }
 
@@ -278,6 +281,7 @@ fun List<Parameter>.asArgumentList(
             parameter.isWrappedInLazy && parameter.isTangleParam -> parameter.name
             parameter.isWrappedInLazy -> "${FqNames.daggerDoubleCheck}.lazy(${parameter.name})"
             parameter.isTangleParam -> parameter.name
+            parameter.isAssisted -> parameter.name
             else -> "${parameter.name}.get()"
           }
         }

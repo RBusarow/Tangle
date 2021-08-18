@@ -7,7 +7,14 @@ import com.squareup.kotlinpoet.KModifier.INTERNAL
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import tangle.inject.compiler.*
+import tangle.inject.compiler.ClassNames
+import tangle.inject.compiler.FileGenerator
+import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.addFunction
+import tangle.inject.compiler.applyEach
+import tangle.inject.compiler.asArgumentList
+import tangle.inject.compiler.buildFile
+import tangle.inject.compiler.require
 import java.io.File
 
 internal class ViewModelFactoryImplGenerator : FileGenerator<Factory> {
@@ -52,12 +59,21 @@ internal class ViewModelFactoryImplGenerator : FileGenerator<Factory> {
         }
         .addFunction(params.functionName) {
           addModifiers(OVERRIDE)
-          returns(returnType = params.viewModelClassName)
 
-          val constructorArguments = viewModelParams.viewModelConstructorParams.asArgumentList(
-            asProvider = true,
-            includeModule = false
-          )
+          val constructorArguments = viewModelParams.viewModelConstructorParams
+            .asArgumentList(
+              asProvider = true,
+              includeModule = false
+            )
+
+          val assistedParams = viewModelParams.viewModelConstructorParams
+            .filter { it.isAssisted }
+
+          assistedParams.forEach { param ->
+            addParameter(param.name, param.typeName)
+          }
+
+          returns(returnType = params.viewModelClassName)
 
           val tangleParams = viewModelParams.viewModelConstructorParams
             .filter { it.isTangleParam }

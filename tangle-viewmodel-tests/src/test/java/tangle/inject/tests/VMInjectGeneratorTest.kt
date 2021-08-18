@@ -18,11 +18,10 @@ package tangle.inject.tests
 import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.TestFactory
-import tangle.inject.test.utils.BaseTest
-import tangle.inject.test.utils.createFunction
-import tangle.inject.test.utils.factoryClass
-import tangle.inject.test.utils.myViewModelClass
+import tangle.inject.test.utils.*
 import javax.inject.Provider
+import kotlin.reflect.full.memberFunctions
+import kotlin.reflect.jvm.javaMethod
 
 class VMInjectGeneratorTest : BaseTest() {
 
@@ -197,10 +196,14 @@ class VMInjectGeneratorTest : BaseTest() {
         val factoryClass = myViewModelClass.factoryClass()
 
         val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance("name")
-        val getter = factoryClass.createFunction()
+        val factoryInstance = constructor.newInstance()
 
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        val createFunction = factoryClass.kotlin
+          .memberFunctions
+          .single { it.name == "create" }
+          .javaMethod!!
+
+        createFunction.invoke(factoryInstance, "name")::class.java shouldBe myViewModelClass
       }
     }
 

@@ -39,3 +39,13 @@ public annotation class TangleViewModelProviderMap {
   @Target(AnnotationTarget.PROPERTY_GETTER, AnnotationTarget.FIELD, AnnotationTarget.FUNCTION)
   public annotation class KeySet
 }
+
+@Qualifier
+@Retention(AnnotationRetention.RUNTIME)
+@Target(
+  AnnotationTarget.PROPERTY_GETTER,
+  AnnotationTarget.FIELD,
+  AnnotationTarget.FUNCTION,
+  AnnotationTarget.VALUE_PARAMETER
+)
+public annotation class TangleViewModelFactoryMap

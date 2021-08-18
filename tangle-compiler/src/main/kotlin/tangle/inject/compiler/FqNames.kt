@@ -29,6 +29,7 @@ object FqNames {
 
   val vmInject = FqName("tangle.viewmodel.VMInject")
   val vmInjectFactory = FqName("tangle.viewmodel.VMInjectFactory")
+  val vmAssisted = FqName("tangle.viewmodel.VMAssisted")
   val contributesViewModel = FqName("tangle.viewmodel.ContributesViewModel")
 
   val fragmentInject = FqName("tangle.fragment.FragmentInject")

@@ -29,6 +29,8 @@ public object ClassNames {
 
   public val tangleViewModelProviderMap: ClassName =
     ClassName("tangle.viewmodel", "TangleViewModelProviderMap")
+  public val tangleViewModelFactoryMap: ClassName =
+    ClassName("tangle.viewmodel", "TangleViewModelFactoryMap")
   public val tangleViewModelProviderMapKeySet: ClassName =
     ClassName("tangle.viewmodel", "TangleViewModelProviderMap", "KeySet")
   public val tangleFragmentFactory: ClassName =

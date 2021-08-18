@@ -210,6 +210,8 @@ fun List<CallableMemberDescriptor>.mapToParameters(
 
     val qualifiers = annotations.qualifierAnnotationSpecs(module)
 
+    val isAssisted = annotations.any { it.fqName == FqNames.vmAssisted }
+
     val containingDeclaration = callableMemberDescriptor.containingDeclaration
     val packageName = containingDeclaration.requireContainingPackage().asString()
 
@@ -227,7 +229,8 @@ fun List<CallableMemberDescriptor>.mapToParameters(
       isWrappedInLazy = isWrappedInLazy,
       tangleParamName = tangleParamName,
       qualifiers = qualifiers,
-      memberInjectorClass = memberInjectorClass
+      memberInjectorClass = memberInjectorClass,
+      isAssisted = isAssisted
     )
   }
 }
