@@ -59,7 +59,6 @@ fun <T : Any> Class<T>.createStatic(
 
 @Suppress("UNCHECKED_CAST")
 fun <T> T.factoryGet(
-  vararg initargs: Any?
 ): Any = cast<Factory<*>>().get()
 
 inline fun <T, E : Executable> E.use(block: (E) -> T): T {

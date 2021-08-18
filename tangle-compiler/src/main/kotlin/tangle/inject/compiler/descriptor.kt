@@ -181,7 +181,6 @@ fun AnnotationDescriptor.qualifierArgumentsOrNull() = type
 
 fun List<CallableMemberDescriptor>.mapToParameters(
   module: ModuleDescriptor,
-  asMembers: Boolean = false
 ): List<MemberInjectParameter> {
 
   return mapIndexed { index, callableMemberDescriptor ->
