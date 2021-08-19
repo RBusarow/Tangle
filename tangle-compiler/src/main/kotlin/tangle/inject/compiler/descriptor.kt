@@ -41,7 +41,7 @@ fun ClassDescriptor.memberInjectedParameters(
   module: ModuleDescriptor
 ): List<MemberInjectParameter> =
   memberInjectedProperties(module)
-    .mapToParameters(module, true)
+    .mapToParameters(module)
 
 fun ClassDescriptor.memberInjectedProperties(
   module: ModuleDescriptor
@@ -180,8 +180,7 @@ fun AnnotationDescriptor.qualifierArgumentsOrNull() = type
   ?.allValueArguments
 
 fun List<CallableMemberDescriptor>.mapToParameters(
-  module: ModuleDescriptor,
-  asMembers: Boolean = false
+  module: ModuleDescriptor
 ): List<MemberInjectParameter> {
 
   return mapIndexed { index, callableMemberDescriptor ->

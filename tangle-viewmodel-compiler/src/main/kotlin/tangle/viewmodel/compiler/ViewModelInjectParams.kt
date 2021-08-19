@@ -36,7 +36,7 @@ data class ViewModelParams(
   override val scopeName: FqName,
   override val viewModelClassName: ClassName,
   val viewModelClassDescriptor: ClassDescriptor,
-  val viewModelConstructorParams: List<ContructorInjectParameter>,
+  val viewModelConstructorParams: List<ConstructorInjectParameter>,
   val viewModelFactoryClassNameString: String,
   override val viewModelFactoryClassName: ClassName,
   val viewModelFactoryConstructorParams: List<Parameter>,
@@ -126,9 +126,9 @@ data class ViewModelParams(
     }
 
     private fun createSavedStateParameter(
-      viewModelConstructorParams: List<ContructorInjectParameter>
-    ): ContructorInjectParameter {
-      return ContructorInjectParameter(
+      viewModelConstructorParams: List<ConstructorInjectParameter>
+    ): ConstructorInjectParameter {
+      return ConstructorInjectParameter(
         name = viewModelConstructorParams.uniqueName("savedStateHandleProvider"),
         typeName = ClassNames.androidxSavedStateHandle,
         providerTypeName = ClassNames.androidxSavedStateHandle.wrapInProvider(),

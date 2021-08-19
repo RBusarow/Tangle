@@ -16,8 +16,8 @@ public interface TangleViewModelKeysSubcomponent {
    * [TangleViewModelProviderMap] is only provided by [TangleViewModelMapSubcomponent],
    * and a new subcomponent needs to be created for each viewModel injection, so it's inefficient
    * to create the object before we know if the map holds the [ViewModel].
-   * The [TangleViewModelFactory][tangle.viewmodel.internal.TangleViewModelFactory] checks this Set in order to determine whether the map
-   * holds a particular ViewModel type.
+   * The [TangleViewModelFactory][tangle.viewmodel.internal.TangleViewModelFactory] checks this
+   * Set in order to determine whether the map holds a particular ViewModel type.
    *
    * @since 0.10.0
    */
