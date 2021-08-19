@@ -251,6 +251,6 @@ val startSite by tasks.registering(Exec::class) {
 
 val versionDocs by tasks.registering(Exec::class) {
   workingDir("./website")
-  val version = libs.versions.versionName.get()
+  val version = project.extra.properties["VERSION_NAME"] as String
   commandLine("npm", "run", "docusaurus", "docs:version", version)
 }

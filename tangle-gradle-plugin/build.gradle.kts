@@ -67,7 +67,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
   .configureEach {
 
     doFirst {
-      val tangleVersion = libs.versions.versionName.get()
+      val tangleVersion = project.extra.properties["VERSION_NAME"] as String
 
       System.setProperty("tangle.version", tangleVersion)
     }
@@ -126,7 +126,7 @@ gradlePlugin {
       id = "com.rickbusarow.tangle"
       group = "com.rickbusarow.tangle"
       implementationClass = "tangle.inject.gradle.TanglePlugin"
-      version = libs.versions.versionName.get()
+      version = project.extra.properties["VERSION_NAME"] as String
     }
   }
 }
