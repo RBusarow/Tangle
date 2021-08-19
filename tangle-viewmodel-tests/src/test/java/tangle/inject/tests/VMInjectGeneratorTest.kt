@@ -18,7 +18,10 @@ package tangle.inject.tests
 import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.TestFactory
-import tangle.inject.test.utils.*
+import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.createFunction
+import tangle.inject.test.utils.factoryClass
+import tangle.inject.test.utils.myViewModelClass
 import javax.inject.Provider
 
 class VMInjectGeneratorTest : BaseTest() {
@@ -193,6 +196,39 @@ class VMInjectGeneratorTest : BaseTest() {
         val constructor = factoryClass.declaredConstructors.single()
         val factoryInstance = constructor.newInstance(
           Provider { SavedStateHandle(mapOf("name" to "Leeroy")) }
+        )
+        val getter = factoryClass.createFunction()
+
+        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+      }
+    }
+
+  @TestFactory
+  fun `generated checkNotNull error message in factory should handle very long names`() =
+    test {
+      compile(
+        //language=kotlin
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.VMInject
+      import javax.inject.Provider
+      import javax.inject.Inject
+
+      class MyViewModel @VMInject constructor(
+        savedStateHandle: Provider<SavedStateHandle>,
+        @TangleParam("aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong") val name: String
+      ) : ViewModel()
+     """
+      ) {
+        val factoryClass = myViewModelClass.factoryClass()
+
+        val constructor = factoryClass.declaredConstructors.single()
+        val factoryInstance = constructor.newInstance(
+          Provider { SavedStateHandle(mapOf("aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong" to "Leeroy")) }
         )
         val getter = factoryClass.createFunction()
 
