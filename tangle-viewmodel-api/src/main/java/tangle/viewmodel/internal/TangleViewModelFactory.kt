@@ -33,13 +33,18 @@ public inline fun <reified VM : ViewModel, reified F : Any> tangleViewModel(
   return tangleViewModel(VM::class, F::class, factory)
 }
 
+@Suppress("UNCHECKED_CAST")
 @PublishedApi
+@InternalTangleApi
 internal fun <VM : ViewModel, F : Any> tangleViewModel(
-  vmClass: KClass<VM>, fClass: KClass<F>,
+  owner: SavedStateRegistryOwner,
+  defaultArgs: Bundle?,
+  vmClass: KClass<VM>,
+  fClass: KClass<F>,
   factory: F.() -> VM
 ): VM {
 
-  val providerFactory = object : AbstractSavedStateViewModelFactory(this, arguments) {
+  val providerFactory = object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
     override fun <T : ViewModel> create(
       key: String, modelClass: Class<T>, handle: SavedStateHandle
     ): T {
@@ -47,9 +52,16 @@ internal fun <VM : ViewModel, F : Any> tangleViewModel(
       val subcomponent = TangleGraph
         .tangleViewModelSubcomponentFactory()
         .create(handle)
-      val factoryImpl =
+      val factoryImpl = (subcomponent.viewModelFactoryMap[fClass.java]?.get() as? F)
+        ?: throw IllegalStateException(
+          "Tangle can't find a factory of type $fClass, " +
+            "which is necessary in order to create an assisted $vmClass."
+        )
+      return factory(factoryImpl) as T
     }
   }
+
+  return providerFactory.create(vmClass.java)
 }
 
 /** @suppress */

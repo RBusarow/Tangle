@@ -22,6 +22,11 @@ public interface TangleViewModelMapSubcomponent {
   public val viewModelProviderMap: Map<Class<*>, Provider<@JvmSuppressWildcards ViewModel>>
 
   /** @suppress */
+  @OptIn(InternalTangleApi::class)
+  @get:TangleViewModelFactoryMap
+  public val viewModelFactoryMap: Map<Class<*>, Provider<@JvmSuppressWildcards Any>>
+
+  /** @suppress */
   public interface Factory {
     /** @suppress */
     public fun create(savedStateHandle: SavedStateHandle): TangleViewModelMapSubcomponent
