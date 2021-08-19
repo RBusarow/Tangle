@@ -39,17 +39,6 @@ public annotation class VMInject
 @MustBeDocumented
 public annotation class VMInjectFactory
 
-/*
-@Target(AnnotationTarget.CLASS)
-@Retention(AnnotationRetention.RUNTIME)
-public annotation class ContributesViewModel(
-  *//**
-   * The scope in which to bind this [ViewModel][androidx.lifecycle.ViewModel].
-   *//*
-  val scope: KClass<*>
-)
-*/
-
 @Target(AnnotationTarget.VALUE_PARAMETER, AnnotationTarget.FIELD)
 @Retention(AnnotationRetention.BINARY)
 @MustBeDocumented

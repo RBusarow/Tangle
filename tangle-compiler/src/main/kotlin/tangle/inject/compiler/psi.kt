@@ -134,7 +134,7 @@ fun List<KtCallableDeclaration>.mapToParameters(
 
     require(!isAssisted || parameter.typeReference?.isFunctionType() != true) {
       "Functional arguments like `${parameter.text}` can't be used as assisted arguments " +
-        "for ViewModels.  They would leak the initial caller's instance into the ViewModelStore."
+        "for ViewModels.  They would leak the initial caller's instance into the ViewModel."
     }
 
     val baseName = parameter.name ?: "param$index"

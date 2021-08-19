@@ -70,6 +70,10 @@ public object ClassNames {
     javaClassWildcard,
     androidxViewModel.jvmSuppressWildcards()
   )
+  public val anyMap: ParameterizedTypeName = Map::class.asClassName().parameterizedBy(
+    javaClassWildcard,
+    Any::class.asClassName().jvmSuppressWildcards()
+  )
   public val fragmentMap: ParameterizedTypeName = Map::class.asClassName().parameterizedBy(
     javaClassOutFragment,
     androidxFragment.jvmSuppressWildcards()

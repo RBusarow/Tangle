@@ -42,6 +42,12 @@ class ViewModelMergeComponentModuleGenerator : FileGenerator<MergeComponentParam
           addModifiers(ABSTRACT)
           returns(ClassNames.viewModelMap)
         }
+        .addFunction("bindTangleViewModelFactoryMap") {
+          addAnnotation(ClassNames.multibinds)
+          addAnnotation(ClassNames.tangleViewModelFactoryMap)
+          addModifiers(ABSTRACT)
+          returns(ClassNames.anyMap)
+        }
         .build()
         .let { addType(it) }
     }

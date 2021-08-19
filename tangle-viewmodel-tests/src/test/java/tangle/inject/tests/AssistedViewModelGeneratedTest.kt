@@ -15,6 +15,7 @@ class AssistedViewModelGeneratedTest : BaseTest() {
   fun `factory impl is generated for a VMInjectFactory factory interface`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -24,7 +25,7 @@ class AssistedViewModelGeneratedTest : BaseTest() {
       import javax.inject.Inject
 
       class MyViewModel @VMInject constructor(
-        @VMAssisted val factory: () -> Unit
+        @VMAssisted val name: String
       ) : ViewModel() {
 
         @VMInjectFactory
@@ -52,6 +53,7 @@ class AssistedViewModelGeneratedTest : BaseTest() {
   fun `assisted arguments can't be function types`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -75,7 +77,34 @@ class AssistedViewModelGeneratedTest : BaseTest() {
 
         messages shouldContain "Functional arguments like `@VMAssisted val function: () -> Unit` " +
           "can't be used as assisted arguments for ViewModels.  " +
-          "They would leak the initial caller's instance into the ViewModelStore."
+          "They would leak the initial caller's instance into the ViewModel."
+      }
+    }
+
+  @TestFactory
+  fun `TangleParam arguments can't be function types`() =
+    test {
+      compile(
+        //language=kotlin
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.*
+      import javax.inject.Inject
+
+      class MyViewModel @VMInject constructor(
+        @TangleParam("function") val function: () -> Unit
+      ) : ViewModel()
+     """,
+        shouldFail = true
+      ) {
+
+        messages shouldContain "Functional arguments like `@VMAssisted val function: () -> Unit` " +
+          "can't be used as assisted arguments for ViewModels.  " +
+          "They would leak the initial caller's instance into the ViewModel."
       }
     }
 }
