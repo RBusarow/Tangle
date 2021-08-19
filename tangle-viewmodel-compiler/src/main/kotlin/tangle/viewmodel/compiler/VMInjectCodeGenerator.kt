@@ -13,6 +13,9 @@ import org.jetbrains.kotlin.psi.psiUtil.nonStaticOuterClasses
 import tangle.inject.compiler.FqNames
 import tangle.inject.compiler.TangleCompilationException
 import tangle.inject.compiler.vmInjectConstructor
+import tangle.viewmodel.compiler.params.Factory
+import tangle.viewmodel.compiler.params.TangleScopeModule
+import tangle.viewmodel.compiler.params.ViewModelParams
 import java.io.File
 
 @Suppress("UNUSED")
@@ -40,8 +43,7 @@ class VMInjectCodeGenerator : CodeGenerator {
                 Factory.create(
                   module,
                   factoryInterface,
-                  viewModelClass,
-                  viewModelClass.vmInjectConstructor(module)!!
+                  viewModelClass
                 )
               } ?: throw TangleCompilationException(
               "The @${FqNames.vmInjectFactory.shortName().asString()}-annotated interface " +

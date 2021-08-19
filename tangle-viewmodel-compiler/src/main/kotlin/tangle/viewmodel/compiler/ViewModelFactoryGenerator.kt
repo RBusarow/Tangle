@@ -8,6 +8,7 @@ import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.buildCodeBlock
 import tangle.inject.compiler.*
+import tangle.viewmodel.compiler.params.ViewModelParams
 import java.io.File
 
 internal class ViewModelFactoryGenerator : FileGenerator<ViewModelParams> {
@@ -16,18 +17,17 @@ internal class ViewModelFactoryGenerator : FileGenerator<ViewModelParams> {
     params: ViewModelParams
   ): GeneratedFile {
 
-    val packageName = params.packageName
-    val classNameString = params.viewModelFactoryClassNameString
+    val viewModelParams = params
+
+    val packageName = viewModelParams.packageName
+    val classNameString = viewModelParams.viewModelFactoryClassNameString
 
     val factoryConstructorParams =
-      params.viewModelFactoryConstructorParams + params.memberInjectedParams
-
-    val typeSpecBuilder =
-      TypeSpec.classBuilder(params.viewModelFactoryClassName)
+      viewModelParams.viewModelFactoryConstructorParams + viewModelParams.memberInjectedParams
 
     val content = FileSpec.buildFile(packageName, classNameString) {
-      typeSpecBuilder
-        .applyEach(params.typeParameters) { addTypeVariable(it) }
+      TypeSpec.classBuilder(viewModelParams.viewModelFactoryClassName)
+        .applyEach(viewModelParams.typeParameters) { addTypeVariable(it) }
         .apply {
           primaryConstructor(
             com.squareup.kotlinpoet.FunSpec.constructorBuilder()
@@ -51,31 +51,31 @@ internal class ViewModelFactoryGenerator : FileGenerator<ViewModelParams> {
           )
         }
         .addFunction("create") {
-          returns(returnType = params.viewModelClassName)
+          returns(returnType = viewModelParams.viewModelClassName)
 
-          val constructorArguments = params.viewModelConstructorParams.asArgumentList(
+          val constructorArguments = viewModelParams.viewModelConstructorParams.asArgumentList(
             asProvider = true,
             includeModule = false
           )
 
-          val tangleParams = params.viewModelConstructorParams
+          val tangleParams = viewModelParams.viewModelConstructorParams
             .filter { it.isTangleParam }
 
-          if (params.savedStateParam != null && tangleParams.isNotEmpty()) {
+          if (viewModelParams.savedStateParam != null && tangleParams.isNotEmpty()) {
             tangleParams.forEach { param ->
 
               val tangleParamName = param.tangleParamName
 
               require(
                 !tangleParamName.isNullOrEmpty(),
-                params.viewModelClassDescriptor
+                viewModelParams.viewModelClassDescriptor
               ) {
                 "parameter ${param.name} is annotated with ${FqNames.tangleParam.asString()}, " +
                   "but does not have a valid key."
               }
 
               addStatement(
-                "val·%L·=·${params.savedStateParam.name}.get().get<%T>(%S)",
+                "val·%L·=·${viewModelParams.savedStateParam.name}.get().get<%T>(%S)",
                 param.name,
                 param.typeName,
                 tangleParamName
@@ -94,19 +94,19 @@ internal class ViewModelFactoryGenerator : FileGenerator<ViewModelParams> {
             }
           }
 
-          if (params.memberInjectedParams.isEmpty()) {
+          if (viewModelParams.memberInjectedParams.isEmpty()) {
             addStatement(
               "return·%T($constructorArguments)",
-              params.viewModelClassName
+              viewModelParams.viewModelClassName
             )
           } else {
 
             addStatement(
               "val·instance·=·%T($constructorArguments)",
-              params.viewModelClassName
+              viewModelParams.viewModelClassName
             )
 
-            val memberInjectParameters = params.memberInjectedParams
+            val memberInjectParameters = viewModelParams.memberInjectedParams
 
             memberInjectParameters.forEach { parameter ->
 

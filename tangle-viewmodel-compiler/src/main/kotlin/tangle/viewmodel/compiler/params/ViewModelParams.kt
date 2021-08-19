@@ -1,4 +1,4 @@
-package tangle.viewmodel.compiler
+package tangle.viewmodel.compiler.params
 
 import com.squareup.anvil.compiler.internal.*
 import com.squareup.kotlinpoet.ClassName
@@ -7,29 +7,11 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
-import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
-import org.jetbrains.kotlin.descriptors.FunctionDescriptor
-import org.jetbrains.kotlin.descriptors.Modality.ABSTRACT
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtConstructor
-import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
-import org.jetbrains.kotlin.types.KotlinType
 import tangle.inject.compiler.*
-
-data class TangleScopeModule(
-  val packageName: String,
-  val viewModelParamsList: List<ViewModelInjectParams>
-)
-
-sealed interface ViewModelInjectParams {
-  val packageName: String
-  val scopeName: FqName
-  val viewModelClassName: ClassName
-  val viewModelFactoryClassName: ClassName
-}
 
 data class ViewModelParams(
   override val packageName: String,
@@ -45,9 +27,17 @@ data class ViewModelParams(
   val typeParameters: List<TypeVariableName>,
   val viewModelClassSimpleName: String,
   val viewModelTypeName: TypeName,
-  val savedStateParam: Parameter?
+  val savedStateParam: Parameter?,
+  val factory: Factory?
 ) : ViewModelInjectParams {
+
+  override val factoryFunctionName: String
+    get() = factory?.factoryFunctionName ?: DEFAULT_FACTORY_FUNCTION_NAME
+
   companion object {
+
+    const val DEFAULT_FACTORY_FUNCTION_NAME = "create"
+
     fun create(
       module: ModuleDescriptor,
       viewModelClass: KtClassOrObject,
@@ -62,8 +52,6 @@ data class ViewModelParams(
 
       val viewModelFactoryClassNameString = "${viewModelClass.generateClassName()}_Factory"
       val viewModelFactoryClassName = ClassName(packageName, viewModelFactoryClassNameString)
-
-      // val scopeName = viewModelClass.scope(FqNames.contributesViewModel, module)
 
       val memberInjectParameters = viewModelClassDescriptor.memberInjectedParameters(module)
 
@@ -150,102 +138,5 @@ data class ViewModelParams(
         isAssisted = false
       )
     }
-  }
-}
-
-data class Factory(
-  override val packageName: String,
-  override val scopeName: FqName,
-  override val viewModelClassName: ClassName,
-  val viewModelParams: ViewModelParams,
-  val factoryDescriptor: ClassDescriptor,
-  val factoryInterface: KtClassOrObject,
-  val factoryInterfaceClassName: ClassName,
-  override val viewModelFactoryClassName: ClassName,
-  val factoryImplClassName: ClassName,
-  val assistedParams: List<AssistedParameter>,
-  val typeParameters: List<TypeVariableName>,
-  val functionName: String
-) : ViewModelInjectParams {
-  data class AssistedParameter(
-    val name: String,
-    val kotlinType: KotlinType,
-    val typeName: TypeName
-  )
-
-  companion object {
-    fun create(
-      module: ModuleDescriptor,
-      factoryInterface: KtClassOrObject,
-      viewModelClass: KtClass,
-      constructor: KtConstructor<*>
-    ): Factory {
-      val packageName = factoryInterface.containingKtFile
-        .packageFqName
-        .safePackageString(dotSuffix = false)
-
-      val viewModelFactoryClassName =
-        ClassName(packageName, "${viewModelClass.generateClassName()}_Factory")
-
-      val factoryDescriptor = factoryInterface.requireClassDescriptor(module)
-
-      val functions = factoryDescriptor.functions()
-
-      require(functions.size == 1, factoryDescriptor) {
-        "@${FqNames.vmInjectFactory.shortName().asString()}-annotated types must have " +
-          "exactly one abstract function -- without a default implementation -- " +
-          "which returns the ${FqNames.vmInject.shortName().asString()} ViewModel type."
-      }
-
-      val function = functions[0]
-
-      val functionParameters = function.valueParameters
-
-      val factoryInterfaceClassName = factoryInterface.asClassName()
-      val factoryImplSimpleName =
-        "${factoryInterfaceClassName.simpleNames.joinToString("_")}_Impl"
-      val factoryImplClassName = ClassName(packageName, factoryImplSimpleName)
-
-      val assistedParams = functionParameters.map {
-        AssistedParameter(
-          it.name.asString(),
-          it.type,
-          it.type.asTypeName()
-        )
-      }
-
-      val functionName = function.name.asString()
-
-      val viewModelParams =
-        ViewModelParams.create(module, viewModelClass, constructor)
-
-      val typeParameters = factoryInterface.typeVariableNames(module)
-
-      return Factory(
-        packageName = packageName,
-        scopeName = FqNames.tangleAppScope,
-        viewModelClassName = viewModelParams.viewModelClassName,
-        viewModelParams = viewModelParams,
-        factoryDescriptor = factoryDescriptor,
-        factoryInterface = factoryInterface,
-        factoryInterfaceClassName = factoryInterfaceClassName,
-        viewModelFactoryClassName = viewModelFactoryClassName,
-        factoryImplClassName = factoryImplClassName,
-        assistedParams = assistedParams,
-        typeParameters = typeParameters,
-        functionName = functionName
-      )
-    }
-
-    private fun ClassDescriptor.functions(): List<FunctionDescriptor> = unsubstitutedMemberScope
-      .getContributedDescriptors(DescriptorKindFilter.FUNCTIONS)
-      .asSequence()
-      .filterIsInstance<FunctionDescriptor>()
-      .filter { it.modality == ABSTRACT }
-      .filter {
-        it.visibility == DescriptorVisibilities.PUBLIC ||
-          it.visibility == DescriptorVisibilities.PROTECTED
-      }
-      .toList()
   }
 }
