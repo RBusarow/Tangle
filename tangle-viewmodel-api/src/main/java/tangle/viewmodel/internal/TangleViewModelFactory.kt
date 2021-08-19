@@ -24,45 +24,6 @@ import androidx.savedstate.SavedStateRegistryOwner
 import dagger.multibindings.ClassKey
 import tangle.inject.InternalTangleApi
 import tangle.viewmodel.TangleGraph
-import kotlin.reflect.KClass
-
-public inline fun <reified VM : ViewModel, reified F : Any> tangleViewModel(
-  noinline factory: F.() -> VM
-): VM {
-
-  return tangleViewModel(VM::class, F::class, factory)
-}
-
-@Suppress("UNCHECKED_CAST")
-@PublishedApi
-@InternalTangleApi
-internal fun <VM : ViewModel, F : Any> tangleViewModel(
-  owner: SavedStateRegistryOwner,
-  defaultArgs: Bundle?,
-  vmClass: KClass<VM>,
-  fClass: KClass<F>,
-  factory: F.() -> VM
-): VM {
-
-  val providerFactory = object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
-    override fun <T : ViewModel> create(
-      key: String, modelClass: Class<T>, handle: SavedStateHandle
-    ): T {
-
-      val subcomponent = TangleGraph
-        .tangleViewModelSubcomponentFactory()
-        .create(handle)
-      val factoryImpl = (subcomponent.viewModelFactoryMap[fClass.java]?.get() as? F)
-        ?: throw IllegalStateException(
-          "Tangle can't find a factory of type $fClass, " +
-            "which is necessary in order to create an assisted $vmClass."
-        )
-      return factory(factoryImpl) as T
-    }
-  }
-
-  return providerFactory.create(vmClass.java)
-}
 
 /** @suppress */
 @InternalTangleApi

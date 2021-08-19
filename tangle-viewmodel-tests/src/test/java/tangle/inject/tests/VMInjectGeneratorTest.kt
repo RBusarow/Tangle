@@ -17,8 +17,12 @@ package tangle.inject.tests
 
 import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.TestFactory
-import tangle.inject.test.utils.*
+import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.createFunction
+import tangle.inject.test.utils.factoryClass
+import tangle.inject.test.utils.myViewModelClass
 import javax.inject.Provider
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
@@ -183,7 +187,7 @@ class VMInjectGeneratorTest : BaseTest() {
       import javax.inject.Inject
 
       class MyViewModel @VMInject constructor(
-        @VMAssisted name: String
+        @VMAssisted val factory: () -> Unit
       ) : ViewModel() {
 
         @VMInjectFactory
@@ -204,6 +208,37 @@ class VMInjectGeneratorTest : BaseTest() {
           .javaMethod!!
 
         createFunction.invoke(factoryInstance, "name")::class.java shouldBe myViewModelClass
+      }
+    }
+
+  @TestFactory
+  fun `assisted arguments can't be function types`() =
+    test {
+      compile(
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.viewmodel.*
+      import javax.inject.Inject
+
+      class MyViewModel @VMInject constructor(
+        @VMAssisted val function: () -> Unit
+      ) : ViewModel() {
+
+        @VMInjectFactory
+        interface Factory {
+          fun create(function: () -> Unit): MyViewModel
+        }
+      }
+     """,
+        shouldFail = true
+      ) {
+
+        messages shouldContain "Functional arguments like `@VMAssisted val function: () -> Unit` " +
+          "can't be used as assisted arguments for ViewModels.  " +
+          "They would leak the initial caller's instance into the ViewModelStore."
       }
     }
 
@@ -432,3 +467,4 @@ class VMInjectGeneratorTest : BaseTest() {
       }
     }
 }
+

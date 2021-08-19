@@ -32,6 +32,7 @@ import org.jetbrains.kotlin.descriptors.resolveClassByFqName
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation.FROM_BACKEND
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.psiUtil.isFunctionalExpression
 import javax.inject.Provider
 import com.squareup.anvil.compiler.internal.asClassName as anvilAsClassName
 import com.squareup.anvil.compiler.internal.requireFqName as anvilRequireFqName
@@ -130,6 +131,11 @@ fun List<KtCallableDeclaration>.mapToParameters(
     val qualifiers = annotations.qualifierAnnotationSpecs(module)
 
     val isAssisted = annotations.any { it.requireFqName(module) == FqNames.vmAssisted }
+
+    require(!isAssisted || parameter.typeReference?.isFunctionType() != true) {
+      "Functional arguments like `${parameter.text}` can't be used as assisted arguments " +
+        "for ViewModels.  They would leak the initial caller's instance into the ViewModelStore."
+    }
 
     val baseName = parameter.name ?: "param$index"
 
