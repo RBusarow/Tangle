@@ -82,7 +82,7 @@ class AssistedViewModelGeneratedTest : BaseTest() {
     }
 
   @TestFactory
-  fun `TangleParam arguments can't be function types`() =
+  fun `arguments cannot be both VMAssisted and TangleParam`() =
     test {
       compile(
         //language=kotlin
@@ -96,8 +96,71 @@ class AssistedViewModelGeneratedTest : BaseTest() {
       import javax.inject.Inject
 
       class MyViewModel @VMInject constructor(
-        @TangleParam("function") val function: () -> Unit
+        @VMAssisted
+        @TangleParam("name")
+        val name: String
       ) : ViewModel()
+     """,
+        shouldFail = true
+      ) {
+
+        messages shouldContain "MyViewModel's constructor parameter `name` is annotated " +
+          "with both `tangle.viewmodel.VMAssisted` (meaning it's passed directly from a Factory) " +
+          "and `tangle.inject.TangleParam` (meaning it's passed via SavedStateHandle).  " +
+          "Only one of these annotations can be applied to a single property."
+      }
+    }
+
+  @TestFactory
+  fun `assisted arguments require an annotated factory interface`() =
+    test {
+      compile(
+        //language=kotlin
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.*
+      import javax.inject.Inject
+
+      class MyViewModel @VMInject constructor(
+        @VMAssisted val name: String
+      ) : ViewModel()
+     """,
+        shouldFail = true
+      ) {
+
+        messages shouldContain "Functional arguments like `@VMAssisted val function: () -> Unit` " +
+          "can't be used as assisted arguments for ViewModels.  " +
+          "They would leak the initial caller's instance into the ViewModel."
+      }
+    }
+
+  @TestFactory
+  fun `assisted arguments must be provided by factory function`() =
+    test {
+      compile(
+        //language=kotlin
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.*
+      import javax.inject.Inject
+
+      class MyViewModel @VMInject constructor(
+        @VMAssisted val name: String
+      ) : ViewModel() {
+
+        @VMInjectFactory
+        interface Factory {
+          fun create(): MyViewModel
+        }
+      }
      """,
         shouldFail = true
       ) {

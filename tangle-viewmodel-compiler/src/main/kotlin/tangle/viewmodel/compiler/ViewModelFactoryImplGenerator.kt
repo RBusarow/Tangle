@@ -7,6 +7,7 @@ import com.squareup.kotlinpoet.KModifier.INTERNAL
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.buildCodeBlock
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
 import tangle.inject.compiler.FqNames
@@ -99,8 +100,13 @@ internal class ViewModelFactoryImplGenerator : FileGenerator<Factory> {
               )
               if (!param.typeName.isNullable) {
                 beginControlFlow("checkNotNull(%L)·{", param.name)
-                addStatement("\"Required parameter with name `%L` \" +", tangleParamName)
-                addStatement("\"and type `%L` is missing from SavedStateHandle.\"", param.typeName)
+                addStatement("%S", buildCodeBlock {
+                  add(
+                    "Required parameter with name `%L` and type `%L` is missing from SavedStateHandle.",
+                    tangleParamName,
+                    param.typeName
+                  )
+                })
                 endControlFlow()
               }
             }

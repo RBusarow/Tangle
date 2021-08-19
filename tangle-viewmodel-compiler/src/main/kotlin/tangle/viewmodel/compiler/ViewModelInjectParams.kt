@@ -69,6 +69,16 @@ data class ViewModelParams(
 
       val viewModelConstructorParams = constructor.valueParameters.mapToParameters(module)
 
+      viewModelConstructorParams.forEach { param ->
+        require(value = !(param.isAssisted && param.isTangleParam),
+          declarationDescriptor = { viewModelClassDescriptor }) {
+          "${viewModelClassDescriptor.name}'s constructor parameter `${param.name}` is annotated " +
+            "with both `${FqNames.vmAssisted}` (meaning it's passed directly from a Factory) " +
+            "and `${FqNames.tangleParam}` (meaning it's passed via SavedStateHandle).  Only one " +
+            "of these annotations can be applied to a single property."
+        }
+      }
+
       val (daggerConstructorParams, savedStateParams) = viewModelConstructorParams
         .filterNot { it.isAssisted }
         .partition { !it.isTangleParam }
@@ -198,7 +208,6 @@ data class Factory(
 
       val assistedParams = functionParameters.map {
         AssistedParameter(
-          // it.requireTangleParamName(),
           it.name.asString(),
           it.type,
           it.type.asTypeName()
