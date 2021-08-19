@@ -99,8 +99,7 @@ public final class tangle/inject/compiler/DescriptorKt {
 	public static final fun isNullable (Lorg/jetbrains/kotlin/descriptors/PropertyDescriptor;)Z
 	public static final fun isNullable (Lorg/jetbrains/kotlin/types/KotlinType;)Z
 	public static final fun isViewModel (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;)Z
-	public static final fun mapToParameters (Ljava/util/List;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;Z)Ljava/util/List;
-	public static synthetic fun mapToParameters$default (Ljava/util/List;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;ZILjava/lang/Object;)Ljava/util/List;
+	public static final fun mapToParameters (Ljava/util/List;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/List;
 	public static final fun memberInjectedParameters (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/List;
 	public static final fun memberInjectedProperties (Lorg/jetbrains/kotlin/descriptors/ClassDescriptor;Lorg/jetbrains/kotlin/descriptors/ModuleDescriptor;)Ljava/util/List;
 	public static final fun memberInjectedProperties (Lorg/jetbrains/kotlin/resolve/scopes/MemberScope;)Ljava/util/List;

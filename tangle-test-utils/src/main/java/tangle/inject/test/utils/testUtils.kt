@@ -58,9 +58,7 @@ fun <T : Any> Class<T>.createStatic(
   .invoke(null, *initargs) as T
 
 @Suppress("UNCHECKED_CAST")
-fun <T> T.factoryGet(
-  vararg initargs: Any?
-): Any = cast<Factory<*>>().get()
+fun <T> T.factoryGet(): Any = cast<Factory<*>>().get()
 
 inline fun <T, E : Executable> E.use(block: (E) -> T): T {
   // Deprecated since Java 9, but many projects still use JDK 8 for compilation.
