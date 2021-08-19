@@ -82,13 +82,16 @@ internal class ViewModelFactoryGenerator : FileGenerator<ViewModelParams> {
               )
               if (!param.typeName.isNullable) {
                 beginControlFlow("checkNotNull(%L)·{", param.name)
-                addStatement("%S", buildCodeBlock {
-                  add(
-                    "Required parameter with name `%L` and type `%L` is missing from SavedStateHandle.",
-                    tangleParamName,
-                    param.typeName
-                  )
-                })
+                addStatement(
+                  "%S",
+                  buildCodeBlock {
+                    add(
+                      "Required parameter with name `%L` and type `%L` is missing from SavedStateHandle.",
+                      tangleParamName,
+                      param.typeName
+                    )
+                  }
+                )
                 endControlFlow()
               }
             }
