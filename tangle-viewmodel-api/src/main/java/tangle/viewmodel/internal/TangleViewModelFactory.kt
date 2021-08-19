@@ -24,6 +24,33 @@ import androidx.savedstate.SavedStateRegistryOwner
 import dagger.multibindings.ClassKey
 import tangle.inject.InternalTangleApi
 import tangle.viewmodel.TangleGraph
+import kotlin.reflect.KClass
+
+public inline fun <reified VM : ViewModel, reified F : Any> tangleViewModel(
+  noinline factory: F.() -> VM
+): VM {
+
+  return tangleViewModel(VM::class, F::class, factory)
+}
+
+@PublishedApi
+internal fun <VM : ViewModel, F : Any> tangleViewModel(
+  vmClass: KClass<VM>, fClass: KClass<F>,
+  factory: F.() -> VM
+): VM {
+
+  val providerFactory = object : AbstractSavedStateViewModelFactory(this, arguments) {
+    override fun <T : ViewModel> create(
+      key: String, modelClass: Class<T>, handle: SavedStateHandle
+    ): T {
+
+      val subcomponent = TangleGraph
+        .tangleViewModelSubcomponentFactory()
+        .create(handle)
+      val factoryImpl =
+    }
+  }
+}
 
 /** @suppress */
 @InternalTangleApi

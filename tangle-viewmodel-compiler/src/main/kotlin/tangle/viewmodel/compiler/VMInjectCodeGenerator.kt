@@ -77,22 +77,30 @@ class VMInjectCodeGenerator : CodeGenerator {
       }
     }
 
-    val moduleParams = paramsList
-      // .filterIsInstance<ViewModelParams>()
-      .groupBy { it.packageName }
-      .map { (packageName, byPackageName) ->
-
-        TangleScopeModule(
-          packageName = packageName,
-          viewModelParamsList = byPackageName
-        )
-      }
     val tangleScopeModules = with(ViewModelTangleScopeModuleGenerator()) {
-      moduleParams
+      paramsList
+        .groupBy { it.packageName }
+        .map { (packageName, byPackageName) ->
+
+          TangleScopeModule(
+            packageName = packageName,
+            viewModelParamsList = byPackageName
+          )
+        }
         .map { generate(codeGenDir, it) }
     }
+
     val tangleAppScopeModules = with(ViewModelTangleAppScopeModuleGenerator()) {
-      moduleParams
+      paramsList
+        .filterIsInstance<ViewModelParams>()
+        .groupBy { it.packageName }
+        .map { (packageName, byPackageName) ->
+
+          TangleScopeModule(
+            packageName = packageName,
+            viewModelParamsList = byPackageName
+          )
+        }
         .map { generate(codeGenDir, it) }
     }
 
