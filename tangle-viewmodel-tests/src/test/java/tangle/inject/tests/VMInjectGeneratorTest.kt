@@ -17,15 +17,12 @@ package tangle.inject.tests
 
 import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
-import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.TestFactory
 import tangle.inject.test.utils.BaseTest
 import tangle.inject.test.utils.createFunction
 import tangle.inject.test.utils.factoryClass
 import tangle.inject.test.utils.myViewModelClass
 import javax.inject.Provider
-import kotlin.reflect.full.memberFunctions
-import kotlin.reflect.jvm.javaMethod
 
 class VMInjectGeneratorTest : BaseTest() {
 
@@ -432,4 +429,3 @@ class VMInjectGeneratorTest : BaseTest() {
       }
     }
 }
-

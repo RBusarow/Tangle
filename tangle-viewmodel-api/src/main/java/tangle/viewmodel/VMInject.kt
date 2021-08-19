@@ -17,7 +17,6 @@ package tangle.viewmodel
 
 import kotlin.annotation.AnnotationRetention.BINARY
 import kotlin.annotation.AnnotationTarget.CONSTRUCTOR
-import kotlin.reflect.KClass
 
 /**
  * Annotates the constructor of a [ViewModel][androidx.lifecycle.ViewModel]

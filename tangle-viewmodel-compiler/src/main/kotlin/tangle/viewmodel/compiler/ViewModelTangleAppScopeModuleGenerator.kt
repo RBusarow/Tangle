@@ -10,6 +10,7 @@ import tangle.inject.compiler.FileGenerator
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.applyEach
 import tangle.inject.compiler.buildFile
+import tangle.viewmodel.compiler.params.TangleScopeModule
 import java.io.File
 
 class ViewModelTangleAppScopeModuleGenerator : FileGenerator<TangleScopeModule> {

@@ -12,7 +12,5 @@ sealed interface ViewModelInjectParams {
   val packageName: String
   val scopeName: FqName
   val viewModelClassName: ClassName
-  val viewModelFactoryClassName: ClassName
   val factoryFunctionName: String
 }
-

@@ -4,30 +4,29 @@ import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.anvil.compiler.internal.capitalize
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier.INTERNAL
+import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.buildCodeBlock
 import tangle.inject.compiler.*
+import tangle.viewmodel.compiler.params.Factory.FunctionParameter
 import tangle.viewmodel.compiler.params.ViewModelParams
 import java.io.File
 
 internal class ViewModelFactoryGenerator : FileGenerator<ViewModelParams> {
+
+  @Suppress("ComplexMethod")
   override fun generate(
     codeGenDir: File,
     params: ViewModelParams
   ): GeneratedFile {
 
-    val viewModelParams = params
-
-    val packageName = viewModelParams.packageName
-    val classNameString = viewModelParams.viewModelFactoryClassNameString
-
     val factoryConstructorParams =
-      viewModelParams.viewModelFactoryConstructorParams + viewModelParams.memberInjectedParams
+      params.viewModelFactoryConstructorParams + params.memberInjectedParams
 
-    val content = FileSpec.buildFile(packageName, classNameString) {
-      TypeSpec.classBuilder(viewModelParams.viewModelFactoryClassName)
-        .applyEach(viewModelParams.typeParameters) { addTypeVariable(it) }
+    val content = FileSpec.buildFile(params.packageName, params.viewModelFactoryClassNameString) {
+      TypeSpec.classBuilder(params.viewModelFactoryClassName)
+        .applyEach(params.typeParameters) { addTypeVariable(it) }
         .apply {
           primaryConstructor(
             com.squareup.kotlinpoet.FunSpec.constructorBuilder()
@@ -37,6 +36,12 @@ internal class ViewModelFactoryGenerator : FileGenerator<ViewModelParams> {
               }
               .build()
           )
+
+          params.factory
+            ?.factoryInterfaceClassName
+            ?.also {
+              addSuperinterface(it)
+            }
         }
         .applyEach(factoryConstructorParams) { parameter ->
 
@@ -50,63 +55,86 @@ internal class ViewModelFactoryGenerator : FileGenerator<ViewModelParams> {
               .build()
           )
         }
-        .addFunction("create") {
-          returns(returnType = viewModelParams.viewModelClassName)
+        .addFunction(params.factoryFunctionName) {
+          if (params.factory != null) {
+            addModifiers(OVERRIDE)
+          }
 
-          val constructorArguments = viewModelParams.viewModelConstructorParams.asArgumentList(
-            asProvider = true,
-            includeModule = false
-          )
+          val constructorArguments = params.viewModelConstructorParams
+            .asArgumentList(
+              asProvider = true,
+              includeModule = false
+            )
 
-          val tangleParams = viewModelParams.viewModelConstructorParams
+          val constructorAssisted = params.viewModelConstructorParams
+            .filter { it.isAssisted }
+
+          requireFactoryExistsIfNeeded(constructorAssisted, params)
+
+          val factoryParams = params.factory
+            ?.functionArguments
+            .orEmpty()
+
+          requireAssistedArgumentsMatch(constructorAssisted, factoryParams, params)
+
+          factoryParams.forEach { param ->
+            addParameter(param.name, param.typeName)
+          }
+
+          returns(returnType = params.viewModelClassName)
+
+          val tangleParams = params.viewModelConstructorParams
             .filter { it.isTangleParam }
 
-          if (viewModelParams.savedStateParam != null && tangleParams.isNotEmpty()) {
+          if (params.savedStateParam != null && tangleParams.isNotEmpty()) {
             tangleParams.forEach { param ->
 
               val tangleParamName = param.tangleParamName
 
               require(
                 !tangleParamName.isNullOrEmpty(),
-                viewModelParams.viewModelClassDescriptor
+                params.viewModelClassDescriptor
               ) {
                 "parameter ${param.name} is annotated with ${FqNames.tangleParam.asString()}, " +
                   "but does not have a valid key."
               }
 
               addStatement(
-                "val·%L·=·${viewModelParams.savedStateParam.name}.get().get<%T>(%S)",
+                "val·%L·=·${params.savedStateParam.name}.get().get<%T>(%S)",
                 param.name,
                 param.typeName,
                 tangleParamName
               )
               if (!param.typeName.isNullable) {
                 beginControlFlow("checkNotNull(%L)·{", param.name)
-                addStatement("%S", buildCodeBlock {
-                  add(
-                    "Required parameter with name `%L` and type `%L` is missing from SavedStateHandle.",
-                    tangleParamName,
-                    param.typeName
-                  )
-                })
+                addStatement(
+                  "%S",
+                  buildCodeBlock {
+                    add(
+                      "Required parameter with name `%L` and type `%L` is missing from SavedStateHandle.",
+                      tangleParamName,
+                      param.typeName
+                    )
+                  }
+                )
                 endControlFlow()
               }
             }
           }
 
-          if (viewModelParams.memberInjectedParams.isEmpty()) {
+          if (params.memberInjectedParams.isEmpty()) {
             addStatement(
               "return·%T($constructorArguments)",
-              viewModelParams.viewModelClassName
+              params.viewModelClassName
             )
           } else {
 
             addStatement(
               "val·instance·=·%T($constructorArguments)",
-              viewModelParams.viewModelClassName
+              params.viewModelClassName
             )
 
-            val memberInjectParameters = viewModelParams.memberInjectedParams
+            val memberInjectParameters = params.memberInjectedParams
 
             memberInjectParameters.forEach { parameter ->
 
@@ -128,7 +156,52 @@ internal class ViewModelFactoryGenerator : FileGenerator<ViewModelParams> {
         .let { addType(it) }
     }
 
-    return createGeneratedFile(codeGenDir, packageName, classNameString, content)
+    return createGeneratedFile(
+      codeGenDir,
+      params.packageName,
+      params.viewModelFactoryClassNameString,
+      content
+    )
+  }
+
+  private fun requireAssistedArgumentsMatch(
+    constructorAssisted: List<ConstructorInjectParameter>,
+    factoryParams: List<FunctionParameter>,
+    viewModelParams: ViewModelParams
+  ) {
+    val matchingArguments = constructorAssisted.all { cp ->
+      factoryParams.any { fp ->
+        fp.name == cp.name && fp.typeName == cp.typeName
+      }
+    }
+
+    require(matchingArguments, { viewModelParams.viewModelClassDescriptor }) {
+      """@VMAssisted-annotated constructor parameters and factory interface function parameters don't match.
+        |
+        |assisted constructor parameters
+        |${constructorAssisted.joinToString("\n\t", "\t") { "${it.name}: ${it.typeName}" }}
+        |
+        |factory function parameters
+        |${factoryParams.joinToString("\n\t", "\t") { "${it.name}: ${it.typeName}" }}
+      """.trimMargin()
+    }
+  }
+
+  private fun requireFactoryExistsIfNeeded(
+    constructorAssisted: List<ConstructorInjectParameter>,
+    viewModelParams: ViewModelParams
+  ) {
+    val factoryExistsIfNeeded =
+      constructorAssisted.isEmpty() || viewModelParams.factory != null
+
+    require(
+      factoryExistsIfNeeded,
+      { viewModelParams.viewModelClassDescriptor }
+    ) {
+      "${viewModelParams.viewModelClassSimpleName}'s constructor has @VMAssisted-annotated " +
+        "parameters, but there is no corresponding factory interface.  In order to provide " +
+        "assisted parameters, create a Factory interface " +
+        "and annotated it with @VMInjectFactory."
+    }
   }
 }
-

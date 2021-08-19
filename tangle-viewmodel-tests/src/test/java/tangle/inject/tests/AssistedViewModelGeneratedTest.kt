@@ -50,6 +50,44 @@ class AssistedViewModelGeneratedTest : BaseTest() {
     }
 
   @TestFactory
+  fun `factory impl function name should match interface's`() =
+    test {
+      compile(
+        //language=kotlin
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.viewmodel.*
+      import javax.inject.Inject
+
+      class MyViewModel @VMInject constructor(
+        @VMAssisted val name: String
+      ) : ViewModel() {
+
+        @VMInjectFactory
+        interface Factory {
+          fun makeIt(name: String): MyViewModel
+        }
+      }
+     """
+      ) {
+        val factoryClass = myViewModelClass.factoryClass()
+
+        val constructor = factoryClass.declaredConstructors.single()
+        val factoryInstance = constructor.newInstance()
+
+        val createFunction = factoryClass.kotlin
+          .memberFunctions
+          .single { it.name == "makeIt" }
+          .javaMethod!!
+
+        createFunction.invoke(factoryInstance, "name")::class.java shouldBe myViewModelClass
+      }
+    }
+
+  @TestFactory
   fun `assisted arguments can't be function types`() =
     test {
       compile(
@@ -132,9 +170,9 @@ class AssistedViewModelGeneratedTest : BaseTest() {
         shouldFail = true
       ) {
 
-        messages shouldContain "Functional arguments like `@VMAssisted val function: () -> Unit` " +
-          "can't be used as assisted arguments for ViewModels.  " +
-          "They would leak the initial caller's instance into the ViewModel."
+        messages shouldContain "MyViewModel's constructor has @VMAssisted-annotated parameters, " +
+          "but there is no corresponding factory interface.  In order to provide assisted " +
+          "parameters, create a Factory interface and annotated it with @VMInjectFactory."
       }
     }
 
@@ -153,21 +191,27 @@ class AssistedViewModelGeneratedTest : BaseTest() {
       import javax.inject.Inject
 
       class MyViewModel @VMInject constructor(
-        @VMAssisted val name: String
+        @VMAssisted val name: String,
+        @VMAssisted val age: Int
       ) : ViewModel() {
 
         @VMInjectFactory
         interface Factory {
-          fun create(): MyViewModel
+          fun create(name: String): MyViewModel
         }
       }
      """,
         shouldFail = true
       ) {
 
-        messages shouldContain "Functional arguments like `@VMAssisted val function: () -> Unit` " +
-          "can't be used as assisted arguments for ViewModels.  " +
-          "They would leak the initial caller's instance into the ViewModel."
+        messages shouldContain """@VMAssisted-annotated constructor parameters and factory interface function parameters don't match.
+        |
+        |assisted constructor parameters
+        |	name: kotlin.String
+        |	age: kotlin.Int
+        |
+        |factory function parameters
+        |	name: kotlin.String""".trimMargin()
       }
     }
 }

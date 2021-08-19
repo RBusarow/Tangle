@@ -8,7 +8,6 @@ import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtClassOrObject
-import org.jetbrains.kotlin.psi.KtConstructor
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
 import org.jetbrains.kotlin.types.KotlinType
 import tangle.inject.compiler.FqNames
@@ -18,16 +17,14 @@ data class Factory(
   override val packageName: String,
   override val scopeName: FqName,
   override val viewModelClassName: ClassName,
-  val factoryDescriptor: ClassDescriptor,
-  val factoryInterface: KtClassOrObject,
   val factoryInterfaceClassName: ClassName,
-  override val viewModelFactoryClassName: ClassName,
-  val factoryImplClassName: ClassName,
-  val assistedParams: List<AssistedParameter>,
+  val viewModelFactoryClassName: ClassName,
+  val functionArguments: List<FunctionParameter>,
   val typeParameters: List<TypeVariableName>,
   override val factoryFunctionName: String
 ) : ViewModelInjectParams {
-  data class AssistedParameter(
+
+  data class FunctionParameter(
     val name: String,
     val kotlinType: KotlinType,
     val typeName: TypeName
@@ -61,12 +58,9 @@ data class Factory(
       val functionParameters = function.valueParameters
 
       val factoryInterfaceClassName = factoryInterface.asClassName()
-      val factoryImplSimpleName =
-        "${factoryInterfaceClassName.simpleNames.joinToString("_")}_Impl"
-      val factoryImplClassName = ClassName(packageName, factoryImplSimpleName)
 
-      val assistedParams = functionParameters.map {
-        AssistedParameter(
+      val functionArguments = functionParameters.map {
+        FunctionParameter(
           it.name.asString(),
           it.type,
           it.type.asTypeName()
@@ -81,12 +75,9 @@ data class Factory(
         packageName = packageName,
         scopeName = FqNames.tangleAppScope,
         viewModelClassName = viewModelClass.asClassName(),
-        factoryDescriptor = factoryDescriptor,
-        factoryInterface = factoryInterface,
         factoryInterfaceClassName = factoryInterfaceClassName,
         viewModelFactoryClassName = viewModelFactoryClassName,
-        factoryImplClassName = factoryImplClassName,
-        assistedParams = assistedParams,
+        functionArguments = functionArguments,
         typeParameters = typeParameters,
         factoryFunctionName = functionName
       )

@@ -20,7 +20,7 @@ data class ViewModelParams(
   val viewModelClassDescriptor: ClassDescriptor,
   val viewModelConstructorParams: List<ConstructorInjectParameter>,
   val viewModelFactoryClassNameString: String,
-  override val viewModelFactoryClassName: ClassName,
+  val viewModelFactoryClassName: ClassName,
   val viewModelFactoryConstructorParams: List<Parameter>,
   val constructor: KtConstructor<*>,
   val memberInjectedParams: List<MemberInjectParameter>,
@@ -41,7 +41,8 @@ data class ViewModelParams(
     fun create(
       module: ModuleDescriptor,
       viewModelClass: KtClassOrObject,
-      constructor: KtConstructor<*>
+      constructor: KtConstructor<*>,
+      factory: Factory?
     ): ViewModelParams {
 
       val packageName = viewModelClass.containingKtFile
@@ -58,8 +59,10 @@ data class ViewModelParams(
       val viewModelConstructorParams = constructor.valueParameters.mapToParameters(module)
 
       viewModelConstructorParams.forEach { param ->
-        require(value = !(param.isAssisted && param.isTangleParam),
-          declarationDescriptor = { viewModelClassDescriptor }) {
+        require(
+          value = !(param.isAssisted && param.isTangleParam),
+          declarationDescriptor = { viewModelClassDescriptor }
+        ) {
           "${viewModelClassDescriptor.name}'s constructor parameter `${param.name}` is annotated " +
             "with both `${FqNames.vmAssisted}` (meaning it's passed directly from a Factory) " +
             "and `${FqNames.tangleParam}` (meaning it's passed via SavedStateHandle).  Only one " +
@@ -119,7 +122,8 @@ data class ViewModelParams(
         typeParameters = typeParameters,
         viewModelClassSimpleName = viewModelClassSimpleName,
         viewModelTypeName = viewModelTypeName,
-        savedStateParam = finalSavedStateParam
+        savedStateParam = finalSavedStateParam,
+        factory = factory
       )
     }
 

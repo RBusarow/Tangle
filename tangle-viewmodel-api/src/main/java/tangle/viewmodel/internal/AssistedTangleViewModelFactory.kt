@@ -12,16 +12,18 @@ import kotlin.reflect.KClass
 @Suppress("UNCHECKED_CAST")
 @InternalTangleApi
 public class AssistedTangleViewModelFactory<VM : ViewModel, F : Any>(
-    private val owner: SavedStateRegistryOwner,
-    private val defaultArgs: Bundle?,
-    private val vmClass: KClass<VM>,
-    private val fClass: KClass<F>
+  private val owner: SavedStateRegistryOwner,
+  private val defaultArgs: Bundle?,
+  private val vmClass: KClass<VM>,
+  private val fClass: KClass<F>
 ) {
 
   public fun create(factory: F.() -> VM): VM =
     object : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
       override fun <T : ViewModel> create(
-        key: String, modelClass: Class<T>, handle: SavedStateHandle
+        key: String,
+        modelClass: Class<T>,
+        handle: SavedStateHandle
       ): T {
 
         val subcomponent = TangleGraph.tangleViewModelSubcomponentFactory()

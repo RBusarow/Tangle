@@ -32,7 +32,6 @@ import org.jetbrains.kotlin.descriptors.resolveClassByFqName
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation.FROM_BACKEND
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.*
-import org.jetbrains.kotlin.psi.psiUtil.isFunctionalExpression
 import javax.inject.Provider
 import com.squareup.anvil.compiler.internal.asClassName as anvilAsClassName
 import com.squareup.anvil.compiler.internal.requireFqName as anvilRequireFqName

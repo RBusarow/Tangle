@@ -8,6 +8,9 @@ import com.squareup.kotlinpoet.KModifier.ABSTRACT
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeSpec.Builder
 import tangle.inject.compiler.*
+import tangle.viewmodel.compiler.params.Factory
+import tangle.viewmodel.compiler.params.TangleScopeModule
+import tangle.viewmodel.compiler.params.ViewModelParams
 import java.io.File
 
 class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
@@ -23,6 +26,8 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
 
     val viewModelParams = params.viewModelParamsList.filterIsInstance<ViewModelParams>()
     val factoryParams = params.viewModelParamsList.filterIsInstance<Factory>()
+
+    val providedViewModels = viewModelParams.filter { it.factory == null }
 
     val content = FileSpec.buildFile(packageName, moduleName) {
       addType(
@@ -41,10 +46,10 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
             addViewModelFactoryBinder(factory)
           }
           .apply {
-            if (viewModelParams.isNotEmpty()) {
+            if (providedViewModels.isNotEmpty()) {
               addType(
                 TypeSpec.companionObjectBuilder()
-                  .applyEach(viewModelParams) { viewModelParam ->
+                  .applyEach(providedViewModels) { viewModelParam ->
 
                     addFunction(
                       "provide_${viewModelParam.viewModelFactoryClassName.simpleNames.joinToString("_")}"
@@ -89,12 +94,12 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
 
   private fun Builder.addViewModelFactoryBinder(factoryParams: Factory) = apply {
     addFunction(
-      "multibind_${factoryParams.viewModelClassName.simpleNames.joinToString("_")}"
+      "multibind_${factoryParams.viewModelFactoryClassName.simpleNames.joinToString("_")}"
     ) {
 
       addModifiers(ABSTRACT)
       addParameter("factory", factoryParams.viewModelFactoryClassName)
-      returns( factoryParams.factoryInterfaceClassName)
+      returns(factoryParams.factoryInterfaceClassName)
       addAnnotation(ClassNames.binds)
       addAnnotation(ClassNames.intoMap)
       addAnnotation(

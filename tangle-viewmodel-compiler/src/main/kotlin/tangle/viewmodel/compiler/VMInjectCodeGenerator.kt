@@ -40,11 +40,21 @@ class VMInjectCodeGenerator : CodeGenerator {
             factoryInterface.nonStaticOuterClasses()
               .firstOrNull { it.vmInjectConstructor(module) != null }
               ?.let { viewModelClass ->
-                Factory.create(
+
+                val factory = Factory.create(
                   module,
                   factoryInterface,
                   viewModelClass
                 )
+
+                val viewModel = ViewModelParams.create(
+                  module,
+                  viewModelClass,
+                  viewModelClass.vmInjectConstructor(module)!!,
+                  factory
+                )
+
+                viewModel
               } ?: throw TangleCompilationException(
               "The @${FqNames.vmInjectFactory.shortName().asString()}-annotated interface " +
                 "`${factoryInterface.fqName}` must be defined inside a ViewModel " +
@@ -64,7 +74,7 @@ class VMInjectCodeGenerator : CodeGenerator {
 
             val constructor = clazz.vmInjectConstructor(module) ?: return@mapNotNull null
 
-            ViewModelParams.create(module, clazz, constructor)
+            ViewModelParams.create(module, clazz, constructor, null)
           }
 
         factoryParams + viewModelParams
@@ -72,15 +82,12 @@ class VMInjectCodeGenerator : CodeGenerator {
       .toList()
 
     val generated = paramsList.map { params ->
-
-      when (params) {
-        is Factory -> with(ViewModelFactoryImplGenerator()) { generate(codeGenDir, params) }
-        is ViewModelParams -> with(ViewModelFactoryGenerator()) { generate(codeGenDir, params) }
-      }
+      with(ViewModelFactoryGenerator()) { generate(codeGenDir, params) }
     }
 
     val tangleScopeModules = with(ViewModelTangleScopeModuleGenerator()) {
       paramsList
+        .flatMap { listOfNotNull(it, it.factory) }
         .groupBy { it.packageName }
         .map { (packageName, byPackageName) ->
 
@@ -92,9 +99,9 @@ class VMInjectCodeGenerator : CodeGenerator {
         .map { generate(codeGenDir, it) }
     }
 
+    // creates `@Provides` functions for any ViewModels which don't require an assisted factory
     val tangleAppScopeModules = with(ViewModelTangleAppScopeModuleGenerator()) {
       paramsList
-        .filterIsInstance<ViewModelParams>()
         .groupBy { it.packageName }
         .map { (packageName, byPackageName) ->
 
