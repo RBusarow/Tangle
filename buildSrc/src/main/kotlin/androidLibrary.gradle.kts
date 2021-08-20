@@ -122,6 +122,8 @@ val lintMain by tasks.registering {
       .configureEach {
         kotlinOptions {
           allWarningsAsErrors = true
+
+          freeCompilerArgs = freeCompilerArgs + "-Xexplicit-api=strict"
         }
       }
   }
@@ -137,6 +139,25 @@ val buildTests by tasks.registering {
   dependsOn("assembleDebugUnitTest")
 }
 
-extensions.configure<KotlinAndroidProjectExtension> {
-  explicitApi = ExplicitApiMode.Strict
-}
+// explicit API mode doesn't work in the IDE for Android projects
+// https://youtrack.jetbrains.com/issue/KT-37652
+// disabling this bandaid because it also complains about exlicit API things in test sources
+/*
+tasks
+  .matching { it is KotlinCompile }
+  .configureEach {
+    val task = this
+    val shouldEnable = !task.name.contains("test", ignoreCase = true)
+    val kotlinCompile = task as KotlinCompile
+
+    if (shouldEnable && !project.hasProperty("kotlin.optOutExplicitApi")) {
+      if ("-Xexplicit-api=strict" !in kotlinCompile.kotlinOptions.freeCompilerArgs) {
+        kotlinCompile.kotlinOptions.freeCompilerArgs += "-Xexplicit-api=strict"
+      }
+    } else {
+      kotlinCompile.kotlinOptions.freeCompilerArgs = kotlinCompile.kotlinOptions
+        .freeCompilerArgs
+        .filterNot { it == "-Xexplicit-api=strict" }
+    }
+  }
+*/
