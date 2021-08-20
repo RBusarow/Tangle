@@ -1,4 +1,4 @@
-package tangle.inject.tests
+package tangle.viewmodel
 
 import androidx.lifecycle.ViewModel
 import io.kotest.matchers.shouldBe
@@ -14,8 +14,6 @@ import tangle.inject.test.utils.daggerAppComponent
 import tangle.inject.test.utils.getPrivateFieldByName
 import tangle.inject.test.utils.getPrivateFunctionByName
 import tangle.inject.test.utils.myViewModelClass
-import tangle.viewmodel.TangleGraph
-import tangle.viewmodel.TangleViewModelMapSubcomponent
 import kotlin.reflect.KClass
 
 @Execution(ExecutionMode.SAME_THREAD)
@@ -28,6 +26,7 @@ class TangleGraphTest : BaseTest() {
 
   @Test
   fun `should hold viewModel keys`() = compileWithDagger(
+    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -57,6 +56,7 @@ class TangleGraphTest : BaseTest() {
 
   @Test
   fun `viewModel keys should persist`() = compileWithDagger(
+    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -87,6 +87,7 @@ class TangleGraphTest : BaseTest() {
 
   @Test
   fun `should provide ViewModel map subcomponent factory`() = compileWithDagger(
+    //language=kotlin
     """
       package tangle.inject.tests
 
