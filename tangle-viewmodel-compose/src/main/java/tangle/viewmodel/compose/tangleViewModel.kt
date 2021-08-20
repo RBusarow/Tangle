@@ -14,6 +14,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.savedstate.SavedStateRegistryOwner
 import tangle.inject.InternalTangleApi
+import tangle.viewmodel.internal.AssistedTangleViewModelFactory
 import tangle.viewmodel.internal.TangleViewModelFactory
 
 /**
@@ -51,6 +52,59 @@ public inline fun <reified VM : ViewModel> tangleViewModel(
 
       val factory = TangleViewModelFactory(viewModelStoreOwner, args, defaultFactory)
       viewModel(viewModelStoreOwner, factory = factory)
+    }
+    else -> {
+      viewModel()
+    }
+  }
+}
+
+/**
+ * Returns an existing [VMInject][tangle.viewmodel.VMInject]-annotated [ViewModel]
+ * or creates a new one scoped to the current navigation graph present on
+ * the NavController back stack.
+ *
+ * @since 0.10.0
+ */
+@Composable
+@OptIn(InternalTangleApi::class)
+public inline fun <reified VM : ViewModel, reified F : Any> tangleViewModel(
+  viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
+    "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+  },
+  noinline factory: F.() -> VM
+): VM {
+  return when {
+    viewModelStoreOwner is NavBackStackEntry -> {
+
+      AssistedTangleViewModelFactory(
+        owner = viewModelStoreOwner,
+        defaultArgs = viewModelStoreOwner.arguments,
+        vmClass = VM::class,
+        fClass = F::class
+      ).create(factory)
+    }
+    viewModelStoreOwner is AppCompatActivity -> {
+
+      val args = viewModelStoreOwner.intent.extras
+
+      AssistedTangleViewModelFactory(
+        owner = viewModelStoreOwner,
+        defaultArgs = args,
+        vmClass = VM::class,
+        fClass = F::class
+      ).create(factory)
+    }
+    viewModelStoreOwner is SavedStateRegistryOwner &&
+      viewModelStoreOwner is HasDefaultViewModelProviderFactory -> {
+
+      val args = currentFragmentOrNull(viewModelStoreOwner)?.arguments
+      AssistedTangleViewModelFactory(
+        owner = viewModelStoreOwner,
+        defaultArgs = args,
+        vmClass = VM::class,
+        fClass = F::class
+      ).create(factory)
     }
     else -> {
       viewModel()
