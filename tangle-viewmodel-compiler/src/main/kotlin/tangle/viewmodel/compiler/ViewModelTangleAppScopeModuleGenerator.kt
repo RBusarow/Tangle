@@ -11,6 +11,7 @@ import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.applyEach
 import tangle.inject.compiler.buildFile
 import tangle.viewmodel.compiler.params.TangleScopeModule
+import tangle.viewmodel.compiler.params.ViewModelParams
 import java.io.File
 
 class ViewModelTangleAppScopeModuleGenerator : FileGenerator<TangleScopeModule> {
@@ -24,6 +25,10 @@ class ViewModelTangleAppScopeModuleGenerator : FileGenerator<TangleScopeModule> 
 
     val moduleName = "${ClassNames.tangleAppScope.simpleName}_VMInject_Module"
 
+    val providedViewModels = params.viewModelParamsList
+      .filterIsInstance<ViewModelParams>()
+      .filter { it.factory == null }
+
     val content = FileSpec.buildFile(packageName, moduleName) {
       addType(
         TypeSpec.objectBuilder(ClassName(packageName, moduleName))
@@ -33,7 +38,7 @@ class ViewModelTangleAppScopeModuleGenerator : FileGenerator<TangleScopeModule> 
               .addMember("%T::class", ClassNames.tangleAppScope)
               .build()
           )
-          .applyEach(params.viewModelParamsList) { viewModelParams ->
+          .applyEach(providedViewModels) { viewModelParams ->
 
             addFunction(
               "provide_${viewModelParams.viewModelClassName.simpleNames.joinToString("_")}Key"

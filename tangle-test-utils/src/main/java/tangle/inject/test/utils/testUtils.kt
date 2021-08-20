@@ -138,11 +138,14 @@ val Result.injectClass: Class<*>
 val Result.myViewModelClass: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.MyViewModel")
 
+val Result.myViewModelFactoryClass: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.MyViewModel\$Factory")
+
 val Result.myFragmentClass: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.MyFragment")
 
 val Result.myFragmentFactoryClass: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.MyFragment.Factory")
+  get() = classLoader.loadClass("tangle.inject.tests.MyFragment\$Factory")
 
 val Result.myFragmentFactoryImplClass: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.MyFragment_Factory_Impl")

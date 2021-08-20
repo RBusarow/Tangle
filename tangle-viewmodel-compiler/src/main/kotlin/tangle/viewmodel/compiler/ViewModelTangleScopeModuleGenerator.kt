@@ -39,7 +39,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
               .addMember("%T::class", ClassNames.tangleScope)
               .build()
           )
-          .applyEach(viewModelParams) { params ->
+          .applyEach(providedViewModels) { params ->
             addViewModelBinder(params)
           }
           .applyEach(factoryParams) { factory ->
@@ -99,7 +99,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
 
       addModifiers(ABSTRACT)
       addParameter("factory", factoryParams.viewModelFactoryClassName)
-      returns(factoryParams.factoryInterfaceClassName)
+      returns(ClassNames.any)
       addAnnotation(ClassNames.binds)
       addAnnotation(ClassNames.intoMap)
       addAnnotation(

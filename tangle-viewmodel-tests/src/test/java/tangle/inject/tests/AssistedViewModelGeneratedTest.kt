@@ -214,4 +214,77 @@ class AssistedViewModelGeneratedTest : BaseTest() {
         |	name: kotlin.String""".trimMargin()
       }
     }
+
+  @TestFactory
+  fun `factory function arguments must also be in constructor`() =
+    test {
+      compile(
+        //language=kotlin
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.*
+      import javax.inject.Inject
+
+      class MyViewModel @VMInject constructor(
+      ) : ViewModel() {
+
+        @VMInjectFactory
+        interface Factory {
+          fun create(name: String): MyViewModel
+        }
+      }
+     """,
+        shouldFail = true
+      ) {
+
+        messages shouldContainIgnoringWhitespaces """@VMAssisted-annotated constructor parameters and factory interface function parameters don't match.
+          |
+          |assisted constructor parameters
+          |
+          |
+          |factory function parameters
+          |  name: kotlin.String""".trimMargin()
+      }
+    }
+
+  @TestFactory
+  fun `factory function arguments must also be in constructor with VMAssisted annotation`() =
+    test {
+      compile(
+        //language=kotlin
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.*
+      import javax.inject.Inject
+
+      class MyViewModel @VMInject constructor(
+        val name: String
+      ) : ViewModel() {
+
+        @VMInjectFactory
+        interface Factory {
+          fun create(name: String): MyViewModel
+        }
+      }
+     """,
+        shouldFail = true
+      ) {
+
+        messages shouldContainIgnoringWhitespaces """@VMAssisted-annotated constructor parameters and factory interface function parameters don't match.
+        |
+        |assisted constructor parameters
+        |
+        |
+        |factory function parameters
+        |	name: kotlin.String""".trimMargin()
+      }
+    }
 }

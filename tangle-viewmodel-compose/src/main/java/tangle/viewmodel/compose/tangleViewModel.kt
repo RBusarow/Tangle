@@ -77,12 +77,15 @@ public inline fun <reified VM : ViewModel, reified F : Any> tangleViewModel(
 ): VM {
 
   return if (viewModelStoreOwner is SavedStateRegistryOwner) {
-    AssistedTangleViewModelFactory(
-      owner = viewModelStoreOwner,
-      defaultArgs = viewModelStoreOwner.navigationArgumentsOrNull(),
-      vmClass = VM::class,
-      fClass = F::class
-    ).create(factory)
+    viewModel(
+      factory = AssistedTangleViewModelFactory(
+        owner = viewModelStoreOwner,
+        defaultArgs = viewModelStoreOwner.navigationArgumentsOrNull(),
+        vmClass = VM::class,
+        fClass = F::class,
+        factory = factory
+      )
+    )
   } else {
     viewModel()
   }

@@ -4,10 +4,7 @@ import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
-import tangle.inject.test.utils.BaseTest
-import tangle.inject.test.utils.createFunction
-import tangle.inject.test.utils.daggerAppComponent
-import tangle.inject.test.utils.myViewModelClass
+import tangle.inject.test.utils.*
 import tangle.viewmodel.TangleViewModelComponent
 
 class ViewModelIntegrationTest : BaseTest() {
@@ -71,6 +68,53 @@ class ViewModelIntegrationTest : BaseTest() {
       .create()
 
     keysSubcomponent.viewModelKeys shouldBe setOf(myViewModelClass)
+  }
+
+  @Test
+  fun `assisted-only graph does not try to bind providers`() = compileWithDagger(
+    //language=kotlin
+    """
+      package tangle.inject.tests
+
+      import com.squareup.anvil.annotations.MergeComponent
+      import androidx.lifecycle.ViewModel
+      import tangle.viewmodel.VMAssisted
+      import tangle.viewmodel.VMInject
+      import tangle.viewmodel.VMInjectFactory
+      import tangle.viewmodel.TangleGraph
+      import javax.inject.Singleton
+      import javax.inject.Inject
+
+      class Repository @Inject constructor()
+
+      class MyViewModel @VMInject constructor(
+        @VMAssisted repository: Repository
+      ) : ViewModel() {
+        @VMInjectFactory
+        interface Factory {
+          fun create(repository: Repository): MyViewModel
+        }
+      }
+
+      @Singleton
+      @MergeComponent(Unit::class)
+      interface AppComponent
+     """
+  ) {
+
+    val component = daggerAppComponent.createFunction()
+      .invoke(null)
+      .cast<TangleViewModelComponent>()
+
+    val keysSubcomponent = component.tangleViewModelKeysSubcomponentFactory
+      .create()
+
+    val mapSubcomponent = component.tangleViewModelMapSubcomponentFactory
+      .create(SavedStateHandle())
+
+    keysSubcomponent.viewModelKeys shouldBe setOf()
+    mapSubcomponent.viewModelProviderMap shouldBe mapOf()
+    mapSubcomponent.viewModelFactoryMap.keys shouldBe setOf(myViewModelFactoryClass)
   }
 
   @Test

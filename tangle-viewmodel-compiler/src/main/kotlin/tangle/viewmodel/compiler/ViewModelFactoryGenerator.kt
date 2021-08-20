@@ -169,11 +169,12 @@ internal class ViewModelFactoryGenerator : FileGenerator<ViewModelParams> {
     factoryParams: List<FunctionParameter>,
     viewModelParams: ViewModelParams
   ) {
+
     val matchingArguments = constructorAssisted.all { cp ->
       factoryParams.any { fp ->
         fp.name == cp.name && fp.typeName == cp.typeName
       }
-    }
+    } && constructorAssisted.size == factoryParams.size
 
     require(matchingArguments, { viewModelParams.viewModelClassDescriptor }) {
       """@VMAssisted-annotated constructor parameters and factory interface function parameters don't match.

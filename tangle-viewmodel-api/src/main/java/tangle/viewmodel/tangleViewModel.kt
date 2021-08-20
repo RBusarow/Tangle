@@ -32,13 +32,14 @@ public inline fun <reified VM : ViewModel> Fragment.tangleViewModel(): Lazy<VM> 
 @OptIn(InternalTangleApi::class)
 public inline fun <reified VM : ViewModel, reified F : Any> Fragment.tangleViewModel(
   noinline factory: F.() -> VM
-): Lazy<VM> = lazy(mode = NONE) {
+): Lazy<VM> = viewModels {
   AssistedTangleViewModelFactory(
     owner = this,
     defaultArgs = arguments,
     vmClass = VM::class,
-    fClass = F::class
-  ).create(factory)
+    fClass = F::class,
+    factory = factory
+  )
 }
 
 /**
@@ -63,11 +64,12 @@ public inline fun <reified VM : ViewModel> ComponentActivity.tangleViewModel(): 
 @OptIn(InternalTangleApi::class)
 public inline fun <reified VM : ViewModel, reified F : Any> ComponentActivity.tangleViewModel(
   noinline factory: F.() -> VM
-): Lazy<VM> = lazy(mode = NONE) {
+): Lazy<VM> = viewModels {
   AssistedTangleViewModelFactory(
     owner = this,
     defaultArgs = intent.extras,
     vmClass = VM::class,
-    fClass = F::class
-  ).create(factory)
+    fClass = F::class,
+    factory = factory
+  )
 }
