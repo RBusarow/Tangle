@@ -1,6 +1,7 @@
 package tangle.viewmodel.compose
 
 import android.content.ContextWrapper
+import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -74,41 +75,31 @@ public inline fun <reified VM : ViewModel, reified F : Any> tangleViewModel(
   },
   noinline factory: F.() -> VM
 ): VM {
+
+  return if (viewModelStoreOwner is SavedStateRegistryOwner) {
+    AssistedTangleViewModelFactory(
+      owner = viewModelStoreOwner,
+      defaultArgs = viewModelStoreOwner.navigationArgumentsOrNull(),
+      vmClass = VM::class,
+      fClass = F::class
+    ).create(factory)
+  } else {
+    viewModel()
+  }
+}
+
+@Composable
+@PublishedApi
+internal fun ViewModelStoreOwner.navigationArgumentsOrNull(): Bundle? {
+
   return when {
-    viewModelStoreOwner is NavBackStackEntry -> {
-
-      AssistedTangleViewModelFactory(
-        owner = viewModelStoreOwner,
-        defaultArgs = viewModelStoreOwner.arguments,
-        vmClass = VM::class,
-        fClass = F::class
-      ).create(factory)
+    this is NavBackStackEntry -> arguments
+    this is AppCompatActivity -> intent.extras
+    this is SavedStateRegistryOwner &&
+      this is HasDefaultViewModelProviderFactory -> {
+      currentFragmentOrNull(this)?.arguments
     }
-    viewModelStoreOwner is AppCompatActivity -> {
-
-      val args = viewModelStoreOwner.intent.extras
-
-      AssistedTangleViewModelFactory(
-        owner = viewModelStoreOwner,
-        defaultArgs = args,
-        vmClass = VM::class,
-        fClass = F::class
-      ).create(factory)
-    }
-    viewModelStoreOwner is SavedStateRegistryOwner &&
-      viewModelStoreOwner is HasDefaultViewModelProviderFactory -> {
-
-      val args = currentFragmentOrNull(viewModelStoreOwner)?.arguments
-      AssistedTangleViewModelFactory(
-        owner = viewModelStoreOwner,
-        defaultArgs = args,
-        vmClass = VM::class,
-        fClass = F::class
-      ).create(factory)
-    }
-    else -> {
-      viewModel()
-    }
+    else -> null
   }
 }
 
