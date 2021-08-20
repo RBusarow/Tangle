@@ -1,4 +1,4 @@
-package tangle.inject.tests
+package tangle.fragment
 
 import com.squareup.anvil.annotations.ContributesTo
 import dagger.Binds
@@ -8,8 +8,6 @@ import dagger.multibindings.IntoMap
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.TestFactory
-import tangle.fragment.FragmentKey
-import tangle.fragment.TangleFragmentProviderMap
 import tangle.inject.test.utils.*
 import kotlin.reflect.full.companionObject
 import kotlin.reflect.full.companionObjectInstance
@@ -20,6 +18,7 @@ class ContributesFragmentGeneratorTest : BaseTest() {
   @TestFactory
   fun `regular inject annotation gets unqualified map binding`() = test {
     compile(
+      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -44,6 +43,7 @@ class ContributesFragmentGeneratorTest : BaseTest() {
   @TestFactory
   fun `FragmentInject annotation gets qualified map binding`() = test {
     compile(
+      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -75,6 +75,7 @@ class ContributesFragmentGeneratorTest : BaseTest() {
   @TestFactory
   fun `FragmentInject annotation gets provider function`() = test {
     compile(
+      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -108,6 +109,7 @@ class ContributesFragmentGeneratorTest : BaseTest() {
   @TestFactory
   fun `module scope should match contributed scope`() = test {
     compile(
+      //language=kotlin
       """
       package tangle.inject.tests
 

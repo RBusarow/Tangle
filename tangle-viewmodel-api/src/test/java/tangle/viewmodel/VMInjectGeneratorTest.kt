@@ -13,7 +13,7 @@
  * limitations under the License.
  */
 
-package tangle.inject.tests
+package tangle.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
@@ -29,6 +29,7 @@ class VMInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory is generated without arguments`() = test {
     compile(
+      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -50,6 +51,7 @@ class VMInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory is generated for an argument`() = test {
     compile(
+      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -74,6 +76,7 @@ class VMInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory is generated for a generic argument`() = test {
     compile(
+      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -99,6 +102,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated for a dagger Lazy argument`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -124,6 +128,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated for a dagger Lazy argument which is generic`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -149,6 +154,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated for a SavedStateHandle argument`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -175,6 +181,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated for a SavedStateHandle argument wrapped in Provider and a TangleParam argument`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -240,6 +247,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated for an argument named savedStateHandleProvider and a TangleParam argument`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -273,6 +281,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `nullable TangleParam-annotated arguments are just null if missing`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -300,6 +309,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated for a TangleParam argument`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -329,6 +339,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated with SavedStateHandle and TangleParam arguments`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -359,6 +370,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated with two TangleParam arguments`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -396,6 +408,7 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `factory is generated with two TangleParam arguments of different types`() =
     test {
       compile(
+        //language=kotlin
         """
       package tangle.inject.tests
 

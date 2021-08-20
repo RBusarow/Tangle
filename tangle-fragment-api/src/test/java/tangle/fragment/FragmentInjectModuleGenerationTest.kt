@@ -1,11 +1,14 @@
-package tangle.inject.tests
+package tangle.fragment
 
 import com.squareup.anvil.annotations.ContributesTo
 import dagger.Module
 import io.kotest.matchers.collections.shouldContainExactly
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.TestFactory
-import tangle.inject.test.utils.*
+import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.annotationClasses
+import tangle.inject.test.utils.myFragmentFactoryImplClass
+import tangle.inject.test.utils.tangleUnitFragmentInjectModuleClass
 import kotlin.reflect.full.functions
 
 class FragmentInjectModuleGenerationTest : BaseTest() {
@@ -13,6 +16,7 @@ class FragmentInjectModuleGenerationTest : BaseTest() {
   @TestFactory
   fun `module scope should match contributed scope`() = test {
     compile(
+      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -38,6 +42,7 @@ class FragmentInjectModuleGenerationTest : BaseTest() {
   @TestFactory
   fun `FragmentInject annotation gets qualified map binding`() = test {
     compile(
+      //language=kotlin
       """
       package tangle.inject.tests
 

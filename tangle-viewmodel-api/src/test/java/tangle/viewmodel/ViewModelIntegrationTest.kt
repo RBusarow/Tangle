@@ -1,16 +1,21 @@
-package tangle.inject.tests
+package tangle.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
-import tangle.inject.test.utils.*
-import tangle.viewmodel.TangleViewModelComponent
+import tangle.inject.InternalTangleApi
+import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.createFunction
+import tangle.inject.test.utils.daggerAppComponent
+import tangle.inject.test.utils.myViewModelClass
 
+@OptIn(InternalTangleApi::class)
 class ViewModelIntegrationTest : BaseTest() {
 
   @Test
   fun `viewmodel is multi-bound into TangleScope`() = compileWithDagger(
+    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -43,6 +48,7 @@ class ViewModelIntegrationTest : BaseTest() {
 
   @Test
   fun `viewmodel key is multi-bound into TangleAppScope`() = compileWithDagger(
+    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -119,6 +125,7 @@ class ViewModelIntegrationTest : BaseTest() {
 
   @Test
   fun `two components in classpath with same scope should not get duplicate bindings`() =
+    //language=kotlin
     compileWithDagger(
       """
       package tangle.inject.tests
@@ -144,6 +151,7 @@ class ViewModelIntegrationTest : BaseTest() {
 
   @Test
   fun `pre-existing Subcomponent factory Module in classpath should not get duplicate bindings`() =
+    //language=kotlin
     compileWithDagger(
       """
       package tangle.inject.tests
@@ -192,6 +200,7 @@ class ViewModelIntegrationTest : BaseTest() {
 
   @Test
   fun `two components in same package with same scope should not get duplicate bindings`() =
+    //language=kotlin
     compileWithDagger(
       """
       package tangle.inject.tests
