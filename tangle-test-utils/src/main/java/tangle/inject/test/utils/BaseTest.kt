@@ -117,8 +117,8 @@ abstract class BaseTest : HermitJUnit5() {
   }
 
   infix fun String.shouldContainIgnoringWhitespaces(expected: String) {
-    val actual = this.replace("\\s{2,}".toRegex()," ")
-    actual shouldContain expected.replace("\\s{2,}".toRegex()," ")
+    val actual = this.replace("\\s{2,}".toRegex(), " ")
+    actual shouldContain expected.replace("\\s{2,}".toRegex(), " ")
   }
 
   data class TestScope(val useAnvilFactories: Boolean)
