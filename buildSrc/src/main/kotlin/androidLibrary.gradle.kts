@@ -35,9 +35,8 @@ configure<TestedExtension> {
   }
 
   sourceSets {
+    findByName("androidTest")?.java?.srcDirs("src/androidTest/kotlin")
     findByName("main")?.java?.srcDirs("src/main/kotlin")
-    findByName("debug")?.java?.srcDirs("src/debug/kotlin")
-    findByName("release")?.java?.srcDirs("src/release/kotlin")
     findByName("test")?.java?.srcDirs("src/test/kotlin")
   }
 
