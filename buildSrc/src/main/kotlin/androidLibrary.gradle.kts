@@ -18,8 +18,6 @@ import org.gradle.api.JavaVersion.VERSION_1_8
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
-import org.jetbrains.kotlin.gradle.dsl.ExplicitApiMode
-import org.jetbrains.kotlin.gradle.dsl.KotlinAndroidProjectExtension
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 apply(plugin = "com.android.library")
@@ -34,6 +32,12 @@ configure<TestedExtension> {
     targetSdk = 31
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+  }
+
+  sourceSets {
+    findByName("androidTest")?.java?.srcDirs("src/androidTest/kotlin")
+    findByName("main")?.java?.srcDirs("src/main/kotlin")
+    findByName("test")?.java?.srcDirs("src/test/kotlin")
   }
 
   buildTypes {
@@ -161,3 +165,37 @@ tasks
     }
   }
 */
+
+val moveJavaSrcToKotlin by tasks.registering {
+  doLast {
+    val reg = """.*/src/([^/]*)/java.*""".toRegex()
+
+    projectDir.walkTopDown()
+      .filter { it.path.matches(reg) }
+      .forEach { file ->
+
+        val oldPath = file.path
+        val newPath = oldPath.replace("/java", "/kotlin")
+
+
+        if (file.isFile) {
+          val text = file.readText()
+
+          File(newPath).also {
+            it.createNewFile()
+            it.writeText(text)
+          }
+        } else {
+
+          File(newPath).mkdirs()
+        }
+      }
+
+    projectDir.walkBottomUp()
+      .filter { it.path.matches(reg) }
+      .forEach { file ->
+
+        file.deleteRecursively()
+      }
+  }
+}
