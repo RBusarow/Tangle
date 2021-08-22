@@ -4,11 +4,10 @@ import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.api.AnvilContext
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.anvil.compiler.internal.*
-import com.squareup.kotlinpoet.*
+import com.squareup.anvil.compiler.internal.classesAndInnerClasses
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
-import tangle.inject.compiler.*
+import tangle.inject.compiler.vmInjectConstructor
 import java.io.File
 
 @Suppress("UNUSED")

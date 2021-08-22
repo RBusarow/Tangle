@@ -7,6 +7,7 @@ import tangle.inject.compiler.FileGenerator
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
 import java.io.File
+import tangle.viewmodel.compiler.*
 
 class ViewModelMapSubcomponentGenerator : FileGenerator<MergeComponentParams> {
   override fun generate(
@@ -22,7 +23,7 @@ class ViewModelMapSubcomponentGenerator : FileGenerator<MergeComponentParams> {
       TypeSpec.interfaceBuilder(className)
         .addSuperinterface(ClassNames.tangleViewModelMapSubcomponent)
         .addAnnotation(
-          AnnotationSpec.builder(ClassNames.mergeSubomponent)
+          AnnotationSpec.builder(ClassNames.mergeSubcomponent)
             .addMember("%T::class", ClassNames.tangleScope)
             .build()
         )
