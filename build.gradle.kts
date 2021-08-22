@@ -151,7 +151,12 @@ apiValidation {
    * Sub-projects that are excluded from API validation
    */
   ignoredProjects.addAll(
-    listOf("tangle-test-utils")
+    listOf(
+      "tangle-test-utils",
+      "tangle-compiler",
+      "tangle-fragment-compiler",
+      "tangle-viewmodel-compiler",
+    )
   )
 
   /**
