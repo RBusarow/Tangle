@@ -9,10 +9,7 @@ import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
-import tangle.viewmodel.compiler.tangleViewModelProviderMap
-import tangle.viewmodel.compiler.tangleViewModelProviderMapKeySet
-import tangle.viewmodel.compiler.viewModelClassSet
-import tangle.viewmodel.compiler.viewModelMap
+import tangle.viewmodel.compiler.*
 import java.io.File
 
 class ViewModelMergeComponentModuleGenerator : FileGenerator<MergeComponentParams> {
