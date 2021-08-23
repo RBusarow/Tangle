@@ -65,3 +65,5 @@ true/
 **/build
 /gradle/profiler/gradle-user-home/
 !/gradle/profiler/bin/
+
+checksum.txt
