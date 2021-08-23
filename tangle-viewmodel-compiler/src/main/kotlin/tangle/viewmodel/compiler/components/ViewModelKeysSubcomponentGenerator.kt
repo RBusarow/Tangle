@@ -6,8 +6,8 @@ import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
-import java.io.File
 import tangle.viewmodel.compiler.*
+import java.io.File
 
 class ViewModelKeysSubcomponentGenerator : FileGenerator<MergeComponentParams> {
   override fun generate(
