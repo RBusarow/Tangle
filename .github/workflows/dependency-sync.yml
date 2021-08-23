@@ -48,7 +48,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Copy Dependabot dependencies to toml
-        run: ./gradlew dependencySync
+        run: ./gradlew dependencySync --no-daemon
 
       # If the copy generated changes, commit and push those changes.
       - name: commit changes
