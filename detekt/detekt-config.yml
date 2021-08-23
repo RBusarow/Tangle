@@ -17,18 +17,18 @@ processors:
   active: true
   exclude:
     - 'DetektProgressListener'
-  # - 'KtFileCountProcessor'
-  # - 'PackageCountProcessor'
-  # - 'ClassCountProcessor'
-  # - 'FunctionCountProcessor'
-  # - 'PropertyCountProcessor'
-  # - 'ProjectComplexityProcessor'
-  # - 'ProjectCognitiveComplexityProcessor'
-  # - 'ProjectLLOCProcessor'
-  # - 'ProjectCLOCProcessor'
-  # - 'ProjectLOCProcessor'
-  # - 'ProjectSLOCProcessor'
-  # - 'LicenseHeaderLoaderExtension'
+    - 'KtFileCountProcessor'
+    - 'PackageCountProcessor'
+    - 'ClassCountProcessor'
+    - 'FunctionCountProcessor'
+    - 'PropertyCountProcessor'
+    - 'ProjectComplexityProcessor'
+    - 'ProjectCognitiveComplexityProcessor'
+    - 'ProjectLLOCProcessor'
+    - 'ProjectCLOCProcessor'
+    - 'ProjectLOCProcessor'
+    - 'ProjectSLOCProcessor'
+    - 'LicenseHeaderLoaderExtension'
 
 console-reports:
   active: true
@@ -49,9 +49,9 @@ output-reports:
 comments:
   active: true
   AbsentOrWrongFileLicense:
-    active: false
+    active: true
     licenseTemplateFile: 'license.template'
-    licenseTemplateIsRegex: false
+    licenseTemplateIsRegex: true
   CommentOverPrivateFunction:
     active: false
   CommentOverPrivateProperty:
