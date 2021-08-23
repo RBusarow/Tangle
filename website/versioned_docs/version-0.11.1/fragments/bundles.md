@@ -158,3 +158,4 @@ class SomeClass @Inject constructor(
 
 [ContributesFragment]: https://rbusarow.github.io/Tangle/api/tangle-fragment-api/tangle.fragment/-contributes-fragment/index.html
 [TangleFragmentFactory]: https://rbusarow.github.io/Tangle/api/tangle-fragment-api/tangle.fragment/-tangle-fragment-factory
+[FragmentFactory]: https://developer.android.com/reference/kotlin/androidx/fragment/app/FragmentFactory

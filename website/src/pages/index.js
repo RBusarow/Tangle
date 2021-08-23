@@ -11,10 +11,10 @@ const features = [
   {
     title: "Fragments",
     code: (
-      `@ContributesFragment(AppScope::class)
+`@ContributesFragment(AppScope::class)
 class MyFragment @FragmentInject constructor(
   val repository: MyRepository
-) : MidFragment() {
+) : Fragment() {
 
   val name: String by arg("name")
 
@@ -37,7 +37,7 @@ class MyFragment @FragmentInject constructor(
   {
     title: "ViewModels",
     code: (
-      `class MyViewModel @VMInject constructor(
+`class MyViewModel @VMInject constructor(
   val repository: MyRepository,
   @TangleParam("userId")
   val userId: String
@@ -59,13 +59,11 @@ class MyFragment : Fragment() {
   {
     title: "Compose",
     code: (
-      `@Composable
+`@Composable
 fun MyComposable(
   navController: NavController,
   viewModel: MyViewModel = tangleViewModel()
-) {
-  // ...
-}`
+) { /* ... */ }`
     ),
     description: (
       <>
