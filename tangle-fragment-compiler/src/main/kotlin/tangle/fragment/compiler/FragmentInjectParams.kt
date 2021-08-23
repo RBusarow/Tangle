@@ -115,6 +115,7 @@ internal sealed class FragmentInjectParams {
     val factoryInterfaceClassName: ClassName,
     val fragmentFactoryClassName: ClassName,
     val factoryImplClassName: ClassName,
+    val typeParameters: List<TypeVariableName>,
     val tangleParams: List<TangleParameter>,
     val functionName: String
   ) : FragmentInjectParams() {
@@ -165,6 +166,8 @@ internal sealed class FragmentInjectParams {
 
         val function = functions[0]
 
+        val typeParameters = factoryInterface.typeVariableNames(module)
+
         val functionParameters = function.valueParameters
 
         val factoryInterfaceClassName = factoryInterface.asClassName()
@@ -198,6 +201,7 @@ internal sealed class FragmentInjectParams {
           factoryInterfaceClassName = factoryInterfaceClassName,
           fragmentFactoryClassName = fragmentFactoryClassName,
           factoryImplClassName = factoryImplClassName,
+          typeParameters = typeParameters,
           tangleParams = tangleParams,
           functionName = functionName
         )

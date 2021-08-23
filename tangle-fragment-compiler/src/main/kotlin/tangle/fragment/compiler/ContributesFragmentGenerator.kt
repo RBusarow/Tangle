@@ -16,12 +16,16 @@
 package tangle.fragment.compiler
 
 import com.google.auto.service.AutoService
+import com.squareup.anvil.annotations.ContributesTo
 import com.squareup.anvil.compiler.api.AnvilContext
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.anvil.compiler.api.createGeneratedFile
 import com.squareup.anvil.compiler.internal.*
 import com.squareup.kotlinpoet.*
+import dagger.Binds
+import dagger.Provides
+import dagger.multibindings.IntoMap
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtClassOrObject
@@ -31,6 +35,28 @@ import tangle.inject.compiler.*
 import tangle.inject.compiler.asClassName
 import java.io.File
 
+/**
+ * Generates a module to create qualified bindings for the Fragment itself
+ *
+ * ```
+ * @Module
+ * @ContributesTo(Unit::class)
+ * public interface Tangle_Unit_Fragment_Module {
+ *   @Binds
+ *   @IntoMap
+ *   @FragmentKey(MyFragment::class)
+ *   @TangleFragmentProviderMap
+ *   public fun bind_MyFragment(@TangleFragmentProviderMap fragment: MyFragment): Fragment
+ *
+ *   public companion object {
+ *     @Provides
+ *     @TangleFragmentProviderMap
+ *     public fun provide_MyFragment(numbers: @JvmSuppressWildcards List<Int>): MyFragment =
+ *         MyFragment_Factory.newInstance(numbers)
+ *   }
+ * }
+ * ```
+ */
 @Suppress("unused")
 @AutoService(CodeGenerator::class)
 class ContributesFragmentGenerator : CodeGenerator {
