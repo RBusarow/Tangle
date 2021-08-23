@@ -13,25 +13,31 @@
  * limitations under the License.
  */
 
+@file:Suppress("EXPERIMENTAL_API_USAGE")
+
 package samples
 
 import android.app.Application
-import tangle.viewmodel.TangleGraph
+import androidx.lifecycle.ViewModel
+import dagger.BindsInstance
+import dagger.Component
+import org.junit.Test
+import tangle.viewmodel.VMInject
+import javax.inject.Inject
 
-class TangleGraphSample {
+typealias Sample = Test
 
-  @Sample
-  fun initializeTangleGraph() {
-    class MyApplication : Application() {
+abstract class AppScope private constructor()
 
-      override fun onCreate() {
-        super.onCreate()
+class MyViewModel @VMInject constructor() : ViewModel()
 
-        val appComponent = DaggerMyAppComponent.factory()
-          .create(this)
+class MyRepository @Inject constructor()
 
-        TangleGraph.init(appComponent)
-      }
-    }
+@Component
+interface MyAppComponent {
+  @Component.Factory
+  interface Factory {
+
+    fun create(@BindsInstance application: Application): MyAppComponent
   }
 }

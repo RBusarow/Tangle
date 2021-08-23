@@ -20,7 +20,7 @@ inline fun <reified T : Any, reified R : Any> T.getStaticPrivateFieldByName(name
 
   property.isAccessible = true
 
-  return property.getter.call() as R
+  return property.getter.call(this) as R
 }
 
 inline fun <reified T : Any, reified R : Any> T.getPrivateFieldByName(name: String): R {

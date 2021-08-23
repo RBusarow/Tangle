@@ -21,11 +21,14 @@ import com.tschuchort.compiletesting.KotlinCompilation.ExitCode.OK
 import hermit.test.junit.HermitJUnit5
 import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestInfo
 import java.io.File
 import kotlin.properties.Delegates
+import kotlin.reflect.full.memberProperties
+import kotlin.reflect.jvm.isAccessible
 
 abstract class BaseTest : HermitJUnit5() {
 
@@ -116,4 +119,23 @@ abstract class BaseTest : HermitJUnit5() {
   }
 
   data class TestScope(val useAnvilFactories: Boolean)
+
+  fun clearTangleGraph() {
+
+    val graphClass = javaClass.classLoader
+      .loadClass("tangle.inject.TangleGraph")
+      .kotlin
+
+    val graphInstance = graphClass.objectInstance ?: return
+
+    val components = graphClass.memberProperties
+      .find { it.name == "components" }
+      ?: return
+
+    components.isAccessible = true
+
+    components.call(graphInstance)
+      .cast<MutableSet<Any>>()
+      .clear()
+  }
 }
