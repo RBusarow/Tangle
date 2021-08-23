@@ -25,146 +25,6 @@ import javax.inject.Provider
 class FragmentInjectGeneratorTest : BaseTest() {
 
   @TestFactory
-  fun `FragmentInject constructors must have a corresponding factory interface`() = test {
-    compile(
-      //language=kotlin
-      """
-      package tangle.inject.tests
-
-      import androidx.fragment.app.Fragment
-      import tangle.fragment.*
-      import javax.inject.Inject
-
-      @ContributesFragment(Unit::class)
-      class MyFragment @FragmentInject constructor() : Fragment()
-      """,
-      shouldFail = true
-    ) {
-
-      messages shouldContain "@FragmentInject must only be applied to the constructor " +
-        "of a Fragment, and that fragment must have a corresponding " +
-        "FragmentInjectFactory-annotated factory interface."
-    }
-  }
-
-  @TestFactory
-  fun `factory interface must have a corresponding FragmentInject constructor`() = test {
-    compile(
-      //language=kotlin
-      """
-      package tangle.inject.tests
-
-      import androidx.fragment.app.Fragment
-      import tangle.fragment.*
-      import javax.inject.Inject
-
-      @ContributesFragment(Unit::class)
-      class MyFragment @Inject constructor() : Fragment() {
-
-        @FragmentInjectFactory
-        interface Factory {
-          fun create(@TangleParam("name") name: String): MyFragment
-        }
-      }
-      """,
-      shouldFail = true
-    ) {
-
-      messages shouldContain "The @FragmentInjectFactory-annotated interface " +
-        "`tangle.inject.tests.MyFragment.Factory` must be defined inside a Fragment " +
-        "which is annotated with `@FragmentInject`."
-    }
-  }
-
-  @TestFactory
-  fun `factory interface must have a function`() = test {
-    compile(
-      //language=kotlin
-      """
-      package tangle.inject.tests
-
-      import androidx.fragment.app.Fragment
-      import tangle.fragment.*
-      import javax.inject.Inject
-
-      @ContributesFragment(Unit::class)
-      class MyFragment @FragmentInject constructor() : Fragment() {
-
-        @FragmentInjectFactory
-        interface Factory
-      }
-      """,
-      shouldFail = true
-    ) {
-
-      messages shouldContain "@FragmentInjectFactory-annotated types must have exactly one " +
-        "abstract function -- without a default implementation -- " +
-        "which returns the FragmentInject Fragment type."
-    }
-  }
-
-  @TestFactory
-  fun `factory interface must have only one function`() = test {
-    compile(
-      //language=kotlin
-      """
-      package tangle.inject.tests
-
-      import androidx.fragment.app.Fragment
-      import tangle.fragment.*
-      import tangle.inject.TangleParam
-      import javax.inject.Inject
-
-      @ContributesFragment(Unit::class)
-      class MyFragment @FragmentInject constructor() : Fragment() {
-
-        @FragmentInjectFactory
-        interface Factory{
-          fun create(@TangleParam("name") name: String): MyFragment
-          fun create2(@TangleParam("name") name: String): MyFragment
-        }
-      }
-      """,
-      shouldFail = true
-    ) {
-
-      messages shouldContain "@FragmentInjectFactory-annotated types must have exactly one " +
-        "abstract function -- without a default implementation -- " +
-        "which returns the FragmentInject Fragment type."
-    }
-  }
-
-  @TestFactory
-  fun `factory interface must have a return type`() = test {
-    compile(
-      //language=kotlin
-      """
-      package tangle.inject.tests
-
-      import androidx.fragment.app.Fragment
-      import tangle.fragment.*
-      import tangle.inject.TangleParam
-      import javax.inject.Inject
-
-      @ContributesFragment(Unit::class)
-      class MyFragment @FragmentInject constructor() : Fragment() {
-
-        @FragmentInjectFactory
-        interface Factory{
-          fun create(@TangleParam("name") name: String)
-        }
-      }
-      """,
-      shouldFail = true
-    ) {
-
-      messages shouldContain "Return type of 'create' is not a subtype of the return type " +
-        "of the overridden member 'public abstract fun create(name: String): Unit " +
-        "defined in tangle.inject.tests.MyFragment.Factory'"
-    }
-  }
-
-  @TestFactory
   fun `factory interface return type may be supertype of the fragment`() = test {
     compile(
       //language=kotlin
@@ -236,59 +96,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
         .filterNot { it.isStatic }
         .single { it.name == "pizza" }
         .invoke(factoryImplInstance, "name")::class.java shouldBe myFragmentClass
-    }
-  }
-
-  @TestFactory
-  fun `FragmentInject fragments must have ContributesFragment annotation`() = test {
-    compile(
-      //language=kotlin
-      """
-      package tangle.inject.tests
-
-      import androidx.fragment.app.Fragment
-      import tangle.fragment.*
-      import tangle.inject.TangleParam
-
-      class MyFragment @FragmentInject constructor() : Fragment() {
-
-        @FragmentInjectFactory
-        interface Factory {
-          fun create(@TangleParam("name") name: String): MyFragment
-        }
-      }
-      """,
-      shouldFail = true
-    ) {
-
-      messages shouldContain "@FragmentInject-annotated Fragments must also have " +
-        "a `tangle.fragment.ContributesFragment` class annotation."
-    }
-  }
-
-  @TestFactory
-  fun `factory arguments must be annotated with TangleParam`() = test {
-    compile(
-      //language=kotlin
-      """
-      package tangle.inject.tests
-
-      import androidx.fragment.app.Fragment
-      import tangle.fragment.*
-
-      @ContributesFragment(Unit::class)
-      class MyFragment @FragmentInject constructor() : Fragment() {
-
-        @FragmentInjectFactory
-        interface Factory {
-          fun create(name: String): MyFragment
-        }
-      }
-      """,
-      shouldFail = true
-    ) {
-
-      messages shouldContain "could not find a @TangleParam annotation for parameter `name`"
     }
   }
 
@@ -679,6 +486,46 @@ class FragmentInjectGeneratorTest : BaseTest() {
   }
 
   @TestFactory
+  fun `factory is generated with a TangleParam and a constructor argument`() = test {
+    compile(
+      //language=kotlin
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.TangleParam
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor(
+        val numbers: List<Int>
+      ) : Fragment() {
+
+        @FragmentInjectFactory
+        interface Factory {
+          fun create(
+            @TangleParam("name") name: String
+          ): MyFragment
+        }
+      }
+     """
+    ) {
+      val factoryClass = myFragmentClass.factoryClass()
+
+      val constructor = factoryClass.declaredConstructors.single()
+
+      val numbers = listOf(1, 2)
+
+      val factoryInstance = constructor.newInstance(Provider { numbers })
+
+      factoryClass.getterFunction().invoke(factoryInstance)::class.java shouldBe myFragmentClass
+
+      factoryClass.createStatic(Provider { numbers })::class.java shouldBe factoryClass
+      factoryClass.newInstanceStatic(numbers)::class.java shouldBe myFragmentClass
+    }
+  }
+
+  @TestFactory
   fun `factory is generated with TangleParam and constructor arguments of the same name`() = test {
     compile(
       //language=kotlin
@@ -713,6 +560,199 @@ class FragmentInjectGeneratorTest : BaseTest() {
 
       factoryClass.createStatic(Provider { "name" })::class.java shouldBe factoryClass
       factoryClass.newInstanceStatic("name")::class.java shouldBe myFragmentClass
+    }
+  }
+
+  @TestFactory
+  fun `FragmentInject constructors must have a corresponding factory interface`() = test {
+    compile(
+      //language=kotlin
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import javax.inject.Inject
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor() : Fragment()
+      """,
+      shouldFail = true
+    ) {
+
+      messages shouldContain "@FragmentInject must only be applied to the constructor " +
+        "of a Fragment, and that fragment must have a corresponding " +
+        "FragmentInjectFactory-annotated factory interface."
+    }
+  }
+
+  @TestFactory
+  fun `factory interface must have a corresponding FragmentInject constructor`() = test {
+    compile(
+      //language=kotlin
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import javax.inject.Inject
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @Inject constructor() : Fragment() {
+
+        @FragmentInjectFactory
+        interface Factory {
+          fun create(@TangleParam("name") name: String): MyFragment
+        }
+      }
+      """,
+      shouldFail = true
+    ) {
+
+      messages shouldContain "The @FragmentInjectFactory-annotated interface " +
+        "`tangle.inject.tests.MyFragment.Factory` must be defined inside a Fragment " +
+        "which is annotated with `@FragmentInject`."
+    }
+  }
+
+  @TestFactory
+  fun `factory interface must have a function`() = test {
+    compile(
+      //language=kotlin
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import javax.inject.Inject
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor() : Fragment() {
+
+        @FragmentInjectFactory
+        interface Factory
+      }
+      """,
+      shouldFail = true
+    ) {
+
+      messages shouldContain "@FragmentInjectFactory-annotated types must have exactly one " +
+        "abstract function -- without a default implementation -- " +
+        "which returns the FragmentInject Fragment type."
+    }
+  }
+
+  @TestFactory
+  fun `factory interface must have only one function`() = test {
+    compile(
+      //language=kotlin
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.TangleParam
+      import javax.inject.Inject
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor() : Fragment() {
+
+        @FragmentInjectFactory
+        interface Factory{
+          fun create(@TangleParam("name") name: String): MyFragment
+          fun create2(@TangleParam("name") name: String): MyFragment
+        }
+      }
+      """,
+      shouldFail = true
+    ) {
+
+      messages shouldContain "@FragmentInjectFactory-annotated types must have exactly one " +
+        "abstract function -- without a default implementation -- " +
+        "which returns the FragmentInject Fragment type."
+    }
+  }
+
+  @TestFactory
+  fun `factory interface must have a return type`() = test {
+    compile(
+      //language=kotlin
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.TangleParam
+      import javax.inject.Inject
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor() : Fragment() {
+
+        @FragmentInjectFactory
+        interface Factory{
+          fun create(@TangleParam("name") name: String)
+        }
+      }
+      """,
+      shouldFail = true
+    ) {
+
+      messages shouldContain "Return type of 'create' is not a subtype of the return type " +
+        "of the overridden member 'public abstract fun create(name: String): Unit " +
+        "defined in tangle.inject.tests.MyFragment.Factory'"
+    }
+  }
+
+  @TestFactory
+  fun `FragmentInject fragments must have ContributesFragment annotation`() = test {
+    compile(
+      //language=kotlin
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.TangleParam
+
+      class MyFragment @FragmentInject constructor() : Fragment() {
+
+        @FragmentInjectFactory
+        interface Factory {
+          fun create(@TangleParam("name") name: String): MyFragment
+        }
+      }
+      """,
+      shouldFail = true
+    ) {
+
+      messages shouldContain "@FragmentInject-annotated Fragments must also have " +
+        "a `tangle.fragment.ContributesFragment` class annotation."
+    }
+  }
+
+  @TestFactory
+  fun `factory arguments must be annotated with TangleParam`() = test {
+    compile(
+      //language=kotlin
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor() : Fragment() {
+
+        @FragmentInjectFactory
+        interface Factory {
+          fun create(name: String): MyFragment
+        }
+      }
+      """,
+      shouldFail = true
+    ) {
+
+      messages shouldContain "could not find a @TangleParam annotation for parameter `name`"
     }
   }
 

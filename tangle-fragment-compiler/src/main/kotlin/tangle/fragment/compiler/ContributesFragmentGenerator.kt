@@ -31,6 +31,28 @@ import tangle.inject.compiler.*
 import tangle.inject.compiler.asClassName
 import java.io.File
 
+/**
+ * Generates a module to create qualified bindings for the Fragment itself
+ *
+ * ```
+ * @Module
+ * @ContributesTo(Unit::class)
+ * public interface Tangle_Unit_Fragment_Module {
+ *   @Binds
+ *   @IntoMap
+ *   @FragmentKey(MyFragment::class)
+ *   @TangleFragmentProviderMap
+ *   public fun bind_MyFragment(@TangleFragmentProviderMap fragment: MyFragment): Fragment
+ *
+ *   public companion object {
+ *     @Provides
+ *     @TangleFragmentProviderMap
+ *     public fun provide_MyFragment(numbers: @JvmSuppressWildcards List<Int>): MyFragment =
+ *         MyFragment_Factory.newInstance(numbers)
+ *   }
+ * }
+ * ```
+ */
 @Suppress("unused")
 @AutoService(CodeGenerator::class)
 class ContributesFragmentGenerator : CodeGenerator {
