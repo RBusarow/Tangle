@@ -11,6 +11,10 @@ This `SavedStateHandle` may then be included as a dependency in injected constru
 just as it can in [Hilt].
 
 ```kotlin
+import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
+import tangle.viewmodel.VMInject
+
 class MyViewModel @VMInject constructor(
   val savedState: SavedStateHandle
 ) : ViewModel()
@@ -28,6 +32,10 @@ just inject `null`.
 Given this code:
 
 ```kotlin
+import androidx.lifecycle.ViewModel
+import tangle.inject.TangleParam
+import tangle.viewmodel.VMInject
+
 class MyViewModel @VMInject constructor(
   @TangleParam("userId")
   val userId: String, // must be present in the SavedStateHandle
@@ -39,6 +47,10 @@ class MyViewModel @VMInject constructor(
 Tangle will generate the following:
 
 ```kotlin
+import androidx.lifecycle.SavedStateHandle
+import javax.inject.Inject
+import javax.inject.Provider
+
 public class MyViewModel_Factory @Inject constructor(
   internal val savedStateHandleProvider: Provider<SavedStateHandle>
 ) {
@@ -46,7 +58,7 @@ public class MyViewModel_Factory @Inject constructor(
     val userId = savedStateHandleProvider.get().get<String>("userId")
     checkNotNull(userId) {
       "Required parameter with name `userId` " +
-      "and type `kotlin.String` is missing from SavedStateHandle."
+        "and type `kotlin.String` is missing from SavedStateHandle."
     }
     val addressOrNull = savedStateHandleProvider.get().get<String?>("address")
     return MyViewModel(userId, addressOrNull)

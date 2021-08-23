@@ -1,27 +1,13 @@
 ---
 id: configuration
 sidebar_label: Configuration
+title: Configuration
 ---
 
 
-The `TangleGraph` holder needs to be initialized with an application-scoped Dagger Component in
-order to complete the graph.
+## Gradle
 
-```kotlin
-class MyApplication : Application() {
-
-  override fun onCreate() {
-    super.onCreate()
-
-    val myAppComponent = DaggerAppComponent.factory()
-      .create(this)
-
-    TangleGraph.init(myAppComponent)
-  }
-}
-```
-
-### Gradle plugin
+### Plugin
 
 The simple way to apply Tangle is to just apply the gradle plugin. It will automatically add the
 dependencies and perform some basic validation of your module's configuration.
@@ -90,5 +76,27 @@ dependencies {
 
   // optional Compose support
   implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.11.5")
+}
+```
+
+## TangleGraph
+
+The `TangleGraph` holder needs to be initialized with an application-scoped Dagger Component in
+order to complete the graph.
+
+```kotlin
+import android.app.Application
+import tangle.inject.TangleGraph
+
+class MyApplication : Application() {
+
+  override fun onCreate() {
+    super.onCreate()
+
+    val appComponent = DaggerMyAppComponent.factory()
+      .create(this)
+
+    TangleGraph.init(appComponent)
+  }
 }
 ```
