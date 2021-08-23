@@ -40,6 +40,20 @@ jobs:
         with:
           java-version: 14
 
+      - name: Generate cache key
+        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
+        run: |
+          chmod u+r+x checksum.sh
+          ./checksum.sh checksum.txt
+
+      - uses: actions/cache@v2
+        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
+        with:
+          path: ~/.gradle/caches
+          key: ${{ runner.os }}-gradle-${{ hashFiles('checksum.txt') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
       - name: Copy Dependabot dependencies to toml
         if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         run: ./gradlew dependencySync
