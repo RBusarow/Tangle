@@ -15,33 +15,26 @@
 
 plugins {
   androidLibrary
-  id("com.vanniktech.maven.publish")
+  kotlin("kapt")
+  id("com.squareup.anvil")
 }
 
 dependencies {
 
-  api(libs.androidx.fragment.core)
-  api(libs.google.dagger.api)
+  kaptTest(libs.google.dagger.compiler)
 
-  api(projects.tangleApi)
+  anvil(projects.tangleViewmodelCompiler)
 
-  compileOnly(libs.google.auto.service.processor)
+  testImplementation(libs.androidx.lifecycle.viewModel.core)
+  testImplementation(libs.google.dagger.api)
+  testImplementation(libs.javax.inject)
+  testImplementation(libs.junit.junit4)
+  testImplementation(libs.kotest.assertions)
+  testImplementation(libs.kotest.properties)
+  testImplementation(libs.kotest.runner)
+  testImplementation(libs.kotlinx.coroutines.core)
+  testImplementation(libs.robolectric)
 
   testImplementation(projects.tangleApi)
-  testImplementation(projects.tangleCompiler)
-  testImplementation(projects.tangleFragmentCompiler)
-  testImplementation(projects.tangleTestUtils)
   testImplementation(projects.tangleViewmodelApi)
-  testImplementation(projects.tangleViewmodelCompiler)
 }
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
-  .configureEach {
-
-    kotlinOptions {
-
-      freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
-      )
-    }
-  }

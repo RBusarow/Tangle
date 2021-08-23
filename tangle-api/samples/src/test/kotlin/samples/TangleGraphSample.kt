@@ -13,23 +13,25 @@
  * limitations under the License.
  */
 
-plugins {
-  androidLibrary
-  id("com.vanniktech.maven.publish")
-}
+package samples
 
-dependencies {
+import android.app.Application
+import tangle.inject.TangleGraph
 
-  api(libs.androidx.annotations)
-}
+class TangleGraphSample {
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
-  .configureEach {
+  @Sample
+  fun initializeTangleGraph() {
+    class MyApplication : Application() {
 
-    kotlinOptions {
+      override fun onCreate() {
+        super.onCreate()
 
-      freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
-      )
+        val appComponent = DaggerMyAppComponent.factory()
+          .create(this)
+
+        TangleGraph.init(appComponent)
+      }
     }
   }
+}

@@ -29,12 +29,12 @@ buildscript {
   }
   dependencies {
     classpath("com.android.tools.build:gradle:7.0.1")
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
     classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.21-1.0.0-beta07")
+    classpath("com.squareup.anvil:gradle-plugin:2.3.3")
     classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
+    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
     classpath("org.jetbrains.kotlinx:kotlinx-knit:0.3.0")
     classpath("org.jlleitschuh.gradle:ktlint-gradle:10.1.0")
-    classpath("com.squareup.anvil:gradle-plugin:2.3.3")
   }
 }
 
@@ -42,6 +42,7 @@ plugins {
   kotlin("jvm")
   id("com.github.ben-manes.versions") version "0.39.0"
   id("io.gitlab.arturbosch.detekt") version "1.18.0"
+  id("com.rickbusarow.module-check") version "0.10.0"
   id("org.jetbrains.dokka") version "1.5.0"
   id("com.osacky.doctor") version "0.7.1"
   id("com.dorongold.task-tree") version "2.1.0"
@@ -151,7 +152,12 @@ apiValidation {
    * Sub-projects that are excluded from API validation
    */
   ignoredProjects.addAll(
-    listOf("tangle-test-utils")
+    listOf(
+      "tangle-test-utils",
+      "tangle-compiler",
+      "tangle-fragment-compiler",
+      "tangle-viewmodel-compiler",
+    )
   )
 
   /**

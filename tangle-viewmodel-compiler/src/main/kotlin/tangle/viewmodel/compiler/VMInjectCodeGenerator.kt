@@ -8,6 +8,7 @@ import com.squareup.anvil.compiler.internal.classesAndInnerClasses
 import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.classesAndInnerClasses
 import com.squareup.anvil.compiler.internal.hasAnnotation
+import com.squareup.anvil.compiler.internal.classesAndInnerClasses
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
 import tangle.inject.compiler.vmInjectConstructor
@@ -18,6 +19,7 @@ import tangle.inject.compiler.vmInjectConstructor
 import tangle.viewmodel.compiler.params.Factory
 import tangle.viewmodel.compiler.params.TangleScopeModule
 import tangle.viewmodel.compiler.params.ViewModelParams
+import tangle.inject.compiler.vmInjectConstructor
 import java.io.File
 
 @Suppress("UNUSED")

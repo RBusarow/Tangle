@@ -20,6 +20,8 @@ plugins {
 
 dependencies {
 
+  kapt(libs.google.auto.service.processor)
+
   api(libs.anvil.annotations)
   api(libs.anvil.compiler.api)
   api(libs.anvil.compiler.core)
@@ -32,15 +34,13 @@ dependencies {
   api(libs.javax.annotation.jsr250.api)
   api(libs.kotlin.annotation.processing)
   api(libs.kotlin.compile.testing)
-  api(libs.kotlin.reflect)
   api(libs.kotlin.compiler)
+  api(libs.kotlin.reflect)
   api(libs.square.kotlinPoet)
 
   api(projects.tangleCompiler)
 
   compileOnly(libs.google.auto.service.processor)
-
-  kapt(libs.google.auto.service.processor)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
@@ -49,8 +49,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
     kotlinOptions {
 
       freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi",
-        "-Xopt-in=tangle.inject.InternalTangleApi"
+        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
       )
     }
   }

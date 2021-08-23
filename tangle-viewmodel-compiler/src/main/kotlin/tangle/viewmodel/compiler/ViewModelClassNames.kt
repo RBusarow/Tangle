@@ -41,6 +41,10 @@ val ClassNames.javaClassOutVM
   get() = Class::class.asClassName()
     .parameterizedBy(TypeVariableName("out·${androidxViewModel.canonicalName}"))
 
+private val ClassNames.javaClassWildcard
+  get() = Class::class.asClassName()
+    .parameterizedBy(TypeVariableName("*"))
+
 val ClassNames.tangleViewModelFactoryMap
   get() = ClassName("tangle.viewmodel", "TangleViewModelFactoryMap")
 
