@@ -1,11 +1,13 @@
 package tangle.viewmodel.compiler
 
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import tangle.inject.compiler.ClassNames
+import javax.inject.Provider
 
 val ClassNames.tangleViewModelComponent
   get() =
@@ -37,6 +39,9 @@ val ClassNames.androidxSavedStateHandle
   get() =
     ClassName("androidx.lifecycle", "SavedStateHandle")
 
+val ClassNames.providerSavedStateHandle: ParameterizedTypeName
+  get() = Provider::class.asClassName()
+    .parameterizedBy(androidxSavedStateHandle)
 val ClassNames.javaClassOutVM
   get() = Class::class.asClassName()
     .parameterizedBy(TypeVariableName("out·${androidxViewModel.canonicalName}"))
@@ -59,3 +64,11 @@ val ClassNames.viewModelMap
       javaClassWildcard,
       androidxViewModel.jvmSuppressWildcards()
     )
+
+val ClassNames.any
+  get() = Any::class.asClassName()
+val ClassNames.anyMap: ParameterizedTypeName
+  get() = Map::class.asClassName().parameterizedBy(
+    ClassNames.javaClassWildcard,
+    Any::class.asClassName().jvmSuppressWildcards()
+  )

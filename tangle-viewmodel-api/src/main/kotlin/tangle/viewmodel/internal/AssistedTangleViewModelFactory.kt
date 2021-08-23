@@ -6,7 +6,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.savedstate.SavedStateRegistryOwner
 import tangle.inject.InternalTangleApi
-import tangle.viewmodel.TangleGraph
+import tangle.inject.TangleGraph
+import tangle.viewmodel.TangleViewModelComponent
 import kotlin.reflect.KClass
 
 @Suppress("UNCHECKED_CAST")
@@ -24,8 +25,10 @@ public class AssistedTangleViewModelFactory<VM : ViewModel, F : Any>(
     handle: SavedStateHandle
   ): T {
 
-    val subcomponent = TangleGraph.tangleViewModelSubcomponentFactory()
+    val subcomponent = TangleGraph.get<TangleViewModelComponent>()
+      .tangleViewModelMapSubcomponentFactory
       .create(handle)
+
     val factoryImpl = (subcomponent.viewModelFactoryMap[fClass.java]?.get() as? F)
       ?: throw IllegalStateException(
         "Tangle can't find a factory of type $fClass, " +
