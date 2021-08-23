@@ -21,9 +21,9 @@ plugins {
 
 dependencies {
 
-  anvil(projects.tangleViewmodelCompiler)
-
   kaptTest(libs.google.dagger.compiler)
+
+  anvil(projects.tangleViewmodelCompiler)
 
   testImplementation(libs.google.dagger.api)
   testImplementation(libs.junit.vintage)
@@ -33,6 +33,7 @@ dependencies {
   testImplementation(libs.kotlinx.coroutines.core)
   testImplementation(libs.kotlinx.coroutines.test)
   testImplementation(libs.robolectric)
+
   testImplementation(projects.tangleApi)
   testImplementation(projects.tangleViewmodelApi)
 }
