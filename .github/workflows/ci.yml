@@ -43,7 +43,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: detekt
-        run: ./gradlew detekt
+        run: ./gradlew detekt --no-daemon
 
   ktlint:
 
@@ -73,7 +73,7 @@ jobs:
 
       # formats all kotlin files
       - name: KtLint format
-        run: ./gradlew ktlintformat -q
+        run: ./gradlew ktlintformat -q --no-daemon
 
       # If KtLint generated changes, commit and push those changes.
       - name: commit changes
@@ -137,7 +137,7 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: all tests
-        run: ./gradlew testJvm --rerun-tasks --no-daemon
+        run: ./gradlew testJvm --no-daemon
 
   tests-windows:
 
@@ -166,4 +166,4 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: all tests
-        run: ./gradlew testJvm --rerun-tasks --no-daemon
+        run: ./gradlew testJvm --no-daemon
