@@ -21,33 +21,29 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
+    if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
 
     steps:
 
       - uses: actions/checkout@v2
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         with:
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
 
       - uses: gradle/wrapper-validation-action@v1
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
 
       - name: Set up JDK
         uses: actions/setup-java@v1
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         with:
           java-version: 14
 
       - name: Generate cache key
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         run: |
           chmod u+r+x checksum.sh
           ./checksum.sh checksum.txt
 
       - uses: actions/cache@v2
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         with:
           path: ~/.gradle/caches
           key: ${{ runner.os }}-gradle-${{ hashFiles('checksum.txt') }}
@@ -55,13 +51,11 @@ jobs:
             ${{ runner.os }}-gradle-
 
       - name: Copy Dependabot dependencies to toml
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         run: ./gradlew dependencySync
 
       # If the copy generated changes, commit and push those changes.
       - name: commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
-        if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
         with:
           commit_message: Update dependencies from dependabot
           commit_options: '--no-verify --signoff'
