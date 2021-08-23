@@ -16,16 +16,12 @@
 package tangle.fragment.compiler
 
 import com.google.auto.service.AutoService
-import com.squareup.anvil.annotations.ContributesTo
 import com.squareup.anvil.compiler.api.AnvilContext
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.anvil.compiler.api.createGeneratedFile
 import com.squareup.anvil.compiler.internal.*
 import com.squareup.kotlinpoet.*
-import dagger.Binds
-import dagger.Provides
-import dagger.multibindings.IntoMap
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtClassOrObject
