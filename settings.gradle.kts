@@ -59,6 +59,7 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(
   ":dependabot-bridge",
   ":tangle-api",
+  ":tangle-api:samples",
   ":tangle-compiler",
   ":tangle-fragment-api",
   ":tangle-fragment-compiler",

@@ -183,7 +183,7 @@ fun List<CallableMemberDescriptor>.mapToParameters(
   module: ModuleDescriptor
 ): List<MemberInjectParameter> {
 
-  return mapIndexed { index, callableMemberDescriptor ->
+  return map { callableMemberDescriptor ->
 
     val type = callableMemberDescriptor.safeAs<PropertyDescriptor>()?.type
       ?: callableMemberDescriptor.valueParameters.first().type

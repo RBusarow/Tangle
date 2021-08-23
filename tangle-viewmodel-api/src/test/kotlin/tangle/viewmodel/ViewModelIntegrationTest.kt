@@ -22,7 +22,7 @@ class ViewModelIntegrationTest : BaseTest() {
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
-      import tangle.viewmodel.TangleGraph
+      import tangle.inject.TangleGraph
       import javax.inject.Singleton
 
       class MyViewModel @VMInject constructor() : ViewModel()
@@ -55,7 +55,7 @@ class ViewModelIntegrationTest : BaseTest() {
       import com.squareup.anvil.annotations.MergeComponent
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
-      import tangle.viewmodel.TangleGraph
+      import tangle.inject.TangleGraph
       import javax.inject.Singleton
 
       class MyViewModel @VMInject constructor() : ViewModel()

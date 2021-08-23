@@ -1,54 +1,23 @@
 package tangle.viewmodel
 
-import tangle.inject.InternalTangleApi
-import tangle.viewmodel.internal.TangleViewModelFactory
+import tangle.inject.TangleGraph as NewTangleGraph
 
 /**
- * Holds a reference to the application's Dagger graph,
- * so that it can be accessed by [TangleViewModelFactory].
+ * This is the old location for [TangleGraph][NewTangleGraph].
  *
- * This should be initialized as soon as possible after initializing the AppComponent.
- *
- * @sample samples.TangleGraphSample.initializeTangleGraph
- * @since 0.10.0
+ * IntelliJ/Android Studio currently gets confused if using @Deprecated/ReplaceWith on a typealias,
+ * so this object exists purely for IDE support.
  */
-@OptIn(InternalTangleApi::class)
-public object TangleGraph {
-
-  private val components: MutableSet<Any> = mutableSetOf()
-
-  internal val tangleViewModelKeys by lazy {
-    get<TangleViewModelComponent>()
-      .tangleViewModelKeysSubcomponentFactory
-      .create()
-      .viewModelKeys
-  }
-
-  /**
-   * Sets a reference to the application's Dagger graph,
-   * so that it can be accessed by [TangleViewModelFactory].
-   *
-   * This should be initialized as soon as possible after initializing the AppComponent.
-   *
-   * @sample samples.TangleGraphSample.initializeTangleGraph
-   * @param component the application-scoped Dagger component
-   * @since 0.10.0
-   */
-  public fun init(component: Any) {
-    components.add(component)
-  }
-
-  internal fun tangleViewModelSubcomponentFactory() = get<TangleViewModelComponent>()
-    .tangleViewModelMapSubcomponentFactory
-
-  /**
-   * Used to retrieve a Component of a given type.
-   *
-   * This is an internal Tangle API and may change at any time.
-   *
-   * @since 0.10.0
-   */
-  private inline fun <reified T> get(): T = components
-    .filterIsInstance<T>()
-    .single()
+@Deprecated(
+  message = "TangleGraph has been moved to `tangle.inject.TangleGraph`.  " +
+    "This breadcrumb object will be removed in a future version of Tangle.",
+  replaceWith = ReplaceWith("TangleGraph", "tangle.inject.TangleGraph")
+)
+object TangleGraph {
+  @Deprecated(
+    message = "TangleGraph has been moved to `tangle.inject.TangleGraph`.  " +
+      "This breadcrumb object will be removed in a future version of Tangle.",
+    replaceWith = ReplaceWith("TangleGraph.init(any)", "tangle.inject.TangleGraph")
+  )
+  fun init(any: Any) = NewTangleGraph.init(any)
 }

@@ -1,6 +1,11 @@
 public abstract interface annotation class tangle/inject/InternalTangleApi : java/lang/annotation/Annotation {
 }
 
+public final class tangle/inject/TangleGraph {
+	public static final field INSTANCE Ltangle/inject/TangleGraph;
+	public final fun init (Ljava/lang/Object;)V
+}
+
 public abstract interface annotation class tangle/inject/TangleParam : java/lang/annotation/Annotation {
 	public abstract fun name ()Ljava/lang/String;
 }
