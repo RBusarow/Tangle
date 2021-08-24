@@ -15,7 +15,7 @@ hermit = "0.9.5"
 jUnit = "5.7.2"
 knit = "0.2.3"
 kotest = "4.6.1"
-kotlin = "1.5.21"
+kotlin = "1.5.30"
 kotlinx-coroutines = "1.5.1"
 kotlinter = "3.4.0"
 mavenPublish = "0.13.0"
@@ -101,7 +101,7 @@ androidx-test-jUnit = "androidx.test.ext:junit:1.1.3"
 androidx-test-truth = { module = "androidx.test.ext:truth", version.ref = "androidx-test-version" }
 
 androidx-work-core = { module = "androidx.work:work-runtime", version.ref = "androidx-work-version" }
-androidx-work-ktx =  { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work-version" }
+androidx-work-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work-version" }
 androidx-work-test = { module = "androidx.work:work-testing", version.ref = "androidx-work-version" }
 
 anvil-annotations = { module = "com.squareup.anvil:annotations", version.ref = "anvil" }
