@@ -44,7 +44,7 @@ repositories {
 
 dependencies {
 
-  compileOnly(libs.androidGradlePlugin)
+  compileOnly(libs.android.gradle)
   compileOnly(libs.kotlin.reflect)
 
   implementation(libs.kotlin.annotation.processing)
