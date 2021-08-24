@@ -29,7 +29,7 @@ buildscript {
   }
   dependencies {
     classpath("com.android.tools.build:gradle:7.0.1")
-    classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.21-1.0.0-beta07")
+    classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.30-1.0.0-beta08-SNAPSHOT")
     classpath("com.squareup.anvil:gradle-plugin:2.3.3")
     classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
