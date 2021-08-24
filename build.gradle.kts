@@ -276,5 +276,4 @@ val updateWebsiteApiDocs by tasks.registering(Copy::class) {
   )
 
   into("./website/static/api")
-
 }
