@@ -8,6 +8,9 @@ The `TangleGraph` holder needs to be initialized with an application-scoped Dagg
 order to complete the graph.
 
 ```kotlin
+import android.app.Application
+import tangle.inject.TangleGraph
+
 class MyApplication : Application() {
 
   override fun onCreate() {

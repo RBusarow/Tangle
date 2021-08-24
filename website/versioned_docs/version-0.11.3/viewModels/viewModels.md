@@ -23,15 +23,18 @@ class MyViewModel @VMInject constructor(
 `TangleGraph` must be initialized as early as possible -- typically in `Application.onCreate()`.
 
 ```kotlin
+import android.app.Application
+import tangle.inject.TangleGraph
+
 class MyApplication : Application() {
 
   override fun onCreate() {
     super.onCreate()
 
-    val appComponent = DaggerMyAppComponent.factory()
+    val myAppComponent = DaggerAppComponent.factory()
       .create(this)
 
-    TangleGraph.init(appComponent)
+    TangleGraph.init(myAppComponent)
   }
 }
 ```
