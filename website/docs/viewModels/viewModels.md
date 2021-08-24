@@ -11,11 +11,13 @@ Once you've added Tangle as a dependency, implementing [ViewModel] injection is 
 `ViewModel` injection is done through the `@VMInject` constructor annotation.
 
 ```kotlin
+import androidx.lifecycle.ViewModel
+import com.example.MyRepository
+import tangle.viewmodel.VMInject
+
 class MyViewModel @VMInject constructor(
-  val myRepository: MyRepository
-) : ViewModel() {
-  // ...
-}
+  val repository: MyRepository
+) : ViewModel()
 ```
 
 ### 2. Tell Tangle about the AppComponent
@@ -23,15 +25,18 @@ class MyViewModel @VMInject constructor(
 `TangleGraph` must be initialized as early as possible -- typically in `Application.onCreate()`.
 
 ```kotlin
+import android.app.Application
+import tangle.inject.TangleGraph
+
 class MyApplication : Application() {
 
   override fun onCreate() {
     super.onCreate()
 
-    val appComponent = DaggerMyAppComponent.factory()
+    val myAppComponent = DaggerAppComponent.factory()
       .create(this)
 
-    TangleGraph.init(appComponent)
+    TangleGraph.init(myAppComponent)
   }
 }
 ```
@@ -39,10 +44,11 @@ class MyApplication : Application() {
 ### 3. Use the `tangleViewModel` delegate
 
 ```kotlin
-class MyFragment : Fragment() {
-  val viewModel by tangleViewModel<MyViewModel>()
+import androidx.fragment.app.Fragment
+import tangle.viewmodel.tangleViewModel
 
-  // ...
+class MyFragment : Fragment() {
+  val viewModel: MyViewModel by tangleViewModel()
 }
 ```
 

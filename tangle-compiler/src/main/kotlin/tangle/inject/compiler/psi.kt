@@ -55,6 +55,10 @@ fun KtClassOrObject.vmInjectConstructor(module: ModuleDescriptor): KtConstructor
   return annotatedConstructorOrNull(FqNames.vmInject, module)
 }
 
+fun KtClassOrObject.assistedInjectConstructor(module: ModuleDescriptor): KtConstructor<*>? {
+  return annotatedConstructorOrNull(FqNames.assistedInject, module)
+}
+
 fun KtClassOrObject.fragmentInjectConstructor(
   module: ModuleDescriptor
 ): KtConstructor<*>? {
@@ -144,6 +148,8 @@ fun List<KtCallableDeclaration>.mapToParameters(
       else -> baseName
     }
 
+    val isDaggerAssisted = annotations.any { it.requireFqName(module) == FqNames.daggerAssisted }
+
     ConstructorInjectParameter(
       name = name,
       typeName = typeName,
@@ -153,7 +159,8 @@ fun List<KtCallableDeclaration>.mapToParameters(
       isWrappedInLazy = isWrappedInLazy,
       tangleParamName = tangleParamName,
       qualifiers = qualifiers,
-      isAssisted = isAssisted
+      isAssisted = isAssisted,
+      isDaggerAssisted = isDaggerAssisted
     )
   }
 

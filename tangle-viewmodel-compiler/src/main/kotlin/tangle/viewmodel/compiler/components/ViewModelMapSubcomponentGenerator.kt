@@ -51,7 +51,10 @@ class ViewModelMapSubcomponentGenerator : FileGenerator<MergeComponentParams> {
               returns(className)
               addModifiers(KModifier.ABSTRACT, KModifier.OVERRIDE)
               addParameter(
-                ParameterSpec.builder("savedStateHandle", ClassNames.androidxSavedStateHandle)
+                ParameterSpec.builder(
+                  "savedStateHandle",
+                  ClassNames.androidxSavedStateHandle
+                )
                   .addAnnotation(ClassNames.bindsInstance)
                   .build()
               )

@@ -11,10 +11,10 @@ const features = [
   {
     title: "Fragments",
     code: (
-      `@ContributesFragment(AppScope::class)
+`@ContributesFragment(AppScope::class)
 class MyFragment @FragmentInject constructor(
   val repository: MyRepository
-) : MidFragment() {
+) : Fragment() {
 
   val name: String by arg("name")
 
@@ -32,12 +32,12 @@ class MyFragment @FragmentInject constructor(
         factories for type-safe <code>Bundle</code> arguments.  Bindings are created automatically.
       </>
     ),
-    dest: "docs/next/fragments/fragments"
+    dest: "docs/fragments/fragments"
   },
   {
     title: "ViewModels",
     code: (
-      `class MyViewModel @VMInject constructor(
+`class MyViewModel @VMInject constructor(
   val repository: MyRepository,
   @TangleParam("userId")
   val userId: String
@@ -59,13 +59,11 @@ class MyFragment : Fragment() {
   {
     title: "Compose",
     code: (
-      `@Composable
+`@Composable
 fun MyComposable(
   navController: NavController,
   viewModel: MyViewModel = tangleViewModel()
-) {
-  // ...
-}`
+) { /* ... */ }`
     ),
     description: (
       <>
@@ -73,7 +71,28 @@ fun MyComposable(
         <code>ViewModel</code>s.
       </>
     ),
-    dest: "docs/next/viewModels/compose"
+    dest: "docs/viewModels/compose"
+  },
+  {
+    title: "WorkManager",
+    code: (
+`@TangleWorker
+class MyWorker @AssistedInject constructor(
+  @Assisted context: Context,
+  @Assisted params: WorkerParameters
+) : CoroutineWorker(context,params){
+  override suspend fun doWork(): Result {
+    /* ... */
+  }
+}`
+    ),
+    description: (
+      <>
+        Use Dagger's <code>@AssistedInject</code> and <code>@Assisted</code> annotations and
+        <code>@TangleWorker</code> to inject any <code>ListenableWorker</code>.
+      </>
+    ),
+    dest: "docs/workManager/workManager"
   },
 ];
 

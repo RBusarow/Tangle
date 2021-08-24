@@ -19,6 +19,7 @@ jobs:
   detekt:
 
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
 
     steps:
       - uses: actions/checkout@v2
@@ -33,34 +34,31 @@ jobs:
           java-version: 14
 
       - name: detekt
-        run: ./gradlew detekt
+        run: ./gradlew detekt --no-daemon
 
   ktlint:
 
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
 
     steps:
       - uses: actions/checkout@v2
-        if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           fetch-depth: 0
 
       - name: Set up JDK
-        if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
         uses: actions/setup-java@v1
         with:
           java-version: 14
 
       # formats all kotlin files
       - name: KtLint format
-        if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
-        run: ./gradlew ktlintformat -q
+        run: ./gradlew ktlintformat -q --no-daemon
 
       # If KtLint generated changes, commit and push those changes.
       - name: commit changes
-        if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Apply KtLint format
@@ -69,6 +67,7 @@ jobs:
   api-check:
 
     runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
 
     steps:
       - uses: actions/checkout@v2
@@ -82,7 +81,7 @@ jobs:
         with:
           java-version: 14
 
-      - name: all tests
+      - name: api check
         run: ./gradlew apicheck --no-daemon
 
   tests-ubuntu:
@@ -101,20 +100,19 @@ jobs:
         with:
           java-version: 14
 
-      - name: Generate cache key
-        run: |
-          chmod u+r+x checksum.sh
-          ./checksum.sh checksum.txt
-
       - uses: actions/cache@v2
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('checksum.txt') }}
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/buildSrc/.gradle
+            ~/buildSrc/build
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts', '**/libs.versions.toml', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
       - name: all tests
-        run: ./gradlew testJvm --rerun-tasks --no-daemon
+        run: ./gradlew testJvm --no-daemon
 
   tests-windows:
 
@@ -133,17 +131,16 @@ jobs:
         with:
           java-version: 14
 
-      - name: Generate cache key
-        run: |
-          chmod u+r+x checksum.sh
-          ./checksum.sh checksum.txt
-
       - uses: actions/cache@v2
         with:
-          path: ~/.gradle/caches
-          key: ${{ runner.os }}-gradle-${{ hashFiles('checksum.txt') }}
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+            ~/buildSrc/.gradle
+            ~/buildSrc/build
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts', '**/libs.versions.toml', '**/gradle-wrapper.properties') }}
           restore-keys: |
             ${{ runner.os }}-gradle-
 
       - name: all tests
-        run: ./gradlew testJvm --rerun-tasks --no-daemon
+        run: ./gradlew testJvm --no-daemon

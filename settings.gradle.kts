@@ -68,5 +68,8 @@ include(
   ":tangle-viewmodel-api",
   ":tangle-viewmodel-api:samples",
   ":tangle-viewmodel-compiler",
-  ":tangle-viewmodel-compose"
+  ":tangle-viewmodel-compose",
+  ":tangle-work-api",
+  ":tangle-work-api:samples",
+  ":tangle-work-compiler"
 )

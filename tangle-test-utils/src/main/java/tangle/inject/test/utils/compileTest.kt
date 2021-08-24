@@ -205,6 +205,11 @@ fun Any.invokeGet(vararg args: Any?): Any {
   return method.invoke(this, *args)
 }
 
+fun Any.invokeCreate(vararg args: Any?): Any {
+  val method = this::class.java.declaredMethods.first { it.name == "create" }
+  return method.invoke(this, *args)
+}
+
 @Suppress("UNCHECKED_CAST")
 fun <T> Annotation.getValue(): T =
   this::class.java.declaredMethods.single { it.name == "value" }.invoke(this) as T

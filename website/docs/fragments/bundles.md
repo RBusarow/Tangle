@@ -19,6 +19,14 @@ Use `@FragmentInject` instead of `@Inject`
 :::
 
 ```kotlin
+import androidx.fragment.app.Fragment
+import com.example.AppScope
+import tangle.fragment.ContributesFragment
+import tangle.fragment.FragmentInject
+import tangle.fragment.FragmentInjectFactory
+import tangle.fragment.arg
+import tangle.inject.TangleParam
+
 @ContributesFragment(AppScope::class)
 class MyFragment @FragmentInject constructor() : Fragment() {
 
@@ -30,20 +38,9 @@ class MyFragment @FragmentInject constructor() : Fragment() {
   }
 }
 
-class MyActivity : BaseActivity() {
+val myFragmentFactory: MyFragment.Factory = TODO("use your favorite Dagger pattern here")
 
-  val myFragmentFactory: MyFragment.Factory = TODO("use your favorite Dagger pattern here")
-
-  override fun onCreate(savedInstanceState: Bundle?) {
-    super.onCreate(savedInstanceState)
-
-    val fragment = myFragmentFactory.create(name = "Bigyan")
-
-    supportFragmentManager.beginTransaction()
-      .replace(containerId, fragment)
-      .commit()
-  }
-}
+val fragment = myFragmentFactory.create(name = "Bigyan")
 ```
 
 ### Background
@@ -56,6 +53,9 @@ a Fragment instance which already has those arguments injected as a Bundle.
 Here's what it may look like in Kotlin:
 
 ```kotlin
+import androidx.core.os.bundleOf
+import androidx.fragment.app.Fragment
+
 class MyFragment : Fragment() {
 
   companion object {
@@ -74,13 +74,17 @@ class MyFragment : Fragment() {
 For the `MyFragment` definition above, Tangle will generate the following:
 
 ```kotlin
+import androidx.core.os.bundleOf
+import dagger.internal.InstanceFactory
+import javax.inject.Provider
+
 public class MyFragment_Factory_Impl(
   public val delegateFactory: MyFragment_Factory
 ) : MyFragment.Factory {
   public override fun create(name: String): MyFragment {
     val bundle = bundleOf(
-          "name" to name
-        )
+      "name" to name
+    )
     return delegateFactory.get().apply {
       this@apply.arguments = bundle
     }
@@ -88,8 +92,8 @@ public class MyFragment_Factory_Impl(
 
   public companion object {
     @JvmStatic
-    public fun create(delegateFactory: MyFragment_Factory): Provider<MyFragment.Factory> =
-        InstanceFactory.create(MyFragment_Factory_Impl(delegateFactory))
+    public fun create(delegateFactory: MyFragment_Factory): Provider<Factory> =
+      InstanceFactory.create(MyFragment_Factory_Impl(delegateFactory))
   }
 }
 ```
@@ -98,6 +102,9 @@ It will then create a Dagger binding for `MyFragment_Factory_Impl` to `MyFragmen
 which allows us to use it in our code:
 
 ```kotlin
+import javax.inject.Inject
+import javax.inject.Provider
+
 class MyNavigationImpl @Inject constructor(
   // fragments without bundle arguments can be injected in a Provider
   val myListFragmentProvider: Provider<MyListFragment>,
@@ -158,3 +165,4 @@ class SomeClass @Inject constructor(
 
 [ContributesFragment]: https://rbusarow.github.io/Tangle/api/tangle-fragment-api/tangle.fragment/-contributes-fragment/index.html
 [TangleFragmentFactory]: https://rbusarow.github.io/Tangle/api/tangle-fragment-api/tangle.fragment/-tangle-fragment-factory
+[FragmentFactory]: https://developer.android.com/reference/kotlin/androidx/fragment/app/FragmentFactory
