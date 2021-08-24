@@ -33,10 +33,10 @@ class MyApplication : Application() {
   override fun onCreate() {
     super.onCreate()
 
-    val appComponent = DaggerMyAppComponent.factory()
+    val myAppComponent = DaggerAppComponent.factory()
       .create(this)
 
-    TangleGraph.init(appComponent)
+    TangleGraph.init(myAppComponent)
   }
 }
 ```

@@ -52,30 +52,32 @@ data class MergeComponentParams(
         addMember("%S", "${clazz.requireFqName().asString()}--${scopeClassName.canonicalName}")
       }
 
-      val base = scopeClassName.generateSimpleNameString()
+      val localScope = scopeClassName.generateSimpleNameString()
+      val tangleScope = ClassNames.tangleScope.generateSimpleNameString()
+      val tangleAppScope = ClassNames.tangleAppScope.generateSimpleNameString()
 
       val keysSubcomponentClassName =
-        ClassName(packageName, "${base}_Tangle_ViewModel_Keys_Subcomponent")
+        ClassName(packageName, "${tangleAppScope}_Tangle_ViewModel_Keys_Subcomponent")
 
       val keysSubcomponentFactoryClassName = keysSubcomponentClassName.nestedClass("Factory")
 
       val mapSubcomponentClassName =
-        ClassName(packageName, "${base}_Tangle_ViewModel_Map_Subcomponent")
+        ClassName(packageName, "${tangleScope}_Tangle_ViewModel_Map_Subcomponent")
 
       val mapSubcomponentFactoryClassName = mapSubcomponentClassName.nestedClass("Factory")
 
       val componentClassName =
-        ClassName(packageName, "${base}_Tangle_ViewModel_Component")
+        ClassName(packageName, "${localScope}_Tangle_ViewModel_Component")
 
       val mergeComponentModuleClassName =
-        ClassName(packageName, "${base}_Tangle_ViewModel_Module")
+        ClassName(packageName, "${localScope}_Tangle_ViewModel_Module")
 
       val subcomponentModulePackageName = "tangle.viewmodel"
 
       val subcomponentModuleClassName =
         ClassName(
           subcomponentModulePackageName,
-          "${base}_Tangle_ViewModel_SubcomponentFactory_Module"
+          "${localScope}_Tangle_ViewModel_SubcomponentFactory_Module"
         )
 
       return MergeComponentParams(

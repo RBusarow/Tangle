@@ -40,7 +40,7 @@ module.exports = {
         {
           label: "Docs",
           type: "doc",
-          docId: "quickstart",
+          docId: "configuration",
           position: "left",
         },
         {

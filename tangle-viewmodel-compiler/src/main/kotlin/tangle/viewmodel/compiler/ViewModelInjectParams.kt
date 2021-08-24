@@ -149,7 +149,8 @@ data class ViewModelParams(
         isWrappedInProvider = true,
         isWrappedInLazy = false,
         tangleParamName = null,
-        qualifiers = emptyList()
+        qualifiers = emptyList(),
+        isDaggerAssisted = false
       )
     }
   }

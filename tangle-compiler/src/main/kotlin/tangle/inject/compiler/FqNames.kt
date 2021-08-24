@@ -27,6 +27,11 @@ import javax.inject.Qualifier
 
 object FqNames {
 
+  val context = FqName("android.content.Context")
+  val workerParameters = FqName("androidx.work.WorkerParameters")
+
+  val assistedInject = FqName("dagger.assisted.AssistedInject")
+  val daggerAssisted = FqName("dagger.assisted.Assisted")
   val vmInject = FqName("tangle.viewmodel.VMInject")
   val vmInjectFactory = FqName("tangle.viewmodel.VMInjectFactory")
   val contributesViewModel = FqName("tangle.viewmodel.ContributesViewModel")
@@ -37,6 +42,8 @@ object FqNames {
 
   val tangleParam = FqName("tangle.inject.TangleParam")
   val tangleAppScope = FqName("tangle.inject.internal.TangleAppScope")
+
+  val tangleWorker = FqName("tangle.work.TangleWorker")
 
   val mergeComponent = MergeComponent::class.fqName
   val jvmSuppressWildcards = JvmSuppressWildcards::class.fqName

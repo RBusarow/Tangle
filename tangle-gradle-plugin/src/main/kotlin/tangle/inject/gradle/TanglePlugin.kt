@@ -55,6 +55,11 @@ public open class TanglePlugin : BasePlugin() {
         target.addAnvil("tangle-viewmodel-compiler")
       }
 
+      if (extension.workEnabled.get()) {
+        target.addImplementation("tangle-work-api")
+        target.addAnvil("tangle-work-compiler")
+      }
+
       if (extension.composeEnabled.get()) {
 
         val composeEnabled = target.extensions.findByType<BaseExtension>()
@@ -90,7 +95,7 @@ public open class TanglePlugin : BasePlugin() {
 
   internal companion object {
     const val TANGLE_GROUP = "com.rickbusarow.tangle"
-    const val TANGLE_VERSION = "0.11.5"
+    const val TANGLE_VERSION = "0.12.0"
     const val EXTENSION_NAME = "tangle"
     const val KOTLIN_ANDROID_ID = "org.jetbrains.kotlin.android"
     const val ANVIL_ID = "com.squareup.anvil"
