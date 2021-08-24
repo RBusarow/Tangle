@@ -106,7 +106,7 @@ dependencies {
 
   dependencySync("org.codehaus.groovy:groovy-xml:3.0.8")
   dependencySync("org.codehaus.groovy:groovy:3.0.8")
-  dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.21")
+  dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.30")
   dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
