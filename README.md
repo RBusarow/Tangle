@@ -77,7 +77,7 @@ pluginManagement {
 // top-level build.gradle.kts
 
 plugins {
-  id("com.rickbusarow.tangle") version "0.11.5"
+  id("com.rickbusarow.tangle") version "0.12.0"
 }
 ```
 
@@ -116,15 +116,15 @@ plugins {
 dependencies {
 
   // Fragments
-  api("com.rickbusarow.tangle:tangle-fragment-api:0.11.5")
-  anvil("com.rickbusarow.tangle:tangle-fragment-compiler:0.11.5")
+  api("com.rickbusarow.tangle:tangle-fragment-api:0.12.0")
+  anvil("com.rickbusarow.tangle:tangle-fragment-compiler:0.12.0")
 
   // ViewModels
-  api("com.rickbusarow.tangle:tangle-viewmodel-api:0.11.5")
-  anvil("com.rickbusarow.tangle:tangle-viewmodel-compiler:0.11.5")
+  api("com.rickbusarow.tangle:tangle-viewmodel-api:0.12.0")
+  anvil("com.rickbusarow.tangle:tangle-viewmodel-compiler:0.12.0")
 
   // optional Compose support
-  implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.11.5")
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.12.0")
 }
 ```
 
