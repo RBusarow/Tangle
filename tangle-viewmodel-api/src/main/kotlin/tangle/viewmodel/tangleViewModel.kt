@@ -20,6 +20,8 @@ import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.savedstate.SavedStateRegistryOwner
 import tangle.inject.InternalTangleApi
 import tangle.viewmodel.internal.AssistedTangleViewModelFactory
 import tangle.viewmodel.internal.TangleViewModelFactory
@@ -33,29 +35,19 @@ import kotlin.LazyThreadSafetyMode.NONE
  * @since 0.11.0
  */
 @OptIn(InternalTangleApi::class)
-public inline fun <reified VM : ViewModel> Fragment.tangleViewModel(): Lazy<VM> =
+public inline fun <reified VM : ViewModel> Fragment.tangleViewModel(
+  savedStateRegistryOwner: SavedStateRegistryOwner = this,
+  defaultFactory: ViewModelProvider.Factory = defaultViewModelProviderFactory
+): Lazy<VM> =
   lazy(mode = NONE) {
     val viewModelFactory = TangleViewModelFactory(
-      owner = this,
+      owner = savedStateRegistryOwner,
       defaultArgs = arguments,
-      defaultFactory = defaultViewModelProviderFactory
+      defaultFactory = defaultFactory
     )
 
     viewModels<VM>(factoryProducer = { viewModelFactory }).value
   }
-
-@OptIn(InternalTangleApi::class)
-public inline fun <reified VM : ViewModel, reified F : Any> Fragment.tangleViewModel(
-  noinline factory: F.() -> VM
-): Lazy<VM> = viewModels {
-  AssistedTangleViewModelFactory(
-    owner = this,
-    defaultArgs = arguments,
-    vmClass = VM::class,
-    fClass = F::class,
-    factory = factory
-  )
-}
 
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.
@@ -65,26 +57,16 @@ public inline fun <reified VM : ViewModel, reified F : Any> Fragment.tangleViewM
  * @since 0.11.0
  */
 @OptIn(InternalTangleApi::class)
-public inline fun <reified VM : ViewModel> ComponentActivity.tangleViewModel(): Lazy<VM> =
+public inline fun <reified VM : ViewModel> ComponentActivity.tangleViewModel(
+  savedStateRegistryOwner: SavedStateRegistryOwner = this,
+  defaultFactory: ViewModelProvider.Factory = defaultViewModelProviderFactory
+): Lazy<VM> =
   lazy(mode = NONE) {
     val viewModelFactory = TangleViewModelFactory(
-      owner = this,
+      owner = savedStateRegistryOwner,
       defaultArgs = intent.extras,
-      defaultFactory = defaultViewModelProviderFactory
+      defaultFactory = defaultFactory
     )
 
     viewModels<VM>(factoryProducer = { viewModelFactory }).value
   }
-
-@OptIn(InternalTangleApi::class)
-public inline fun <reified VM : ViewModel, reified F : Any> ComponentActivity.tangleViewModel(
-  noinline factory: F.() -> VM
-): Lazy<VM> = viewModels {
-  AssistedTangleViewModelFactory(
-    owner = this,
-    defaultArgs = intent.extras,
-    vmClass = VM::class,
-    fClass = F::class,
-    factory = factory
-  )
-}

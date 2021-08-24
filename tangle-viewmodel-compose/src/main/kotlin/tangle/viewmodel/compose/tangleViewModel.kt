@@ -30,8 +30,10 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavBackStackEntry
 import androidx.savedstate.SavedStateRegistryOwner
 import tangle.inject.InternalTangleApi
+import tangle.viewmodel.AssistedViewModel
 import tangle.viewmodel.internal.AssistedTangleViewModelFactory
 import tangle.viewmodel.internal.TangleViewModelFactory
+import kotlin.DeprecationLevel.ERROR
 
 /**
  * Returns an existing [VMInject][tangle.viewmodel.VMInject]-annotated [ViewModel]
@@ -80,16 +82,16 @@ public inline fun <reified VM : ViewModel> tangleViewModel(
  * or creates a new one scoped to the current navigation graph present on
  * the NavController back stack.
  *
- * @since 0.10.0
+ * @since 0.12.0
  */
 @Composable
 @OptIn(InternalTangleApi::class)
-public inline fun <reified VM : ViewModel, reified F : Any> tangleViewModel(
+public inline fun <reified VM, reified F : Any> tangleViewModel(
   viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
     "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
   },
   noinline factory: F.() -> VM
-): VM {
+): VM where VM : AssistedViewModel<VM, F>, VM : ViewModel {
 
   return if (viewModelStoreOwner is SavedStateRegistryOwner) {
     viewModel(
@@ -104,6 +106,16 @@ public inline fun <reified VM : ViewModel, reified F : Any> tangleViewModel(
   } else {
     viewModel()
   }
+}
+
+@Deprecated("no", level = ERROR)
+@OptIn(InternalTangleApi::class)
+public inline fun <reified VM : AssistedViewModel<VM, *>> tangleViewModel(
+  // viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
+  //   "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
+  // }
+): VM {
+  throw UnsupportedOperationException("")
 }
 
 @Composable

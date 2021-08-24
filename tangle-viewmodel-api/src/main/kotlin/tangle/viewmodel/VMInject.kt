@@ -42,3 +42,4 @@ public annotation class VMInjectFactory
 @Retention(AnnotationRetention.BINARY)
 @MustBeDocumented
 public annotation class VMAssisted
+
