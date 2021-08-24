@@ -82,7 +82,7 @@ class MyWorker @AssistedInject constructor(
   @Assisted params: WorkerParameters
 ) : CoroutineWorker(context,params){
   override suspend fun doWork(): Result {
-    TODO()
+    /* ... */
   }
 }`
     ),
