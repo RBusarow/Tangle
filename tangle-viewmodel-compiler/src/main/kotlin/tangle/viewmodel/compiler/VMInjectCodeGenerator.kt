@@ -19,14 +19,11 @@ import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.api.AnvilContext
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.anvil.compiler.internal.classesAndInnerClasses
 import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.classesAndInnerClasses
 import com.squareup.anvil.compiler.internal.hasAnnotation
-import com.squareup.anvil.compiler.internal.classesAndInnerClasses
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
-import tangle.inject.compiler.vmInjectConstructor
 import org.jetbrains.kotlin.psi.psiUtil.nonStaticOuterClasses
 import tangle.inject.compiler.FqNames
 import tangle.inject.compiler.TangleCompilationException
@@ -34,7 +31,6 @@ import tangle.inject.compiler.vmInjectConstructor
 import tangle.viewmodel.compiler.params.Factory
 import tangle.viewmodel.compiler.params.TangleScopeModule
 import tangle.viewmodel.compiler.params.ViewModelParams
-import tangle.inject.compiler.vmInjectConstructor
 import java.io.File
 
 @Suppress("UNUSED")

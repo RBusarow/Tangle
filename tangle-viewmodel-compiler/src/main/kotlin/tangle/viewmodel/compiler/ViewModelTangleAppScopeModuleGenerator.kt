@@ -21,7 +21,7 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.TypeSpec
 import tangle.inject.compiler.ClassNames
-import tangle.inject.compiler.*
+import tangle.inject.compiler.FileGenerator
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.applyEach
 import tangle.inject.compiler.buildFile

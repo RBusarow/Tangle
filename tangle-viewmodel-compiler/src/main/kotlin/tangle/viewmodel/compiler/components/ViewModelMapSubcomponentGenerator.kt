@@ -23,7 +23,6 @@ import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
 import tangle.viewmodel.compiler.*
 import java.io.File
-import tangle.viewmodel.compiler.*
 
 class ViewModelMapSubcomponentGenerator : FileGenerator<MergeComponentParams> {
   override fun generate(
