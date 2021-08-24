@@ -72,6 +72,9 @@ dependencies {
   dependencySync("com.google.auto:auto-common:1.1.2")
   dependencySync("com.google.dagger:dagger-compiler:2.38.1")
   dependencySync("com.google.dagger:dagger:2.38.1")
+  dependencySync("androidx.work:work-runtime:2.5.0")
+  dependencySync("androidx.work:work-runtime-ktx:2.5.0")
+  dependencySync("androidx.work:work-testing:2.5.0")
   dependencySync("com.jakewharton.timber:timber:5.0.1")
   dependencySync("com.rickbusarow.hermit:hermit-core:0.9.5")
   dependencySync("com.rickbusarow.hermit:hermit-coroutines:0.9.5")
@@ -87,11 +90,11 @@ dependencies {
 
   dependencySync("dev.zacsweers.autoservice:auto-service-ksp:0.5.3")
 
-  dependencySync("io.kotest:kotest-assertions-core-jvm:4.6.1")
-  dependencySync("io.kotest:kotest-assertions-shared-jvm:4.6.1")
-  dependencySync("io.kotest:kotest-common-jvm:4.6.1")
+  dependencySync("io.kotest:kotest-assertions-core-jvm:4.6.2")
+  dependencySync("io.kotest:kotest-assertions-shared-jvm:4.6.2")
+  dependencySync("io.kotest:kotest-common-jvm:4.6.2")
   dependencySync("io.kotest:kotest-property-jvm:4.6.2")
-  dependencySync("io.kotest:kotest-runner-junit5-jvm:4.6.1")
+  dependencySync("io.kotest:kotest-runner-junit5-jvm:4.6.2")
   dependencySync("io.mockk:mockk:1.12.0")
 
   dependencySync("javax.annotation:jsr250-api:1.0")
