@@ -15,7 +15,6 @@
 
 module.exports = {
   Docs: [
-    "quickstart",
     "configuration",
     {
       type: "category",
@@ -34,6 +33,14 @@ module.exports = {
       items: [
         "fragments/fragments",
         "fragments/bundles",
+      ],
+    },
+    {
+      type: "category",
+      label: "WorkManager",
+      collapsed: false,
+      items: [
+        "workManager/workManager",
       ],
     },
   ],

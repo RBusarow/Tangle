@@ -55,6 +55,11 @@ public open class TanglePlugin : BasePlugin() {
         target.addAnvil("tangle-viewmodel-compiler")
       }
 
+      if (extension.workEnabled.get()) {
+        target.addImplementation("tangle-work-api")
+        target.addAnvil("tangle-work-compiler")
+      }
+
       if (extension.composeEnabled.get()) {
 
         val composeEnabled = target.extensions.findByType<BaseExtension>()

@@ -39,6 +39,7 @@ dependencies {
   api(libs.square.kotlinPoet)
 
   api(projects.tangleCompiler)
+  api(projects.tangleApi)
 
   compileOnly(libs.google.auto.service.processor)
 }

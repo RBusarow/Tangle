@@ -42,7 +42,8 @@ data class ConstructorInjectParameter(
   override val isWrappedInProvider: Boolean,
   override val isWrappedInLazy: Boolean,
   override val tangleParamName: String?,
-  override val qualifiers: List<AnnotationSpec>
+  override val qualifiers: List<AnnotationSpec>,
+  val isDaggerAssisted: Boolean
 ) : Parameter()
 
 data class MemberInjectParameter(

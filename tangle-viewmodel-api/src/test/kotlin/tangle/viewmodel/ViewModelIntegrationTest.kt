@@ -147,20 +147,20 @@ class ViewModelIntegrationTest : BaseTest() {
       import dagger.Module
       import kotlin.Suppress
       import kotlin.Unit
-      import tangle.inject.tests.Unit_Tangle_ViewModel_Keys_Subcomponent
-      import tangle.inject.tests.Unit_Tangle_ViewModel_Map_Subcomponent
+      import tangle.inject.tests.TangleAppScope_Tangle_ViewModel_Keys_Subcomponent
+      import tangle.inject.tests.TangleScope_Tangle_ViewModel_Map_Subcomponent
 
       @ContributesTo(Unit::class)
-      @Module(subcomponents = [Unit_Tangle_ViewModel_Map_Subcomponent::class, Unit_Tangle_ViewModel_Keys_Subcomponent::class])
+      @Module(subcomponents = [TangleScope_Tangle_ViewModel_Map_Subcomponent::class, TangleAppScope_Tangle_ViewModel_Keys_Subcomponent::class])
       public interface Unit_Tangle_ViewModel_SubcomponentFactory_Module {
         @Binds
         public
-            fun bindUnit_Tangle_ViewModel_Map_Subcomponent_FactoryIntoSet(factory: Unit_Tangle_ViewModel_Map_Subcomponent.Factory):
+            fun bindTangleScope_Tangle_ViewModel_Map_Subcomponent_FactoryIntoSet(factory: TangleScope_Tangle_ViewModel_Map_Subcomponent.Factory):
             TangleViewModelMapSubcomponent.Factory
 
         @Binds
         public
-            fun bindUnit_Tangle_ViewModel_Keys_Subcomponent_FactoryIntoSet(factory: Unit_Tangle_ViewModel_Keys_Subcomponent.Factory):
+            fun bindTangleAppScope_Tangle_ViewModel_Keys_Subcomponent_FactoryIntoSet(factory: TangleAppScope_Tangle_ViewModel_Keys_Subcomponent.Factory):
             TangleViewModelKeysSubcomponent.Factory
       }
      """

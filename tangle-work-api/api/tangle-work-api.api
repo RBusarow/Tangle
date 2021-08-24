@@ -1,0 +1,27 @@
+public abstract interface class tangle/work/AssistedWorkerFactory {
+	public abstract fun create (Landroid/content/Context;Landroidx/work/WorkerParameters;)Landroidx/work/ListenableWorker;
+}
+
+public abstract interface annotation class tangle/work/TangleAssistedWorkerFactoryMap : java/lang/annotation/Annotation {
+}
+
+public abstract interface annotation class tangle/work/TangleWorker : java/lang/annotation/Annotation {
+}
+
+public abstract interface class tangle/work/TangleWorkerComponent {
+	public abstract fun getTangleWorkerMapSubcomponentFactory ()Ltangle/work/TangleWorkerFactoryMapSubcomponent$Factory;
+}
+
+public final class tangle/work/TangleWorkerFactory : androidx/work/WorkerFactory {
+	public fun <init> ()V
+	public fun createWorker (Landroid/content/Context;Ljava/lang/String;Landroidx/work/WorkerParameters;)Landroidx/work/ListenableWorker;
+}
+
+public abstract interface class tangle/work/TangleWorkerFactoryMapSubcomponent {
+	public abstract fun getWorkerFactoryMap ()Ljava/util/Map;
+}
+
+public abstract interface class tangle/work/TangleWorkerFactoryMapSubcomponent$Factory {
+	public abstract fun create ()Ltangle/work/TangleWorkerFactoryMapSubcomponent;
+}
+

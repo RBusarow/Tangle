@@ -21,6 +21,7 @@ import com.tschuchort.compiletesting.KotlinCompilation.ExitCode.OK
 import hermit.test.junit.HermitJUnit5
 import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest
@@ -116,6 +117,12 @@ abstract class BaseTest : HermitJUnit5() {
     messages.asClue {
       exitCode shouldBe expectedCode
     }
+  }
+
+  infix fun String.shouldContainIgnoringWhitespaces(expected: String) {
+    val actual = this.replace("\\s{2,}".toRegex(), " ").trim()
+    val expectedClean = expected.replace("\\s{2,}".toRegex(), " ").trim()
+    actual shouldContain expectedClean
   }
 
   data class TestScope(val useAnvilFactories: Boolean)

@@ -2,15 +2,32 @@
 id: configuration
 sidebar_label: Configuration
 title: Configuration
+slug: /
 ---
 
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
 
 ## Gradle
 
-### Plugin
-
 The simple way to apply Tangle is to just apply the gradle plugin. It will automatically add the
 dependencies and perform some basic validation of your module's configuration.
+
+You can also just add dependencies yourself, without applying the plugin.
+
+Note that Tangle is specifically for Android and has Android-specific dependencies,
+so it should only be added to Android modules.
+
+<Tabs groupId="language"
+  defaultValue="Kotlin Plugin"
+  values={[
+    {label: 'Kotlin Plugin', value: 'Kotlin Plugin'},
+    {label: 'Groovy Plugin', value: 'Groovy Plugin'},
+    {label: 'Kotlin Dependencies', value: 'Kotlin Dependencies'},
+    {label: 'Groovy Dependencies', value: 'Groovy Dependencies'},
+]}>
+
+<TabItem value="Kotlin Plugin">
 
 ```kotlin
 // settings.gradle.kts
@@ -45,15 +62,54 @@ tangle {
   composeEnabled.set(true) // default is false
   fragmentsEnabled.set(true) // default is true
   viewModelsEnabled.set(true) // default is true
+  workEnabled.set(true) // default is false
 }
 ```
 
-### Explicit dependencies
+</TabItem>
 
-You can also just add dependencies yourself, without applying the plugin.
+<TabItem value="Groovy Plugin">
 
-Note that Tangle is specifically for Android and has Android-specific dependencies,
-so it should only be added to Android modules.
+```groovy
+// settings.gradle
+
+pluginManagement {
+  repositories {
+    gradlePluginPortal()
+  }
+}
+```
+
+```groovy
+// top-level build.gradle
+
+plugins {
+  id "com.rickbusarow.module-check" version "0.12.0"
+}
+```
+
+```groovy
+// any Android module's build.gradle
+
+plugins {
+  id 'android-library' // or application, etc.
+  kotlin("android")
+  id 'com.squareup.anvil'
+  id 'com.rickbusarow.tangle'
+}
+
+// optional
+tangle {
+  composeEnabled = true // default is false
+  fragmentsEnabled = true // default is true
+  viewModelsEnabled = true // default is true
+  workEnabled = true // default is false
+}
+```
+
+</TabItem>
+
+<TabItem value="Kotlin Dependencies">
 
 ```kotlin
 // any Android module's build.gradle.kts
@@ -76,13 +132,52 @@ dependencies {
 
   // optional Compose support
   implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.12.0")
+
+  // WorkManager
+  api("com.rickbusarow.tangle:tangle-work-api:0.12.0")
+  anvil("com.rickbusarow.tangle:tangle-work-compiler:0.12.0")
 }
 ```
 
-## TangleGraph
+</TabItem>
 
-The `TangleGraph` holder needs to be initialized with an application-scoped Dagger Component in
-order to complete the graph.
+<TabItem value="Groovy Dependencies">
+
+```groovy
+// any Android module's build.gradle
+
+plugins {
+  id 'android-library' // or application, etc.
+  kotlin("android")
+  id 'com.squareup.anvil'
+}
+
+dependencies {
+
+  // Fragments
+  api 'com.rickbusarow.tangle:tangle-fragment-api:0.12.0'
+  anvil 'com.rickbusarow.tangle:tangle-fragment-compiler:0.12.0'
+
+  // ViewModels
+  api 'com.rickbusarow.tangle:tangle-viewmodel-api:0.12.0'
+  anvil 'com.rickbusarow.tangle:tangle-viewmodel-compiler:0.12.0'
+
+  // optional Compose support
+  implementation 'com.rickbusarow.tangle:tangle-viewmodel-compose:0.12.0'
+
+  // WorkManager
+  api 'com.rickbusarow.tangle:tangle-work-api:0.12.0'
+  anvil 'com.rickbusarow.tangle:tangle-work-compiler:0.12.0'
+}
+```
+</TabItem>
+
+</Tabs>
+
+## Setting up the Tangle graph
+
+In order to connect Tangle to your application-scoped Dagger component,
+call `TangleGraph.init(...)` immediately after creating the component.
 
 ```kotlin
 import android.app.Application
@@ -93,10 +188,18 @@ class MyApplication : Application() {
   override fun onCreate() {
     super.onCreate()
 
-    val appComponent = DaggerMyAppComponent.factory()
+    val myAppComponent = DaggerMyAppComponent.factory()
       .create(this)
 
-    TangleGraph.init(appComponent)
+    TangleGraph.init(myAppComponent)
   }
 }
 ```
+## Next steps
+
+Tangle is now able to generate its code and hook in to Dagger.
+
+Check out these features to start using Tangle in your project:
+- [Fragments](fragments/fragments.mdx)
+- [ViewModels](viewModels/viewModels.md)
+- [WorkManager](workManager/workManager.md)

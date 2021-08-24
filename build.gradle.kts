@@ -157,6 +157,7 @@ apiValidation {
       "tangle-compiler",
       "tangle-fragment-compiler",
       "tangle-viewmodel-compiler",
+      "tangle-work-compiler"
     )
   )
 

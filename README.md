@@ -125,6 +125,10 @@ dependencies {
 
   // optional Compose support
   implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.12.0")
+
+  // WorkManager
+  api("com.rickbusarow.tangle:tangle-work-api:0.12.0")
+  anvil("com.rickbusarow.tangle:tangle-work-compiler:0.12.0")
 }
 ```
 
