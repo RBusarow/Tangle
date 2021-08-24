@@ -28,26 +28,10 @@ class MyWorker @AssistedInject constructor(
 }
 ```
 
-
-## Configuration
-
-Once you've added Tangle as a dependency, implementing [Worker] injection is easy.
-
-### 1. Annotate your ViewModels
-
-`ViewModel` injection is done through the `@VMInject` constructor annotation.
-
-```kotlin
-class MyViewModel @VMInject constructor(
-  val myRepository: MyRepository
-) : ViewModel() {
-  // ...
-}
-```
-
-### 2. Initialize TangleGraph and use TangleWorkerFactory in your WorkManager
-
 `TangleGraph` must be initialized as early as possible -- typically in `Application.onCreate()`.
+
+`TangleWorkerFactory` will then be automatically added to the application-scoped component.
+Use an instance of `TangleWorkerFactory` in your `WorkManager` configuration.
 
 ```kotlin
 import android.app.Application
