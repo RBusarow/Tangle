@@ -1,5 +1,6 @@
 name-template: '$RESOLVED_VERSION'
 tag-template: '$RESOLVED_VERSION'
+
 categories:
   - title: '🚀 Features'
     labels:
@@ -20,8 +21,11 @@ categories:
   - title: 'ℹ️ Website'
     labels:
       - 'documentation'
+
 change-template: '- $TITLE [@$AUTHOR](https://github.com/$AUTHOR) ([#$NUMBER](https://github.com/rbusarow/Tangle/pull/$NUMBER))'
+
 change-title-escapes: '\<*_&' # You can add # and @ to disable mentions, and add ` to disable code blocks.
+
 version-resolver:
   major:
     labels:
@@ -33,14 +37,12 @@ version-resolver:
     labels:
       - 'patch'
   default: patch
+
 template: |
   ## Changes
 
   $CHANGES
 
-  ## Contributors
-
-  $CONTRIBUTORS
 autolabeler:
   - label: 'documentation'
     files:
@@ -48,3 +50,6 @@ autolabeler:
   - label: 'dependencies'
     branch:
       - '/dependabot\/.+/'
+
+exclude-labels:
+  - no-changelog
