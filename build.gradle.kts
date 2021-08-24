@@ -256,3 +256,25 @@ val versionDocs by tasks.registering(Exec::class) {
   val version = project.extra.properties["VERSION_NAME"] as String
   commandLine("npm", "run", "docusaurus", "docs:version", version)
 }
+
+val updateWebsiteApiDocs by tasks.registering(Copy::class) {
+
+  doFirst {
+    delete(
+      fileTree("./website/static/api") {
+        exclude("**/styles/*")
+      }
+    )
+  }
+
+  dependsOn(tasks.findByName("knit"))
+
+  from(
+    fileTree("$buildDir/dokka/htmlMultiModule") {
+      exclude("**/styles/*")
+    }
+  )
+
+  into("./website/static/api")
+
+}
