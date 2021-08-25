@@ -26,6 +26,7 @@ import tangle.inject.TangleGraph
  * A [WorkerFactory] for Tangle.  This factory references the Dagger dependency graph
  * via the [TangleGraph] singleton, and uses it to generate injected [ListenableWorker] instances.
  *
+ * @sample tangle.work.samples.TangleWorkerFactorySample.tangleWorkerFactorySample
  * @since 0.12.0
  */
 class TangleWorkerFactory : WorkerFactory() {

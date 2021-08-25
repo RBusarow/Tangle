@@ -25,7 +25,7 @@ import kotlin.annotation.AnnotationTarget.CONSTRUCTOR
  * These ViewModels are scoped to the [TangleViewModelMapSubcomponent],
  * which can be accessed via the [tangleViewModel] delegate function.
  *
- * @sample samples.VMInjectSample.vmInjectSample
+ * @sample tangle.viewmodel.samples.VMInjectSample.vmInjectSample
  * @since 0.10.0
  */
 @Target(CONSTRUCTOR)
