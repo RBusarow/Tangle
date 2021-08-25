@@ -19,7 +19,6 @@ import com.android.build.gradle.BaseExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
-import org.gradle.kotlin.dsl.findByType
 
 public open class TanglePlugin : BasePlugin() {
 
@@ -30,7 +29,7 @@ public open class TanglePlugin : BasePlugin() {
     var hasAndroid = false
 
     target.pluginManager.withPlugin(ANVIL_ID) {
-      hasAndroid = target.extensions.findByType<BaseExtension>() != null
+      hasAndroid = target.extensions.findByType(BaseExtension::class.java) != null
 
       target.addImplementation("tangle-api")
     }
@@ -62,7 +61,7 @@ public open class TanglePlugin : BasePlugin() {
 
       if (extension.composeEnabled.get()) {
 
-        val composeEnabled = target.extensions.findByType<BaseExtension>()
+        val composeEnabled = target.extensions.findByType(BaseExtension::class.java)
           ?.buildFeatures
           ?.compose
           ?: false
@@ -82,20 +81,19 @@ public open class TanglePlugin : BasePlugin() {
   private fun Project.addAnvil(name: String) {
     dependencies.add(
       "anvil",
-      "$TANGLE_GROUP:$name:$TANGLE_VERSION"
+      "${BuildProperties.GROUP}:$name:${BuildProperties.VERSION}"
     )
   }
 
   private fun Project.addImplementation(name: String) {
     dependencies.add(
       "implementation",
-      "$TANGLE_GROUP:$name:$TANGLE_VERSION"
+      "${BuildProperties.GROUP}:$name:${BuildProperties.VERSION}"
     )
   }
 
   internal companion object {
-    const val TANGLE_GROUP = "com.rickbusarow.tangle"
-    const val TANGLE_VERSION = "0.12.0"
+
     const val EXTENSION_NAME = "tangle"
     const val KOTLIN_ANDROID_ID = "org.jetbrains.kotlin.android"
     const val ANVIL_ID = "com.squareup.anvil"
