@@ -18,4 +18,3 @@ package tangle.inject.test.utils
 import org.junit.Test
 
 typealias Sample = Test
-
