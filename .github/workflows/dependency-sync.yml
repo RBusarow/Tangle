@@ -21,7 +21,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-    if: github.actor == 'dependabot[bot]' || github.actor == 'dependabot-preview[bot]'
 
     steps:
 
@@ -49,12 +48,12 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      - name: Copy Dependabot dependencies to toml
+      - name: run dependencySync
         run: ./gradlew dependencySync --no-daemon
 
       # If the copy generated changes, commit and push those changes.
       - name: commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
-          commit_message: Update dependencies from dependabot
+          commit_message: sync dependency definitions
           commit_options: '--no-verify --signoff'
