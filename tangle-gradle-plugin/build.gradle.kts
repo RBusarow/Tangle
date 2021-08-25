@@ -193,5 +193,3 @@ tasks.withType<KotlinCompile>()
 
     dependsOn(generateBuildProperties)
   }
-
-
