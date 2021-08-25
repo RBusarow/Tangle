@@ -27,18 +27,18 @@ dependencies {
 
   testCompileOnly(libs.google.auto.service.processor)
 
+  testImplementation(libs.hermit.mockk)
+  testImplementation(libs.mockk)
+
   testImplementation(projects.tangleApi)
   testImplementation(projects.tangleCompiler)
   testImplementation(projects.tangleFragmentApi)
-  testImplementation(projects.tangleViewmodelApi)
-  testImplementation(projects.tangleTestUtils)
-
   testImplementation(projects.tangleFragmentCompiler)
-  testImplementation(projects.tangleWorkCompiler)
+  testImplementation(projects.tangleTestUtils)
+  testImplementation(projects.tangleTestUtilsAndroid)
+  testImplementation(projects.tangleViewmodelApi)
   testImplementation(projects.tangleViewmodelCompiler)
-
-  testImplementation(libs.mockk)
-  testImplementation(libs.hermit.mockk)
+  testImplementation(projects.tangleWorkCompiler)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()

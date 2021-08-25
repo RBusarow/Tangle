@@ -13,26 +13,29 @@
  * limitations under the License.
  */
 
-plugins {
-  androidLibrary
-  id("com.vanniktech.maven.publish")
-}
+package tangle.viewmodel.samples
 
-dependencies {
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
+import tangle.inject.TangleParam
+import tangle.inject.test.utils.MyRepository
+import tangle.inject.test.utils.Sample
+import tangle.viewmodel.VMInject
+import tangle.viewmodel.tangleViewModel
 
-  api(libs.androidx.annotations)
+class VMInjectSample {
 
-  testImplementation(projects.tangleTestUtils)
-  testImplementation(projects.tangleTestUtilsAndroid)
-}
+  @Sample
+  fun vmInjectSample() {
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
-  .configureEach {
+    class MyViewModel @VMInject constructor(
+      val repository: MyRepository,
+      @TangleParam("userId")
+      val userId: Int
+    ) : ViewModel()
 
-    kotlinOptions {
-
-      freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
-      )
+    class MyFragment : Fragment() {
+      val viewModel by tangleViewModel<MyViewModel>()
     }
   }
+}
