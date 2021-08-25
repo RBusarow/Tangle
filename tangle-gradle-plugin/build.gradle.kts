@@ -14,25 +14,12 @@
  */
 import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent
-
-buildscript {
-  repositories {
-    mavenCentral()
-    google()
-  }
-  dependencies {
-    classpath("com.android.tools.build:gradle:7.0.1")
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.10")
-    classpath("org.jetbrains.kotlinx:kotlinx-knit:0.3.0")
-    classpath("org.jmailen.gradle:kotlinter-gradle:3.4.5")
-  }
-}
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   id("java-gradle-plugin")
   kotlin("jvm")
   id("com.gradle.plugin-publish") version "0.15.0"
-  `kotlin-dsl`
   `maven-publish`
 }
 
@@ -63,7 +50,7 @@ kotlin {
 
 val ci = !System.getenv("CI").isNullOrBlank()
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
+tasks.withType<KotlinCompile>()
   .configureEach {
 
     doFirst {
@@ -159,3 +146,52 @@ tasks.create("setupPluginUploadFromEnvironment") {
     System.setProperty("gradle.publish.secret", secret)
   }
 }
+
+/*
+Adapted from Anvil:
+https://github.com/square/anvil/blob/main/gradle-plugin/generate_build_properties.gradle
+
+This pipes the current version and group from gradle.properties into generated source,
+so that the plugin always applies the correct artifacts.
+ */
+val generatedDirPath = "$buildDir/generated/sources/build-properties/kotlin/main"
+sourceSets {
+  main.configure {
+    java.srcDir(project.file(generatedDirPath))
+  }
+}
+
+val generateBuildProperties by tasks.registering {
+
+  val version = project.extra.properties["VERSION_NAME"] as String
+  val group = project.extra.properties["GROUP"] as String
+
+  val buildPropertiesDir = File(generatedDirPath)
+  val buildPropertiesFile = File(buildPropertiesDir, "BuildProperties.kt")
+
+  inputs.properties(mapOf("version" to version, "group" to group))
+  outputs.file(buildPropertiesFile)
+
+  doLast {
+
+    buildPropertiesDir.mkdirs()
+
+    buildPropertiesFile.writeText(
+      """package tangle.inject.gradle
+      |
+      |internal object BuildProperties {
+      |  const val VERSION = "$version"
+      |  const val GROUP = "$group"
+      |}
+    """.trimMargin()
+    )
+  }
+}
+
+tasks.withType<KotlinCompile>()
+  .configureEach {
+
+    dependsOn(generateBuildProperties)
+  }
+
+
