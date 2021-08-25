@@ -16,7 +16,6 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import io.gitlab.arturbosch.detekt.detekt
-import modulecheck.psi.internal.lines
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
 
@@ -289,17 +288,17 @@ allprojects {
   proj.tasks
     .withType<Delete>()
     .configureEach {
-    doLast {
+      doLast {
 
-      val subprojectDirs = proj.subprojects
-        .map { it.projectDir.path }
+        val subprojectDirs = proj.subprojects
+          .map { it.projectDir.path }
 
-      proj.projectDir.walkBottomUp()
-        .filter { it.isDirectory }
-        .filterNot { dir -> subprojectDirs.any { dir.path.startsWith(it) } }
-        .filterNot { it.path.contains(".gradle") }
-        .filter { it.listFiles()?.isEmpty() != false }
-        .forEach { it.deleteRecursively() }
+        proj.projectDir.walkBottomUp()
+          .filter { it.isDirectory }
+          .filterNot { dir -> subprojectDirs.any { dir.path.startsWith(it) } }
+          .filterNot { it.path.contains(".gradle") }
+          .filter { it.listFiles()?.isEmpty() != false }
+          .forEach { it.deleteRecursively() }
+      }
     }
-  }
 }
