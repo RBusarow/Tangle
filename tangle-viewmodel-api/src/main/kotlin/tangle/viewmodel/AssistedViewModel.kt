@@ -20,11 +20,15 @@ import androidx.activity.viewModels
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.savedstate.SavedStateRegistryOwner
 import tangle.inject.InternalTangleApi
 import tangle.viewmodel.internal.AssistedTangleViewModelFactory
 import tangle.viewmodel.internal.TangleViewModelFactory
 import kotlin.DeprecationLevel.ERROR
 import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 interface AssistedViewModel<T : ViewModel, F : Any>
 
@@ -41,20 +45,8 @@ public inline fun <reified VM, reified F : Any> Fragment.tangleViewModel(
   )
 }
 
-@Deprecated("no", level = ERROR)
-@OptIn(InternalTangleApi::class)
-public inline fun <reified VM> Fragment.tangleViewModel(): Lazy<VM>
-  where VM : ViewModel, VM : AssistedViewModel<VM, *> {
-  return lazy(mode = NONE) {
-    val viewModelFactory = TangleViewModelFactory(
-      owner = this,
-      defaultArgs = arguments,
-      defaultFactory = defaultViewModelProviderFactory
-    )
-
-    viewModels<VM>(factoryProducer = { viewModelFactory }).value
-  }
-}
+@Deprecated("no"/*, level = ERROR*/)
+public fun <VM : AssistedViewModel<*, *> > Fragment.tangleViewModel(): Lazy<VM>  = TODO()
 
 @OptIn(InternalTangleApi::class)
 public inline fun <reified VM, reified F : Any> ComponentActivity.tangleViewModel(

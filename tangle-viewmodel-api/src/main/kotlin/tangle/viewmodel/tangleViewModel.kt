@@ -26,6 +26,8 @@ import tangle.inject.InternalTangleApi
 import tangle.viewmodel.internal.AssistedTangleViewModelFactory
 import tangle.viewmodel.internal.TangleViewModelFactory
 import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.properties.ReadOnlyProperty
+import kotlin.reflect.KProperty
 
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.
@@ -38,16 +40,16 @@ import kotlin.LazyThreadSafetyMode.NONE
 public inline fun <reified VM : ViewModel> Fragment.tangleViewModel(
   savedStateRegistryOwner: SavedStateRegistryOwner = this,
   defaultFactory: ViewModelProvider.Factory = defaultViewModelProviderFactory
-): Lazy<VM> =
-  lazy(mode = NONE) {
-    val viewModelFactory = TangleViewModelFactory(
-      owner = savedStateRegistryOwner,
-      defaultArgs = arguments,
-      defaultFactory = defaultFactory
-    )
+): Lazy<VM> = lazy(mode = NONE) {
+  val viewModelFactory = TangleViewModelFactory(
+    owner = savedStateRegistryOwner,
+    defaultArgs = arguments,
+    defaultFactory = defaultFactory
+  )
 
-    viewModels<VM>(factoryProducer = { viewModelFactory }).value
-  }
+  viewModels<VM>(factoryProducer = { viewModelFactory }).value
+
+}
 
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.

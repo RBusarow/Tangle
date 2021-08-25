@@ -15,8 +15,30 @@
 
 package tangle.viewmodel
 
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModel
 import org.junit.jupiter.api.Assertions.*
 
 import tangle.inject.test.utils.BaseTest
+import tangle.viewmodel.Assisted.AF
 
 internal class DogFoodTest : BaseTest()
+
+class SimpleViewModel : ViewModel()
+
+class Assisted : ViewModel(), AssistedViewModel<Assisted, AF> {
+  interface AF {
+    fun create(): Assisted
+  }
+}
+
+class MyFragment : Fragment() {
+
+  val assisted: Assisted by tangleViewModel { create() }
+
+  val assisted2: Assisted by tangleViewModel() // should fail
+
+  val viewModel: SimpleViewModel by tangleViewModel() // should resolve
+
+  val viewModel2 by tangleViewModel<SimpleViewModel>()
+}
