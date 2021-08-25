@@ -21,9 +21,12 @@ plugins {
 
 dependencies {
 
+  kapt(libs.google.auto.service.processor)
+
   api(libs.anvil.compiler.api)
   api(libs.kotlin.compiler)
   api(libs.square.kotlinPoet)
+
   api(projects.tangleCompiler)
 
   compileOnly(libs.androidx.annotations)
@@ -38,7 +41,6 @@ dependencies {
   testImplementation(libs.bundles.kotest)
   testImplementation(libs.google.dagger.compiler)
   testImplementation(libs.kotlin.compile.testing)
-  kapt(libs.google.auto.service.processor)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
