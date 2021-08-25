@@ -22,6 +22,7 @@ import javax.inject.Qualifier
  * to Dagger's graph via Tangle.  The corresponding Worker can then be created
  * using [TangleWorkerFactory].
  *
+ * @sample tangle.work.samples.TangleWorkerSample.tangleWorkerSample
  * @since 0.12.0
  */
 @Target(AnnotationTarget.CLASS)

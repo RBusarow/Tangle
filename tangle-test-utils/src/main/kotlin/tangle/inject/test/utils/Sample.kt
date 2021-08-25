@@ -13,26 +13,9 @@
  * limitations under the License.
  */
 
-plugins {
-  androidLibrary
-  id("com.vanniktech.maven.publish")
-}
+package tangle.inject.test.utils
 
-dependencies {
+import org.junit.Test
 
-  api(libs.androidx.annotations)
+typealias Sample = Test
 
-  testImplementation(projects.tangleTestUtils)
-  testImplementation(projects.tangleTestUtilsAndroid)
-}
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
-  .configureEach {
-
-    kotlinOptions {
-
-      freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
-      )
-    }
-  }

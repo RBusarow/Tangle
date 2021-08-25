@@ -173,7 +173,7 @@ subprojects {
 
   val includeSubproject = when {
     path == ":tangle-test-utils" -> false
-    path.endsWith("samples") -> false
+    path == ":tangle-test-utils-android" -> false
     path.endsWith("tests") -> false
     path.endsWith("compiler") -> false
     else -> File("$projectDir/src").exists()
@@ -192,9 +192,11 @@ subprojects {
 
         getByName("main") {
 
-          if (File("${proj.projectDir}/samples").exists()) {
-            samples.setFrom("${proj.projectDir}/samples")
-          }
+          samples.setFrom(
+            fileTree(proj.projectDir) {
+              include("**/samples/**")
+            }
+          )
 
           if (File("${proj.projectDir}/README.md").exists()) {
             includes.from(files("${proj.projectDir}/README.md"))
