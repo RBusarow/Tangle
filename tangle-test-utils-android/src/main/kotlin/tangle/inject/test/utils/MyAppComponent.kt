@@ -13,26 +13,30 @@
  * limitations under the License.
  */
 
-plugins {
-  androidLibrary
-  id("com.vanniktech.maven.publish")
-}
+@file:Suppress("EXPERIMENTAL_API_USAGE")
 
-dependencies {
+package tangle.inject.test.utils
 
-  api(libs.androidx.annotations)
+import android.app.Application
+import dagger.BindsInstance
+import dagger.Component
 
-  testImplementation(projects.tangleTestUtils)
-  testImplementation(projects.tangleTestUtilsAndroid)
-}
+@Component
+interface MyAppComponent {
+  @Component.Factory
+  fun interface Factory {
 
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
-  .configureEach {
-
-    kotlinOptions {
-
-      freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
-      )
-    }
+    fun create(@BindsInstance application: Application): MyAppComponent
   }
+}
+
+object DaggerAppComponent : MyAppComponent {
+
+  fun factory() = MyAppComponent.Factory {
+    DaggerAppComponent
+  }
+}
+
+interface MyApplicationComponent {
+  fun inject(application: Application)
+}

@@ -24,7 +24,7 @@ import androidx.annotation.RestrictTo.Scope.LIBRARY_GROUP
  *
  * This should be initialized as soon as possible after initializing the AppComponent.
  *
- * @sample samples.TangleGraphSample.initializeTangleGraph
+ * @sample tangle.inject.samples.TangleGraphSample.tangleGraphSample
  * @since 0.10.0
  */
 public object TangleGraph {
@@ -38,7 +38,7 @@ public object TangleGraph {
    *
    * This should be initialized as soon as possible after initializing the AppComponent.
    *
-   * @sample samples.TangleGraphSample.initializeTangleGraph
+   * @sample tangle.inject.samples.TangleGraphSample.tangleGraphSample
    * @param component the application-scoped Dagger component
    * @since 0.10.0
    */
