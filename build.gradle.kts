@@ -16,6 +16,7 @@
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 import io.gitlab.arturbosch.detekt.detekt
+import modulecheck.psi.internal.lines
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
 
@@ -277,4 +278,28 @@ val updateWebsiteApiDocs by tasks.registering(Copy::class) {
   )
 
   into("./website/static/api")
+}
+
+// Delete any empty directories while cleaning.
+// This is mostly just because IntelliJ/AS likes to randomly create both `/java` and `/kotlin`
+// source directories and that annoys me.
+allprojects {
+  val proj = this@allprojects
+
+  proj.tasks
+    .withType<Delete>()
+    .configureEach {
+    doLast {
+
+      val subprojectDirs = proj.subprojects
+        .map { it.projectDir.path }
+
+      proj.projectDir.walkBottomUp()
+        .filter { it.isDirectory }
+        .filterNot { dir -> subprojectDirs.any { dir.path.startsWith(it) } }
+        .filterNot { it.path.contains(".gradle") }
+        .filter { it.listFiles()?.isEmpty() != false }
+        .forEach { it.deleteRecursively() }
+    }
+  }
 }
