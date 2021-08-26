@@ -93,9 +93,15 @@ plugins {
 
 // optional
 tangle {
-  activitiesEnabled.set(true) // default is false
-  composeEnabled.set(true) // default is false
-  fragmentsEnabled.set(true) // default is false
+  fragmentsEnabled = true // default is true
+  workEnabled = true // default is true
+
+  viewModelOptions {
+    enabled = true // default is true
+    activitiesEnabled = true // default is true
+    composeEnabled = true // default is false
+    fragmentsEnabled = true // default is true
+  }
 }
 ```
 
@@ -195,7 +201,7 @@ navigation/viewModel artifact. It will scope the ViewModel to the composable's `
 @Composable
 fun MyComposable(
   navController: NavController,
-  viewModel: MyViewModel = tangle()
+  viewModel: MyViewModel = tangleViewModel()
 ) {
   // ...
 }
