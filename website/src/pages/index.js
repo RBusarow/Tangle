@@ -50,9 +50,18 @@ fun MyComposable(
 ) { /* ... */ }
 
 class MyFragment : Fragment() {
-  val viewModel: MyViewModel by tangleViewModel()
-}`
-    ),
+   val viewModel: MyViewModel by tangleViewModel()
+ }`
+     ),
+     description: (
+       <>
+         Inject <code>ViewModel</code>s, including scoped <code>SavedStateHandle</code> arguments.
+         Use the <code>TangleParam</code> annotation to automatically extract
+         navigation/<code>Bundle</code> arguments and inject them explicitly.
+       </>
+     ),
+     dest: "docs/viewModels/viewModels"
+   },
   {
     title: "WorkManager",
     code: (
