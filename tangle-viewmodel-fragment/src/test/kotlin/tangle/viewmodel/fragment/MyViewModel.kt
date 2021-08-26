@@ -13,23 +13,24 @@
  * limitations under the License.
  */
 
-package tangle.viewmodel.samples
+package tangle.viewmodel.fragment
 
-import androidx.activity.ComponentActivity
 import androidx.lifecycle.ViewModel
-import tangle.inject.test.utils.Sample
+import tangle.viewmodel.AssistedViewModel
+import tangle.viewmodel.VMAssisted
 import tangle.viewmodel.VMInject
-import tangle.viewmodel.activity.tangleViewModel
-
-class TangleActivityDelegateSample {
-
-  @Sample
-  fun byTangleViewModelSample() {
-    class MyActivity : ComponentActivity() {
-
-      val viewModel: MyViewModel by tangleViewModel()
-    }
-  }
-}
+import tangle.viewmodel.VMInjectFactory
+import tangle.viewmodel.fragment.MyAssistedViewModel.MyFactory
 
 class MyViewModel @VMInject constructor() : ViewModel()
+
+class MyAssistedViewModel @VMInject constructor(
+  @VMAssisted val name: String
+) : ViewModel(),
+    AssistedViewModel< MyFactory> {
+
+  @VMInjectFactory
+  interface MyFactory {
+    fun create(name: String): MyAssistedViewModel
+  }
+}

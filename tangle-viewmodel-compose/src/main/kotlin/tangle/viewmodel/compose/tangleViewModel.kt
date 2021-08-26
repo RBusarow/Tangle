@@ -86,12 +86,12 @@ public inline fun <reified VM : ViewModel> tangleViewModel(
  */
 @Composable
 @OptIn(InternalTangleApi::class)
-public inline fun <reified VM, reified F : Any> tangleViewModel(
+public inline fun <reified VM, reified F : Any> tangleAssisted(
   viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
     "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
   },
   noinline factory: F.() -> VM
-): VM where VM : AssistedViewModel<VM, F>, VM : ViewModel {
+): VM where VM : AssistedViewModel<F>, VM : ViewModel {
 
   return if (viewModelStoreOwner is SavedStateRegistryOwner) {
     viewModel(
@@ -99,7 +99,7 @@ public inline fun <reified VM, reified F : Any> tangleViewModel(
         owner = viewModelStoreOwner,
         defaultArgs = viewModelStoreOwner.navigationArgumentsOrNull(),
         vmClass = VM::class,
-        fClass = F::class,
+        factoryClass = F::class,
         factory = factory
       )
     )
@@ -110,7 +110,7 @@ public inline fun <reified VM, reified F : Any> tangleViewModel(
 
 @Deprecated("no", level = ERROR)
 @OptIn(InternalTangleApi::class)
-public inline fun <reified VM : AssistedViewModel<VM, *>> tangleViewModel(
+public inline fun <reified VM : AssistedViewModel<*>> tangleViewModel(
   // viewModelStoreOwner: ViewModelStoreOwner = checkNotNull(LocalViewModelStoreOwner.current) {
   //   "No ViewModelStoreOwner was provided via LocalViewModelStoreOwner"
   // }

@@ -13,12 +13,18 @@
  * limitations under the License.
  */
 
-package tangle.viewmodel.samples
+package tangle.viewmodel.fragment.samples
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import tangle.inject.test.utils.Sample
+import tangle.viewmodel.AssistedViewModel
+import tangle.viewmodel.VMAssisted
 import tangle.viewmodel.VMInject
+import tangle.viewmodel.VMInjectFactory
+import tangle.viewmodel.fragment.MyViewModel
+import tangle.viewmodel.fragment.samples.MyAssistedViewModel2.MyFactory2
+import tangle.viewmodel.fragment.tangleAssisted
 import tangle.viewmodel.fragment.tangleViewModel
 
 class TangleFragmentDelegateSample {
@@ -30,6 +36,27 @@ class TangleFragmentDelegateSample {
       val viewModel: MyViewModel by tangleViewModel<MyViewModel>()
     }
   }
+
+  @Sample
+  fun byTangleAssistedSample() {
+    class MyFragment : Fragment() {
+
+      val viewModel: MyAssistedViewModel2 by tangleAssisted {
+        create("name")
+      }
+    }
+  }
 }
 
 class MyViewModel @VMInject constructor() : ViewModel()
+
+class MyAssistedViewModel2 @VMInject constructor(
+  @VMAssisted val name: String
+) : ViewModel(),
+    AssistedViewModel<MyFactory2> {
+
+  @VMInjectFactory
+  interface MyFactory2 {
+    fun create(name: String): MyAssistedViewModel2
+  }
+}

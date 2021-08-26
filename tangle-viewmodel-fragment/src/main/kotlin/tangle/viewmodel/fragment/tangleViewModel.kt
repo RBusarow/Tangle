@@ -25,11 +25,13 @@ import tangle.inject.InternalTangleApi
 import tangle.viewmodel.AssistedViewModel
 import tangle.viewmodel.internal.AssistedTangleViewModelFactory
 import tangle.viewmodel.internal.TangleViewModelFactory
+import kotlin.DeprecationLevel.ERROR
+import kotlin.experimental.ExperimentalTypeInference
 
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.
  *
- * @sample tangle.viewmodel.samples.TangleFragmentDelegateSample.byTangleViewModelSample
+ * @sample tangle.viewmodel.fragment.samples.TangleFragmentDelegateSample.byTangleViewModelSample
  * @return lazy [ViewModel] instance of the specified type, injected by Tangle/Anvil/Dagger
  * @since 0.11.0
  */
@@ -48,11 +50,19 @@ public inline fun <reified VM : ViewModel> Fragment.tangleViewModel(
   return ViewModelLazy(VM::class, { viewModelStore }, { viewModelFactory })
 }
 
-@OptIn(InternalTangleApi::class)
-public inline fun <reified VM, reified F : Any> Fragment.tangleViewModel(
+/**
+ * Equivalent to the Androidx ktx `by viewModels()` delegate.
+ *
+ * @sample tangle.viewmodel.fragment.samples.TangleFragmentDelegateSample.byTangleAssistedSample
+ * @return lazy [ViewModel] instance of the specified type, injected by Tangle/Anvil/Dagger
+ * @since 0.12.0
+ */
+@OverloadResolutionByLambdaReturnType
+@OptIn(InternalTangleApi::class, ExperimentalTypeInference::class)
+public inline fun <reified VM, reified F : Any> Fragment.tangleAssisted(
   savedStateRegistryOwner: SavedStateRegistryOwner = this,
   noinline factory: F.() -> VM
-): Lazy<VM> where VM : AssistedViewModel<VM, F>, VM : ViewModel = viewModels {
+): Lazy<VM> where VM : AssistedViewModel<F>, VM : ViewModel = viewModels {
   AssistedTangleViewModelFactory(
     owner = savedStateRegistryOwner,
     defaultArgs = arguments,
@@ -62,6 +72,10 @@ public inline fun <reified VM, reified F : Any> Fragment.tangleViewModel(
   )
 }
 
-@Deprecated("no"/*, level = ERROR*/)
-public fun <VM : AssistedViewModel<*, *>> Fragment.tangleViewModel(
-): Lazy<VM> = TODO()
+@Deprecated(
+  "AssistedViewModel injection requires a lambda argument.  ViewModel injection without a factory must specify the type, such as `tangleAssisted<MyViewModel>().",
+  level = ERROR,
+  replaceWith = ReplaceWith("tangleAssisted<VM> { TODO() }")
+)
+public fun <VM : AssistedViewModel<*>> Fragment.tangleViewModel(
+): Lazy<VM> = throw UnsupportedOperationException("")

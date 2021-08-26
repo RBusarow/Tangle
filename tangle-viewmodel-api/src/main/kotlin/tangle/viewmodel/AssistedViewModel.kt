@@ -17,4 +17,4 @@ package tangle.viewmodel
 
 import androidx.lifecycle.ViewModel
 
-interface AssistedViewModel<T : ViewModel, F : Any>
+interface AssistedViewModel< F : Any>

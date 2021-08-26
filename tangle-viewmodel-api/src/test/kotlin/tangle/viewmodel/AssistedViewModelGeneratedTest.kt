@@ -15,12 +15,14 @@
 
 package tangle.viewmodel
 
+import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.TestFactory
 import tangle.inject.test.utils.BaseTest
 import tangle.inject.test.utils.factoryClass
 import tangle.inject.test.utils.myViewModelClass
+import javax.inject.Provider
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.jvm.javaMethod
 
@@ -61,6 +63,53 @@ class AssistedViewModelGeneratedTest : BaseTest() {
           .javaMethod!!
 
         createFunction.invoke(factoryInstance, "name")::class.java shouldBe myViewModelClass
+      }
+    }
+
+  @TestFactory
+  fun `factory impl is generated for mixed arguments`() =
+    test {
+      compile(
+        //language=kotlin
+        """
+      package tangle.inject.tests
+
+      import androidx.lifecycle.SavedStateHandle
+      import androidx.lifecycle.ViewModel
+      import tangle.inject.TangleParam
+      import tangle.viewmodel.*
+      import javax.inject.Inject
+
+      class MyViewModel @VMInject constructor(
+        val data: List<Int>,
+        @TangleParam("id") val id: Int,
+        @VMAssisted val name: String
+      ) : ViewModel() {
+
+        @VMInjectFactory
+        interface Factory {
+          fun create(name: String): MyViewModel
+        }
+      }
+     """
+      ) {
+        val factoryClass = myViewModelClass.factoryClass()
+
+        val constructor = factoryClass.declaredConstructors.single()
+        val factoryInstance = constructor.newInstance(
+          Provider { listOf<Int>() },
+          Provider { SavedStateHandle(mapOf("id" to 13)) }
+        )
+
+        val createFunction = factoryClass.kotlin
+          .memberFunctions
+          .single { it.name == "create" }
+          .javaMethod!!
+
+        createFunction.invoke(
+          factoryInstance,
+          "name"
+        )::class.java shouldBe myViewModelClass
       }
     }
 

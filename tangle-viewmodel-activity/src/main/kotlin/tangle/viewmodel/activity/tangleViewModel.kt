@@ -30,7 +30,7 @@ import kotlin.DeprecationLevel.ERROR
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.
  *
- * @sample tangle.viewmodel.samples.TangleFragmentDelegateSample.byTangleViewModelSample
+ * @sample tangle.viewmodel.activity.samples.TangleActivityDelegateSample.byTangleViewModelSample
  * @return lazy [ViewModel] instance of the specified type, injected by Tangle/Anvil/Dagger
  * @since 0.11.0
  */
@@ -49,22 +49,32 @@ public inline fun <reified VM : ViewModel> ComponentActivity.tangleViewModel(
   return ViewModelLazy(VM::class, { viewModelStore }, { viewModelFactory })
 }
 
+/**
+ * Equivalent to the Androidx ktx `by viewModels()` delegate.
+ *
+ * @sample tangle.viewmodel.activity.samples.TangleActivityDelegateSample.byTangleAssistedSample
+ * @return lazy [ViewModel] instance of the specified type, injected by Tangle/Anvil/Dagger
+ * @since 0.12.0
+ */
 @OptIn(InternalTangleApi::class)
-public inline fun <reified VM, reified F : Any> ComponentActivity.tangleViewModel(
+public inline fun <reified VM, reified F : Any> ComponentActivity.tangleAssisted(
   noinline factory: F.() -> VM
-): Lazy<VM> where VM : AssistedViewModel<VM, F>, VM : ViewModel = viewModels {
+): Lazy<VM> where VM : AssistedViewModel<F>, VM : ViewModel = viewModels {
   AssistedTangleViewModelFactory(
     owner = this,
     defaultArgs = intent.extras,
     vmClass = VM::class,
-    fClass = F::class,
+    factoryClass = F::class,
     factory = factory
   )
 }
 
-@Deprecated("no", level = ERROR)
-@OptIn(InternalTangleApi::class)
+@Deprecated(
+  "AssistedViewModel injection requires a lambda argument.  ViewModel injection without a factory must specify the type, such as `tangleAssisted<MyViewModel>().",
+  level = ERROR,
+  replaceWith = ReplaceWith("tangleAssisted<VM> { TODO() }")
+)
 public inline fun <reified VM> ComponentActivity.tangleViewModel(): VM
-  where VM : AssistedViewModel<VM, *>, VM : ViewModel {
+  where VM : AssistedViewModel<*>, VM : ViewModel {
   throw UnsupportedOperationException("")
 }
