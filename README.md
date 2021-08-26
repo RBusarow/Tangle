@@ -11,201 +11,67 @@ better flexibility of Anvil.
 Since Tangle is an extension upon Anvil, its code generation will be applied to **Kotlin** files
 only.
 
+### Please see [the project website](https://rbusarow.github.io/Tangle/) for full documentation.
+
+## Features
+
+#### ViewModel Injection
+
 ```kotlin
-@ContributesViewModel(AppScope::class)
 class MyViewModel @VMInject constructor(
-  val myRepository: MyRepository,
-  val savedStateHandle: SavedStateHandle
-) : ViewModel() {
-  // ...
-}
-
-class MyFragment : Fragment() {
-
-  // lazily service-located, just like `by viewModels` or `by hiltViewModel`
-  val myViewModel: MyViewModel by tangle()
-}
-```
-
-____
-<!--- TOC -->
-
-* [Config](#config)
-  * [Gradle plugin](#gradle-plugin)
-  * [Explicit dependencies](#explicit-dependencies)
-* [SavedStateHandle injection](#savedstatehandle-injection)
-* [Compose support](#compose-support)
-* [License](#license)
-
-<!--- END -->
-
-## Config
-
-The `TangleComponents` holder needs to be initialized with an application-scoped Dagger Component in
-order to complete the graph.
-
-```kotlin
-class MyApplication : Application() {
-
-  override fun onCreate() {
-    super.onCreate()
-
-    val myAppComponent = DaggerAppComponent.factory()
-      .create(this)
-
-    TangleComponents.add(myAppComponent)
-  }
-}
-```
-
-### Gradle plugin
-
-The simple way to apply Tangle is to just apply the gradle plugin. It will automatically add the
-dependencies and perform some basic validation of your module's configuration.
-
-```kotlin
-// settings.gradle.kts
-
-pluginManagement {
-  repositories {
-    gradlePluginPortal()
-  }
-}
-```
-
-```kotlin
-// top-level build.gradle.kts
-
-plugins {
-  id("com.rickbusarow.tangle") version "0.12.0"
-}
-```
-
-```kotlin
-// any Android module's build.gradle.kts
-
-plugins {
-  id("android-library") // or application, etc.
-  kotlin("android")
-  id("com.squareup.anvil")
-  id("com.rickbusarow.tangle")
-}
-
-// optional
-tangle {
-  fragmentsEnabled = true // default is true
-  workEnabled = true // default is true
-
-  viewModelOptions {
-    enabled = true // default is true
-    activitiesEnabled = true // default is true
-    composeEnabled = true // default is false
-    fragmentsEnabled = true // default is true
-  }
-}
-```
-
-### Explicit dependencies
-
-You can also just add dependencies yourself, without applying the plugin.
-
-Note that `tangle-api` is an Android library, and `tangle-compiler` generates Android-specific code,
-so they should only be added to Android modules.
-
-```kotlin
-// any Android module's build.gradle.kts
-
-plugins {
-  id("android-library") // or application, etc.
-  kotlin("android")
-  id("com.squareup.anvil")
-}
-
-dependencies {
-
-  // Fragments
-  api("com.rickbusarow.tangle:tangle-fragment-api:0.12.0")
-  anvil("com.rickbusarow.tangle:tangle-fragment-compiler:0.12.0")
-
-  // ViewModels
-  api("com.rickbusarow.tangle:tangle-viewmodel-api:0.12.0")
-  anvil("com.rickbusarow.tangle:tangle-viewmodel-compiler:0.12.0")
-
-  // optional Activity ViewModel support
-  implementation("com.rickbusarow.tangle:tangle-viewmodel-activity:0.12.0")
-
-  // optional Compose ViewModel support
-  implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.12.0")
-
-  // optional Fragment ViewModel support
-  implementation("com.rickbusarow.tangle:tangle-viewmodel-fragment:0.12.0")
-
-  // WorkManager
-  api("com.rickbusarow.tangle:tangle-work-api:0.12.0")
-  anvil("com.rickbusarow.tangle:tangle-work-compiler:0.12.0")
-}
-```
-
-## SavedStateHandle injection
-
-Tangle supports injecting [SavedStateHandle] into ViewModel constructors, where
-the `SavedStateHandle` is provided by the ViewModel's owning `Fragment`/`Activity`
-/`NavBackStackEntry`.
-
-In addition to or in lieu of `SavedStateHandle`, Tangle can automatically extract arguments from
-the `SavedStateHandle` and inject them into the constructor, through use of
-the `FromSavedStateHandle` annotation.
-
-If the constructor argument's type is not nullable, then Tangle will assert that the argument is in
-the bundle while creating the ViewModel.
-
-If the argument is marked as nullable, then Tangle will gracefully handle a missing argument and
-just inject `null`.
-
-Given this code:
-
-```kotlin
-@ContributesViewModel(AppScope::class)
-class MyViewModel @VMInject constructor(
-  @FromSavedState("userId")
-  val userId: String,
-  @FromSavedState("address")
-  val addressOrNull: String?
+  val repository: MyRepository,
+  @TangleParam("userId") // pulls the "userId" argument out of SavedStateHandle
+  val userId: String
 ) : ViewModel()
-```
 
-Tangle will generate this Provider:
-
-```kotlin
-public class MyViewModel_Provider @Inject constructor(
-  private val savedStateHandle: Provider<SavedStateHandle>
-) : Provider<MyViewModel> {
-  public override fun `get`(): MyViewModel {
-    val userId = savedStateHandle.get().get<String>("userId")
-    checkNotNull(userId) {
-      "Required parameter with name `userId` " +
-      "and type `kotlin.String` is missing from SavedStateHandle."
-    }
-    val addressOrNull = savedStateHandle.get().get<String?>("address")
-    return MyViewModel(userId, addressOrNull, savedStateHandle.get())
-  }
-}
-```
-
-## Compose support
-
-Tangle supports ViewModel "injection" in composables in a manner very similar to Hilt's
-navigation/viewModel artifact. It will scope the ViewModel to the composable's `NavBackStackEntry`.
-
-```kotlin
 @Composable
 fun MyComposable(
   navController: NavController,
   viewModel: MyViewModel = tangleViewModel()
-) {
-  // ...
+) { /* ... */ }
+
+class MyFragment : Fragment() {
+  val viewModel: MyViewModel by tangleViewModel()
 }
 ```
+Inject ViewModels, including scoped `SavedStateHandle` arguments. Use the `@TangleParam` annotation to automatically extract navigation/Bundle arguments and inject them directly. [read more](https://rbusarow.github.io/Tangle/docs/viewModels/viewModels)
+
+#### Fragment Injection with Bundle arguments
+
+```kotlin
+@ContributesFragment(AppScope::class)
+class MyFragment @FragmentInject constructor(
+  val repository: MyRepository
+) : Fragment() {
+
+  val name: String by arg("name")
+
+  @FragmentInjectFactory
+  interface Factory {
+    fun create(
+      @TangleParam("name") name: String
+    ): MyFragment
+  }
+}
+```
+
+Use constructor injection in Fragments, with optional AssistedInject-like factories for type-safe `Bundle` arguments. Bindings are created automatically. [read more](https://rbusarow.github.io/Tangle/docs/next/fragments/fragments)
+
+#### Worker Injection
+
+```kotlin
+@TangleWorker
+class MyWorker @AssistedInject constructor(
+  @Assisted context: Context,
+  @Assisted params: WorkerParameters
+) : CoroutineWorker(context,params) {
+  override suspend fun doWork(): Result {
+    /* ... */
+  }
+}
+```
+
+Use Dagger's `@AssistedInject` and `@Assisted` annotations and `@TangleWorker` to inject any `ListenableWorker`. [read more](https://rbusarow.github.io/Tangle/docs/next/workManager/workManager)
 
 ## License
 
