@@ -65,9 +65,11 @@ include(
   ":tangle-gradle-plugin",
   ":tangle-test-utils",
   ":tangle-test-utils-android",
+  ":tangle-viewmodel-activity",
   ":tangle-viewmodel-api",
   ":tangle-viewmodel-compiler",
   ":tangle-viewmodel-compose",
+  ":tangle-viewmodel-fragment",
   ":tangle-work-api",
   ":tangle-work-compiler"
 )
