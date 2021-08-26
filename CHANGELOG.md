@@ -1,4 +1,4 @@
-# 0.12.0
+# 0.12.0 - Worker Injection
 
 ### 🚀 Features
 
@@ -56,8 +56,6 @@ class MyWorker @AssistedInject constructor(
 
 # 0.11.4
 
-### Changes
-
 ### 🐛 Bug Fixes
 
 - fix ViewModel duplicate bindings ([#127](https://github.com/rbusarow/Tangle/pull/127))
@@ -69,9 +67,6 @@ class MyWorker @AssistedInject constructor(
 
 - create `release.sh` ([#126](https://github.com/rbusarow/Tangle/pull/126))
 
-### Contributors
-
-[@RBusarow](https://github.com/RBusarow)
 
 # 0.11.2
 
@@ -91,15 +86,7 @@ class MyWorker @AssistedInject constructor(
 - update version to 0.11.2 ([#119](https://github.com/rbusarow/Tangle/pull/119))
 - update changelogs ([#117](https://github.com/rbusarow/Tangle/pull/117))
 
-### Contributors
-
-[@RBusarow](https://github.com/RBusarow)
-
 # 0.11.1
-
-### Changes
-
-- create 0.11.1 version for website docs [#111](https://github.com/rbusarow/Tangle/pull/111)
 
 ### 🐛 Bug Fixes
 
@@ -112,7 +99,7 @@ class MyWorker @AssistedInject constructor(
 - update version to 0.11.1 [#109](https://github.com/rbusarow/Tangle/pull/109)
 - add release-drafter [#106](https://github.com/rbusarow/Tangle/pull/106)
 
-# 0.11.0
+# 0.11.0 - Fragment Injection
 
 - add `require` function which throws
   TangleCompilationException [#6](https://github.com/rbusarow/Tangle/pull/6)
@@ -124,7 +111,7 @@ class MyWorker @AssistedInject constructor(
 - automatically deploy website for every merge into
   main [#49](https://github.com/rbusarow/Tangle/pull/49)
 
-# 0.10.0
+# 0.10.0 - ViewModel Injection
 
 Initial release
 

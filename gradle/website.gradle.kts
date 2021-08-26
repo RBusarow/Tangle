@@ -49,7 +49,8 @@ fun File.updateTangleVersionRef(version: String) {
 
   val group = project.extra.properties["GROUP"] as String
 
-  val pluginRegex = """^([^'"\n]*['"])$group[^'"]*(['"].*) version (['"])[^'"]*(['"])${'$'}""".toRegex()
+  val pluginRegex =
+    """^([^'"\n]*['"])$group[^'"]*(['"].*) version (['"])[^'"]*(['"])${'$'}""".toRegex()
   val moduleRegex = """^([^'"\n]*['"])$group:([^:]*):[^'"]*(['"].*)${'$'}""".toRegex()
 
   val newText = readText()
@@ -108,4 +109,21 @@ val updateWebsiteApiDocs by tasks.registering(Copy::class) {
 val updateWebsiteChangelog by tasks.registering(Copy::class) {
   from("CHANGELOG.md")
   into("./website/src/pages")
+
+  doLast {
+
+    // add one hashmark to each header, because GitHub and Docusaurus render them differently
+    val changelog = File("./website/src/pages/CHANGELOG.md")
+
+    val newText = changelog.readText()
+      .lines()
+      .joinToString("\n") { line ->
+        line.replace("^(#+) (.*)".toRegex()) { matchResult ->
+          val (hashes, text) = matchResult.destructured
+
+          "$hashes# $text"
+        }
+      }
+    changelog.writeText(newText)
+  }
 }
