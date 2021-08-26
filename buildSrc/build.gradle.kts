@@ -32,7 +32,6 @@ dependencies {
   implementation(libs.kotlin.stdlib.jdk8)
   implementation(libs.kotlin.annotation.processing)
   implementation(libs.kotlin.compiler)
-  // implementation(libs.kotlin.gradle.plugin)
   implementation(libs.kotlin.gradle.pluginApi)
 
   implementation(kotlin("gradle-plugin", version = kotlinVersion))
@@ -42,6 +41,9 @@ dependencies {
   implementation(kotlin("stdlib-jdk8", version = kotlinVersion))
   implementation(kotlin("reflect", version = kotlinVersion))
   implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlinVersion")
+
+  implementation(libs.dokka.gradle)
+  implementation(libs.kotlinx.knit.gradle)
 
   implementation(libs.android.gradle)
 
