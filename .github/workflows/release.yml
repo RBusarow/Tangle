@@ -39,6 +39,9 @@ jobs:
       - name: Create new website docs version
         run: ./gradlew versionDocs
 
+      - name: Set all versions in the root README to the new version
+        run: ./gradlew updateProjectReadmeVersionRefs
+
       - name: Create Pull Request
         id: cpr
         uses: peter-evans/create-pull-request@v3

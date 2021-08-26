@@ -8,12 +8,11 @@ coroutines = "1.4.3"
 dependencyAnalysis = "0.63.0"
 dispatch = "1.0.0-beta09"
 detekt = "1.17.0"
-dokka = "1.4.10"
+dokka = "1.5.0"
 gradleDoctor = "0.7.0"
 groovy = "3.0.8"
 hermit = "0.9.5"
 jUnit = "5.7.2"
-knit = "0.2.3"
 kotest = "4.6.2"
 kotlin = "1.5.21"
 kotlinx-coroutines = "1.5.1"
@@ -34,7 +33,15 @@ androidx-test-espresso = "3.4.0"
 androidx-test-version = "1.4.0"
 androidx-work-version = "2.5.0"
 
+kotlinx-atomicfu = "0.16.3"
+kotlinx-knit = "0.3.0"
+
 google-dagger = "2.38.1"
+
+[plugins]
+
+dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
+kotlinx-knit = { id = "kotlinx-knit", version.ref = "kotlinx-knit" }
 
 [libraries]
 android-gradle = "com.android.tools.build:gradle:7.0.1"
@@ -114,6 +121,8 @@ anvil-gradle = { module = "com.squareup.anvil:gradle-plugin", version.ref = "anv
 codehaus-groovy-core = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
 codehaus-groovy-xml = { module = "org.codehaus.groovy:groovy-xml", version.ref = "groovy" }
 
+dokka-gradle = { module = "org.jetbrains.dokka:dokka-gradle-plugin", version.ref = "dokka" }
+
 google-accompanist-coil = "com.google.accompanist:accompanist-coil:0.15.0"
 
 google-auto-common = "com.google.auto:auto-common:1.1.2"
@@ -163,13 +172,14 @@ kotlin-compile-testing = "com.github.tschuchortdev:kotlin-compile-testing:1.4.3"
 
 kotlinter = "org.jmailen.gradle:kotlinter-gradle:3.4.5"
 
-kotlinx-atomicfu = "org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.16.3"
+kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu-gradle-plugin", version.ref = "kotlinx-atomicfu" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-core = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-jdk8 = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-jdk8", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-jvm = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm", version.ref = "kotlinx-coroutines" }
 kotlinx-coroutines-test = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-test", version.ref = "kotlinx-coroutines" }
-kotlinx-knit-test = "org.jetbrains.kotlinx:kotlinx-knit-test:0.3.0"
+kotlinx-knit-gradle = { module = "org.jetbrains.kotlinx:kotlinx-knit", version.ref = "kotlinx-knit" }
+kotlinx-knit-test = { module = "org.jetbrains.kotlinx:kotlinx-knit-test", version.ref = "kotlinx-knit" }
 
 mockk = "io.mockk:mockk:1.12.0"
 
