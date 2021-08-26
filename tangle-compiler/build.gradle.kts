@@ -25,7 +25,6 @@ dependencies {
   api(libs.square.kotlinPoet)
 
   compileOnly(libs.androidx.annotations)
-  compileOnly(libs.google.auto.service.processor)
 
   implementation(libs.anvil.annotations)
   implementation(libs.anvil.compiler.utils)

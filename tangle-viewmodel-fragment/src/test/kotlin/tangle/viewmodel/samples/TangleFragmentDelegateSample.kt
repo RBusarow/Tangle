@@ -27,7 +27,7 @@ class TangleFragmentDelegateSample {
   fun byTangleViewModelSample() {
     class MyFragment : Fragment() {
 
-      val viewModel: MyViewModel by tangleViewModel()
+      val viewModel: MyViewModel by tangleViewModel<MyViewModel>()
     }
   }
 }

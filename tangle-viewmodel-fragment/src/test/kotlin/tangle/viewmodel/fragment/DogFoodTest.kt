@@ -13,14 +13,12 @@
  * limitations under the License.
  */
 
-package tangle.viewmodel
+package tangle.viewmodel.fragment
 
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import org.junit.jupiter.api.Assertions.*
-
 import tangle.inject.test.utils.BaseTest
-import tangle.viewmodel.Assisted.AF
+import tangle.viewmodel.AssistedViewModel
+import tangle.viewmodel.fragment.Assisted.AF
 
 internal class DogFoodTest : BaseTest()
 
@@ -32,6 +30,7 @@ class Assisted : ViewModel(), AssistedViewModel<Assisted, AF> {
   }
 }
 
+/*
 class MyFragment : Fragment() {
 
   val assisted: Assisted by tangleViewModel { create() }
@@ -40,5 +39,7 @@ class MyFragment : Fragment() {
 
   val viewModel: SimpleViewModel by tangleViewModel() // should resolve
 
-  val viewModel2 by tangleViewModel<SimpleViewModel>()
+  val viewModel2 by tangleViewModel<SimpleViewModel>() // should resolve
 }
+*/
+

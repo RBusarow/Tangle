@@ -15,49 +15,6 @@
 
 package tangle.viewmodel
 
-import androidx.activity.ComponentActivity
-import androidx.activity.viewModels
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
-import tangle.inject.InternalTangleApi
-import tangle.viewmodel.internal.AssistedTangleViewModelFactory
-import kotlin.DeprecationLevel.ERROR
 
 interface AssistedViewModel<T : ViewModel, F : Any>
-
-@OptIn(InternalTangleApi::class)
-public inline fun <reified VM, reified F : Any> Fragment.tangleViewModel(
-  noinline factory: F.() -> VM
-): Lazy<VM> where VM : AssistedViewModel<VM, F>, VM : ViewModel = viewModels {
-  AssistedTangleViewModelFactory(
-    owner = this,
-    defaultArgs = arguments,
-    vmClass = VM::class,
-    fClass = F::class,
-    factory = factory
-  )
-}
-
-@Deprecated("no"/*, level = ERROR*/)
-public fun <VM : AssistedViewModel<*, *>> Fragment.tangleViewModel(): Lazy<VM> = TODO()
-
-@OptIn(InternalTangleApi::class)
-public inline fun <reified VM, reified F : Any> ComponentActivity.tangleViewModel(
-  noinline factory: F.() -> VM
-): Lazy<VM> where VM : AssistedViewModel<VM, F>, VM : ViewModel = viewModels {
-  AssistedTangleViewModelFactory(
-    owner = this,
-    defaultArgs = intent.extras,
-    vmClass = VM::class,
-    fClass = F::class,
-    factory = factory
-  )
-}
-
-@Deprecated("no", level = ERROR)
-@OptIn(InternalTangleApi::class)
-public inline fun <reified VM> ComponentActivity.tangleViewModel(): VM
-  where VM : AssistedViewModel<VM, *>, VM : ViewModel {
-  throw UnsupportedOperationException("")
-}

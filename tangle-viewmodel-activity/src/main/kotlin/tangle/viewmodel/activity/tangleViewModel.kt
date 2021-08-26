@@ -16,10 +16,16 @@
 package tangle.viewmodel.activity
 
 import androidx.activity.ComponentActivity
+import androidx.activity.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelLazy
+import androidx.lifecycle.ViewModelProvider
+import androidx.savedstate.SavedStateRegistryOwner
 import tangle.inject.InternalTangleApi
+import tangle.viewmodel.AssistedViewModel
+import tangle.viewmodel.internal.AssistedTangleViewModelFactory
 import tangle.viewmodel.internal.TangleViewModelFactory
+import kotlin.DeprecationLevel.ERROR
 
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.
@@ -29,13 +35,36 @@ import tangle.viewmodel.internal.TangleViewModelFactory
  * @since 0.11.0
  */
 @OptIn(InternalTangleApi::class)
-public inline fun <reified VM : ViewModel> ComponentActivity.tangleViewModel(): Lazy<VM> {
+public inline fun <reified VM : ViewModel> ComponentActivity.tangleViewModel(
+  savedStateRegistryOwner: SavedStateRegistryOwner = this,
+  defaultFactory: ViewModelProvider.Factory = defaultViewModelProviderFactory
+): Lazy<VM> {
 
   val viewModelFactory = TangleViewModelFactory(
-    owner = this,
+    owner = savedStateRegistryOwner,
     defaultArgs = intent.extras,
-    defaultFactory = defaultViewModelProviderFactory
+    defaultFactory = defaultFactory
   )
 
   return ViewModelLazy(VM::class, { viewModelStore }, { viewModelFactory })
+}
+
+@OptIn(InternalTangleApi::class)
+public inline fun <reified VM, reified F : Any> ComponentActivity.tangleViewModel(
+  noinline factory: F.() -> VM
+): Lazy<VM> where VM : AssistedViewModel<VM, F>, VM : ViewModel = viewModels {
+  AssistedTangleViewModelFactory(
+    owner = this,
+    defaultArgs = intent.extras,
+    vmClass = VM::class,
+    fClass = F::class,
+    factory = factory
+  )
+}
+
+@Deprecated("no", level = ERROR)
+@OptIn(InternalTangleApi::class)
+public inline fun <reified VM> ComponentActivity.tangleViewModel(): VM
+  where VM : AssistedViewModel<VM, *>, VM : ViewModel {
+  throw UnsupportedOperationException("")
 }

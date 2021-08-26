@@ -27,7 +27,7 @@ dependencies {
   api(libs.kotlin.compiler)
   api(libs.square.kotlinPoet)
 
-  api(projects.tangleCompiler)
+  implementation(projects.tangleCompiler)
 
   compileOnly(libs.androidx.annotations)
   compileOnly(libs.google.auto.service.processor)

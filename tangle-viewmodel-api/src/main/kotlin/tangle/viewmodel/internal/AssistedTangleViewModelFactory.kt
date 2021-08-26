@@ -31,7 +31,7 @@ public class AssistedTangleViewModelFactory<VM : ViewModel, F : Any>(
   private val owner: SavedStateRegistryOwner,
   private val defaultArgs: Bundle?,
   private val vmClass: KClass<VM>,
-  private val fClass: KClass<F>,
+  private val factoryClass: KClass<F>,
   private val factory: F.() -> VM
 ) : AbstractSavedStateViewModelFactory(owner, defaultArgs) {
   override fun <T : ViewModel> create(
@@ -44,9 +44,9 @@ public class AssistedTangleViewModelFactory<VM : ViewModel, F : Any>(
       .tangleViewModelMapSubcomponentFactory
       .create(handle)
 
-    val factoryImpl = (subcomponent.viewModelFactoryMap[fClass.java]?.get() as? F)
+    val factoryImpl = (subcomponent.viewModelFactoryMap[factoryClass.java]?.get() as? F)
       ?: throw IllegalStateException(
-        "Tangle can't find a factory of type $fClass, " +
+        "Tangle can't find a factory of type $factoryClass, " +
           "which is necessary in order to create an assisted $vmClass."
       )
     return factory(factoryImpl) as T

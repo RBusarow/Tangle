@@ -16,9 +16,14 @@
 package tangle.viewmodel.fragment
 
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelLazy
+import androidx.lifecycle.ViewModelProvider
+import androidx.savedstate.SavedStateRegistryOwner
 import tangle.inject.InternalTangleApi
+import tangle.viewmodel.AssistedViewModel
+import tangle.viewmodel.internal.AssistedTangleViewModelFactory
 import tangle.viewmodel.internal.TangleViewModelFactory
 
 /**
@@ -29,13 +34,34 @@ import tangle.viewmodel.internal.TangleViewModelFactory
  * @since 0.11.0
  */
 @OptIn(InternalTangleApi::class)
-public inline fun <reified VM : ViewModel> Fragment.tangleViewModel(): Lazy<VM> {
+public inline fun <reified VM : ViewModel> Fragment.tangleViewModel(
+  savedStateRegistryOwner: SavedStateRegistryOwner = this,
+  defaultFactory: ViewModelProvider.Factory = defaultViewModelProviderFactory
+): Lazy<VM> {
 
   val viewModelFactory = TangleViewModelFactory(
-    owner = this,
+    owner = savedStateRegistryOwner,
     defaultArgs = arguments,
-    defaultFactory = defaultViewModelProviderFactory
+    defaultFactory = defaultFactory
   )
 
   return ViewModelLazy(VM::class, { viewModelStore }, { viewModelFactory })
 }
+
+@OptIn(InternalTangleApi::class)
+public inline fun <reified VM, reified F : Any> Fragment.tangleViewModel(
+  savedStateRegistryOwner: SavedStateRegistryOwner = this,
+  noinline factory: F.() -> VM
+): Lazy<VM> where VM : AssistedViewModel<VM, F>, VM : ViewModel = viewModels {
+  AssistedTangleViewModelFactory(
+    owner = savedStateRegistryOwner,
+    defaultArgs = arguments,
+    vmClass = VM::class,
+    factoryClass = F::class,
+    factory = factory
+  )
+}
+
+@Deprecated("no"/*, level = ERROR*/)
+public fun <VM : AssistedViewModel<*, *>> Fragment.tangleViewModel(
+): Lazy<VM> = TODO()

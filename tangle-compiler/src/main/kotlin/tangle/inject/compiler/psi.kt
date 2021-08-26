@@ -59,6 +59,12 @@ fun KtClassOrObject.assistedInjectConstructor(module: ModuleDescriptor): KtConst
   return annotatedConstructorOrNull(FqNames.assistedInject, module)
 }
 
+fun KtClassOrObject.classDescriptorOrNull(module: ModuleDescriptor) = try {
+  requireClassDescriptor(module)
+} catch (e: AnvilCompilationException) {
+  null
+}
+
 fun KtClassOrObject.fragmentInjectConstructor(
   module: ModuleDescriptor
 ): KtConstructor<*>? {

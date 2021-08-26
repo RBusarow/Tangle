@@ -131,3 +131,4 @@ class VMInjectCodeGenerator : CodeGenerator {
     return generated + tangleScopeModules + tangleAppScopeModules
   }
 }
+
