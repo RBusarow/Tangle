@@ -44,6 +44,9 @@ jobs:
       - name: Build API docs and copy to /website
         run: ./gradlew updateWebsiteApiDocs --no-daemon
 
+      - name: Update website's changelog
+        run: ./gradlew updateWebsiteChangelog --no-daemon
+
       # Install and build Docusaurus website
       - name: Build Docusaurus website
         run: |
