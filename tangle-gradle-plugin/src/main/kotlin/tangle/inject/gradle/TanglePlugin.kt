@@ -44,38 +44,72 @@ public open class TanglePlugin : BasePlugin() {
         )
       }
 
-      if (extension.fragmentsEnabled.get()) {
+      if (extension.fragmentsEnabled) {
         target.addImplementation("tangle-fragment-api")
         target.addAnvil("tangle-fragment-compiler")
       }
 
-      if (extension.viewModelsEnabled.get()) {
-        target.addImplementation("tangle-viewmodel-api")
-        target.addAnvil("tangle-viewmodel-compiler")
-      }
-
-      if (extension.workEnabled.get()) {
+      if (extension.workEnabled) {
         target.addImplementation("tangle-work-api")
         target.addAnvil("tangle-work-compiler")
       }
 
-      if (extension.composeEnabled.get()) {
+      val viewModelOptions = extension.viewModelOptions
 
-        val composeEnabled = target.extensions.findByType(BaseExtension::class.java)
-          ?.buildFeatures
-          ?.compose
-          ?: false
+      validateViewModelOptions(viewModelOptions)
 
-        if (!composeEnabled) {
-          throw GradleException(
-            "Tangle's compose support is enabled, but AGP's `buildFeatures.compose` is disabled. " +
-              "Compose must be enabled in the Android Gradle Plugin."
-          )
+      if (viewModelOptions.enabled) {
+        target.addImplementation("tangle-viewmodel-api")
+        target.addAnvil("tangle-viewmodel-compiler")
+
+        if (viewModelOptions.activitiesEnabled) {
+          target.addImplementation("tangle-viewmodel-activity")
         }
+        if (viewModelOptions.composeEnabled) {
 
-        target.addImplementation("tangle-viewmodel-compose")
+          val composeEnabled = target.extensions.findByType(BaseExtension::class.java)
+            ?.buildFeatures
+            ?.compose
+            ?: false
+
+          if (!composeEnabled) {
+            throw GradleException(
+              "Tangle's compose support is enabled, but AGP's `buildFeatures.compose` is disabled. " +
+                "Compose must be enabled in the Android Gradle Plugin."
+            )
+          }
+
+          target.addImplementation("tangle-viewmodel-compose")
+        }
+        if (viewModelOptions.fragmentsEnabled) {
+          target.addImplementation("tangle-viewmodel-fragment")
+        }
       }
     }
+  }
+
+  private fun validateViewModelOptions(viewModelOptions: ViewModelOptions) {
+
+    fun validate(setting: Boolean, name: String) {
+      if (!viewModelOptions.enabled && setting) {
+        throw GradleException(
+          "viewModelOptions.$name is enabled, but ViewModel code-gen is disabled.  Code generation " +
+            """must be enabled in order for any ViewModel API's to work.
+            |
+            |tangle {
+            |  viewModelOptions {
+            |    enabled = true
+            |    $name = true
+            |  }
+            |}
+          """.trimMargin()
+        )
+      }
+    }
+
+    validate(viewModelOptions.activitiesEnabled, "activitiesEnabled")
+    validate(viewModelOptions.composeEnabled, "composeEnabled")
+    validate(viewModelOptions.fragmentsEnabled, "fragmentsEnabled")
   }
 
   private fun Project.addAnvil(name: String) {
