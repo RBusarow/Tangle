@@ -93,7 +93,15 @@ plugins {
 
 // optional
 tangle {
-  composeEnabled.set(true) // default is false
+  fragmentsEnabled = true // default is true
+  workEnabled = true // default is true
+
+  viewModelOptions {
+    enabled = true // default is true
+    activitiesEnabled = true // default is true
+    composeEnabled = true // default is false
+    fragmentsEnabled = true // default is true
+  }
 }
 ```
 
@@ -123,8 +131,14 @@ dependencies {
   api("com.rickbusarow.tangle:tangle-viewmodel-api:0.12.0")
   anvil("com.rickbusarow.tangle:tangle-viewmodel-compiler:0.12.0")
 
-  // optional Compose support
+  // optional Activity ViewModel support
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-activity:0.12.0")
+
+  // optional Compose ViewModel support
   implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.12.0")
+
+  // optional Fragment ViewModel support
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-fragment:0.12.0")
 
   // WorkManager
   api("com.rickbusarow.tangle:tangle-work-api:0.12.0")
@@ -187,7 +201,7 @@ navigation/viewModel artifact. It will scope the ViewModel to the composable's `
 @Composable
 fun MyComposable(
   navController: NavController,
-  viewModel: MyViewModel = tangle()
+  viewModel: MyViewModel = tangleViewModel()
 ) {
   // ...
 }

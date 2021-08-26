@@ -1,23 +1,33 @@
 public abstract class tangle/inject/gradle/TangleExtension {
-	public static final field COMPOSE_ENABLED Z
 	public static final field FRAGMENTS_ENABLED Z
-	public static final field VIEWMODELS_ENABLED Z
 	public static final field WORK_ENABLED Z
 	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
-	public final fun getComposeEnabled ()Lorg/gradle/api/provider/Property;
-	public final fun getFragmentsEnabled ()Lorg/gradle/api/provider/Property;
-	public final fun getViewModelsEnabled ()Lorg/gradle/api/provider/Property;
-	public final fun getWorkEnabled ()Lorg/gradle/api/provider/Property;
+	public final fun getFragmentsEnabled ()Z
+	public final fun getViewModelOptions ()Ltangle/inject/gradle/ViewModelOptions;
+	public final fun getWorkEnabled ()Z
+	public final fun setFragmentsEnabled (Z)V
+	public final fun setWorkEnabled (Z)V
+	public final fun viewModelOptions (Lorg/gradle/api/Action;)V
 }
 
 public class tangle/inject/gradle/TanglePlugin : org/gradle/api/plugins/BasePlugin {
 	public static final field ANVIL_ID Ljava/lang/String;
 	public static final field EXTENSION_NAME Ljava/lang/String;
 	public static final field KOTLIN_ANDROID_ID Ljava/lang/String;
-	public static final field TANGLE_GROUP Ljava/lang/String;
-	public static final field TANGLE_VERSION Ljava/lang/String;
 	public fun <init> ()V
 	public synthetic fun apply (Ljava/lang/Object;)V
 	public fun apply (Lorg/gradle/api/Project;)V
+}
+
+public class tangle/inject/gradle/ViewModelOptions {
+	public fun <init> (Lorg/gradle/api/model/ObjectFactory;)V
+	public final fun getActivitiesEnabled ()Z
+	public final fun getComposeEnabled ()Z
+	public final fun getEnabled ()Z
+	public final fun getFragmentsEnabled ()Z
+	public final fun setActivitiesEnabled (Z)V
+	public final fun setComposeEnabled (Z)V
+	public final fun setEnabled (Z)V
+	public final fun setFragmentsEnabled (Z)V
 }
 

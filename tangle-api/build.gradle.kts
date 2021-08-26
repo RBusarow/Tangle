@@ -21,6 +21,9 @@ plugins {
 dependencies {
 
   api(libs.androidx.annotations)
+
+  testImplementation(projects.tangleTestUtils)
+  testImplementation(projects.tangleTestUtilsAndroid)
 }
 
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()

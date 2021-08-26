@@ -32,14 +32,15 @@ dependencies {
   api(libs.google.dagger.api)
   api(libs.google.dagger.compiler)
   api(libs.javax.annotation.jsr250.api)
+  api(libs.junit.vintage)
   api(libs.kotlin.annotation.processing)
   api(libs.kotlin.compile.testing)
   api(libs.kotlin.compiler)
   api(libs.kotlin.reflect)
   api(libs.square.kotlinPoet)
 
-  api(projects.tangleCompiler)
   api(projects.tangleApi)
+  api(projects.tangleCompiler)
 
   compileOnly(libs.google.auto.service.processor)
 }

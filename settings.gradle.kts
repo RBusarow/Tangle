@@ -59,17 +59,17 @@ enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 include(
   ":dependabot-bridge",
   ":tangle-api",
-  ":tangle-api:samples",
   ":tangle-compiler",
   ":tangle-fragment-api",
   ":tangle-fragment-compiler",
   ":tangle-gradle-plugin",
   ":tangle-test-utils",
+  ":tangle-test-utils-android",
+  ":tangle-viewmodel-activity",
   ":tangle-viewmodel-api",
-  ":tangle-viewmodel-api:samples",
   ":tangle-viewmodel-compiler",
   ":tangle-viewmodel-compose",
+  ":tangle-viewmodel-fragment",
   ":tangle-work-api",
-  ":tangle-work-api:samples",
   ":tangle-work-compiler"
 )
