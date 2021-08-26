@@ -20,13 +20,15 @@ plugins {
 
 dependencies {
 
+  api(libs.androidx.fragment.ktx)
   api(libs.androidx.lifecycle.viewModel.savedstate)
   api(libs.androidx.savedstate)
   api(libs.google.dagger.api)
 
   api(projects.tangleApi)
+  api(projects.tangleViewmodelApi)
 
-  implementation(libs.androidx.lifecycle.viewModel.core)
+  implementation(libs.androidx.lifecycle.viewModel.ktx)
 
   testCompileOnly(libs.google.auto.service.processor)
 
@@ -36,8 +38,6 @@ dependencies {
   testImplementation(projects.tangleFragmentCompiler)
   testImplementation(projects.tangleTestUtils)
   testImplementation(projects.tangleTestUtilsAndroid)
-  testImplementation(projects.tangleViewmodelActivity)
-  testImplementation(projects.tangleViewmodelFragment)
   testImplementation(projects.tangleViewmodelCompiler)
 }
 

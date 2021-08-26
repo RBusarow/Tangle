@@ -16,22 +16,10 @@
 package tangle.viewmodel.samples
 
 import androidx.activity.ComponentActivity
-import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import tangle.inject.test.utils.Sample
 import tangle.viewmodel.VMInject
-import tangle.viewmodel.tangleViewModel
-
-class TangleFragmentDelegateSample {
-
-  @Sample
-  fun byTangleViewModelSample() {
-    class MyFragment : Fragment() {
-
-      val viewModel: MyViewModel by tangleViewModel()
-    }
-  }
-}
+import tangle.viewmodel.activity.tangleViewModel
 
 class TangleActivityDelegateSample {
 
