@@ -64,6 +64,32 @@ jobs:
           commit_message: Apply KtLint format
           commit_options: '--no-verify --signoff'
 
+  versioning:
+
+    runs-on: ubuntu-latest
+    if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 14
+
+      - name: Sync versions in website docs
+        run: ./gradlew updateWebsiteNextDocsVersionRefs --no-daemon
+
+      - name: commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: update docs versions
+          commit_options: '--no-verify --signoff'
+
   api-check:
 
     runs-on: ubuntu-latest

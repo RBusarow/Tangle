@@ -13,6 +13,9 @@
 # Create new website docs version
 ./gradlew versionDocs
 
+# Set all versions in the root README to the new version
+./gradlew updateProjectReadmeVersionRefs
+
 echo
 echo ' ___ _   _  ___ ___ ___  ___ ___'
 echo '/ __| | | |/ __/ __/ _ \/ __/ __|'

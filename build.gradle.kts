@@ -33,7 +33,6 @@ buildscript {
     classpath("com.squareup.anvil:gradle-plugin:2.3.3")
     classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
-    classpath("org.jetbrains.kotlinx:kotlinx-knit:0.3.0")
     classpath("org.jlleitschuh.gradle:ktlint-gradle:10.1.0")
   }
 }
@@ -43,12 +42,15 @@ plugins {
   id("com.github.ben-manes.versions") version "0.39.0"
   id("io.gitlab.arturbosch.detekt") version "1.18.0"
   id("com.rickbusarow.module-check") version "0.10.0"
-  id("org.jetbrains.dokka") version "1.5.0"
   id("com.osacky.doctor") version "0.7.1"
   id("com.dorongold.task-tree") version "2.1.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.7.1"
   base
 }
+
+apply(from = "gradle/knit.gradle.kts")
+apply(from = "gradle/dokka.gradle.kts")
+apply(from = "gradle/website.gradle.kts")
 
 allprojects {
 
@@ -168,118 +170,6 @@ apiValidation {
    * effectively private API that cannot be actually private for technical reasons.
    */
   nonPublicMarkers.add("tangle.api.internal.InternalTangleApi")
-}
-
-subprojects {
-
-  val includeSubproject = when {
-    path == ":tangle-test-utils" -> false
-    path == ":tangle-test-utils-android" -> false
-    path.endsWith("tests") -> false
-    path.endsWith("compiler") -> false
-    else -> File("$projectDir/src").exists()
-  }
-
-  if (includeSubproject) {
-    apply(plugin = "org.jetbrains.dokka")
-
-    val proj = this
-
-    proj.tasks.withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask>().configureEach {
-
-      dependsOn(allprojects.mapNotNull { it.tasks.findByName("compileKotlin") })
-
-      dokkaSourceSets {
-
-        getByName("main") {
-
-          samples.setFrom(
-            fileTree(proj.projectDir) {
-              include("**/samples/**")
-            }
-          )
-
-          if (File("${proj.projectDir}/README.md").exists()) {
-            includes.from(files("${proj.projectDir}/README.md"))
-          }
-
-          sourceLink {
-            localDirectory.set(file("src/main"))
-
-            val modulePath = proj.path.replace(":", "/").replaceFirst("/", "")
-
-            // URL showing where the source code can be accessed through the web browser
-            remoteUrl.set(uri("https://github.com/RBusarow/Tangle/blob/main/$modulePath/src/main").toURL())
-            // Suffix which is used to append the line number to the URL. Use #L for GitHub
-            remoteLineSuffix.set("#L")
-          }
-        }
-      }
-    }
-  }
-}
-
-apply(plugin = "kotlinx-knit")
-
-extensions.configure<kotlinx.knit.KnitPluginExtension> {
-
-  rootDir = rootProject.rootDir
-
-  files = fileTree(project.rootDir) {
-    include(
-      "**/*.md",
-      "**/*.kt",
-      "**/*.kts"
-    )
-    exclude(
-      "**/node_modules/**",
-      "**/build/**",
-      "**/.gradle/**"
-    )
-  }
-
-  moduleRoots = listOf(".")
-
-  moduleDocs = "build/dokka"
-  moduleMarkers = listOf("build.gradle", "build.gradle.kts")
-  siteRoot = "https://rbusarow.github.io/Tangle/api/"
-}
-
-// Build API docs for all modules with dokka before running Knit
-tasks.withType<kotlinx.knit.KnitTask>().configureEach {
-  dependsOn(tasks.findByName("dokkaHtmlMultiModule"))
-}
-
-val startSite by tasks.registering(Exec::class) {
-  workingDir("./website")
-  commandLine("npm", "run", "start")
-}
-
-val versionDocs by tasks.registering(Exec::class) {
-  workingDir("./website")
-  val version = project.extra.properties["VERSION_NAME"] as String
-  commandLine("npm", "run", "docusaurus", "docs:version", version)
-}
-
-val updateWebsiteApiDocs by tasks.registering(Copy::class) {
-
-  doFirst {
-    delete(
-      fileTree("./website/static/api") {
-        exclude("**/styles/*")
-      }
-    )
-  }
-
-  dependsOn(tasks.findByName("knit"))
-
-  from(
-    fileTree("$buildDir/dokka/htmlMultiModule") {
-      exclude("**/styles/*")
-    }
-  )
-
-  into("./website/static/api")
 }
 
 // Delete any empty directories while cleaning.
