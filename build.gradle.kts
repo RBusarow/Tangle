@@ -44,7 +44,7 @@ plugins {
   id("com.rickbusarow.module-check") version "0.10.0"
   id("com.osacky.doctor") version "0.7.1"
   id("com.dorongold.task-tree") version "2.1.0"
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.7.0"
+  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.7.1"
   base
 }
 
