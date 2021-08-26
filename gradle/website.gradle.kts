@@ -104,3 +104,8 @@ val updateWebsiteApiDocs by tasks.registering(Copy::class) {
 
   into("./website/static/api")
 }
+
+val updateWebsiteChangelog by tasks.registering(Copy::class) {
+  from("CHANGELOG.md")
+  into("./website/src/pages")
+}
