@@ -250,6 +250,18 @@ tasks.withType<kotlinx.knit.KnitTask>().configureEach {
   dependsOn(tasks.findByName("dokkaHtmlMultiModule"))
 }
 
+val updateDocsVersions by tasks.registering {
+  doLast {
+
+    val group = project.extra.properties["GROUP"] as String
+    val version = project.extra.properties["VERSION_NAME"] as String
+
+    val regex = "([^'\"]*['\"])$group:([^:]*):([^'\"]*)(['\"].*)".toRegex()
+
+
+  }
+}
+
 val startSite by tasks.registering(Exec::class) {
   workingDir("./website")
   commandLine("npm", "run", "start")
