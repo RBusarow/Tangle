@@ -15,6 +15,7 @@
 
 package tangle.inject.gradle
 
+import org.gradle.api.Action
 import org.gradle.api.model.ObjectFactory
 import org.gradle.api.provider.Property
 import javax.inject.Inject
@@ -24,23 +25,41 @@ public abstract class TangleExtension @Inject constructor(
   objectFactory: ObjectFactory
 ) {
 
-  public val composeEnabled: Property<Boolean> =
-    objectFactory.property(Boolean::class.java)
-      .convention(COMPOSE_ENABLED)
   public val fragmentsEnabled: Property<Boolean> =
     objectFactory.property(Boolean::class.java)
       .convention(FRAGMENTS_ENABLED)
-  public val viewModelsEnabled: Property<Boolean> =
-    objectFactory.property(Boolean::class.java)
-      .convention(VIEWMODELS_ENABLED)
   public val workEnabled: Property<Boolean> =
     objectFactory.property(Boolean::class.java)
       .convention(WORK_ENABLED)
 
+  internal val _viewModels: Property<ViewModelContext> =
+    objectFactory.property(ViewModelContext::class.java)
+      .convention(ViewModelContext())
+
+  public fun viewModels(action: ViewModelContext.() ->Unit) {
+
+    _viewModels = action
+  }
+
   internal companion object {
-    const val COMPOSE_ENABLED = false
     const val FRAGMENTS_ENABLED = true
-    const val VIEWMODELS_ENABLED = true
     const val WORK_ENABLED = true
   }
+}
+
+public open class ViewModelContext @Inject constructor(
+  objectFactory: ObjectFactory
+) {
+  public val enabled: Property<Boolean> =
+    objectFactory.property(Boolean::class.java)
+      .convention(true)
+  public val activitiesEnabled: Property<Boolean> =
+    objectFactory.property(Boolean::class.java)
+      .convention(false)
+  public val composeEnabled: Property<Boolean> =
+    objectFactory.property(Boolean::class.java)
+      .convention(false)
+  public val fragmentsEnabled: Property<Boolean> =
+    objectFactory.property(Boolean::class.java)
+      .convention(false)
 }

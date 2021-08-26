@@ -20,7 +20,7 @@ plugins {
 
 dependencies {
 
-  api(libs.androidx.fragment.core)
+  api(libs.androidx.fragment.ktx)
   api(libs.google.dagger.api)
 
   api(projects.tangleApi)

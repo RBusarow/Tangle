@@ -93,7 +93,9 @@ plugins {
 
 // optional
 tangle {
+  activitiesEnabled.set(true) // default is false
   composeEnabled.set(true) // default is false
+  fragmentsEnabled.set(true) // default is false
 }
 ```
 
@@ -123,8 +125,14 @@ dependencies {
   api("com.rickbusarow.tangle:tangle-viewmodel-api:0.12.0")
   anvil("com.rickbusarow.tangle:tangle-viewmodel-compiler:0.12.0")
 
-  // optional Compose support
+  // optional Activity ViewModel support
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-activity:0.12.0")
+
+  // optional Compose ViewModel support
   implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.12.0")
+
+  // optional Fragment ViewModel support
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-fragment:0.12.0")
 
   // WorkManager
   api("com.rickbusarow.tangle:tangle-work-api:0.12.0")

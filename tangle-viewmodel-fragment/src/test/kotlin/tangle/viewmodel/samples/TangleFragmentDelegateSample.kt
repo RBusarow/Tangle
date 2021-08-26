@@ -17,25 +17,19 @@ package tangle.viewmodel.samples
 
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
-import tangle.inject.TangleParam
-import tangle.inject.test.utils.MyRepository
 import tangle.inject.test.utils.Sample
 import tangle.viewmodel.VMInject
 import tangle.viewmodel.fragment.tangleViewModel
 
-class VMInjectSample {
+class TangleFragmentDelegateSample {
 
   @Sample
-  fun vmInjectSample() {
-
-    class MyViewModel @VMInject constructor(
-      val repository: MyRepository,
-      @TangleParam("userId")
-      val userId: Int
-    ) : ViewModel()
-
+  fun byTangleViewModelSample() {
     class MyFragment : Fragment() {
-      val viewModel by tangleViewModel<MyViewModel>()
+
+      val viewModel: MyViewModel by tangleViewModel()
     }
   }
 }
+
+class MyViewModel @VMInject constructor() : ViewModel()
