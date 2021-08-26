@@ -43,36 +43,16 @@ class MyFragment @FragmentInject constructor(
   val userId: String
 ) : ViewModel()
 
+@Composable
+fun MyComposable(
+  navController: NavController,
+  viewModel: MyViewModel = tangleViewModel()
+) { /* ... */ }
+
 class MyFragment : Fragment() {
   val viewModel: MyViewModel by tangleViewModel()
 }`
     ),
-    description: (
-      <>
-        Inject <code>ViewModel</code>s, including scoped <code>SavedStateHandle</code> arguments.
-        Use the <code>TangleParam</code> annotation to automatically extract
-        navigation/<code>Bundle</code> arguments and inject them explicitly.
-      </>
-    ),
-    dest: "docs/viewModels/viewModels"
-  },
-  {
-    title: "Compose",
-    code: (
-`@Composable
-fun MyComposable(
-  navController: NavController,
-  viewModel: MyViewModel = tangleViewModel()
-) { /* ... */ }`
-    ),
-    description: (
-      <>
-        Use the <code>tangleViewModel</code> composable function to inject scoped
-        <code>ViewModel</code>s.
-      </>
-    ),
-    dest: "docs/viewModels/compose"
-  },
   {
     title: "WorkManager",
     code: (
