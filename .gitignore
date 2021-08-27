@@ -45,6 +45,7 @@ Thumbs.db
 !/.idea/externalDependencies.xml
 # ktlint plugin settings
 !/.idea/ktlint.xml
+!/.idea/icon.png
 
 /.idea/vcs.xml
 **/.idea/workspace.xml
