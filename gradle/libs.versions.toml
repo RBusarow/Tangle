@@ -112,12 +112,6 @@ androidx-work-core = { module = "androidx.work:work-runtime", version.ref = "and
 androidx-work-ktx = { module = "androidx.work:work-runtime-ktx", version.ref = "androidx-work-version" }
 androidx-work-test = { module = "androidx.work:work-testing", version.ref = "androidx-work-version" }
 
-anvil-annotations = { module = "com.squareup.anvil:annotations", version.ref = "anvil" }
-anvil-compiler-api = { module = "com.squareup.anvil:compiler-api", version.ref = "anvil" }
-anvil-compiler-core = { module = "com.squareup.anvil:compiler", version.ref = "anvil" }
-anvil-compiler-utils = { module = "com.squareup.anvil:compiler-utils", version.ref = "anvil" }
-anvil-gradle = { module = "com.squareup.anvil:gradle-plugin", version.ref = "anvil" }
-
 codehaus-groovy-core = { module = "org.codehaus.groovy:groovy", version.ref = "groovy" }
 codehaus-groovy-xml = { module = "org.codehaus.groovy:groovy-xml", version.ref = "groovy" }
 
@@ -184,6 +178,12 @@ kotlinx-knit-test = { module = "org.jetbrains.kotlinx:kotlinx-knit-test", versio
 mockk = "io.mockk:mockk:1.12.0"
 
 robolectric = "org.robolectric:robolectric:4.6.1"
+
+square-anvil-annotations = { module = "com.squareup.anvil:annotations", version.ref = "anvil" }
+square-anvil-compiler-api = { module = "com.squareup.anvil:compiler-api", version.ref = "anvil" }
+square-anvil-compiler-core = { module = "com.squareup.anvil:compiler", version.ref = "anvil" }
+square-anvil-compiler-utils = { module = "com.squareup.anvil:compiler-utils", version.ref = "anvil" }
+square-anvil-gradle = { module = "com.squareup.anvil:gradle-plugin", version.ref = "anvil" }
 
 square-kotlinPoet = "com.squareup:kotlinpoet:1.9.0"
 

@@ -29,7 +29,7 @@ import tangle.inject.TangleGraph
  * @sample tangle.work.samples.TangleWorkerFactorySample.tangleWorkerFactorySample
  * @since 0.12.0
  */
-class TangleWorkerFactory : WorkerFactory() {
+public class TangleWorkerFactory : WorkerFactory() {
 
   @OptIn(InternalTangleApi::class)
   internal val workerFactories = TangleGraph.get<TangleWorkerComponent>()

@@ -28,11 +28,13 @@ import tangle.inject.TangleGraph as NewTangleGraph
     "This breadcrumb object will be removed in a future version of Tangle.",
   replaceWith = ReplaceWith("TangleGraph", "tangle.inject.TangleGraph")
 )
-object TangleGraph {
+public object TangleGraph {
   @Deprecated(
     message = "TangleGraph has been moved to `tangle.inject.TangleGraph`.  " +
       "This breadcrumb object will be removed in a future version of Tangle.",
     replaceWith = ReplaceWith("TangleGraph.init(any)", "tangle.inject.TangleGraph")
   )
-  fun init(any: Any) = NewTangleGraph.init(any)
+  public fun init(any: Any) {
+    NewTangleGraph.init(any)
+  }
 }

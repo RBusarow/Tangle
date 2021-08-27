@@ -25,10 +25,6 @@ dependencies {
 
   kaptTest(libs.google.dagger.compiler)
 
-  api(libs.anvil.annotations)
-  api(libs.anvil.compiler.api)
-  api(libs.anvil.compiler.core)
-  api(libs.anvil.compiler.utils)
   api(libs.bundles.hermit)
   api(libs.bundles.jUnit)
   api(libs.bundles.kotest)
@@ -45,7 +41,13 @@ dependencies {
   api(libs.kotlin.reflect)
   api(libs.kotlinx.coroutines.core)
   api(libs.kotlinx.coroutines.test)
-  api(libs.robolectric)
+  api(libs.robolectric) {
+    exclude(group = "org.bouncycastle")
+  }
+  api(libs.square.anvil.annotations)
+  api(libs.square.anvil.compiler.api)
+  api(libs.square.anvil.compiler.core)
+  api(libs.square.anvil.compiler.utils)
   api(libs.square.kotlinPoet)
 
   api(projects.tangleApi)
@@ -53,14 +55,3 @@ dependencies {
 
   compileOnly(libs.google.auto.service.processor)
 }
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
-  .configureEach {
-
-    kotlinOptions {
-
-      freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
-      )
-    }
-  }

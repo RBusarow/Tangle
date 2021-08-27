@@ -13,62 +13,13 @@
  * limitations under the License.
  */
 
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
-import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
   kotlin("jvm")
 }
 
-val ci = !System.getenv("CI").isNullOrBlank()
-
-tasks.withType<KotlinCompile>()
-  .configureEach {
-
-    kotlinOptions {
-      allWarningsAsErrors = false
-
-      jvmTarget = "1.8"
-
-      freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xjvm-default=enable",
-        "-Xallow-result-return-type",
-        "-Xopt-in=kotlin.contracts.ExperimentalContracts",
-        "-Xopt-in=kotlin.Experimental",
-        "-Xopt-in=kotlin.time.ExperimentalTime",
-        "-Xopt-in=kotlin.RequiresOptIn",
-        "-Xinline-classes"
-      )
-    }
-  }
-
-kotlin {
-  // explicitApi()
-}
-
-tasks.withType<Test> {
-  useJUnitPlatform()
-
-  testLogging {
-    events = setOf(PASSED, FAILED)
-    exceptionFormat = TestExceptionFormat.FULL
-    showExceptions = true
-    showCauses = true
-    showStackTraces = true
-  }
-
-  project
-    .properties
-    .asSequence()
-    .filter { (key, value) ->
-      key.startsWith("tangle") && value != null
-    }
-    .forEach { (key, value) ->
-      systemProperty(key, value!!)
-    }
-}
+common()
 
 java {
   // force Java 8 source when building java-only artifacts.
@@ -100,4 +51,13 @@ val buildTests by tasks.registering {
   dependsOn("testClasses")
 }
 
+tasks.withType<KotlinCompile>()
+  .configureEach {
 
+    kotlinOptions {
+
+      freeCompilerArgs = freeCompilerArgs + listOf(
+        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
+      )
+    }
+  }
