@@ -18,24 +18,16 @@ package tangle.inject.compiler
 
 import com.squareup.anvil.compiler.api.AnvilCompilationException
 import com.squareup.anvil.compiler.internal.*
-import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import dagger.Lazy
-import org.jetbrains.kotlin.com.intellij.psi.PsiElement
-import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.descriptors.resolveClassByFqName
-import org.jetbrains.kotlin.incremental.components.NoLookupLocation.FROM_BACKEND
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.*
 import javax.inject.Provider
-import com.squareup.anvil.compiler.internal.asClassName as anvilAsClassName
-import com.squareup.anvil.compiler.internal.requireFqName as anvilRequireFqName
-import com.squareup.anvil.compiler.internal.requireTypeName as anvilRequireTypeName
 
 fun KtAnnotationEntry.scope(module: ModuleDescriptor): FqName {
   return findAnnotationArgument<KtClassLiteralExpression>(name = "scope", index = 0)
@@ -156,16 +148,6 @@ fun List<KtCallableDeclaration>.mapToParameters(
     )
   }
 
-fun KtAnnotationEntry.qualifierArgumentsOrNull(module: ModuleDescriptor) = typeReference
-  ?.requireFqName(module)
-  // Often entries are annotated with @Inject, in this case we know it's not a qualifier and we
-  // can stop early.
-  ?.takeIf { it != FqNames.inject }
-  ?.requireClassDescriptor(module)
-  ?.annotations
-  ?.findAnnotation(FqNames.qualifier)
-  ?.allValueArguments
-
 fun TypeName.wrapInProvider(): ParameterizedTypeName {
   return Provider::class.asClassName().parameterizedBy(this)
 }
@@ -197,56 +179,11 @@ internal fun <T : KtCallableDeclaration> TypeName.withJvmSuppressWildcardsIfNeed
   }
 }
 
-internal fun PsiElement.fqNameOrNull(
-  module: ModuleDescriptor
-): FqName? {
-  // Usually it's the opposite way, the require*() method calls the nullable method. But in this
-  // case we'd like to preserve the better error messages in case something goes wrong.
-  return try {
-    requireFqName(module)
-  } catch (e: TangleCompilationException) {
-    null
-  }
-}
-
-internal fun PsiElement.requireFqName(
-  module: ModuleDescriptor
-): FqName = delegateToAnvilUnsafe {
-  anvilRequireFqName(module)
-}
-
-fun KtCallableDeclaration.requireTypeReference(module: ModuleDescriptor): KtTypeReference {
-  typeReference?.let { return it }
-
-  if (this is KtFunction && findAnnotation(FqNames.daggerProvides, module) != null) {
-    throw TangleCompilationException(
-      message = "Dagger provider methods must specify the return type explicitly when using " +
-        "Anvil. The return type cannot be inferred implicitly.",
-      element = this
-    )
-  }
-
-  throw TangleCompilationException("Couldn't obtain type reference.", element = this)
-}
-
-fun FqName.requireClassDescriptor(module: ModuleDescriptor): ClassDescriptor {
-  return module.resolveClassByFqName(this, FROM_BACKEND)
-    ?: throw TangleCompilationException("Couldn't resolve class for $this.")
-}
-
-internal fun KtTypeReference.requireTypeName(
-  module: ModuleDescriptor
-): TypeName = delegateToAnvilUnsafe {
-  anvilRequireTypeName(module)
-}
-
-fun FqName.asClassName(module: ModuleDescriptor): ClassName = delegateToAnvilUnsafe {
-  anvilAsClassName(module)
-}
-
 /**
  * Delegate everything to Anvil's logic, but if it throws an exception,
  * catch that Anvil exception and re-brand as a Tangle exception.
+ *
+ * This will hopefully prevent Tangle bugs getting reported to Anvil as Anvil bugs.
  */
 internal inline fun <T, R> T.delegateToAnvilUnsafe(action: T.() -> R): R = try {
   action()

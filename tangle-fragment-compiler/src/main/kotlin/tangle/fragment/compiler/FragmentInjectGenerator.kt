@@ -16,7 +16,6 @@
 package tangle.fragment.compiler
 
 import com.google.auto.service.AutoService
-import com.squareup.anvil.compiler.api.AnvilContext
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.anvil.compiler.internal.*
@@ -25,20 +24,14 @@ import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.psiUtil.nonStaticOuterClasses
 import tangle.fragment.compiler.FragmentInjectParams.Factory
 import tangle.fragment.compiler.FragmentInjectParams.Fragment
-import tangle.inject.compiler.FqNames
-import tangle.inject.compiler.TangleCompilationException
-import tangle.inject.compiler.asClassName
-import tangle.inject.compiler.fragmentInjectConstructor
-import tangle.inject.compiler.require
+import tangle.inject.compiler.*
 import java.io.File
 
 @Suppress("unused")
 @AutoService(CodeGenerator::class)
-class FragmentInjectGenerator : CodeGenerator {
+class FragmentInjectGenerator : TangleCodeGenerator() {
 
-  override fun isApplicable(context: AnvilContext): Boolean = true
-
-  override fun generateCode(
+  override fun generateTangleCode(
     codeGenDir: File,
     module: ModuleDescriptor,
     projectFiles: Collection<KtFile>

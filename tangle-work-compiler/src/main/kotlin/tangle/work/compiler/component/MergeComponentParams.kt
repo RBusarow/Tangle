@@ -15,6 +15,7 @@
 
 package tangle.work.compiler.component
 
+import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.requireFqName
 import com.squareup.anvil.compiler.internal.safePackageString
 import com.squareup.anvil.compiler.internal.scope
