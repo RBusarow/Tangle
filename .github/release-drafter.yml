@@ -57,5 +57,16 @@ autolabeler:
     branch:
       - '/dependabot\/.+/'
 
-exclude-labels:
-  - no-changelog
+include-labels:
+  - 'api-breaking change'
+  - 'bug'
+  - 'bugfix'
+  - 'chore'
+  - 'dependencies'
+  - 'documentation'
+  - 'enhancement'
+  - 'feature'
+  - 'fix'
+  - 'major'
+  - 'minor'
+  - 'patch'
