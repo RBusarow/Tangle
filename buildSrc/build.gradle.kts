@@ -42,10 +42,11 @@ dependencies {
   implementation(kotlin("reflect", version = kotlinVersion))
   implementation("org.jetbrains.kotlin:kotlin-compiler-embeddable:$kotlinVersion")
 
+  implementation(libs.android.gradle)
   implementation(libs.dokka.gradle)
   implementation(libs.kotlinx.knit.gradle)
+  implementation(libs.square.anvil.gradle)
 
-  implementation(libs.android.gradle)
 
 }
 
