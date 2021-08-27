@@ -16,7 +16,6 @@
 package tangle.work.compiler.component
 
 import com.google.auto.service.AutoService
-import com.squareup.anvil.compiler.api.AnvilContext
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.anvil.compiler.internal.classesAndInnerClasses
@@ -24,11 +23,12 @@ import com.squareup.anvil.compiler.internal.hasAnnotation
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
 import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.TangleCodeGenerator
 import java.io.File
 
 @Suppress("UNUSED")
 @AutoService(CodeGenerator::class)
-class WorkerMergeComponentCodeGenerator : CodeGenerator {
+class WorkerMergeComponentCodeGenerator : TangleCodeGenerator() {
 
   val fileGenerators = listOf(
     WorkerMapSubcomponentGenerator,
@@ -38,9 +38,7 @@ class WorkerMergeComponentCodeGenerator : CodeGenerator {
     WorkerComponentGenerator,
   )
 
-  override fun isApplicable(context: AnvilContext): Boolean = true
-
-  override fun generateCode(
+  override fun generateTangleCode(
     codeGenDir: File,
     module: ModuleDescriptor,
     projectFiles: Collection<KtFile>

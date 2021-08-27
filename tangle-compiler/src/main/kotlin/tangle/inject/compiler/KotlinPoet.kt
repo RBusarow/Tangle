@@ -15,9 +15,7 @@
 
 package tangle.inject.compiler
 
-import com.squareup.anvil.compiler.internal.argumentType
-import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.classDescriptorForType
+import com.squareup.anvil.compiler.internal.*
 import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import org.jetbrains.kotlin.builtins.isFunctionType
