@@ -46,11 +46,10 @@ plugins {
   id("com.dorongold.task-tree") version "2.1.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.7.1"
   base
+  dokka
+  knit
+  website
 }
-
-apply(from = "gradle/knit.gradle.kts")
-apply(from = "gradle/dokka.gradle.kts")
-apply(from = "gradle/website.gradle.kts")
 
 allprojects {
 
