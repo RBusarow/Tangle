@@ -24,11 +24,11 @@ import androidx.work.WorkerParameters
  *
  * @since 0.12.0
  */
-fun interface AssistedWorkerFactory<T : ListenableWorker> {
+public fun interface AssistedWorkerFactory<T : ListenableWorker> {
   /**
    * Creates a [ListenableWorker] of type `T`.
    *
    * @since 0.12.0
    */
-  fun create(context: Context, params: WorkerParameters): T
+  public fun create(context: Context, params: WorkerParameters): T
 }

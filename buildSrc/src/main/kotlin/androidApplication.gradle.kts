@@ -14,14 +14,13 @@
  */
 
 plugins {
-  androidLibrary
-  id("com.vanniktech.maven.publish")
+  id("com.android.application")
+  id("kotlin-android")
+  kotlin("kapt")
 }
 
-dependencies {
+android {
 
-  api(libs.androidx.annotations)
-
-  testImplementation(projects.tangleTestUtils)
-  testImplementation(projects.tangleTestUtilsAndroid)
+  commonAndroid(project)
+  common()
 }
