@@ -98,4 +98,17 @@ fun Project.common() {
         }
     }
   }
+
+  tasks.register("format") {
+    group = "formatting"
+    description = "ktlintformat, moduleCheckSortDependencies, dependencySync"
+
+    dependsOn("ktlintFormat")
+    dependsOn(rootProject.tasks.getByPath("moduleCheckSortDependencies"))
+
+    val dependencySyncTasks = rootProject
+      .allprojects
+      .mapNotNull { it.tasks.findByPath("dependencySync") }
+    dependsOn(dependencySyncTasks)
+  }
 }
