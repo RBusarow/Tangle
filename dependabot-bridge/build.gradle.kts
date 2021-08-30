@@ -89,7 +89,7 @@ dependencies {
   dependencySync("com.squareup.anvil:gradle-plugin:2.3.4")
   dependencySync("com.squareup:kotlinpoet:1.9.0")
 
-  dependencySync("dev.zacsweers.autoservice:auto-service-ksp:0.5.3")
+  dependencySync("dev.zacsweers.autoservice:auto-service-ksp:0.5.4")
 
   dependencySync("io.kotest:kotest-assertions-core-jvm:4.6.2")
   dependencySync("io.kotest:kotest-assertions-shared-jvm:4.6.2")
