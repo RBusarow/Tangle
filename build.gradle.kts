@@ -32,6 +32,7 @@ buildscript {
     classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.30-1.0.0-beta08")
     classpath("com.squareup.anvil:gradle-plugin:2.3.3")
     classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
+
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
     classpath("org.jlleitschuh.gradle:ktlint-gradle:10.1.0")
   }
