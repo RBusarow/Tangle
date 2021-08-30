@@ -124,7 +124,7 @@ google-auto-common = "com.google.auto:auto-common:1.1.2"
 google-auto-service-annotations = "com.google.auto.service:auto-service-annotations:1.0"
 google-auto-service-processor = "com.google.auto.service:auto-service:1.0"
 
-google-auto-service-ksp = "dev.zacsweers.autoservice:auto-service-ksp:0.5.3"
+google-auto-service-ksp = "dev.zacsweers.autoservice:auto-service-ksp:0.5.4"
 
 google-dagger-api = { module = "com.google.dagger:dagger", version.ref = "google-dagger" }
 google-dagger-compiler = { module = "com.google.dagger:dagger-compiler", version.ref = "google-dagger" }
