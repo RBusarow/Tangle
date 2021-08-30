@@ -86,7 +86,7 @@ dependencies {
   dependencySync("com.squareup.anvil:compiler-api:2.3.3")
   dependencySync("com.squareup.anvil:compiler-utils:2.3.3")
   dependencySync("com.squareup.anvil:compiler:2.3.3")
-  dependencySync("com.squareup.anvil:gradle-plugin:2.3.3")
+  dependencySync("com.squareup.anvil:gradle-plugin:2.3.4")
   dependencySync("com.squareup:kotlinpoet:1.9.0")
 
   dependencySync("dev.zacsweers.autoservice:auto-service-ksp:0.5.3")
