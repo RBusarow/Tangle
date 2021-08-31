@@ -125,7 +125,7 @@ internal fun ViewModelStoreOwner.navigationArgumentsOrNull(): Bundle? {
 
   return when {
     this is NavBackStackEntry -> arguments
-    this is AppCompatActivity -> intent.extras
+    this is ComponentActivity -> intent.extras
     this is SavedStateRegistryOwner &&
       this is HasDefaultViewModelProviderFactory -> {
       currentFragmentOrNull(this)?.arguments
