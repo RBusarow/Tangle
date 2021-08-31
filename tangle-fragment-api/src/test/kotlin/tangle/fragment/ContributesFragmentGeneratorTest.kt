@@ -146,4 +146,54 @@ class ContributesFragmentGeneratorTest : BaseTest() {
         .getAnnotation(ContributesTo::class.java)!!.scope shouldBe Unit::class
     }
   }
+
+  @TestFactory
+  fun `annotated class may extend an abstract base fragment`() = test {
+    compile(
+      //language=kotlin
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import javax.inject.Inject
+
+      @ContributesFragment(Unit::class)
+      class Subject @Inject constructor() : BaseFragment()
+
+      abstract class BaseFragment : Fragment()
+      """
+    ) {
+      tangleUnitFragmentModuleClass.annotationClasses() shouldContainExactly listOf(
+        Module::class,
+        ContributesTo::class,
+        Metadata::class
+      )
+
+      tangleUnitFragmentModuleClass
+        .getAnnotation(ContributesTo::class.java)!!.scope shouldBe Unit::class
+    }
+  }
+
+  @TestFactory
+  fun `annotated class must extend fragment`() = test {
+    compile(
+      //language=kotlin
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import javax.inject.Inject
+
+      @ContributesFragment(Unit::class)
+      class Subject @Inject constructor()
+      """,
+      shouldFail = true
+    ) {
+      messages shouldContainIgnoringWhitespaces "The annotation " +
+        "`@ContributesFragment(Unit::class)` can only be applied " +
+        "to classes which extend androidx.fragment.app.Fragment"
+    }
+  }
 }
