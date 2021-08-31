@@ -121,7 +121,7 @@ dependencies {
   dependencySync("com.squareup:kotlinpoet:1.9.0")
 
   dependencySync("dev.zacsweers.autoservice:auto-service-ksp:0.5.4")
-  dependencySync("dev.zacsweers.moshix:moshi-ksp:0.12.0")
+  dependencySync("dev.zacsweers.moshix:moshi-ksp:0.13.0")
   dependencySync("dev.zacsweers.moshix:moshi-sealed-codegen:0.12.0")
   dependencySync("dev.zacsweers.moshix:moshi-sealed-ksp:0.12.0")
   dependencySync("dev.zacsweers.moshix:moshi-sealed-runtime:0.12.0")
