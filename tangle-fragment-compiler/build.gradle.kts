@@ -24,6 +24,7 @@ dependencies {
   kapt(libs.google.auto.service.processor)
 
   api(libs.kotlin.compiler)
+  api(libs.kotlin.reflect)
   api(libs.square.anvil.compiler.api)
   api(libs.square.kotlinPoet)
 
