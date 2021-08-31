@@ -39,4 +39,3 @@ class ComposeFragmentsIntegrationTest {
     testRule.onNodeWithText("awesome temperament").assertIsDisplayed()
   }
 }
-

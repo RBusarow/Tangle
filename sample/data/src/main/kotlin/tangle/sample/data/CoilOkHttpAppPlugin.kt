@@ -62,4 +62,3 @@ object CoilImageLoaderModule {
       .build()
   }
 }
-
