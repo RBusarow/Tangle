@@ -16,7 +16,6 @@
 package tangle.viewmodel.compiler
 
 import com.google.auto.service.AutoService
-import com.squareup.anvil.compiler.api.AnvilContext
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.anvil.compiler.internal.asClassName
@@ -27,6 +26,7 @@ import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.psiUtil.nonStaticOuterClasses
 import tangle.inject.compiler.FqNames
 import tangle.inject.compiler.TangleCompilationException
+import tangle.inject.compiler.TangleCodeGenerator
 import tangle.inject.compiler.vmInjectConstructor
 import tangle.viewmodel.compiler.params.Factory
 import tangle.viewmodel.compiler.params.TangleScopeModule
@@ -35,11 +35,9 @@ import java.io.File
 
 @Suppress("UNUSED")
 @AutoService(CodeGenerator::class)
-class VMInjectCodeGenerator : CodeGenerator {
+class VMInjectCodeGenerator : TangleCodeGenerator() {
 
-  override fun isApplicable(context: AnvilContext): Boolean = true
-
-  override fun generateCode(
+  override fun generateTangleCode(
     codeGenDir: File,
     module: ModuleDescriptor,
     projectFiles: Collection<KtFile>

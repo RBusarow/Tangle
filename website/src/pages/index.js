@@ -43,36 +43,25 @@ class MyFragment @FragmentInject constructor(
   val userId: String
 ) : ViewModel()
 
-class MyFragment : Fragment() {
-  val viewModel: MyViewModel by tangleViewModel()
-}`
-    ),
-    description: (
-      <>
-        Inject <code>ViewModel</code>s, including scoped <code>SavedStateHandle</code> arguments.
-        Use the <code>TangleParam</code> annotation to automatically extract
-        navigation/<code>Bundle</code> arguments and inject them explicitly.
-      </>
-    ),
-    dest: "docs/viewModels/viewModels"
-  },
-  {
-    title: "Compose",
-    code: (
-`@Composable
+@Composable
 fun MyComposable(
   navController: NavController,
   viewModel: MyViewModel = tangleViewModel()
-) { /* ... */ }`
-    ),
-    description: (
-      <>
-        Use the <code>tangleViewModel</code> composable function to inject scoped
-        <code>ViewModel</code>s.
-      </>
-    ),
-    dest: "docs/viewModels/compose"
-  },
+) { /* ... */ }
+
+class MyFragment : Fragment() {
+   val viewModel: MyViewModel by tangleViewModel()
+ }`
+     ),
+     description: (
+       <>
+         Inject <code>ViewModel</code>s, including scoped <code>SavedStateHandle</code> arguments.
+         Use the <code>TangleParam</code> annotation to automatically extract
+         navigation/<code>Bundle</code> arguments and inject them explicitly.
+       </>
+     ),
+     dest: "docs/viewModels/viewModels"
+   },
   {
     title: "WorkManager",
     code: (
@@ -80,7 +69,7 @@ fun MyComposable(
 class MyWorker @AssistedInject constructor(
   @Assisted context: Context,
   @Assisted params: WorkerParameters
-) : CoroutineWorker(context,params){
+) : CoroutineWorker(context,params) {
   override suspend fun doWork(): Result {
     /* ... */
   }

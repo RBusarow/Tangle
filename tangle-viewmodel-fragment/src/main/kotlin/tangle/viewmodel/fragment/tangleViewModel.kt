@@ -27,6 +27,7 @@ import tangle.viewmodel.internal.AssistedTangleViewModelFactory
 import tangle.viewmodel.internal.TangleViewModelFactory
 import kotlin.DeprecationLevel.ERROR
 import kotlin.experimental.ExperimentalTypeInference
+import kotlin.LazyThreadSafetyMode.NONE
 
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.
@@ -39,16 +40,17 @@ import kotlin.experimental.ExperimentalTypeInference
 public inline fun <reified VM : ViewModel> Fragment.tangleViewModel(
   savedStateRegistryOwner: SavedStateRegistryOwner = this,
   defaultFactory: ViewModelProvider.Factory = defaultViewModelProviderFactory
-): Lazy<VM> {
+): Lazy<VM> =
+  lazy(NONE) {
 
-  val viewModelFactory = TangleViewModelFactory(
-    owner = savedStateRegistryOwner,
-    defaultArgs = arguments,
-    defaultFactory = defaultFactory
-  )
+    val viewModelFactory = TangleViewModelFactory(
+      owner = savedStateRegistryOwner,
+      defaultArgs = arguments,
+      defaultFactory = defaultFactory
+    )
 
-  return ViewModelLazy(VM::class, { viewModelStore }, { viewModelFactory })
-}
+    ViewModelLazy(VM::class, { viewModelStore }, { viewModelFactory }).value
+  }
 
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.

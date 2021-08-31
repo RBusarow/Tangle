@@ -23,8 +23,9 @@ dependencies {
 
   kapt(libs.google.auto.service.processor)
 
-  api(libs.anvil.compiler.api)
   api(libs.kotlin.compiler)
+  api(libs.kotlin.reflect)
+  api(libs.square.anvil.compiler.api)
   api(libs.square.kotlinPoet)
 
   api(projects.tangleCompiler)
@@ -32,24 +33,13 @@ dependencies {
   compileOnly(libs.androidx.annotations)
   compileOnly(libs.google.auto.service.processor)
 
-  implementation(libs.anvil.annotations)
-  implementation(libs.anvil.compiler.utils)
   implementation(libs.google.dagger.api)
+  implementation(libs.square.anvil.annotations)
+  implementation(libs.square.anvil.compiler.utils)
 
-  testImplementation(libs.anvil.compiler.core)
   testImplementation(libs.bundles.hermit)
   testImplementation(libs.bundles.kotest)
   testImplementation(libs.google.dagger.compiler)
   testImplementation(libs.kotlin.compile.testing)
+  testImplementation(libs.square.anvil.compiler.core)
 }
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
-  .configureEach {
-
-    kotlinOptions {
-
-      freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
-      )
-    }
-  }

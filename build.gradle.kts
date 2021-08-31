@@ -29,9 +29,10 @@ buildscript {
   }
   dependencies {
     classpath("com.android.tools.build:gradle:7.0.1")
-    classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.30-1.0.0-beta08")
+    classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.21-1.0.0-beta07")
     classpath("com.squareup.anvil:gradle-plugin:2.3.3")
     classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
+
     classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
     classpath("org.jlleitschuh.gradle:ktlint-gradle:10.1.0")
   }
@@ -40,17 +41,16 @@ buildscript {
 plugins {
   kotlin("jvm")
   id("com.github.ben-manes.versions") version "0.39.0"
-  id("io.gitlab.arturbosch.detekt") version "1.18.0"
+  id("io.gitlab.arturbosch.detekt") version "1.18.1"
   id("com.rickbusarow.module-check") version "0.10.0"
   id("com.osacky.doctor") version "0.7.1"
   id("com.dorongold.task-tree") version "2.1.0"
   id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.7.1"
   base
+  dokka
+  knit
+  website
 }
-
-apply(from = "gradle/knit.gradle.kts")
-apply(from = "gradle/dokka.gradle.kts")
-apply(from = "gradle/website.gradle.kts")
 
 allprojects {
 
@@ -160,7 +160,11 @@ apiValidation {
       "tangle-compiler",
       "tangle-fragment-compiler",
       "tangle-viewmodel-compiler",
-      "tangle-work-compiler"
+      "tangle-work-compiler",
+      "app",
+      "core",
+      "data",
+      "ui"
     )
   )
 

@@ -17,10 +17,11 @@ package tangle.viewmodel.compose
 
 import android.content.ContextWrapper
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
+import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.HasDefaultViewModelProviderFactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -54,7 +55,7 @@ public inline fun <reified VM : ViewModel> tangleViewModel(
       val factory = TangleViewModelFactory(viewModelStoreOwner)
       viewModel(viewModelStoreOwner, factory = factory)
     }
-    viewModelStoreOwner is AppCompatActivity -> {
+    viewModelStoreOwner is ComponentActivity -> {
 
       val args = viewModelStoreOwner.intent.extras
       val defaultFactory = viewModelStoreOwner.defaultViewModelProviderFactory
@@ -142,7 +143,7 @@ internal fun currentFragmentOrNull(
   val activity = LocalContext.current.let {
     var ctx = it
     while (ctx is ContextWrapper) {
-      if (ctx is AppCompatActivity) {
+      if (ctx is FragmentActivity) {
         return@let ctx
       }
       ctx = ctx.baseContext

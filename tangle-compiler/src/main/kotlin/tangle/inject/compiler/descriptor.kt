@@ -17,10 +17,7 @@
 
 package tangle.inject.compiler
 
-import com.squareup.anvil.compiler.internal.argumentType
-import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.asTypeName
-import com.squareup.anvil.compiler.internal.classDescriptorForType
+import com.squareup.anvil.compiler.internal.*
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.MemberName
@@ -184,15 +181,6 @@ fun List<AnnotationDescriptor>.qualifierAnnotationSpecs(
       }
   }
 }
-
-fun AnnotationDescriptor.qualifierArgumentsOrNull() = type
-  .classDescriptorForType()
-  // Often entries are annotated with @Inject, in this case we know it's not a qualifier and we
-  // can stop early.
-  .takeIf { it.fqNameOrNull() != FqNames.inject }
-  ?.annotations
-  ?.findAnnotation(FqNames.qualifier)
-  ?.allValueArguments
 
 fun List<CallableMemberDescriptor>.mapToParameters(
   module: ModuleDescriptor

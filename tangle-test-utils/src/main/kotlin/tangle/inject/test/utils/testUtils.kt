@@ -15,7 +15,6 @@
 
 package tangle.inject.test.utils
 
-import com.squareup.anvil.annotations.ExperimentalAnvilApi
 import com.tschuchort.compiletesting.KotlinCompilation.Result
 import dagger.internal.Factory
 import org.jetbrains.kotlin.utils.addToStdlib.cast
@@ -26,13 +25,8 @@ import java.lang.reflect.Modifier
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
-@ExperimentalAnvilApi
 val Member.isStatic: Boolean
   get() = Modifier.isStatic(modifiers)
-
-@ExperimentalAnvilApi
-val Member.isAbstract: Boolean
-  get() = Modifier.isAbstract(modifiers)
 
 /**
  * Creates a new instance of this class with the given arguments. This method assumes that this
@@ -41,7 +35,8 @@ val Member.isAbstract: Boolean
 @Suppress("UNCHECKED_CAST")
 fun <T : Any> Class<T>.createInstance(
   vararg initargs: Any?
-): T = declaredConstructors.single().use { it.newInstance(*initargs) } as T
+): T = declaredConstructors.single()
+  .use { it.newInstance(*initargs) } as T
 
 @Suppress("UNCHECKED_CAST")
 fun <T : Any> Class<T>.newInstanceStatic(
@@ -64,7 +59,6 @@ inline fun <T, E : Executable> E.use(block: (E) -> T): T {
   // Deprecated since Java 9, but many projects still use JDK 8 for compilation.
   @Suppress("DEPRECATION")
   val original = isAccessible
-
   return try {
     isAccessible = true
     block(this)
@@ -73,67 +67,8 @@ inline fun <T, E : Executable> E.use(block: (E) -> T): T {
   }
 }
 
-const val MODULE_PACKAGE_PREFIX = "anvil.module"
-
 val Result.daggerAppComponent: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.DaggerAppComponent")
-
-val Result.daggerAppComponent2: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.DaggerAppComponent2")
-
-val Result.contributingInterface: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.ContributingInterface")
-
-val Result.secondContributingInterface: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.SecondContributingInterface")
-
-val Result.innerInterface: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.SomeClass\$InnerInterface")
-
-val Result.parentInterface: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.ParentInterface")
-
-val Result.componentInterface: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.ComponentInterface")
-
-val Result.componentInterfaceAnvilModule: Class<*>
-  get() = classLoader
-    .loadClass("$MODULE_PACKAGE_PREFIX.tangle.inject.tests.ComponentInterfaceAnvilModule")
-
-val Result.subcomponentInterface: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.SubcomponentInterface")
-
-val Result.subcomponentInterfaceAnvilModule: Class<*>
-  get() = classLoader
-    .loadClass("$MODULE_PACKAGE_PREFIX.tangle.inject.tests.SubcomponentInterfaceAnvilModule")
-
-val Result.daggerModule1: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.DaggerModule1")
-
-val Result.assistedService: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.AssistedService")
-
-val Result.assistedServiceFactory: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.AssistedServiceFactory")
-
-val Result.daggerModule1AnvilModule: Class<*>
-  get() = classLoader
-    .loadClass("$MODULE_PACKAGE_PREFIX.tangle.inject.tests.DaggerModule1AnvilModule")
-
-val Result.daggerModule2: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.DaggerModule2")
-
-val Result.daggerModule3: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.DaggerModule3")
-
-val Result.daggerModule4: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.DaggerModule4")
-
-val Result.innerModule: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.ComponentInterface\$InnerModule")
-
-val Result.injectClass: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.InjectClass")
 
 val Result.myViewModelClass: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.MyViewModel")
@@ -158,9 +93,6 @@ val Result.tangleUnitFragmentInjectModuleClass: Class<*>
 
 val Result.tangleUnitFragmentModuleCompanionClass: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.Tangle_Unit_Fragment_Module\$Companion")
-
-val Result.anyQualifier: Class<*>
-  get() = classLoader.loadClass("tangle.inject.tests.AnyQualifier")
 
 val Result.bindMyFragment: Method
   get() = tangleUnitFragmentModuleClass.getDeclaredMethod("bind_MyFragment", myFragmentClass)

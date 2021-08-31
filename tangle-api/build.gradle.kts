@@ -25,14 +25,3 @@ dependencies {
   testImplementation(projects.tangleTestUtils)
   testImplementation(projects.tangleTestUtilsAndroid)
 }
-
-tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
-  .configureEach {
-
-    kotlinOptions {
-
-      freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
-      )
-    }
-  }
