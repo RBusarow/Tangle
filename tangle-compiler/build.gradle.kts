@@ -21,6 +21,7 @@ plugins {
 dependencies {
 
   api(libs.kotlin.compiler)
+  api(libs.kotlin.reflect)
   api(libs.square.anvil.compiler.api)
   api(libs.square.kotlinPoet)
 

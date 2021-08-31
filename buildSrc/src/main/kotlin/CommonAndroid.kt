@@ -30,19 +30,18 @@ fun BaseExtension.commonAndroid(target: Project) {
 
   defaultConfig {
     minSdk = 21
-    targetSdk = 31
-
-    testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+    targetSdk = 30
 
     vectorDrawables {
       useSupportLibrary = true
     }
   }
 
-  buildTypes {
-    getByName("release") {
-      isMinifyEnabled = false
-    }
+  buildTypes.configureEach {
+    isMinifyEnabled = false
+    proguardFiles(
+      getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+    )
   }
 
   compileOptions {

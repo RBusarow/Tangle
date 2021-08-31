@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (C) 2021 Rick Busarow
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~      http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<navigation
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  xmlns:app="http://schemas.android.com/apk/res-auto"
+  xmlns:tools="http://schemas.android.com/tools"
+  android:id="@+id/nav_graph"
+  app:startDestination="@id/BreedListFragment"
+  >
+
+  <fragment
+    android:id="@+id/BreedListFragment"
+    android:name="tangle.sample.ui.fragmentsWithArchNavigation.breedList.BreedListFragment"
+    android:label="breed list"
+    tools:layout="@layout/fragment_breed_list"
+    >
+
+    <action
+      android:id="@+id/action_BreedListFragment_to_BreedDetailFragment"
+      app:destination="@id/BreedDetailFragment"
+      />
+  </fragment>
+  <fragment
+    android:id="@+id/BreedDetailFragment"
+    android:name="tangle.sample.ui.fragmentsWithArchNavigation.breedDetail.BreedDetailFragment"
+    android:label="breed detail"
+    tools:layout="@layout/fragment_breed_detail"
+    >
+
+    <argument
+      android:name="breedId"
+      android:defaultValue="-1"
+      app:argType="integer"
+      />
+    <action
+      android:id="@+id/action_BreedDetailFragment_to_BreedListFragment"
+      app:destination="@id/BreedListFragment"
+      />
+  </fragment>
+</navigation>

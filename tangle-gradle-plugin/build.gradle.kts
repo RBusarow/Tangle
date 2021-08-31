@@ -183,6 +183,7 @@ val generateBuildProperties by tasks.registering {
       |  const val VERSION = "$version"
       |  const val GROUP = "$group"
       |}
+      |
     """.trimMargin()
     )
   }

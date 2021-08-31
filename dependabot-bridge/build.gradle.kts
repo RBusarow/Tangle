@@ -32,6 +32,7 @@ dependencies {
   dependencySync("androidx.compose.material:material:1.0.1")
   dependencySync("androidx.compose.runtime:runtime:1.0.1")
   dependencySync("androidx.compose.ui:ui-test-junit4:1.0.1")
+  dependencySync("androidx.compose.ui:ui-test-manifest:1.0.1")
   dependencySync("androidx.compose.ui:ui-tooling:1.0.1")
   dependencySync("androidx.compose.ui:ui:1.0.1")
   dependencySync("androidx.constraintlayout:constraintlayout:2.1.0")
@@ -122,8 +123,12 @@ dependencies {
 
   dependencySync("dev.zacsweers.autoservice:auto-service-ksp:0.5.4")
   dependencySync("dev.zacsweers.moshix:moshi-ksp:0.12.0")
+  dependencySync("dev.zacsweers.moshix:moshi-ksp:0.12.0")
+  dependencySync("dev.zacsweers.moshix:moshi-sealed-codegen:0.12.0")
   dependencySync("dev.zacsweers.moshix:moshi-sealed-codegen:0.12.0")
   dependencySync("dev.zacsweers.moshix:moshi-sealed-ksp:0.12.0")
+  dependencySync("dev.zacsweers.moshix:moshi-sealed-ksp:0.12.0")
+  dependencySync("dev.zacsweers.moshix:moshi-sealed-runtime:0.12.0")
   dependencySync("dev.zacsweers.moshix:moshi-sealed-runtime:0.12.0")
 
   dependencySync("io.coil-kt:coil-compose:1.3.2")
@@ -149,6 +154,7 @@ dependencies {
   dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.21")
+  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-reflect:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21")
   dependencySync("org.jetbrains.kotlinx:atomicfu-gradle-plugin:0.16.3")
