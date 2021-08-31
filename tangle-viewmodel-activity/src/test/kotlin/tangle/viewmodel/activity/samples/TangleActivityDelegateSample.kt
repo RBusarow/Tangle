@@ -50,7 +50,7 @@ class MyViewModel @VMInject constructor() : ViewModel()
 class MyAssistedViewModel @VMInject constructor(
   @VMAssisted val name: String
 ) : ViewModel(),
-    AssistedViewModel<Factory> {
+  AssistedViewModel<Factory> {
 
   @VMInjectFactory
   interface Factory {

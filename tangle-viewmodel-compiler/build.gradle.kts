@@ -27,14 +27,14 @@ dependencies {
   api(libs.square.anvil.compiler.api)
   api(libs.square.kotlinPoet)
 
-  implementation(projects.tangleCompiler)
-
   compileOnly(libs.androidx.annotations)
   compileOnly(libs.google.auto.service.processor)
 
   implementation(libs.google.dagger.api)
   implementation(libs.square.anvil.annotations)
   implementation(libs.square.anvil.compiler.utils)
+
+  implementation(projects.tangleCompiler)
 
   testImplementation(libs.bundles.hermit)
   testImplementation(libs.bundles.kotest)

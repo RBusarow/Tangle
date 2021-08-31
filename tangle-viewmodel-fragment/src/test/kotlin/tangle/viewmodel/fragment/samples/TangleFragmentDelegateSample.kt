@@ -51,7 +51,8 @@ class TangleFragmentDelegateSample {
 class MyViewModel @VMInject constructor() : ViewModel()
 
 class MyAssistedViewModel2 @VMInject constructor(
-  @VMAssisted val name: String
+  @VMAssisted
+  val name: String
 ) : ViewModel(),
     AssistedViewModel<MyFactory2> {
 

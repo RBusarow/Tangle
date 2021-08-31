@@ -25,9 +25,10 @@ import tangle.viewmodel.fragment.MyAssistedViewModel.MyFactory
 class MyViewModel @VMInject constructor() : ViewModel()
 
 class MyAssistedViewModel @VMInject constructor(
-  @VMAssisted val name: String
+  @VMAssisted
+  val name: String
 ) : ViewModel(),
-    AssistedViewModel< MyFactory> {
+    AssistedViewModel<MyFactory> {
 
   @VMInjectFactory
   interface MyFactory {

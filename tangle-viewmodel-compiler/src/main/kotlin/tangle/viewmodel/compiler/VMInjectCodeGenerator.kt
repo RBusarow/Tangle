@@ -25,8 +25,8 @@ import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.psiUtil.nonStaticOuterClasses
 import tangle.inject.compiler.FqNames
-import tangle.inject.compiler.TangleCompilationException
 import tangle.inject.compiler.TangleCodeGenerator
+import tangle.inject.compiler.TangleCompilationException
 import tangle.inject.compiler.vmInjectConstructor
 import tangle.viewmodel.compiler.params.Factory
 import tangle.viewmodel.compiler.params.TangleScopeModule
@@ -129,4 +129,3 @@ class VMInjectCodeGenerator : TangleCodeGenerator() {
     return generated + tangleScopeModules + tangleAppScopeModules
   }
 }
-

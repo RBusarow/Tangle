@@ -26,8 +26,8 @@ import tangle.viewmodel.AssistedViewModel
 import tangle.viewmodel.internal.AssistedTangleViewModelFactory
 import tangle.viewmodel.internal.TangleViewModelFactory
 import kotlin.DeprecationLevel.ERROR
-import kotlin.experimental.ExperimentalTypeInference
 import kotlin.LazyThreadSafetyMode.NONE
+import kotlin.experimental.ExperimentalTypeInference
 
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.
@@ -79,5 +79,4 @@ public inline fun <reified VM, reified F : Any> Fragment.tangleAssisted(
   level = ERROR,
   replaceWith = ReplaceWith("tangleAssisted<VM> { TODO() }")
 )
-public fun <VM : AssistedViewModel<*>> Fragment.tangleViewModel(
-): Lazy<VM> = throw UnsupportedOperationException("")
+public fun <VM : AssistedViewModel<*>> Fragment.tangleViewModel(): Lazy<VM> = throw UnsupportedOperationException("")
