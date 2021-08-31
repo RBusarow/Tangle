@@ -20,38 +20,9 @@ plugins {
 
 dependencies {
 
-  kapt(libs.google.auto.service.processor)
   kapt(libs.google.dagger.compiler)
 
-  kaptTest(libs.google.dagger.compiler)
-
-  api(libs.bundles.hermit)
-  api(libs.bundles.jUnit)
-  api(libs.bundles.kotest)
   api(libs.google.dagger.api)
-  api(libs.google.dagger.compiler)
-  api(libs.javax.annotation.jsr250.api)
-  api(libs.junit.vintage)
-  api(libs.kotest.assertions)
-  api(libs.kotest.properties)
-  api(libs.kotest.runner)
-  api(libs.kotlin.annotation.processing)
-  api(libs.kotlin.compile.testing)
-  api(libs.kotlin.compiler)
-  api(libs.kotlin.reflect)
-  api(libs.kotlinx.coroutines.core)
-  api(libs.kotlinx.coroutines.test)
-  api(libs.robolectric) {
-    exclude(group = "org.bouncycastle")
-  }
-  api(libs.square.anvil.annotations)
-  api(libs.square.anvil.compiler.api)
-  api(libs.square.anvil.compiler.core)
-  api(libs.square.anvil.compiler.utils)
-  api(libs.square.kotlinPoet)
 
   api(projects.tangleApi)
-  api(projects.tangleCompiler)
-
-  compileOnly(libs.google.auto.service.processor)
 }

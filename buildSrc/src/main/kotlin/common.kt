@@ -105,6 +105,7 @@ fun Project.common() {
 
     dependsOn("ktlintFormat")
     dependsOn(rootProject.tasks.getByPath("moduleCheckSortDependencies"))
+    dependsOn("moveJavaSrcToKotlin")
 
     val dependencySyncTasks = rootProject
       .allprojects
