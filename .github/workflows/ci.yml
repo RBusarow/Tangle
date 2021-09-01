@@ -90,6 +90,15 @@ jobs:
           commit_message: update docs versions
           commit_options: '--no-verify --signoff'
 
+      - name: Update version in website package.json
+        run: ./gradlew updateWebsitePackageJsonVersion --no-daemon
+
+      - name: commit changes
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: update website versions
+          commit_options: '--no-verify --signoff'
+
   api-check:
 
     runs-on: ubuntu-latest
