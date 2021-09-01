@@ -1,3 +1,14 @@
+# 0.12.1
+
+### 🐛 Bug Fixes
+
+- fix `by tangleViewModel` ignores `ComponentActivity` or `FragmentActivity` ([#228](https://github.com/RBusarow/Tangle/issues/228))
+- fix `by tangleViewModel` in a Fragment attempts to initialize eagerly (and crashes) ([#227](https://github.com/RBusarow/Tangle/issues/227))
+
+### 🧰 Maintenance
+
+- update Anvil to 2.3.4 ([#251](https://github.com/rbusarow/Tangle/pull/251))
+
 # 0.12.0 - Worker Injection
 
 ### 🚀 Features

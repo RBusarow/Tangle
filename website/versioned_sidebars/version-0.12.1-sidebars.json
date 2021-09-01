@@ -1,0 +1,56 @@
+{
+  "version-0.12.1/Docs": [
+    {
+      "type": "doc",
+      "id": "version-0.12.1/configuration"
+    },
+    {
+      "type": "category",
+      "label": "ViewModels",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-0.12.1/viewModels/viewModels"
+        },
+        {
+          "type": "doc",
+          "id": "version-0.12.1/viewModels/savedStateHandle"
+        },
+        {
+          "type": "doc",
+          "id": "version-0.12.1/viewModels/compose"
+        }
+      ],
+      "collapsible": true
+    },
+    {
+      "type": "category",
+      "label": "Fragments",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-0.12.1/fragments/fragments"
+        },
+        {
+          "type": "doc",
+          "id": "version-0.12.1/fragments/bundles"
+        }
+      ],
+      "collapsible": true
+    },
+    {
+      "type": "category",
+      "label": "WorkManager",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-0.12.1/workManager/workManager"
+        }
+      ],
+      "collapsible": true
+    }
+  ]
+}
