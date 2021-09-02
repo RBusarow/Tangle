@@ -28,6 +28,7 @@ extensions.configure<kotlinx.knit.KnitPluginExtension> {
     exclude(
       "**/node_modules/**",
       "**/build/**",
+      "**/sample/**",
       "**/.gradle/**"
     )
   }
