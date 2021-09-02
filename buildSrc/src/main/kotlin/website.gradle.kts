@@ -128,6 +128,14 @@ val startSite by tasks.registering(Exec::class) {
   description = "launches the local development website"
   group = "website"
 
+  dependsOn(
+    versionDocs,
+    updateWebsiteApiDocs,
+    updateWebsiteChangelog,
+    updateWebsiteNextDocsVersionRefs,
+    updateWebsitePackageJsonVersion
+  )
+
   workingDir("./website")
   commandLine("npm", "run", "start")
 }
@@ -138,8 +146,17 @@ val versionDocs by tasks.registering(Exec::class) {
     "creates a new version snapshot of website docs, using the current version defined in gradle.properties"
   group = "website"
 
-  workingDir("./website")
+  val existingVersions = with(File("./website/versions.json")) {
+    "\"([^\"]*)\"".toRegex()
+      .findAll(readText())
+      .flatMap { it.destructured.toList() }
+  }
+
   val version = project.extra.properties["VERSION_NAME"] as String
+
+  enabled = version !in existingVersions
+
+  workingDir("./website")
   commandLine("npm", "run", "docusaurus", "docs:version", version)
 }
 
@@ -171,7 +188,6 @@ val updateWebsiteChangelog by tasks.registering(Copy::class) {
 
   description = "copies the root project's CHANGELOG to the website and updates its formatting"
   group = "website"
-
 
   from("CHANGELOG.md")
   into("./website/src/pages")
