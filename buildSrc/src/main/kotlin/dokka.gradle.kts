@@ -17,18 +17,19 @@ apply(plugin = "org.jetbrains.dokka")
 
 subprojects {
 
+  val proj = this
+
   val includeSubproject = when {
     path == ":tangle-test-utils" -> false
     path == ":tangle-test-utils-android" -> false
     path.endsWith("tests") -> false
     path.endsWith("compiler") -> false
-    else -> java.io.File("$projectDir/src").exists()
+    proj.parent?.path == ":sample" -> false
+    else -> File("${proj.projectDir}/src").exists()
   }
 
   if (includeSubproject) {
     apply(plugin = "org.jetbrains.dokka")
-
-    val proj = this
 
     proj.tasks
       .withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask>()
@@ -46,7 +47,7 @@ subprojects {
               }
             )
 
-            if (java.io.File("${proj.projectDir}/README.md").exists()) {
+            if (File("${proj.projectDir}/README.md").exists()) {
               includes.from(files("${proj.projectDir}/README.md"))
             }
 
@@ -65,4 +66,3 @@ subprojects {
       }
   }
 }
-
