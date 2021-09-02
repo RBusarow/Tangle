@@ -129,6 +129,7 @@ dependencies {
 
   testImplementation(projects.tangleTestUtils)
 }
+
 tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
   .configureEach {
 
@@ -139,3 +140,16 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
       )
     }
   }
+
+// adapted from Tivi
+// https://github.com/chrisbanes/tivi/blob/main/app/build.gradle#L213-L223
+androidComponents.onVariants { variant ->
+  val caps = variant.name.capitalize()
+  tasks.register("open$caps", Exec::class.java) {
+    dependsOn("install$caps")
+
+    val args = "adb shell monkey -p ${variant.applicationId.get()} -c android.intent.category.LAUNCHER 1".split(" ")
+
+    commandLine(args)
+  }
+}
