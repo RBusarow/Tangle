@@ -195,6 +195,7 @@ jobs:
 
       - name: Upload results
         uses: actions/upload-artifact@v2
+        if: failure()
         with:
           name: insrumentation-test-results
           path: ./**/build/reports/androidTests/connected/**
