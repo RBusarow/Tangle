@@ -76,8 +76,8 @@ dependencies {
   dependencySync("androidx.test:orchestrator:1.4.0")
   dependencySync("androidx.test:rules:1.4.0")
   dependencySync("androidx.test:runner:1.4.0")
-  dependencySync("androidx.work:work-runtime-ktx:2.5.0")
-  dependencySync("androidx.work:work-runtime:2.5.0")
+  dependencySync("androidx.work:work-runtime-ktx:2.6.0")
+  dependencySync("androidx.work:work-runtime:2.6.0")
   dependencySync("androidx.work:work-testing:2.6.0")
 
   dependencySync("com.android.tools.build:gradle:7.0.1")
