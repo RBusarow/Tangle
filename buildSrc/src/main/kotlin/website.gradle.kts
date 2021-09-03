@@ -18,6 +18,10 @@
  * in the un-versioned /website/docs. Updates all versions to the pre-release version.
  */
 val updateWebsiteNextDocsVersionRefs by tasks.registering {
+
+  description = "Updates the \"next\" version docs to use the next artifact version"
+  group = "website"
+
   doLast {
 
     val version = project.extra.properties["VERSION_NAME"] as String
@@ -32,10 +36,55 @@ val updateWebsiteNextDocsVersionRefs by tasks.registering {
 }
 
 /**
+ * Updates the "tangle" version in package.json
+ */
+val updateWebsitePackageJsonVersion by tasks.registering {
+
+  description = "Updates the \"Tangle\" version in package.json"
+  group = "website"
+
+  doLast {
+
+    val version = project.extra.properties["VERSION_NAME"] as String
+
+    // this isn't very robust, but it's fine for this use-case
+    val versionReg = """(\s*"version"\s*:\s*")[^"]*("\s*,)""".toRegex()
+
+    // just in case some child object gets a "version" field, ignore it.
+    // This only works if the correct field comes first (which it does).
+    var foundOnce = false
+
+    with(File("$rootDir/website/package.json")) {
+      val newText = readText()
+        .lines()
+        .joinToString("\n") { line ->
+
+          line.replace(versionReg) { matchResult ->
+
+            if (!foundOnce) {
+              foundOnce = true
+              val (prefix, suffix) = matchResult.destructured
+              "$prefix$version$suffix"
+            } else {
+              line
+            }
+          }
+        }
+      writeText(newText)
+    }
+  }
+}
+
+/**
  * Looks for all references to Tangle artifacts in the project README.md
  * to the current released version.
  */
 val updateProjectReadmeVersionRefs by tasks.registering {
+
+  description =
+    "Updates the project-level README to use the latest published version in maven coordinates"
+  group = "documentation"
+
   doLast {
 
     val version = project.extra.properties["VERSION_NAME"] as String
@@ -75,17 +124,46 @@ fun File.updateTangleVersionRef(version: String) {
 }
 
 val startSite by tasks.registering(Exec::class) {
+
+  description = "launches the local development website"
+  group = "website"
+
+  dependsOn(
+    versionDocs,
+    updateWebsiteApiDocs,
+    updateWebsiteChangelog,
+    updateWebsiteNextDocsVersionRefs,
+    updateWebsitePackageJsonVersion
+  )
+
   workingDir("./website")
   commandLine("npm", "run", "start")
 }
 
 val versionDocs by tasks.registering(Exec::class) {
-  workingDir("./website")
+
+  description =
+    "creates a new version snapshot of website docs, using the current version defined in gradle.properties"
+  group = "website"
+
+  val existingVersions = with(File("./website/versions.json")) {
+    "\"([^\"]*)\"".toRegex()
+      .findAll(readText())
+      .flatMap { it.destructured.toList() }
+  }
+
   val version = project.extra.properties["VERSION_NAME"] as String
+
+  enabled = version !in existingVersions
+
+  workingDir("./website")
   commandLine("npm", "run", "docusaurus", "docs:version", version)
 }
 
 val updateWebsiteApiDocs by tasks.registering(Copy::class) {
+
+  description = "creates new Dokka api docs and copies them to the website's static dir"
+  group = "website"
 
   doFirst {
     delete(
@@ -107,6 +185,10 @@ val updateWebsiteApiDocs by tasks.registering(Copy::class) {
 }
 
 val updateWebsiteChangelog by tasks.registering(Copy::class) {
+
+  description = "copies the root project's CHANGELOG to the website and updates its formatting"
+  group = "website"
+
   from("CHANGELOG.md")
   into("./website/src/pages")
 
