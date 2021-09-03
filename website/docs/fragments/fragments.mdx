@@ -14,14 +14,15 @@ with two different paths at the end.
 ### 1. Set up Gradle
 
 <Tabs groupId="language"
-defaultValue="Anvil Plugin"
+defaultValue="Kotlin Plugin"
 values={[
-{label: 'Anvil Plugin', value: 'Anvil Plugin'},
-{label: 'Kotlin dependencies block', value: 'Kotlin dependencies block'},
-{label: 'Groovy dependencies block', value: 'Groovy dependencies block'},
+    {label: 'Kotlin Plugin', value: 'Kotlin Plugin'},
+    {label: 'Groovy Plugin', value: 'Groovy Plugin'},
+    {label: 'Kotlin dependencies block', value: 'Kotlin dependencies block'},
+    {label: 'Groovy dependencies block', value: 'Groovy dependencies block'},
 ]}>
 
-<TabItem value="Anvil Plugin">
+<TabItem value="Kotlin Plugin">
 
 ```kotlin
 // any Android module's build.gradle.kts
@@ -33,7 +34,26 @@ plugins {
 }
 
 tangle {
-  fragmentsEnabled.set(true) // default is true
+  fragmentsEnabled = true // default is true
+}
+```
+
+</TabItem>
+
+<TabItem value="Groovy Plugin">
+
+```groovy
+// any Android module's build.gradle
+plugins {
+  id 'android-library' // or application, etc.
+  kotlin("android")
+  id 'com.squareup.anvil'
+  id 'com.rickbusarow.tangle'
+}
+
+// optional
+tangle {
+  fragmentsEnabled true // default is true
 }
 ```
 
