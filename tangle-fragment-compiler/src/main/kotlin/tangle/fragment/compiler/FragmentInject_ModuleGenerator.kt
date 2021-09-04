@@ -48,7 +48,7 @@ internal object FragmentInject_ModuleGenerator : FileGenerator<FragmentBindingMo
     val scopeClassName = params.scopeClassName
     val packageName = params.packageName
 
-    val moduleName = "Tangle_${scopeClassName.simpleNames.joinToString("_")}_FragmentInject_Module"
+    val moduleName = "Tangle_${scopeClassName.generateSimpleNameString()}_FragmentInject_Module"
 
     val factoryImpls = params.factoryParams
 
@@ -71,7 +71,7 @@ internal object FragmentInject_ModuleGenerator : FileGenerator<FragmentBindingMo
               includeModule = false
             )
             addFunction(
-              "provide_${params.factoryInterfaceClassName.simpleNames.joinToString("_")}"
+              "provide_${params.factoryInterfaceClassName.generateSimpleNameString()}"
             ) {
               addAnnotation(ClassNames.provides)
               factoryConstructorParams.forEach { argument ->

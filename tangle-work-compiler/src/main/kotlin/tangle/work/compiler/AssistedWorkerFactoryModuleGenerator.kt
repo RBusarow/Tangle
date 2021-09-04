@@ -46,7 +46,7 @@ object AssistedWorkerFactoryModuleGenerator : FileGenerator<TangleAppScopeModule
           .applyEach(params.workerParamsList) { workerParams ->
 
             addFunction(
-              "multibind_${workerParams.assistedFactoryClassName.simpleNames.joinToString("_")}"
+              "multibind_${workerParams.assistedFactoryClassName.generateSimpleNameString()}"
             ) {
 
               addModifiers(ABSTRACT)

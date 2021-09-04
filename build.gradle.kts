@@ -156,7 +156,6 @@ apiValidation {
   ignoredProjects.addAll(
     listOf(
       "tangle-test-utils",
-      "tangle-test-utils-android",
       "tangle-compiler",
       "tangle-fragment-compiler",
       "tangle-viewmodel-compiler",

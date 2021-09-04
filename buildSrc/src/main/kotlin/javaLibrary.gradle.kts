@@ -50,14 +50,3 @@ val testJvm by tasks.registering {
 val buildTests by tasks.registering {
   dependsOn("testClasses")
 }
-
-tasks.withType<KotlinCompile>()
-  .configureEach {
-
-    kotlinOptions {
-
-      freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
-      )
-    }
-  }

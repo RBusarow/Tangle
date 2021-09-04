@@ -113,3 +113,18 @@ fun Project.common() {
     dependsOn(dependencySyncTasks)
   }
 }
+
+fun Project.experimentalAnvil() {
+
+  tasks.withType<KotlinCompile>()
+    .configureEach {
+
+      kotlinOptions {
+
+        freeCompilerArgs = freeCompilerArgs + listOf(
+          "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
+        )
+      }
+    }
+
+}

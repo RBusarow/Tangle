@@ -172,7 +172,7 @@ internal sealed class FragmentInjectParams {
 
         val factoryInterfaceClassName = factoryInterface.asClassName()
         val factoryImplSimpleName =
-          "${factoryInterfaceClassName.simpleNames.joinToString("_")}_Impl"
+          "${factoryInterfaceClassName.generateSimpleNameString()}_Impl"
         val factoryImplClassName = ClassName(packageName, factoryImplSimpleName)
 
         val tangleParams = functionParameters.map {

@@ -1,7 +1,13 @@
 name: CI
 
-on:
-  pull_request
+on:  
+  pull_request:
+  workflow_dispatch:
+  schedule:
+    # * is a special character in YAML so you have to quote this string
+    # every day at 10pm CST (4 UTC)
+    - cron: '0 4 * * *'
+
 
 jobs:
 

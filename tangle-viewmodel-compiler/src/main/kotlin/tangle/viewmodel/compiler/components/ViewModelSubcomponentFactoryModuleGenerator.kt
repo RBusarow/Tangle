@@ -23,10 +23,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import org.jetbrains.kotlin.descriptors.resolveClassByFqName
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation.FROM_BACKEND
 import org.jetbrains.kotlin.name.FqName
-import tangle.inject.compiler.ClassNames
-import tangle.inject.compiler.FileGenerator
-import tangle.inject.compiler.addFunction
-import tangle.inject.compiler.buildFile
+import tangle.inject.compiler.*
 import tangle.viewmodel.compiler.tangleViewModelKeysSubcomponentFactory
 import tangle.viewmodel.compiler.tangleViewModelMapSubcomponentFactory
 import java.io.File
@@ -81,7 +78,7 @@ class ViewModelSubcomponentFactoryModuleGenerator : FileGenerator<MergeComponent
             .build()
         )
         .addFunction(
-          "bind_${params.mapSubcomponentFactoryClassName.simpleNames.joinToString("_")}IntoSet"
+          "bind_${params.mapSubcomponentFactoryClassName.generateSimpleNameString()}IntoSet"
         ) {
           addModifiers(KModifier.ABSTRACT)
           returns(ClassNames.tangleViewModelMapSubcomponentFactory)
@@ -90,7 +87,7 @@ class ViewModelSubcomponentFactoryModuleGenerator : FileGenerator<MergeComponent
           build()
         }
         .addFunction(
-          "bind_${params.keysSubcomponentFactoryClassName.simpleNames.joinToString("_")}IntoSet"
+          "bind_${params.keysSubcomponentFactoryClassName.generateSimpleNameString()}IntoSet"
         ) {
           addModifiers(KModifier.ABSTRACT)
           returns(ClassNames.tangleViewModelKeysSubcomponentFactory)

@@ -18,6 +18,8 @@ plugins {
   id("com.vanniktech.maven.publish")
 }
 
+experimentalAnvil()
+
 dependencies {
 
   api(libs.kotlin.compiler)
