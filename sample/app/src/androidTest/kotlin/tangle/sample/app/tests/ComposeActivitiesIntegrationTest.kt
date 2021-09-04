@@ -37,6 +37,8 @@ class ComposeActivitiesIntegrationTest {
 
     testRule.onNodeWithText("Goldendoodle").performClick()
 
+    Thread.sleep(500)
+
     testRule.onNodeWithText("awesome temperament")
       .performScrollTo()
       .assertIsDisplayed()
