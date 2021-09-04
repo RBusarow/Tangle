@@ -22,10 +22,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import org.jetbrains.kotlin.descriptors.resolveClassByFqName
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
 import org.jetbrains.kotlin.name.FqName
-import tangle.inject.compiler.ClassNames
-import tangle.inject.compiler.FileGenerator
-import tangle.inject.compiler.addFunction
-import tangle.inject.compiler.buildFile
+import tangle.inject.compiler.*
 import tangle.work.compiler.tangleWorkerFactory
 import java.io.File
 
@@ -67,7 +64,7 @@ object WorkerFactoryModuleGenerator : FileGenerator<MergeComponentParams> {
         )
         .addAnnotation(ClassNames.module)
         .addFunction(
-          "provide_${ClassNames.tangleWorkerFactory.simpleNames.joinToString("_")}"
+          "provide_${ClassNames.tangleWorkerFactory.generateSimpleNameString()}"
         ) {
           returns(ClassNames.tangleWorkerFactory)
           addAnnotation(ClassNames.provides)
