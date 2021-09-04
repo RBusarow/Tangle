@@ -17,6 +17,7 @@ plugins {
   androidApplication
   id("com.squareup.anvil")
   kotlin("kapt")
+  scabbard
 }
 
 android {
@@ -148,7 +149,9 @@ androidComponents.onVariants { variant ->
   tasks.register("open$caps", Exec::class.java) {
     dependsOn("install$caps")
 
-    val args = "adb shell monkey -p ${variant.applicationId.get()} -c android.intent.category.LAUNCHER 1".split(" ")
+    val args =
+      "adb shell monkey -p ${variant.applicationId.get()} -c android.intent.category.LAUNCHER 1"
+        .split(" ")
 
     commandLine(args)
   }

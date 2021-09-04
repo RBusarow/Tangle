@@ -17,6 +17,7 @@ plugins {
   androidLibrary
   id("com.squareup.anvil")
   id("com.google.devtools.ksp")
+  scabbard
 }
 
 anvil {

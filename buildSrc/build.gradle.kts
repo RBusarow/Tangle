@@ -20,6 +20,7 @@ plugins {
 repositories {
   mavenCentral()
   google()
+  maven("https://plugins.gradle.org/m2/")
 }
 
 val kotlinVersion = libs.versions.kotlin.get()
@@ -27,7 +28,6 @@ val kotlinVersion = libs.versions.kotlin.get()
 dependencies {
 
   compileOnly(gradleApi())
-
   implementation(libs.kotlin.reflect)
   implementation(libs.kotlin.stdlib.jdk8)
   implementation(libs.kotlin.annotation.processing)
@@ -44,8 +44,10 @@ dependencies {
   implementation(libs.android.gradle)
   implementation(libs.dokka.gradle)
   implementation(libs.kotlinx.knit.gradle)
-  implementation(libs.square.anvil.gradle)
 
+  implementation(libs.scabbard)
+
+  implementation(libs.square.anvil.gradle)
 }
 
 configurations.all {
