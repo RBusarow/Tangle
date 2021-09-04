@@ -14,14 +14,18 @@
  */
 
 plugins {
-  androidLibrary
+  javaLibrary
   id("com.vanniktech.maven.publish")
+}
+
+kotlin {
+  explicitApi()
 }
 
 dependencies {
 
   api(libs.androidx.annotations)
+  api(libs.google.dagger.api)
 
   testImplementation(projects.tangleTestUtils)
-  testImplementation(projects.tangleTestUtilsAndroid)
 }
