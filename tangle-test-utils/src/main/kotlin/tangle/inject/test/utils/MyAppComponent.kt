@@ -17,7 +17,6 @@
 
 package tangle.inject.test.utils
 
-import android.app.Application
 import dagger.BindsInstance
 import dagger.Component
 
@@ -26,8 +25,15 @@ interface MyAppComponent {
   @Component.Factory
   fun interface Factory {
 
-    fun create(@BindsInstance application: Application): MyAppComponent
+    fun create(
+      @BindsInstance
+      application: Application
+    ): MyAppComponent
   }
+}
+
+open class Application {
+  open fun onCreate() = Unit
 }
 
 object DaggerAppComponent : MyAppComponent {

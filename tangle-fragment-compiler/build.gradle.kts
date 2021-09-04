@@ -19,6 +19,8 @@ plugins {
   kotlin("kapt")
 }
 
+experimentalAnvil()
+
 dependencies {
 
   kapt(libs.google.auto.service.processor)
