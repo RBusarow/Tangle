@@ -48,7 +48,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
           .applyEach(params.viewModelParamsList) { viewModelParams ->
 
             addFunction(
-              "multibind_${viewModelParams.viewModelClassName.simpleNames.joinToString("_")}"
+              "multibind_${viewModelParams.viewModelClassName.generateSimpleNameString()}"
             ) {
 
               addModifiers(ABSTRACT)
@@ -69,7 +69,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
               .applyEach(params.viewModelParamsList) { viewModelParams ->
 
                 addFunction(
-                  "provide_${viewModelParams.viewModelFactoryClassName.simpleNames.joinToString("_")}"
+                  "provide_${viewModelParams.viewModelFactoryClassName.generateSimpleNameString()}"
                 ) {
 
                   addParameter("factory", viewModelParams.viewModelFactoryClassName)
