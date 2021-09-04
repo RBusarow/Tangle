@@ -15,9 +15,9 @@
 
 package tangle.work.samples
 
-import android.app.Application
 import androidx.work.Configuration
 import tangle.inject.TangleGraph
+import tangle.inject.test.utils.Application
 import tangle.inject.test.utils.DaggerAppComponent
 import tangle.inject.test.utils.MyApplicationComponent
 import tangle.inject.test.utils.Sample
