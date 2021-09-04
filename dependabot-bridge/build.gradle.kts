@@ -127,6 +127,8 @@ dependencies {
   dependencySync("dev.zacsweers.moshix:moshi-sealed-ksp:0.13.0")
   dependencySync("dev.zacsweers.moshix:moshi-sealed-runtime:0.13.0")
 
+  dependencySync("gradle.plugin.dev.arunkumar:scabbard-gradle-plugin:0.5.0")
+
   dependencySync("io.coil-kt:coil-compose:1.3.2")
   dependencySync("io.coil-kt:coil-gif:1.3.2")
   dependencySync("io.coil-kt:coil:1.3.2")
