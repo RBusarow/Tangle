@@ -34,7 +34,7 @@ class TangleApplication : Application() {
       .create(this)
 
     Components.add(component)
-    TangleGraph.init(component)
+    TangleGraph.add(component)
 
     Components.get<TangleApplicationComponent>()
       .appPlugins

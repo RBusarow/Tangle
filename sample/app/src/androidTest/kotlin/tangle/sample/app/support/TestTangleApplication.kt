@@ -35,7 +35,7 @@ class TestTangleApplication : Application() {
       .create(this)
 
     Components.add(component)
-    TangleGraph.init(component)
+    TangleGraph.add(component)
 
     Components.get<TestTangleApplicationComponent>().inject(this)
 

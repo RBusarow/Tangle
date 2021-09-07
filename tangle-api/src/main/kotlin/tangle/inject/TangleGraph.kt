@@ -38,11 +38,31 @@ public object TangleGraph {
    *
    * This should be initialized as soon as possible after initializing the AppComponent.
    *
+   * This function has been renamed to `add`.  This "init" version will be removed soon.
+   *
    * @sample tangle.inject.samples.TangleGraphSample.tangleGraphSample
    * @param component the application-scoped Dagger component
    * @since 0.10.0
    */
+  @Deprecated(
+    "use TangleGraph.add(...) instead",
+    ReplaceWith("TangleGraph.add(component)", "tangle.inject.TangleGraph")
+  )
   public fun init(component: Any) {
+    add(component)
+  }
+
+  /**
+   * Sets a reference to the application's Dagger graph,
+   * so that it can be accessed by internal tooling.
+   *
+   * This should be initialized as soon as possible after initializing the AppComponent.
+   *
+   * @sample tangle.inject.samples.TangleGraphSample.tangleGraphSample
+   * @param component the application-scoped Dagger component
+   * @since 0.13.0
+   */
+  public fun add(component: Any) {
     components.add(component)
   }
 
