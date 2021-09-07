@@ -21,7 +21,10 @@ import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
-import tangle.viewmodel.compiler.*
+import tangle.viewmodel.compiler.androidxSavedStateHandle
+import tangle.viewmodel.compiler.tangleViewModelMapSubcomponent
+import tangle.viewmodel.compiler.tangleViewModelMapSubcomponentFactory
+import tangle.viewmodel.compiler.tangleViewModelScope
 import java.io.File
 
 class ViewModelMapSubcomponentGenerator : FileGenerator<MergeComponentParams> {
@@ -39,7 +42,7 @@ class ViewModelMapSubcomponentGenerator : FileGenerator<MergeComponentParams> {
         .addSuperinterface(ClassNames.tangleViewModelMapSubcomponent)
         .addAnnotation(
           AnnotationSpec.builder(ClassNames.mergeSubcomponent)
-            .addMember("%T::class", ClassNames.tangleScope)
+            .addMember("%T::class", ClassNames.tangleViewModelScope)
             .build()
         )
         .addType(

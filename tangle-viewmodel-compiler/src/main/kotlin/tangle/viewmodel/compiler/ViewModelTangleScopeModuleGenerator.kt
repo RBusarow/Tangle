@@ -33,7 +33,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
 
     val packageName = params.packageName
 
-    val moduleName = "${ClassNames.tangleScope.simpleName}_VMInject_Module"
+    val moduleName = "${ClassNames.tangleViewModelScope.simpleName}_VMInject_Module"
 
     val content = FileSpec.buildFile(packageName, moduleName) {
       addType(
@@ -42,7 +42,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
           .addAnnotation(ClassNames.module)
           .addAnnotation(
             AnnotationSpec.builder(ClassNames.contributesTo)
-              .addMember("%T::class", ClassNames.tangleScope)
+              .addMember("%T::class", ClassNames.tangleViewModelScope)
               .build()
           )
           .applyEach(params.viewModelParamsList) { viewModelParams ->

@@ -22,6 +22,9 @@ import com.squareup.kotlinpoet.asClassName
 import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import tangle.inject.compiler.ClassNames
 
+val ClassNames.tangleViewModelScope: ClassName
+  get() = ClassName("tangle.viewmodel.internal", "TangleViewModelScope")
+
 val ClassNames.tangleViewModelComponent
   get() =
     ClassName("tangle.viewmodel", "TangleViewModelComponent")
