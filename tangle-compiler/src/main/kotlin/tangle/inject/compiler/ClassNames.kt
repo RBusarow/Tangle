@@ -35,7 +35,6 @@ object ClassNames {
 
   val internalTangleApi = ClassName("tangle.inject", "InternalTangleApi")
 
-  val tangleScope = ClassName("tangle.inject.internal", "TangleScope")
   val tangleAppScope = ClassName("tangle.inject.internal", "TangleAppScope")
 
   val provider = Provider::class.asClassName()

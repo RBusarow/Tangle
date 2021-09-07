@@ -24,7 +24,11 @@ import com.squareup.kotlinpoet.ClassName
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtClassOrObject
-import tangle.inject.compiler.*
+import tangle.inject.compiler.AnnotationSpec
+import tangle.inject.compiler.ClassNames
+import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.generateSimpleNameString
+import tangle.viewmodel.compiler.tangleViewModelScope
 
 data class MergeComponentParams(
   val module: ModuleDescriptor,
@@ -54,7 +58,7 @@ data class MergeComponentParams(
       }
 
       val localScope = scopeClassName.generateSimpleNameString()
-      val tangleScope = ClassNames.tangleScope.generateSimpleNameString()
+      val tangleViewModelScope = ClassNames.tangleViewModelScope.generateSimpleNameString()
       val tangleAppScope = ClassNames.tangleAppScope.generateSimpleNameString()
 
       val keysSubcomponentClassName =
@@ -63,7 +67,7 @@ data class MergeComponentParams(
       val keysSubcomponentFactoryClassName = keysSubcomponentClassName.nestedClass("Factory")
 
       val mapSubcomponentClassName =
-        ClassName(packageName, "${tangleScope}_Tangle_ViewModel_Map_Subcomponent")
+        ClassName(packageName, "${tangleViewModelScope}_Tangle_ViewModel_Map_Subcomponent")
 
       val mapSubcomponentFactoryClassName = mapSubcomponentClassName.nestedClass("Factory")
 

@@ -43,3 +43,6 @@ public final class tangle/viewmodel/internal/TangleViewModelFactory$Companion {
 	public final fun invoke (Landroidx/savedstate/SavedStateRegistryOwner;Landroid/os/Bundle;Landroidx/lifecycle/ViewModelProvider$Factory;)Landroidx/lifecycle/ViewModelProvider$Factory;
 }
 
+public abstract class tangle/viewmodel/internal/TangleViewModelScope {
+}
+
