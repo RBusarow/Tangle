@@ -20,13 +20,20 @@ import androidx.work.WorkManager
 import com.squareup.anvil.annotations.ContributesTo
 import dagger.Module
 import dagger.Provides
+import tangle.sample.app.BuildConfig
 import tangle.sample.core.AppScope
+import tangle.sample.data.DogApiKey
 
 @Module
 @ContributesTo(AppScope::class)
-object WorkManagerModule {
+object AppModule {
+
   @Provides
   fun provideWorkManager(
     context: Context
   ): WorkManager = WorkManager.getInstance(context)
+
+  @DogApiKey
+  @Provides
+  fun provideDogApiKey() = BuildConfig.DOG_API_KEY
 }

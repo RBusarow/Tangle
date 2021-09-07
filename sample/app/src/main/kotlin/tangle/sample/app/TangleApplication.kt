@@ -49,11 +49,3 @@ interface TangleApplicationComponent {
 
   val appPlugins: Set<@JvmSuppressWildcards AppPlugin>
 }
-
-@Module
-@ContributesTo(AppScope::class)
-object AppModule {
-  @DogApiKey
-  @Provides
-  fun provideDogApiKey() = BuildConfig.DOG_API_KEY
-}
