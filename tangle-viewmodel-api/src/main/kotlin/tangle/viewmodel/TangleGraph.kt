@@ -32,9 +32,9 @@ public object TangleGraph {
   @Deprecated(
     message = "TangleGraph has been moved to `tangle.inject.TangleGraph`.  " +
       "This breadcrumb object will be removed in a future version of Tangle.",
-    replaceWith = ReplaceWith("TangleGraph.init(any)", "tangle.inject.TangleGraph")
+    replaceWith = ReplaceWith("TangleGraph.add(any)", "tangle.inject.TangleGraph")
   )
   public fun init(any: Any) {
-    NewTangleGraph.init(any)
+    NewTangleGraph.add(any)
   }
 }

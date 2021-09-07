@@ -36,7 +36,7 @@ class MyApplication : Application() {
     val myAppComponent = DaggerAppComponent.factory()
       .create(this)
 
-    TangleGraph.init(myAppComponent)
+    TangleGraph.add(myAppComponent)
   }
 }
 ```

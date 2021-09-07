@@ -60,7 +60,7 @@ class TangleGraphTest : BaseTest() {
     val component = daggerAppComponent.createFunction()
       .invoke(null)!!
 
-    TangleGraph.init(component)
+    TangleGraph.add(component)
 
     val keys = TangleGraph.get<TangleViewModelComponent>()
       .tangleViewModelKeysSubcomponentFactory
@@ -93,7 +93,7 @@ class TangleGraphTest : BaseTest() {
     val component = daggerAppComponent.createFunction()
       .invoke(null)!!
 
-    TangleGraph.init(component)
+    TangleGraph.add(component)
 
     val factory = TangleGraph.get<TangleViewModelComponent>()
       .tangleViewModelMapSubcomponentFactory
