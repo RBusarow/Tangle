@@ -120,7 +120,7 @@ class WorkerIntegrationTest : BaseTest() {
     val component = daggerAppComponent.createFunction()
       .invoke(null)!!
 
-    TangleGraph.init(component)
+    TangleGraph.add(component)
 
     val workerFactory = TangleGraph.get<WorkerComponent>()
       .tangleWorkerFactory

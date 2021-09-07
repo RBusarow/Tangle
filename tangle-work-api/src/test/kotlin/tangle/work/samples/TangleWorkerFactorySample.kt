@@ -38,7 +38,7 @@ class TangleWorkerFactorySample {
         val myAppComponent = DaggerAppComponent.factory()
           .create(this)
 
-        TangleGraph.init(myAppComponent)
+        TangleGraph.add(myAppComponent)
 
         // inject your application class after initializing TangleGraph
         (myAppComponent as MyApplicationComponent).inject(this)
