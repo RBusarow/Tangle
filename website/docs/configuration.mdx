@@ -199,7 +199,7 @@ dependencies {
 ## Setting up the Tangle graph
 
 In order to connect Tangle to your application-scoped Dagger component,
-call `TangleGraph.init(...)` immediately after creating the component.
+call `TangleGraph.add(...)` immediately after creating the component.
 
 ```kotlin
 import android.app.Application
@@ -213,7 +213,7 @@ class MyApplication : Application() {
     val myAppComponent = DaggerMyAppComponent.factory()
       .create(this)
 
-    TangleGraph.init(myAppComponent)
+    TangleGraph.add(myAppComponent)
   }
 }
 ```

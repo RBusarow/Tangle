@@ -3,6 +3,7 @@ public abstract interface annotation class tangle/inject/InternalTangleApi : jav
 
 public final class tangle/inject/TangleGraph {
 	public static final field INSTANCE Ltangle/inject/TangleGraph;
+	public final fun add (Ljava/lang/Object;)V
 	public final fun init (Ljava/lang/Object;)V
 }
 
