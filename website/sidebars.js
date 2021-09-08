@@ -16,6 +16,7 @@
 module.exports = {
   Docs: [
     "configuration",
+    "extending-anvil",
     "member-injection",
     {
       type: "category",
