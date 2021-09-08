@@ -30,6 +30,7 @@ dependencies {
   api(libs.square.kotlinPoet)
 
   compileOnly(libs.androidx.annotations)
+  compileOnly(libs.google.auto.service.processor)
 
   implementation(libs.google.dagger.api)
   implementation(libs.square.anvil.annotations)

@@ -17,15 +17,18 @@ package tangle.viewmodel.compiler.params
 
 import com.squareup.anvil.compiler.internal.*
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.KModifier.ABSTRACT
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
-import org.jetbrains.kotlin.descriptors.ClassDescriptor
-import org.jetbrains.kotlin.descriptors.ModuleDescriptor
+import org.jetbrains.kotlin.descriptors.*
 import org.jetbrains.kotlin.name.FqName
+import org.jetbrains.kotlin.psi.KtClass
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtConstructor
+import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
+import org.jetbrains.kotlin.types.KotlinType
 import tangle.inject.compiler.*
 import tangle.viewmodel.compiler.androidxSavedStateHandle
 
@@ -173,7 +176,8 @@ data class Factory(
   val viewModelFactoryClassName: ClassName,
   val factoryImplClassName: ClassName,
   val tangleParams: List<TangleParameter>,
-  val functionName: String
+  val functionName: String,
+  override val factoryFunctionName: String
 ) : ViewModelInjectParams {
   data class TangleParameter(
     val key: String,
@@ -264,11 +268,12 @@ data class Factory(
       .getContributedDescriptors(DescriptorKindFilter.FUNCTIONS)
       .asSequence()
       .filterIsInstance<FunctionDescriptor>()
-      .filter { it.modality == ABSTRACT }
+      .filter { it.modality == Modality.ABSTRACT }
       .filter {
         it.visibility == DescriptorVisibilities.PUBLIC ||
           it.visibility == DescriptorVisibilities.PROTECTED
       }
       .toList()
   }
+
 }
