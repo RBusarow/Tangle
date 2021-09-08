@@ -16,6 +16,7 @@
 module.exports = {
   Docs: [
     "configuration",
+    "member-injection",
     {
       type: "category",
       label: "ViewModels",

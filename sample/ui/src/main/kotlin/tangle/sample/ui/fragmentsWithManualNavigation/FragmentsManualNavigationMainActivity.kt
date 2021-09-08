@@ -17,27 +17,23 @@ package tangle.sample.ui.fragmentsWithManualNavigation
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.squareup.anvil.annotations.ContributesTo
 import tangle.fragment.TangleFragmentFactory
+import tangle.inject.TangleGraph
+import tangle.inject.TangleScope
 import tangle.sample.core.AppScope
-import tangle.sample.core.Components
 import tangle.sample.ui.R
 import tangle.sample.ui.fragmentsWithManualNavigation.breedList.BreedListFragment
 import javax.inject.Inject
 import javax.inject.Provider
 
-@ContributesTo(AppScope::class)
-interface FragmentsManualNavigationMainActivityComponent {
-  fun inject(activity: FragmentsManualNavigationMainActivity)
-}
-
+@TangleScope(AppScope::class)
 class FragmentsManualNavigationMainActivity : AppCompatActivity() {
 
   @Inject lateinit var tangleFragmentFactory: TangleFragmentFactory
   @Inject lateinit var navigation: FragmentsManualNavigationMainActivityNavigation
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    Components.get<FragmentsManualNavigationMainActivityComponent>().inject(this)
+    TangleGraph.inject(this)
 
     supportFragmentManager.fragmentFactory = tangleFragmentFactory
     super.onCreate(savedInstanceState)

@@ -13,22 +13,19 @@
  * limitations under the License.
  */
 
-plugins {
-  javaLibrary
-  id("com.vanniktech.maven.publish")
+package tangle.inject.internal
+
+import tangle.inject.InternalTangleApi
+import javax.inject.Provider
+
+@InternalTangleApi
+public interface TangleScopeMapProviderComponent {
+
+  public val scopeMapProvider: TangleScopeMapProvider
 }
 
-kotlin {
-  explicitApi()
-}
+@InternalTangleApi
+public interface TangleInjectorComponent {
 
-dependencies {
-
-  api(libs.androidx.annotations)
-  api(libs.google.dagger.api)
-
-  compileOnly(libs.google.auto.service.processor)
-
-  testImplementation(projects.tangleCompiler)
-  testImplementation(projects.tangleTestUtils)
+  public val injectors: Map<Class<*>, @JvmSuppressWildcards Provider<TangleInjector<*>>>
 }
