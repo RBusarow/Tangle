@@ -57,7 +57,8 @@ class MemberInjectCodeGenerator : TangleCodeGenerator() {
           ?: clazz.assistedInjectConstructor(module)
           ?: clazz.vmInjectConstructor(module)
 
-        require(injectConstructor == null,
+        require(
+          injectConstructor == null,
           { clazz.requireClassDescriptor(module) }
         ) {
           "@TangleScope cannot be applied to classes which use injected constructors."
