@@ -123,9 +123,9 @@ dependencies {
 
   dependencySync("dev.zacsweers.autoservice:auto-service-ksp:1.0.0")
   dependencySync("dev.zacsweers.moshix:moshi-ksp:0.14.0")
-  dependencySync("dev.zacsweers.moshix:moshi-sealed-codegen:0.13.0")
-  dependencySync("dev.zacsweers.moshix:moshi-sealed-ksp:0.13.0")
-  dependencySync("dev.zacsweers.moshix:moshi-sealed-runtime:0.13.0")
+  dependencySync("dev.zacsweers.moshix:moshi-sealed-codegen:0.14.0")
+  dependencySync("dev.zacsweers.moshix:moshi-sealed-ksp:0.14.0")
+  dependencySync("dev.zacsweers.moshix:moshi-sealed-runtime:0.14.0")
 
   dependencySync("gradle.plugin.dev.arunkumar:scabbard-gradle-plugin:0.5.0")
 
