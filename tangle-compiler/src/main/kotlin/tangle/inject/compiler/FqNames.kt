@@ -16,6 +16,7 @@
 package tangle.inject.compiler
 
 import com.squareup.anvil.annotations.MergeComponent
+import com.squareup.anvil.annotations.MergeSubcomponent
 import com.squareup.anvil.compiler.internal.fqName
 import dagger.Provides
 import dagger.internal.DoubleCheck
@@ -40,12 +41,15 @@ object FqNames {
   val fragmentInjectFactory = FqName("tangle.fragment.FragmentInjectFactory")
   val contributesFragment = FqName("tangle.fragment.ContributesFragment")
 
-  val tangleParam = FqName("tangle.inject.TangleParam")
   val tangleAppScope = FqName("tangle.inject.internal.TangleAppScope")
+  val tangleParam = FqName("tangle.inject.TangleParam")
+  val tangleScope = FqName("tangle.inject.TangleScope")
+  val tangleViewModelScope = FqName("tangle.viewmodel.internal.TangleViewModelScope")
 
   val tangleWorker = FqName("tangle.work.TangleWorker")
 
   val mergeComponent = MergeComponent::class.fqName
+  val mergeSubcomponent = MergeSubcomponent::class.fqName
   val jvmSuppressWildcards = JvmSuppressWildcards::class.fqName
   val provider = Provider::class.fqName
   val daggerLazy = dagger.Lazy::class.fqName

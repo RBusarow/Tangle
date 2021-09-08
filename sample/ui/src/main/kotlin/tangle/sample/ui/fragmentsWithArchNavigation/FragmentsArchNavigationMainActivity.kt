@@ -18,25 +18,20 @@ package tangle.sample.ui.fragmentsWithArchNavigation
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
-import com.squareup.anvil.annotations.ContributesTo
 import tangle.fragment.TangleFragmentFactory
+import tangle.inject.TangleGraph
+import tangle.inject.TangleScope
 import tangle.sample.core.AppScope
-import tangle.sample.core.Components
 import tangle.sample.ui.R
 import javax.inject.Inject
 
-@ContributesTo(AppScope::class)
-interface FragmentsArchNavigationMainActivityComponent {
-  fun inject(activity: FragmentsArchNavigationMainActivity)
-}
-
+@TangleScope(AppScope::class)
 class FragmentsArchNavigationMainActivity : AppCompatActivity() {
 
   @Inject lateinit var tangleFragmentFactory: TangleFragmentFactory
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    Components.get<FragmentsArchNavigationMainActivityComponent>()
-      .inject(this)
+    TangleGraph.inject(this)
 
     supportFragmentManager.fragmentFactory = tangleFragmentFactory
     super.onCreate(savedInstanceState)

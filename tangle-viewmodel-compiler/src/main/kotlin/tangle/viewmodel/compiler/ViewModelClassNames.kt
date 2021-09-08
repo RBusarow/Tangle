@@ -59,15 +59,10 @@ val ClassNames.javaClassOutVM
   get() = Class::class.asClassName()
     .parameterizedBy(TypeVariableName("out·${androidxViewModel.canonicalName}"))
 
-private val ClassNames.javaClassWildcard
-  get() = Class::class.asClassName()
-    .parameterizedBy(TypeVariableName("*"))
-
 val ClassNames.viewModelClassSet
   get() = Set::class.asClassName()
-    .parameterizedBy(
-      javaClassOutVM
-    )
+    .parameterizedBy(javaClassOutVM)
+
 val ClassNames.viewModelMap
   get() = Map::class.asClassName()
     .parameterizedBy(
