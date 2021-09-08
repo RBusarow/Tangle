@@ -13,35 +13,38 @@
  * limitations under the License.
  */
 
-package tangle.sample.app
+package tangle.inject.samples
 
-import android.app.Application
 import tangle.inject.TangleGraph
 import tangle.inject.TangleScope
-import tangle.sample.core.AppPlugin
-import tangle.sample.core.AppScope
-import tangle.sample.core.Components
+import tangle.inject.test.utils.*
 import javax.inject.Inject
 
-@TangleScope(AppScope::class)
-class TangleApplication : Application() {
+class MemberInjectSample {
 
-  @Inject lateinit var appPlugins: Set<@JvmSuppressWildcards AppPlugin>
+  @Sample
+  fun memberInjectSample() {
 
-  override fun onCreate() {
-    super.onCreate()
+    @TangleScope(AppScope::class) // dependencies will come from the AppScope
+    class MyApplication : Application() {
 
-    val component = DaggerAppComponent.factory()
-      .create(this)
+      @Inject lateinit var logger: MyLogger
 
-    Components.add(component)
-    TangleGraph.add(component)
+      override fun onCreate() {
+        super.onCreate()
 
-    TangleGraph.inject(this)
+        val appComponent = DaggerAppComponent.factory()
+          .create(this)
 
-    appPlugins
-      .forEach {
-        it.apply(this)
+        // connect the app's Dagger graph to Tangle
+        TangleGraph.add(appComponent)
+
+        // inject MyLogger using Dagger/Tangle
+        TangleGraph.inject(this)
+
+        // logger is not initialized and safe to use
+        Timber.plant(logger)
       }
+    }
   }
 }

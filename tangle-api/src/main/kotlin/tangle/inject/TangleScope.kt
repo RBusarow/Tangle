@@ -13,22 +13,21 @@
  * limitations under the License.
  */
 
-plugins {
-  javaLibrary
-  id("com.vanniktech.maven.publish")
-}
+package tangle.inject
 
-kotlin {
-  explicitApi()
-}
+import kotlin.reflect.KClass
 
-dependencies {
-
-  api(libs.androidx.annotations)
-  api(libs.google.dagger.api)
-
-  compileOnly(libs.google.auto.service.processor)
-
-  testImplementation(projects.tangleCompiler)
-  testImplementation(projects.tangleTestUtils)
-}
+/**
+ * Annotates a member-injected class to indicate the scope which will provide its dependencies.
+ *
+ * @sample tangle.inject.samples.MemberInjectSample.memberInjectSample
+ * @since 0.13.0
+ */
+@Target(AnnotationTarget.CLASS)
+@Retention(AnnotationRetention.RUNTIME)
+public annotation class TangleScope(
+  /**
+   * The scope from which to pull the annotated class's dependencies.
+   */
+  val scope: KClass<*>
+)

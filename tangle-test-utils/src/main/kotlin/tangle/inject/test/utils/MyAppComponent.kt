@@ -46,3 +46,10 @@ object DaggerAppComponent : MyAppComponent {
 interface MyApplicationComponent {
   fun inject(application: Application)
 }
+
+object Timber {
+  @Suppress("UnusedPrivateMember", "UNUSED_PARAMETER")
+  fun plant(any: Any) = Unit
+}
+
+object MyLogger

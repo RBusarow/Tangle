@@ -19,6 +19,8 @@ import com.squareup.anvil.annotations.ContributesTo
 import com.squareup.anvil.annotations.MergeComponent
 import com.squareup.anvil.annotations.MergeSubcomponent
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.asClassName
 import dagger.*
 import dagger.internal.Factory
@@ -36,8 +38,15 @@ object ClassNames {
   val internalTangleApi = ClassName("tangle.inject", "InternalTangleApi")
 
   val tangleAppScope = ClassName("tangle.inject.internal", "TangleAppScope")
+  val tangleScope = ClassName("tangle.inject", "TangleScope")
 
   val provider = Provider::class.asClassName()
+
+  val javaClassWildcard = Class::class.asClassName()
+    .parameterizedBy(TypeVariableName("*"))
+
+  val javaClassToClassMap = Map::class.asClassName()
+    .parameterizedBy(javaClassWildcard, javaClassWildcard)
 
   val binds = Binds::class.asClassName()
   val bindsInstance = BindsInstance::class.asClassName()

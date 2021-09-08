@@ -141,7 +141,11 @@ fun Class<*>.providerClass(): Class<*> {
 }
 
 fun Class<*>.createFunction(): Method {
-  return getDeclaredMethod("create")
+  return methods.first { it.name == "create" }
+}
+
+fun Class<*>.factoryFunction(): Method {
+  return declaredMethods.first { it.name == "factory" }
 }
 
 fun Class<*>.getterFunction(): Method {
@@ -166,6 +170,14 @@ fun Class<*>.membersInjector(): Class<*> {
 
   return classLoader.loadClass(
     "${packageName()}$enclosingClassString${simpleName}_MembersInjector"
+  )
+}
+
+fun Class<*>.tangleInjector(): Class<*> {
+  val enclosingClassString = enclosingClass?.let { "${it.simpleName}_" } ?: ""
+
+  return classLoader.loadClass(
+    "${packageName()}${enclosingClassString}Tangle_${simpleName}Injector"
   )
 }
 
@@ -199,13 +211,34 @@ fun Collection<KClass<*>>.withoutAnvilModule(): List<KClass<*>> =
   filterNot { it.qualifiedName!!.startsWith("anvil.module") }
 
 fun Any.invokeGet(vararg args: Any?): Any {
-  val method = this::class.java.declaredMethods.first { it.name == "get" }
+  val method = this::class.java.methods.first { it.name == "get" }
   return method.invoke(this, *args)
 }
 
 fun Any.invokeCreate(vararg args: Any?): Any {
-  val method = this::class.java.declaredMethods.first { it.name == "create" }
-  return method.invoke(this, *args)
+
+  return this::class.java.methods.first { it.name == "create" }
+    .use { it.invoke(this@invokeCreate, *args) }
+}
+
+@OptIn(ExperimentalStdlibApi::class)
+fun Any.fieldsValues(): Map<String, Any?> {
+  val thisRef = this
+  return buildMap {
+    thisRef::class.java.fields.forEach { field ->
+      put(field.name, field.get(thisRef))
+    }
+  }
+}
+
+@OptIn(ExperimentalStdlibApi::class)
+fun Any.declaredFieldsValues(): Map<String, Any?> {
+  val thisRef = this
+  return buildMap {
+    thisRef::class.java.fields.forEach { field ->
+      put(field.name, field.get(thisRef))
+    }
+  }
 }
 
 @Suppress("UNCHECKED_CAST")
