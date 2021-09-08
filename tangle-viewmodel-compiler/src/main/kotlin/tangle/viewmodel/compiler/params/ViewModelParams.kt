@@ -161,3 +161,114 @@ data class ViewModelParams(
     }
   }
 }
+
+data class Factory(
+  override val packageName: String,
+  override val scopeName: FqName,
+  override val viewModelClassName: ClassName,
+  val viewModelParams: ViewModelParams,
+  val factoryDescriptor: ClassDescriptor,
+  val factoryInterface: KtClassOrObject,
+  val factoryInterfaceClassName: ClassName,
+  val viewModelFactoryClassName: ClassName,
+  val factoryImplClassName: ClassName,
+  val tangleParams: List<TangleParameter>,
+  val functionName: String
+) : ViewModelInjectParams {
+  data class TangleParameter(
+    val key: String,
+    val name: String,
+    val kotlinType: KotlinType,
+    val typeName: TypeName
+  )
+
+  companion object {
+    fun create(
+      module: ModuleDescriptor,
+      factoryInterface: KtClassOrObject,
+      viewModelClass: KtClass,
+      constructor: KtConstructor<*>
+    ): Factory {
+      val packageName = factoryInterface.containingKtFile
+        .packageFqName
+        .safePackageString(dotSuffix = false)
+
+      val contributesAnnotation = viewModelClass.findAnnotation(
+        FqNames.contributesViewModel, module
+      )
+
+      require(
+        value = contributesAnnotation != null,
+        declarationDescriptor = { viewModelClass.requireClassDescriptor(module) }
+      ) {
+        "@${FqNames.vmInject.shortName().asString()}-annotated ViewModels must also " +
+          "have a `${FqNames.contributesViewModel.asString()}` class annotation."
+      }
+
+      val scopeName = viewModelClass.scope(FqNames.contributesViewModel, module)
+
+      val viewModelFactoryClassName =
+        ClassName(packageName, "${viewModelClass.generateClassName()}_Factory")
+
+      val factoryDescriptor = factoryInterface.requireClassDescriptor(module)
+
+      val functions = factoryDescriptor.functions()
+
+      require(functions.size == 1, factoryDescriptor) {
+        "@${FqNames.vmInjectFactory.shortName().asString()}-annotated types must have " +
+          "exactly one abstract function -- without a default implementation -- " +
+          "which returns the ${FqNames.vmInject.shortName().asString()} ViewModel type."
+      }
+
+      val function = functions[0]
+
+      val functionParameters = function.valueParameters
+
+      val factoryInterfaceClassName = factoryInterface.asClassName()
+      val factoryImplSimpleName =
+        "${factoryInterfaceClassName.generateSimpleNameString()}_Impl"
+      val factoryImplClassName = ClassName(packageName, factoryImplSimpleName)
+
+      val tangleParams = functionParameters.map {
+        TangleParameter(
+          it.requireTangleParamName(),
+          it.name.asString(),
+          it.type,
+          it.type.asTypeName()
+        )
+      }
+
+      // tangleParams.checkForBundleSafe(factoryDescriptor)
+
+      val functionName = function.name.asString()
+
+      val viewModelParams =
+        ViewModelParams.create(module, viewModelClass, constructor)
+
+      return Factory(
+        packageName = packageName,
+        scopeName = scopeName,
+        viewModelClassName = viewModelParams.viewModelClassName,
+        viewModelParams = viewModelParams,
+        factoryDescriptor = factoryDescriptor,
+        factoryInterface = factoryInterface,
+        factoryInterfaceClassName = factoryInterfaceClassName,
+        viewModelFactoryClassName = viewModelFactoryClassName,
+        factoryImplClassName = factoryImplClassName,
+        tangleParams = tangleParams,
+        functionName = functionName
+      )
+    }
+
+    private fun ClassDescriptor.functions(): List<FunctionDescriptor> = unsubstitutedMemberScope
+      .getContributedDescriptors(DescriptorKindFilter.FUNCTIONS)
+      .asSequence()
+      .filterIsInstance<FunctionDescriptor>()
+      .filter { it.modality == ABSTRACT }
+      .filter {
+        it.visibility == DescriptorVisibilities.PUBLIC ||
+          it.visibility == DescriptorVisibilities.PROTECTED
+      }
+      .toList()
+  }
+}

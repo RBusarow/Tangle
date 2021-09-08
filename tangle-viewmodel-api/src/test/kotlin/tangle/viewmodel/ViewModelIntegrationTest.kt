@@ -26,7 +26,7 @@ import tangle.inject.test.utils.*
 class ViewModelIntegrationTest : BaseTest() {
 
   @Test
-  fun `viewmodel is multi-bound into TangleScope`() = compileWithDagger(
+  fun `viewmodel is multi-bound into TangleViewModelScope`() = compileWithDagger(
     //language=kotlin
     """
       package tangle.inject.tests
@@ -192,14 +192,14 @@ class ViewModelIntegrationTest : BaseTest() {
       import kotlin.Suppress
       import kotlin.Unit
       import tangle.inject.tests.TangleAppScope_Tangle_ViewModel_Keys_Subcomponent
-      import tangle.inject.tests.TangleScope_Tangle_ViewModel_Map_Subcomponent
+      import tangle.inject.tests.TangleViewModelScope_Tangle_ViewModel_Map_Subcomponent
 
       @ContributesTo(Unit::class)
-      @Module(subcomponents = [TangleScope_Tangle_ViewModel_Map_Subcomponent::class, TangleAppScope_Tangle_ViewModel_Keys_Subcomponent::class])
+      @Module(subcomponents = [TangleViewModelScope_Tangle_ViewModel_Map_Subcomponent::class, TangleAppScope_Tangle_ViewModel_Keys_Subcomponent::class])
       public interface Unit_Tangle_ViewModel_SubcomponentFactory_Module {
         @Binds
         public
-            fun bindTangleScope_Tangle_ViewModel_Map_Subcomponent_FactoryIntoSet(factory: TangleScope_Tangle_ViewModel_Map_Subcomponent.Factory):
+            fun bindTangleViewModelScope_Tangle_ViewModel_Map_Subcomponent_FactoryIntoSet(factory: TangleViewModelScope_Tangle_ViewModel_Map_Subcomponent.Factory):
             TangleViewModelMapSubcomponent.Factory
 
         @Binds

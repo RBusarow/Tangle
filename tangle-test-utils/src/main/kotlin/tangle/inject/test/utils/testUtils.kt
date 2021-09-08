@@ -22,6 +22,7 @@ import java.lang.reflect.Executable
 import java.lang.reflect.Member
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import javax.inject.Provider
 import kotlin.reflect.KClass
 import kotlin.reflect.full.memberProperties
 
@@ -55,6 +56,16 @@ fun <T : Any> Class<T>.createStatic(
 @Suppress("UNCHECKED_CAST")
 fun <T> T.factoryGet(): Any = cast<Factory<*>>().get()
 
+@Suppress("UNCHECKED_CAST")
+fun Result.appComponentFactoryCreate(
+  vararg initargs: Any?
+): Any {
+
+  return daggerAppComponent.factoryFunction()
+    .invoke(null)
+    .invokeCreate(*initargs)
+}
+
 inline fun <T, E : Executable> E.use(block: (E) -> T): T {
   // Deprecated since Java 9, but many projects still use JDK 8 for compilation.
   @Suppress("DEPRECATION")
@@ -67,8 +78,17 @@ inline fun <T, E : Executable> E.use(block: (E) -> T): T {
   }
 }
 
+val Result.appComponentFactory: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.AppComponent\$Factory")
+
 val Result.daggerAppComponent: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.DaggerAppComponent")
+
+val Result.targetClass: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.Target")
+
+val Result.baseClass: Class<*>
+  get() = classLoader.loadClass("tangle.inject.tests.Base")
 
 val Result.myViewModelClass: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.MyViewModel")
@@ -104,3 +124,5 @@ fun Method.annotationClasses() = annotations.map { it.annotationClass }
 fun Class<*>.annotationClasses() = annotations.map { it.annotationClass }
 fun KClass<*>.property(name: String) = memberProperties
   .first { it.name == name }
+
+fun Any.provider() = Provider { this }

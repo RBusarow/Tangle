@@ -16,17 +16,17 @@
 package tangle.sample.app.support
 
 import android.app.Application
-import com.squareup.anvil.annotations.ContributesTo
 import tangle.inject.TangleGraph
+import tangle.inject.TangleScope
 import tangle.sample.core.AppPlugin
 import tangle.sample.core.AppScope
 import tangle.sample.core.Components
 import javax.inject.Inject
 
+@TangleScope(AppScope::class)
 class TestTangleApplication : Application() {
 
-  @Inject
-  lateinit var appPlugins: Set<@JvmSuppressWildcards AppPlugin>
+  @Inject lateinit var appPlugins: Set<@JvmSuppressWildcards AppPlugin>
 
   override fun onCreate() {
     super.onCreate()
@@ -35,18 +35,13 @@ class TestTangleApplication : Application() {
       .create(this)
 
     Components.add(component)
-    TangleGraph.init(component)
+    TangleGraph.add(component)
 
-    Components.get<TestTangleApplicationComponent>().inject(this)
+    TangleGraph.inject(this)
 
     appPlugins
       .forEach {
         it.apply(this)
       }
   }
-}
-
-@ContributesTo(AppScope::class)
-interface TestTangleApplicationComponent {
-  fun inject(application: TestTangleApplication)
 }

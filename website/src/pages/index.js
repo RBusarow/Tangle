@@ -63,6 +63,32 @@ class MyFragment : Fragment() {
      dest: "docs/viewModels/viewModels"
    },
   {
+    title: "Member Injection",
+    code: (
+`@TangleScope(UserScope::class)
+class UserActivity : Activity() {
+
+  @Inject lateinit var logger: MyLogger
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    // inject MyLogger
+    TangleGraph.inject(this)
+
+    super.onCreate(savedInstanceState)
+
+    logger.log("started UserActivity")
+  }
+}`
+    ),
+    description: (
+      <>
+        Inject scoped dependencies into "entry point" Android components using
+        <code>@TangleScope</code> and any desired scope.
+      </>
+    ),
+    dest: "docs/member-injection"
+  },
+  {
     title: "WorkManager",
     code: (
 `@TangleWorker

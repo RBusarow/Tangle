@@ -24,6 +24,9 @@ import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import tangle.inject.compiler.ClassNames
 import javax.inject.Provider
 
+val ClassNames.tangleViewModelScope: ClassName
+  get() = ClassName("tangle.viewmodel.internal", "TangleViewModelScope")
+
 val ClassNames.tangleViewModelComponent
   get() =
     ClassName("tangle.viewmodel", "TangleViewModelComponent")
@@ -61,18 +64,13 @@ val ClassNames.javaClassOutVM
   get() = Class::class.asClassName()
     .parameterizedBy(TypeVariableName("out·${androidxViewModel.canonicalName}"))
 
-private val ClassNames.javaClassWildcard
-  get() = Class::class.asClassName()
-    .parameterizedBy(TypeVariableName("*"))
-
 val ClassNames.tangleViewModelFactoryMap
   get() = ClassName("tangle.viewmodel", "TangleViewModelFactoryMap")
 
 val ClassNames.viewModelClassSet
   get() = Set::class.asClassName()
-    .parameterizedBy(
-      javaClassOutVM
-    )
+    .parameterizedBy(javaClassOutVM)
+
 val ClassNames.viewModelMap
   get() = Map::class.asClassName()
     .parameterizedBy(

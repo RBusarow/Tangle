@@ -3,6 +3,9 @@ public abstract interface annotation class tangle/inject/InternalTangleApi : jav
 
 public final class tangle/inject/TangleGraph {
 	public static final field INSTANCE Ltangle/inject/TangleGraph;
+	public final fun add (Ljava/lang/Object;)V
+	public final fun componentClassForScope (Ljava/lang/Class;Ltangle/inject/internal/TangleScopeMapProvider;)Ljava/lang/Class;
+	public final fun get (Ljava/lang/Class;)Ljava/lang/Object;
 	public final fun init (Ljava/lang/Object;)V
 }
 
@@ -10,9 +13,33 @@ public abstract interface annotation class tangle/inject/TangleParam : java/lang
 	public abstract fun name ()Ljava/lang/String;
 }
 
+public abstract interface annotation class tangle/inject/TangleScope : java/lang/annotation/Annotation {
+	public abstract fun scope ()Ljava/lang/Class;
+}
+
 public abstract class tangle/inject/internal/TangleAppScope {
 }
 
-public abstract class tangle/inject/internal/TangleScope {
+public abstract interface class tangle/inject/internal/TangleInjector {
+	public abstract fun inject (Ljava/lang/Object;)V
+}
+
+public abstract interface class tangle/inject/internal/TangleInjectorComponent {
+	public abstract fun getInjectors ()Ljava/util/Map;
+}
+
+public abstract interface annotation class tangle/inject/internal/TangleScopeMap : java/lang/annotation/Annotation {
+}
+
+public abstract interface class tangle/inject/internal/TangleScopeMapProvider {
+	public abstract fun getInjectedClassToScopeClass ()Ljava/util/Map;
+	public abstract fun getScopeClassToComponentClass ()Ljava/util/Map;
+}
+
+public abstract interface class tangle/inject/internal/TangleScopeMapProviderComponent {
+	public abstract fun getScopeMapProvider ()Ltangle/inject/internal/TangleScopeMapProvider;
+}
+
+public abstract interface annotation class tangle/inject/internal/TangleScopeToComponentMap : java/lang/annotation/Annotation {
 }
 

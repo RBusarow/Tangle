@@ -121,11 +121,13 @@ dependencies {
   dependencySync("com.squareup.retrofit2:retrofit:2.9.0")
   dependencySync("com.squareup:kotlinpoet:1.9.0")
 
-  dependencySync("dev.zacsweers.autoservice:auto-service-ksp:0.5.4")
-  dependencySync("dev.zacsweers.moshix:moshi-ksp:0.13.0")
-  dependencySync("dev.zacsweers.moshix:moshi-sealed-codegen:0.13.0")
-  dependencySync("dev.zacsweers.moshix:moshi-sealed-ksp:0.13.0")
-  dependencySync("dev.zacsweers.moshix:moshi-sealed-runtime:0.13.0")
+  dependencySync("dev.zacsweers.autoservice:auto-service-ksp:1.0.0")
+  dependencySync("dev.zacsweers.moshix:moshi-ksp:0.14.0")
+  dependencySync("dev.zacsweers.moshix:moshi-sealed-codegen:0.14.0")
+  dependencySync("dev.zacsweers.moshix:moshi-sealed-ksp:0.14.0")
+  dependencySync("dev.zacsweers.moshix:moshi-sealed-runtime:0.14.0")
+
+  dependencySync("gradle.plugin.dev.arunkumar:scabbard-gradle-plugin:0.5.0")
 
   dependencySync("io.coil-kt:coil-compose:1.3.2")
   dependencySync("io.coil-kt:coil-gif:1.3.2")
@@ -144,8 +146,8 @@ dependencies {
 
   dependencySync("net.swiftzer.semver:semver:1.1.1")
 
-  dependencySync("org.codehaus.groovy:groovy-xml:3.0.8")
-  dependencySync("org.codehaus.groovy:groovy:3.0.8")
+  dependencySync("org.codehaus.groovy:groovy-xml:3.0.9")
+  dependencySync("org.codehaus.groovy:groovy:3.0.9")
   dependencySync("org.jetbrains.dokka:dokka-gradle-plugin:1.5.0")
   dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.21")

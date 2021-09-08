@@ -15,9 +15,9 @@
 
 package tangle.inject.samples
 
-import android.app.Application
 import tangle.inject.TangleGraph
-import tangle.inject.test.utils.DaggerMyAppComponent
+import tangle.inject.test.utils.Application
+import tangle.inject.test.utils.DaggerAppComponent
 import tangle.inject.test.utils.Sample
 
 class TangleGraphSample {
@@ -29,10 +29,10 @@ class TangleGraphSample {
       override fun onCreate() {
         super.onCreate()
 
-        val appComponent = DaggerMyAppComponent.factory()
+        val appComponent = DaggerAppComponent.factory()
           .create(this)
 
-        TangleGraph.init(appComponent)
+        TangleGraph.add(appComponent)
       }
     }
   }

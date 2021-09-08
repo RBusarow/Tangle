@@ -37,7 +37,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
 
     val packageName = params.packageName
 
-    val moduleName = "${ClassNames.tangleScope.simpleName}_VMInject_Module"
+    val moduleName = "${ClassNames.tangleViewModelScope.simpleName}_VMInject_Module"
 
     val viewModelParams = params.viewModelParamsList.filterIsInstance<ViewModelParams>()
     val factoryParams = params.viewModelParamsList.filterIsInstance<Factory>()
@@ -51,7 +51,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
           .addAnnotation(ClassNames.module)
           .addAnnotation(
             AnnotationSpec.builder(ClassNames.contributesTo)
-              .addMember("%T::class", ClassNames.tangleScope)
+              .addMember("%T::class", ClassNames.tangleViewModelScope)
               .build()
           )
           .applyEach(providedViewModels) { params ->
@@ -90,7 +90,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
 
   private fun Builder.addViewModelBinder(viewModelParams: ViewModelParams) = apply {
     addFunction(
-      "multibind_${viewModelParams.viewModelClassName.simpleNames.joinToString("_")}"
+      "multibind_${viewModelParams.viewModelClassName.generateSimpleNameString()}"
     ) {
 
       addModifiers(ABSTRACT)
@@ -109,7 +109,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
 
   private fun Builder.addViewModelFactoryBinder(factoryParams: Factory) = apply {
     addFunction(
-      "multibind_${factoryParams.viewModelFactoryClassName.simpleNames.joinToString("_")}"
+      "multibind_${factoryParams.viewModelFactoryClassName.generateSimpleNameString()}"
     ) {
 
       addModifiers(ABSTRACT)

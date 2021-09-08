@@ -56,7 +56,7 @@ class ViewModelTangleAppScopeModuleGenerator : FileGenerator<TangleScopeModule> 
           .applyEach(providedViewModels) { viewModelParams ->
 
             addFunction(
-              "provide_${viewModelParams.viewModelClassName.simpleNames.joinToString("_")}Key"
+              "provide_${viewModelParams.viewModelClassName.generateSimpleNameString()}Key"
             ) {
               returns(ClassNames.javaClassOutVM)
               addAnnotation(ClassNames.intoSet)

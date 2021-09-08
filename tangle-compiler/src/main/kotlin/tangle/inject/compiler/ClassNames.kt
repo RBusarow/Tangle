@@ -19,6 +19,8 @@ import com.squareup.anvil.annotations.ContributesTo
 import com.squareup.anvil.annotations.MergeComponent
 import com.squareup.anvil.annotations.MergeSubcomponent
 import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.asClassName
 import dagger.*
 import dagger.internal.Factory
@@ -30,10 +32,21 @@ import javax.inject.Provider
 
 object ClassNames {
 
-  val tangleScope = ClassName("tangle.inject.internal", "TangleScope")
+  val androidContext = ClassName("android.content", "Context")
+  val string = String::class.asClassName()
+
+  val internalTangleApi = ClassName("tangle.inject", "InternalTangleApi")
+
   val tangleAppScope = ClassName("tangle.inject.internal", "TangleAppScope")
+  val tangleScope = ClassName("tangle.inject", "TangleScope")
 
   val provider = Provider::class.asClassName()
+
+  val javaClassWildcard = Class::class.asClassName()
+    .parameterizedBy(TypeVariableName("*"))
+
+  val javaClassToClassMap = Map::class.asClassName()
+    .parameterizedBy(javaClassWildcard, javaClassWildcard)
 
   val binds = Binds::class.asClassName()
   val bindsInstance = BindsInstance::class.asClassName()
@@ -61,11 +74,6 @@ object ClassNames {
   val parcelable = ClassName("android.os", "Parcelable")
   val size = ClassName("android.util", "Size")
   val sizeF = ClassName("android.util", "SizeF")
-
-  val androidContext = ClassName("android.content", "Context")
-  val string = String::class.asClassName()
-
-  val internalTangleApi = ClassName("tangle.inject", "InternalTangleApi")
 
   val optIn = ClassName("kotlin", "OptIn")
 }

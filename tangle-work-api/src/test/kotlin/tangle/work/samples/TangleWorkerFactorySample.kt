@@ -15,9 +15,9 @@
 
 package tangle.work.samples
 
-import android.app.Application
 import androidx.work.Configuration
 import tangle.inject.TangleGraph
+import tangle.inject.test.utils.Application
 import tangle.inject.test.utils.DaggerAppComponent
 import tangle.inject.test.utils.MyApplicationComponent
 import tangle.inject.test.utils.Sample
@@ -38,7 +38,7 @@ class TangleWorkerFactorySample {
         val myAppComponent = DaggerAppComponent.factory()
           .create(this)
 
-        TangleGraph.init(myAppComponent)
+        TangleGraph.add(myAppComponent)
 
         // inject your application class after initializing TangleGraph
         (myAppComponent as MyApplicationComponent).inject(this)

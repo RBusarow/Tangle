@@ -17,27 +17,23 @@ package tangle.sample.ui.composeWithFragments
 
 import android.os.Bundle
 import androidx.fragment.app.FragmentActivity
-import com.squareup.anvil.annotations.ContributesTo
 import tangle.fragment.TangleFragmentFactory
+import tangle.inject.TangleGraph
+import tangle.inject.TangleScope
 import tangle.sample.core.AppScope
-import tangle.sample.core.Components
 import tangle.sample.ui.R
 import tangle.sample.ui.composeWithFragments.breedList.BreedListFragment
 import javax.inject.Inject
 import javax.inject.Provider
 
-@ContributesTo(AppScope::class)
-interface ComposeWithFragmentsMainActivityComponent {
-  fun inject(activity: ComposeWithFragmentsMainActivity)
-}
-
+@TangleScope(AppScope::class)
 class ComposeWithFragmentsMainActivity : FragmentActivity() {
 
   @Inject lateinit var tangleFragmentFactory: TangleFragmentFactory
   @Inject lateinit var navigation: ComposeWithFragmentsMainActivityNavigation
 
   override fun onCreate(savedInstanceState: Bundle?) {
-    Components.get<ComposeWithFragmentsMainActivityComponent>().inject(this)
+    TangleGraph.inject(this)
 
     supportFragmentManager.fragmentFactory = tangleFragmentFactory
     super.onCreate(savedInstanceState)

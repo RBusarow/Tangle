@@ -16,16 +16,17 @@
 package tangle.sample.app
 
 import android.app.Application
-import com.squareup.anvil.annotations.ContributesTo
-import dagger.Module
-import dagger.Provides
 import tangle.inject.TangleGraph
+import tangle.inject.TangleScope
 import tangle.sample.core.AppPlugin
 import tangle.sample.core.AppScope
 import tangle.sample.core.Components
-import tangle.sample.data.DogApiKey
+import javax.inject.Inject
 
+@TangleScope(AppScope::class)
 class TangleApplication : Application() {
+
+  @Inject lateinit var appPlugins: Set<@JvmSuppressWildcards AppPlugin>
 
   override fun onCreate() {
     super.onCreate()
@@ -34,26 +35,13 @@ class TangleApplication : Application() {
       .create(this)
 
     Components.add(component)
-    TangleGraph.init(component)
+    TangleGraph.add(component)
 
-    Components.get<TangleApplicationComponent>()
-      .appPlugins
+    TangleGraph.inject(this)
+
+    appPlugins
       .forEach {
         it.apply(this)
       }
   }
-}
-
-@ContributesTo(AppScope::class)
-interface TangleApplicationComponent {
-
-  val appPlugins: Set<@JvmSuppressWildcards AppPlugin>
-}
-
-@Module
-@ContributesTo(AppScope::class)
-object AppModule {
-  @DogApiKey
-  @Provides
-  fun provideDogApiKey() = BuildConfig.DOG_API_KEY
 }

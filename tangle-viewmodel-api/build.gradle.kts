@@ -35,7 +35,6 @@ dependencies {
   testImplementation(projects.tangleFragmentApi)
   testImplementation(projects.tangleFragmentCompiler)
   testImplementation(projects.tangleTestUtils)
-  testImplementation(projects.tangleTestUtilsAndroid)
   testImplementation(projects.tangleViewmodelActivity)
   testImplementation(projects.tangleViewmodelCompiler)
   testImplementation(projects.tangleViewmodelFragment)

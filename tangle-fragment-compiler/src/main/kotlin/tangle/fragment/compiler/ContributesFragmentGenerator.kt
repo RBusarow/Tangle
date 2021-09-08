@@ -124,7 +124,7 @@ class ContributesFragmentGenerator : TangleCodeGenerator() {
     packageName: String,
     bindingList: List<Binding>
   ): GeneratedFile {
-    val moduleName = "Tangle_${scopeClassName.simpleNames.joinToString("_")}_Fragment_Module"
+    val moduleName = "Tangle_${scopeClassName.generateSimpleNameString()}_Fragment_Module"
 
     val fragmentInjected = bindingList.filter { it.fragmentInject }
 
@@ -143,7 +143,7 @@ class ContributesFragmentGenerator : TangleCodeGenerator() {
           val factoryImplClassName = ClassName(binding.packageName, fragmentFactoryClassNameString)
 
           addFunction(
-            FunSpec.builder(name = "provide_${binding.fragmentClassName.simpleNames.joinToString("_")}")
+            FunSpec.builder(name = "provide_${binding.fragmentClassName.generateSimpleNameString()}")
               .addAnnotation(ClassNames.provides)
               .addAnnotation(ClassNames.tangleFragmentProviderMap)
               .applyEach(binding.injectedParams) { argument ->
@@ -177,7 +177,7 @@ class ContributesFragmentGenerator : TangleCodeGenerator() {
               .build()
 
             addFunction(
-              FunSpec.builder(name = "bind_${binding.fragmentClassName.simpleNames.joinToString("_")}")
+              FunSpec.builder(name = "bind_${binding.fragmentClassName.generateSimpleNameString()}")
                 .addModifiers(KModifier.ABSTRACT)
                 .returns(ClassNames.androidxFragment)
                 .apply {

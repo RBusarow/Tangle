@@ -17,9 +17,7 @@ package tangle.sample.ui.composeWithActivities.breedDetail
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
@@ -49,15 +47,18 @@ internal fun BreedDetail(
   ) {
     Column(
       Modifier
-        .fillMaxSize()
+        .fillMaxHeight()
         .verticalScroll(rememberScrollState()),
       horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
       Image(
         painter = rememberImagePainter(breedDetail.imageUrl),
         contentDescription = "picture of ${breedDetail.name}",
         modifier = Modifier
-          .padding(8.dp),
+          .padding(8.dp)
+          .sizeIn(minHeight = 240.dp)
+          .fillMaxWidth(),
         contentScale = ContentScale.Fit
       )
 

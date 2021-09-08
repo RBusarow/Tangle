@@ -16,3 +16,5 @@
 package tangle.inject.test.utils
 
 abstract class AppScope private constructor()
+
+abstract class UserScope private constructor()

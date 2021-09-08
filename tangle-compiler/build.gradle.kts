@@ -16,9 +16,13 @@
 plugins {
   javaLibrary
   id("com.vanniktech.maven.publish")
+  kotlin("kapt")
 }
 
+experimentalAnvil()
+
 dependencies {
+  kapt(libs.google.auto.service.processor)
 
   api(libs.kotlin.compiler)
   api(libs.kotlin.reflect)

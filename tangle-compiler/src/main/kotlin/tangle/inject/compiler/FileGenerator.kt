@@ -44,4 +44,8 @@ fun interface FileGenerator<T> {
 
     return GeneratedFile(file, content)
   }
+
+  companion object {
+    const val CONSTANT_PACKAGE_NAME = "tangle.inject"
+  }
 }
