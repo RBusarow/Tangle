@@ -1,3 +1,38 @@
+# 0.13.0
+
+### 🚀 Features
+
+- add member injection ([#309](https://github.com/rbusarow/Tangle/pull/309))
+```kotlin
+@TangleScope(UserScope::class)
+class UserActivity : Activity() {
+
+  @Inject lateinit var logger: MyLogger
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    // inject MyLogger
+    TangleGraph.inject(this)
+
+    super.onCreate(savedInstanceState)
+
+    logger.log("started UserActivity")
+  }
+}
+```
+
+### 💥 Breaking Changes
+
+- rename `TangleGraph.init()` to `TangleGraph.add()` ([#299](https://github.com/rbusarow/Tangle/pull/299))
+- make :tangle-api a regular jar artifact ([#289](https://github.com/rbusarow/Tangle/pull/289)) (not really a breaking change though?)
+
+### 🧰 Maintenance
+
+- Bump moshi-ksp from 0.13.0 to 0.14.0 ([#307](https://github.com/rbusarow/Tangle/pull/307))
+- Bump auto-service-ksp from 0.5.5 to 1.0.0 ([#308](https://github.com/rbusarow/Tangle/pull/308))
+- Bump Androidx Work to 2.6.0 ([#277](https://github.com/rbusarow/Tangle/pull/277))
+- Bump AGP to 7.0.2 ([#278](https://github.com/rbusarow/Tangle/pull/278))
+- Bump compose from 1.0.1 to 1.0.2 ([#262](https://github.com/rbusarow/Tangle/pull/262))
+
 # 0.12.1
 
 ### 🐛 Bug Fixes
