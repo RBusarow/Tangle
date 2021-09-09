@@ -144,7 +144,6 @@ internal object FragmentAssisted_Factory_Impl_Generator : FileGenerator<Fragment
             )
             .build()
         )
-
         .build()
         .let { addType(it) }
     }
