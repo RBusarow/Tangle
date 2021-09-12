@@ -28,13 +28,12 @@ buildscript {
     maven("https://oss.sonatype.org/content/repositories/snapshots")
   }
   dependencies {
-    classpath("com.android.tools.build:gradle:7.0.2")
-    classpath("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.21-1.0.0-beta07")
-    classpath("com.squareup.anvil:gradle-plugin:2.3.4")
-    classpath("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
-
-    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
-    classpath("org.jlleitschuh.gradle:ktlint-gradle:10.2.0")
+    classpath(libs.android.gradle)
+    classpath(libs.square.anvil.gradle)
+    classpath(libs.google.ksp)
+    classpath(libs.vanniktech.maven.publish)
+    classpath(libs.kotlin.gradle.plug)
+    classpath(libs.ktlint.gradle)
   }
 }
 

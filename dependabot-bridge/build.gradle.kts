@@ -80,7 +80,7 @@ dependencies {
   dependencySync("androidx.work:work-runtime:2.6.0")
   dependencySync("androidx.work:work-testing:2.6.0")
 
-  dependencySync("com.android.tools.build:gradle:7.0.1")
+  dependencySync("com.android.tools.build:gradle:7.0.2")
   dependencySync("com.github.javaparser:javaparser-symbol-solver-core:3.23.0")
   dependencySync("com.github.tschuchortdev:kotlin-compile-testing:1.4.4")
   dependencySync("com.google.accompanist:accompanist-coil:0.15.0")
@@ -121,6 +121,9 @@ dependencies {
   dependencySync("com.squareup.retrofit2:retrofit:2.9.0")
   dependencySync("com.squareup:kotlinpoet:1.9.0")
 
+  dependencySync("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.21-1.0.0-beta07")
+  dependencySync("org.jlleitschuh.gradle:ktlint-gradle:10.2.0")
+  dependencySync("com.vanniktech:gradle-maven-publish-plugin:0.17.0")
   dependencySync("dev.zacsweers.autoservice:auto-service-ksp:1.0.0")
   dependencySync("dev.zacsweers.moshix:moshi-ksp:0.14.0")
   dependencySync("dev.zacsweers.moshix:moshi-sealed-codegen:0.14.0")
