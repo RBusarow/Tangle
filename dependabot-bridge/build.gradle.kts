@@ -80,7 +80,7 @@ dependencies {
   dependencySync("androidx.work:work-runtime:2.6.0")
   dependencySync("androidx.work:work-testing:2.6.0")
 
-  dependencySync("com.android.tools.build:gradle:7.0.1")
+  dependencySync("com.android.tools.build:gradle:7.0.2")
   dependencySync("com.github.javaparser:javaparser-symbol-solver-core:3.23.0")
   dependencySync("com.github.tschuchortdev:kotlin-compile-testing:1.4.4")
   dependencySync("com.google.accompanist:accompanist-coil:0.15.0")
