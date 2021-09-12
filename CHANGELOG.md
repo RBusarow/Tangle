@@ -74,6 +74,23 @@ class MyWorker @AssistedInject constructor(
   - `com.rickbusarow.tangle:tangle-viewmodel-fragment`
 - `TangleGraph` has
   moved `:tangle-api` (`tangle.inject.TangleGraph`) ([#169](https://github.com/rbusarow/Tangle/pull/169))
+- `ViewModel`-related s feature toggles in the Gradle plugin have been moved.
+  old:
+  ```kotlin
+  tangle {
+    viewModelsEnabled.set(true)
+    composeEnabled.set(true)
+  }
+  ```
+  new:
+  ```kotlin
+  tangle {
+    viewModelOptions {
+      enabled = true // default is true
+      composeEnabled = true // default is false
+    }
+  }
+  ```
 
 ### 🐛 Bug Fixes
 
