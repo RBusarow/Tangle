@@ -12,7 +12,7 @@ dokka = "1.5.0"
 gradleDoctor = "0.7.0"
 groovy = "3.0.9"
 hermit = "0.9.5"
-jUnit = "5.7.2"
+jUnit = "5.8.0"
 kotest = "4.6.2"
 kotlin = "1.5.21"
 
