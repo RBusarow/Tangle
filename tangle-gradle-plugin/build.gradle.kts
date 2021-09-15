@@ -19,7 +19,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   id("java-gradle-plugin")
   kotlin("jvm")
-  id("com.gradle.plugin-publish") version "0.15.0"
+  id("com.gradle.plugin-publish") version "0.16.0"
   `maven-publish`
 }
 
