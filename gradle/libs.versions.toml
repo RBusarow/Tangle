@@ -90,7 +90,7 @@ androidx-lifecycle-liveData = { module = "androidx.lifecycle:lifecycle-livedata-
 androidx-lifecycle-liveDataKtx = { module = "androidx.lifecycle:lifecycle-livedata-ktx", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtime = { module = "androidx.lifecycle:lifecycle-runtime", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-runtimeKtx = { module = "androidx.lifecycle:lifecycle-runtime-ktx", version.ref = "androidx-lifecycle" }
-androidx-lifecycle-viewModel-compose = "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"
+androidx-lifecycle-viewModel-compose = "androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-beta01"
 androidx-lifecycle-viewModel-core = { module = "androidx.lifecycle:lifecycle-viewmodel", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewModel-ktx = { module = "androidx.lifecycle:lifecycle-viewmodel-ktx", version.ref = "androidx-lifecycle" }
 androidx-lifecycle-viewModel-savedstate = { module = "androidx.lifecycle:lifecycle-viewmodel-savedstate", version.ref = "androidx-lifecycle" }
