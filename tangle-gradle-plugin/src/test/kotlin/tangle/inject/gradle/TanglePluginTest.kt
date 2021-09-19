@@ -15,41 +15,12 @@
 
 package tangle.inject.gradle
 
-import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.TestFactory
 
-public class TanglePluginTest : PluginTest() {
+public class TanglePluginTest : BasePluginTest() {
 
-  @Test
-  fun `default application should apply Anvil`() {
-
-    //language=kotlin
-    module(
-      """
-      plugins {
-        id("com.android.library")
-        kotlin("android")
-        id("com.rickbusarow.tangle")
-      }
-
-      android {
-        compileSdk = 30
-
-        defaultConfig {
-          minSdk = 23
-          targetSdk = 30
-        }
-      }
-
-      ${listDepsTasks()}
-    """.trimIndent()
-    )
-
-    // The configuration only exists if Anvil is applied, so this would fail without the plugin
-    build("anvil").shouldSucceed()
-  }
-
-  @Test
-  fun `default application should add Tangle dependencies`() {
+  @TestFactory
+  fun `default application should apply Anvil`() = test {
 
     //language=kotlin
     module(
@@ -73,24 +44,50 @@ public class TanglePluginTest : PluginTest() {
     """.trimIndent()
     )
 
-    build("anvil").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-fragment-compiler",
-      "com.rickbusarow.tangle:tangle-viewmodel-compiler",
-      "com.rickbusarow.tangle:tangle-work-compiler"
-    )
-    build("implementation").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-api",
-      "com.rickbusarow.tangle:tangle-fragment-api",
-      "com.rickbusarow.tangle:tangle-viewmodel-activity",
-      "com.rickbusarow.tangle:tangle-viewmodel-api",
-      "com.rickbusarow.tangle:tangle-viewmodel-fragment",
-      "com.rickbusarow.tangle:tangle-work-api"
-    )
-    build("api").deps() shouldBe listOf()
+    // The Anvil configuration only exists if Anvil is applied, so this would fail without the plugin
+    build("deps").shouldSucceed()
   }
 
-  @Test
-  fun `disabling fragments in config should disable their dependencies`() {
+  @TestFactory
+  fun `default application should add Tangle dependencies`() = test {
+
+    //language=kotlin
+    module(
+      """
+      plugins {
+        id("com.android.library")
+        kotlin("android")
+        id("com.rickbusarow.tangle")
+      }
+
+      android {
+        compileSdk = 30
+
+        defaultConfig {
+          minSdk = 23
+          targetSdk = 30
+        }
+      }
+
+      ${listDepsTasks()}
+    """.trimIndent()
+    )
+
+    build("deps").deps() shouldBe listOf(
+      "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
+      "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
+      "anvil com.rickbusarow.tangle:tangle-work-compiler",
+      "implementation com.rickbusarow.tangle:tangle-api",
+      "implementation com.rickbusarow.tangle:tangle-fragment-api",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-activity",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-fragment",
+      "implementation com.rickbusarow.tangle:tangle-work-api"
+    )
+  }
+
+  @TestFactory
+  fun `disabling fragments in config should disable their dependencies`() = test {
 
     //language=kotlin
     module(
@@ -118,22 +115,19 @@ public class TanglePluginTest : PluginTest() {
     """.trimIndent()
     )
 
-    build("anvil").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-viewmodel-compiler",
-      "com.rickbusarow.tangle:tangle-work-compiler"
+    build("deps").deps() shouldBe listOf(
+      "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
+      "anvil com.rickbusarow.tangle:tangle-work-compiler",
+      "implementation com.rickbusarow.tangle:tangle-api",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-activity",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-fragment",
+      "implementation com.rickbusarow.tangle:tangle-work-api"
     )
-    build("implementation").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-api",
-      "com.rickbusarow.tangle:tangle-viewmodel-activity",
-      "com.rickbusarow.tangle:tangle-viewmodel-api",
-      "com.rickbusarow.tangle:tangle-viewmodel-fragment",
-      "com.rickbusarow.tangle:tangle-work-api"
-    )
-    build("api").deps() shouldBe listOf()
   }
 
-  @Test
-  fun `disabling work in config should disable its dependencies`() {
+  @TestFactory
+  fun `disabling work in config should disable its dependencies`() = test {
 
     //language=kotlin
     module(
@@ -161,22 +155,19 @@ public class TanglePluginTest : PluginTest() {
     """.trimIndent()
     )
 
-    build("anvil").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-fragment-compiler",
-      "com.rickbusarow.tangle:tangle-viewmodel-compiler"
+    build("deps").deps() shouldBe listOf(
+      "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
+      "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
+      "implementation com.rickbusarow.tangle:tangle-api",
+      "implementation com.rickbusarow.tangle:tangle-fragment-api",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-activity",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-fragment"
     )
-    build("implementation").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-api",
-      "com.rickbusarow.tangle:tangle-fragment-api",
-      "com.rickbusarow.tangle:tangle-viewmodel-activity",
-      "com.rickbusarow.tangle:tangle-viewmodel-api",
-      "com.rickbusarow.tangle:tangle-viewmodel-fragment"
-    )
-    build("api").deps() shouldBe listOf()
   }
 
-  @Test
-  fun `disabling viewModels in config should disable its dependencies`() {
+  @TestFactory
+  fun `disabling viewModels in config should disable its dependencies`() = test {
 
     //language=kotlin
     module(
@@ -206,24 +197,22 @@ public class TanglePluginTest : PluginTest() {
     """.trimIndent()
     )
 
-    build("anvil").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-fragment-compiler",
-      "com.rickbusarow.tangle:tangle-work-compiler"
+    build("deps").deps() shouldBe listOf(
+      "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
+      "anvil com.rickbusarow.tangle:tangle-work-compiler",
+      "implementation com.rickbusarow.tangle:tangle-api",
+      "implementation com.rickbusarow.tangle:tangle-fragment-api",
+      "implementation com.rickbusarow.tangle:tangle-work-api"
     )
-    build("implementation").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-api",
-      "com.rickbusarow.tangle:tangle-fragment-api",
-      "com.rickbusarow.tangle:tangle-work-api"
-    )
-    build("api").deps() shouldBe listOf()
   }
 
-  @Test
-  fun `disabling viewModels fragments in config should disable the viewmodel fragment api dependency`() {
+  @TestFactory
+  fun `disabling viewModels fragments in config should disable the viewmodel fragment api dependency`() =
+    test {
 
-    //language=kotlin
-    module(
-      """
+      //language=kotlin
+      module(
+        """
       plugins {
         id("com.android.library")
         kotlin("android")
@@ -247,29 +236,27 @@ public class TanglePluginTest : PluginTest() {
 
       ${listDepsTasks()}
     """.trimIndent()
-    )
+      )
 
-    build("anvil").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-fragment-compiler",
-      "com.rickbusarow.tangle:tangle-viewmodel-compiler",
-      "com.rickbusarow.tangle:tangle-work-compiler"
-    )
-    build("implementation").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-api",
-      "com.rickbusarow.tangle:tangle-fragment-api",
-      "com.rickbusarow.tangle:tangle-viewmodel-activity",
-      "com.rickbusarow.tangle:tangle-viewmodel-api",
-      "com.rickbusarow.tangle:tangle-work-api"
-    )
-    build("api").deps() shouldBe listOf()
-  }
+      build("deps").deps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
+        "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
+        "anvil com.rickbusarow.tangle:tangle-work-compiler",
+        "implementation com.rickbusarow.tangle:tangle-api",
+        "implementation com.rickbusarow.tangle:tangle-fragment-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-activity",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+        "implementation com.rickbusarow.tangle:tangle-work-api"
+      )
+    }
 
-  @Test
-  fun `disabling viewModels activities in config should disable the viewmodel activity api dependency`() {
+  @TestFactory
+  fun `disabling viewModels activities in config should disable the viewmodel activity api dependency`() =
+    test {
 
-    //language=kotlin
-    module(
-      """
+      //language=kotlin
+      module(
+        """
       plugins {
         id("com.android.library")
         kotlin("android")
@@ -293,29 +280,27 @@ public class TanglePluginTest : PluginTest() {
 
       ${listDepsTasks()}
     """.trimIndent()
-    )
+      )
 
-    build("anvil").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-fragment-compiler",
-      "com.rickbusarow.tangle:tangle-viewmodel-compiler",
-      "com.rickbusarow.tangle:tangle-work-compiler"
-    )
-    build("implementation").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-api",
-      "com.rickbusarow.tangle:tangle-fragment-api",
-      "com.rickbusarow.tangle:tangle-viewmodel-api",
-      "com.rickbusarow.tangle:tangle-viewmodel-fragment",
-      "com.rickbusarow.tangle:tangle-work-api"
-    )
-    build("api").deps() shouldBe listOf()
-  }
+      build("deps").deps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
+        "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
+        "anvil com.rickbusarow.tangle:tangle-work-compiler",
+        "implementation com.rickbusarow.tangle:tangle-api",
+        "implementation com.rickbusarow.tangle:tangle-fragment-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-fragment",
+        "implementation com.rickbusarow.tangle:tangle-work-api"
+      )
+    }
 
-  @Test
-  fun `enabling viewModels compose in config should disable the viewmodel compose api dependency`() {
+  @TestFactory
+  fun `enabling viewModels compose in config should disable the viewmodel compose api dependency`() =
+    test {
 
-    //language=kotlin
-    module(
-      """
+      //language=kotlin
+      module(
+        """
       plugins {
         id("com.android.library")
         kotlin("android")
@@ -339,36 +324,61 @@ public class TanglePluginTest : PluginTest() {
 
       ${listDepsTasks()}
     """.trimIndent()
+      )
+
+      build("deps").deps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
+        "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
+        "anvil com.rickbusarow.tangle:tangle-work-compiler",
+        "implementation com.rickbusarow.tangle:tangle-api",
+        "implementation com.rickbusarow.tangle:tangle-fragment-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-activity",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-compose",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-fragment",
+        "implementation com.rickbusarow.tangle:tangle-work-api"
+      )
+    }
+
+  @TestFactory
+  fun `build will fail if applied to a module without AGP`() = test {
+
+    //language=kotlin
+    module(
+      """
+      plugins {
+        kotlin("jvm")
+        id("com.rickbusarow.tangle")
+      }
+
+      tangle {
+        viewModelOptions {
+          composeEnabled = true // default is false
+        }
+      }
+
+      ${listDepsTasks()}
+    """.trimIndent()
     )
 
-    build("anvil").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-fragment-compiler",
-      "com.rickbusarow.tangle:tangle-viewmodel-compiler",
-      "com.rickbusarow.tangle:tangle-work-compiler"
+    tasks("test").shouldFailWithMessage(
+      "A problem occurred configuring project ':module'.\n" +
+        "> Tangle is applied to project ':module', but no Android plugin has been applied.  " +
+        "Tangle serves no purpose unless the project is Android and the Kotlin plugin is applied."
     )
-    build("implementation").deps() shouldBe listOf(
-      "com.rickbusarow.tangle:tangle-api",
-      "com.rickbusarow.tangle:tangle-fragment-api",
-      "com.rickbusarow.tangle:tangle-viewmodel-activity",
-      "com.rickbusarow.tangle:tangle-viewmodel-api",
-      "com.rickbusarow.tangle:tangle-viewmodel-compose",
-      "com.rickbusarow.tangle:tangle-viewmodel-fragment",
-      "com.rickbusarow.tangle:tangle-work-api"
-    )
-    build("api").deps() shouldBe listOf()
   }
 
   public fun listDepsTasks() = """
-    listOf("anvil", "api", "implementation")
-  .forEach { config ->
-    tasks.register(config) {
-      doLast {
-        project.configurations
-          .named(config)
-          .get()
-          .dependencies
-          .forEach { println("${'$'}{it.group}:${'$'}{it.name}") }
-      }
+  tasks.register("deps") {
+    doLast {
+      listOf("anvil", "api", "implementation")
+        .forEach { config ->
+          project.configurations
+            .named(config)
+            .get()
+            .dependencies
+            .forEach { println("${'$'}config ${'$'}{it.group}:${'$'}{it.name}") }
+        }
     }
   }
   """.trimIndent()
