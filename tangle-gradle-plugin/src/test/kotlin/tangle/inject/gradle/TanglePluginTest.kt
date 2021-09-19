@@ -41,7 +41,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-    """.trimIndent()
+      """.trimIndent()
     )
 
     // The Anvil configuration only exists if Anvil is applied, so this would fail without the plugin
@@ -70,7 +70,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-    """.trimIndent()
+      """.trimIndent()
     )
 
     build("deps").deps() shouldBe listOf(
@@ -112,7 +112,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-    """.trimIndent()
+      """.trimIndent()
     )
 
     build("deps").deps() shouldBe listOf(
@@ -152,7 +152,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-    """.trimIndent()
+      """.trimIndent()
     )
 
     build("deps").deps() shouldBe listOf(
@@ -194,7 +194,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-    """.trimIndent()
+      """.trimIndent()
     )
 
     build("deps").deps() shouldBe listOf(
@@ -235,7 +235,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-    """.trimIndent()
+        """.trimIndent()
       )
 
       build("deps").deps() shouldBe listOf(
@@ -279,7 +279,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-    """.trimIndent()
+        """.trimIndent()
       )
 
       build("deps").deps() shouldBe listOf(
@@ -323,7 +323,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-    """.trimIndent()
+        """.trimIndent()
       )
 
       build("deps").deps() shouldBe listOf(
@@ -358,7 +358,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-    """.trimIndent()
+      """.trimIndent()
     )
 
     tasks("test").shouldFailWithMessage(
