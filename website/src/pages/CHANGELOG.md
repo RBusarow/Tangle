@@ -1,3 +1,25 @@
+## 0.13.1
+
+#### 🚀 Features
+
+- The Tangle Gradle Plugin will now automatically apply the Anvil Gradle plugin if it hasn't been applied already.  There is no change to behavior if Anvil was already applied manually, or if Anvil is applied later on in configuration. ([#333](https://github.com/rbusarow/Tangle/pull/333))
+
+#### 🐛 Bug Fixes
+- The Tangle Gradle Plugin will now correctly detect existence of the Android Gradle Plugin ([#333](https://github.com/rbusarow/Tangle/pull/333))
+- The website's "get started" button point to configuration doc ([#331](https://github.com/rbusarow/Tangle/pull/331))
+
+#### 🧰 Maintenance
+
+- Bump com.osacky.doctor from 0.7.1 to 0.7.2 ([#329](https://github.com/rbusarow/Tangle/pull/329))
+- Bump kotest-property-jvm from 4.6.2 to 4.6.3 ([#328](https://github.com/rbusarow/Tangle/pull/328))
+- Bump lifecycle-viewmodel-compose from 1.0.0-alpha07 to 2.4.0-beta01 ([#327](https://github.com/rbusarow/Tangle/pull/327))
+- Bump navigation-runtime-ktx from 2.4.0-alpha08 to 2.4.0-alpha09 ([#326](https://github.com/rbusarow/Tangle/pull/326))
+- update Dokka to 1.5.30 ([#324](https://github.com/rbusarow/Tangle/pull/324))
+- update Gradle Plugin Publish to 0.16.0 ([#325](https://github.com/rbusarow/Tangle/pull/325))
+- Bump gradle-maven-publish-plugin from 0.17.0 to 0.18.0 ([#322](https://github.com/rbusarow/Tangle/pull/322))
+- Bump junit-jupiter-api from 5.7.2 to 5.8.0 ([#321](https://github.com/rbusarow/Tangle/pull/321))
+- Bump ktlint-gradle from 10.1.0 to 10.2.0 ([#312](https://github.com/rbusarow/Tangle/pull/312))
+
 ## 0.13.0
 
 #### 🚀 Features
@@ -74,6 +96,23 @@ class MyWorker @AssistedInject constructor(
   - `com.rickbusarow.tangle:tangle-viewmodel-fragment`
 - `TangleGraph` has
   moved `:tangle-api` (`tangle.inject.TangleGraph`) ([#169](https://github.com/rbusarow/Tangle/pull/169))
+- `ViewModel`-related s feature toggles in the Gradle plugin have been moved.
+  old:
+  ```kotlin
+  tangle {
+    viewModelsEnabled.set(true)
+    composeEnabled.set(true)
+  }
+  ```
+  new:
+  ```kotlin
+  tangle {
+    viewModelOptions {
+      enabled = true // default is true
+      composeEnabled = true // default is false
+    }
+  }
+  ```
 
 #### 🐛 Bug Fixes
 
