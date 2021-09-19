@@ -15,101 +15,65 @@
 
 package tangle.inject.gradle
 
-import com.android.build.gradle.BaseExtension
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
 
 public open class TanglePlugin : BasePlugin() {
 
-  @Suppress("UnstableApiUsage")
   override fun apply(target: Project) {
     val extension = target.extensions
       .create(EXTENSION_NAME, TangleExtension::class.java)
-    var hasAndroid = false
-
-    target.pluginManager.withPlugin(ANVIL_ID) {
-      hasAndroid = target.extensions.findByType(BaseExtension::class.java) != null
-
-      target.addImplementation("tangle-api")
-    }
 
     target.afterEvaluate {
+
+      val hasAndroid = target.extensions.findByName("android") != null
+
       if (!hasAndroid) {
         throw GradleException(
           "Tangle is applied to project '${target.path}', " +
-            "but $KOTLIN_ANDROID_ID has not been applied.  " +
+            "but no Android plugin has been applied.  " +
             "Tangle serves no purpose unless the project is Android " +
             "and the Kotlin plugin is applied."
         )
       }
 
-      if (extension.fragmentsEnabled) {
-        target.addImplementation("tangle-fragment-api")
-        target.addAnvil("tangle-fragment-compiler")
+      if (!target.pluginManager.hasPlugin(ANVIL_ID)) {
+        target.pluginManager.apply(ANVIL_ID)
       }
 
-      if (extension.workEnabled) {
-        target.addImplementation("tangle-work-api")
-        target.addAnvil("tangle-work-compiler")
-      }
+      target.pluginManager.withPlugin(ANVIL_ID) {
 
-      val viewModelOptions = extension.viewModelOptions
+        target.addImplementation("tangle-api")
 
-      validateViewModelOptions(viewModelOptions)
-
-      if (viewModelOptions.enabled) {
-        target.addImplementation("tangle-viewmodel-api")
-        target.addAnvil("tangle-viewmodel-compiler")
-
-        if (viewModelOptions.activitiesEnabled) {
-          target.addImplementation("tangle-viewmodel-activity")
+        if (extension.fragmentsEnabled) {
+          target.addImplementation("tangle-fragment-api")
+          target.addAnvil("tangle-fragment-compiler")
         }
-        if (viewModelOptions.composeEnabled) {
 
-          val composeEnabled = target.extensions.findByType(BaseExtension::class.java)
-            ?.buildFeatures
-            ?.compose
-            ?: false
+        if (extension.workEnabled) {
+          target.addImplementation("tangle-work-api")
+          target.addAnvil("tangle-work-compiler")
+        }
 
-          if (!composeEnabled) {
-            throw GradleException(
-              "Tangle's compose support is enabled, but AGP's `buildFeatures.compose` is disabled. " +
-                "Compose must be enabled in the Android Gradle Plugin."
-            )
+        val viewModelOptions = extension.viewModelOptions
+
+        if (viewModelOptions.enabled) {
+          target.addImplementation("tangle-viewmodel-api")
+          target.addAnvil("tangle-viewmodel-compiler")
+
+          if (viewModelOptions.activitiesEnabled) {
+            target.addImplementation("tangle-viewmodel-activity")
           }
-
-          target.addImplementation("tangle-viewmodel-compose")
-        }
-        if (viewModelOptions.fragmentsEnabled) {
-          target.addImplementation("tangle-viewmodel-fragment")
+          if (viewModelOptions.composeEnabled) {
+            target.addImplementation("tangle-viewmodel-compose")
+          }
+          if (viewModelOptions.fragmentsEnabled) {
+            target.addImplementation("tangle-viewmodel-fragment")
+          }
         }
       }
     }
-  }
-
-  private fun validateViewModelOptions(viewModelOptions: ViewModelOptions) {
-
-    fun validate(setting: Boolean, name: String) {
-      if (!viewModelOptions.enabled && setting) {
-        throw GradleException(
-          "viewModelOptions.$name is enabled, but ViewModel code-gen is disabled.  Code generation " +
-            """must be enabled in order for any ViewModel API's to work.
-            |
-            |tangle {
-            |  viewModelOptions {
-            |    enabled = true
-            |    $name = true
-            |  }
-            |}
-          """.trimMargin()
-        )
-      }
-    }
-
-    validate(viewModelOptions.activitiesEnabled, "activitiesEnabled")
-    validate(viewModelOptions.composeEnabled, "composeEnabled")
-    validate(viewModelOptions.fragmentsEnabled, "fragmentsEnabled")
   }
 
   private fun Project.addAnvil(name: String) {
@@ -129,7 +93,6 @@ public open class TanglePlugin : BasePlugin() {
   internal companion object {
 
     const val EXTENSION_NAME = "tangle"
-    const val KOTLIN_ANDROID_ID = "org.jetbrains.kotlin.android"
     const val ANVIL_ID = "com.squareup.anvil"
   }
 }
