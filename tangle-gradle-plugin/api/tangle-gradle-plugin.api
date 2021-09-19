@@ -13,7 +13,6 @@ public abstract class tangle/inject/gradle/TangleExtension {
 public class tangle/inject/gradle/TanglePlugin : org/gradle/api/plugins/BasePlugin {
 	public static final field ANVIL_ID Ljava/lang/String;
 	public static final field EXTENSION_NAME Ljava/lang/String;
-	public static final field KOTLIN_ANDROID_ID Ljava/lang/String;
 	public fun <init> ()V
 	public synthetic fun apply (Ljava/lang/Object;)V
 	public fun apply (Lorg/gradle/api/Project;)V
