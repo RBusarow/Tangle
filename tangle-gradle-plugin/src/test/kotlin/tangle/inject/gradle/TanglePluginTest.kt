@@ -15,7 +15,9 @@
 
 package tangle.inject.gradle
 
+import org.gradle.testkit.runner.TaskOutcome.SUCCESS
 import org.junit.jupiter.api.TestFactory
+import java.io.File
 
 public class TanglePluginTest : BasePluginTest() {
 
@@ -44,8 +46,23 @@ public class TanglePluginTest : BasePluginTest() {
       """.trimIndent()
     )
 
-    // The Anvil configuration only exists if Anvil is applied, so this would fail without the plugin
-    build("deps").shouldSucceed()
+    File(testProjectDir, "module/src/main/java/tangle/inject/tests/Component.kt")
+      .also { it.parentFile.mkdirs() }
+      .writeText(
+        """
+        package tangle.inject.tests
+
+        import com.squareup.anvil.annotations.ContributesTo
+
+        @ContributesTo(Unit::class)
+        interface Component
+      """.trimIndent()
+      )
+
+    tasks("assembleDebug")
+      .build()
+      .task(":module:assembleDebug")!!
+      .outcome shouldBe SUCCESS
   }
 
   @TestFactory

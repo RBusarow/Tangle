@@ -25,6 +25,10 @@ public open class TanglePlugin : BasePlugin() {
     val extension = target.extensions
       .create(EXTENSION_NAME, TangleExtension::class.java)
 
+    if (!target.pluginManager.hasPlugin(ANVIL_ID)) {
+      target.pluginManager.apply(ANVIL_ID)
+    }
+
     target.afterEvaluate {
 
       val hasAndroid = target.extensions.findByName("android") != null
@@ -36,10 +40,6 @@ public open class TanglePlugin : BasePlugin() {
             "Tangle serves no purpose unless the project is Android " +
             "and the Kotlin plugin is applied."
         )
-      }
-
-      if (!target.pluginManager.hasPlugin(ANVIL_ID)) {
-        target.pluginManager.apply(ANVIL_ID)
       }
 
       target.pluginManager.withPlugin(ANVIL_ID) {
