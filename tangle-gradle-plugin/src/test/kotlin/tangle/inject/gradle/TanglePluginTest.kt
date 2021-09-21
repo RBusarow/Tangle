@@ -56,7 +56,7 @@ public class TanglePluginTest : BasePluginTest() {
 
         @ContributesTo(Unit::class)
         interface Component
-      """.trimIndent()
+        """.trimIndent()
       )
 
     tasks("assembleDebug")
