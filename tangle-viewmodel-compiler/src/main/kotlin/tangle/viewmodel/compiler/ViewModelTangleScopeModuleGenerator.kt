@@ -16,11 +16,9 @@
 package tangle.viewmodel.compiler
 
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.kotlinpoet.AnnotationSpec
-import com.squareup.kotlinpoet.ClassName
-import com.squareup.kotlinpoet.FileSpec
+import com.squareup.anvil.compiler.internal.capitalize
+import com.squareup.kotlinpoet.*
 import com.squareup.kotlinpoet.KModifier.ABSTRACT
-import com.squareup.kotlinpoet.TypeSpec
 import tangle.inject.compiler.*
 import java.io.File
 
@@ -68,14 +66,98 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
             TypeSpec.companionObjectBuilder()
               .applyEach(params.viewModelParamsList) { viewModelParams ->
 
+                val factoryConstructorParams =
+                  viewModelParams.viewModelFactoryConstructorParams + viewModelParams.memberInjectedParams
+
                 addFunction(
                   "provide_${viewModelParams.viewModelFactoryClassName.generateSimpleNameString()}"
                 ) {
 
-                  addParameter("factory", viewModelParams.viewModelFactoryClassName)
+                  applyEach(factoryConstructorParams) { parameter ->
+                    addParameter(parameter.name, parameter.providerTypeName)
+                  }
+
                   returns(viewModelParams.viewModelClassName)
                   addAnnotation(ClassNames.provides)
-                  addStatement("return·factory.create()")
+
+                  val constructorArguments =
+                    viewModelParams.viewModelConstructorParams.asArgumentList(
+                      asProvider = true,
+                      includeModule = false
+                    )
+
+                  val tangleParams = viewModelParams.viewModelConstructorParams
+                    .filter { it.isTangleParam }
+
+                  if (viewModelParams.savedStateParam != null && tangleParams.isNotEmpty()) {
+                    tangleParams.forEach { param ->
+
+                      val tangleParamName = param.tangleParamName
+
+                      require(
+                        !tangleParamName.isNullOrEmpty(),
+                        viewModelParams.viewModelClassDescriptor
+                      ) {
+                        "parameter ${param.name} is annotated with ${FqNames.tangleParam.asString()}, " +
+                          "but does not have a valid key."
+                      }
+
+                      addStatement(
+                        "val·%L·=·${viewModelParams.savedStateParam.name}.get().get<%T>(%S)",
+                        param.name,
+                        param.typeName,
+                        tangleParamName
+                      )
+                      if (!param.typeName.isNullable) {
+                        beginControlFlow("checkNotNull(%L)·{", param.name)
+                        addStatement(
+                          "%S",
+                          buildCodeBlock {
+                            add(
+                              "Required parameter with name `%L` and type `%L` is missing from SavedStateHandle.",
+                              tangleParamName,
+                              param.typeName
+                            )
+                          }
+                        )
+                        endControlFlow()
+                      }
+                    }
+                  }
+
+                  if (viewModelParams.memberInjectedParams.isEmpty()) {
+                    addStatement(
+                      "return·%T($constructorArguments)",
+                      viewModelParams.viewModelClassName
+                    )
+                  } else {
+
+                    addStatement(
+                      "val·instance·=·%T($constructorArguments)",
+                      viewModelParams.viewModelClassName
+                    )
+
+                    val memberInjectParameters = viewModelParams.memberInjectedParams
+
+                    memberInjectParameters.forEach { parameter ->
+
+                      val propertyName = parameter.name
+                      val functionName = "inject${propertyName.capitalize()}"
+
+                      val param = when {
+                        parameter.isWrappedInProvider -> parameter.name
+                        parameter.isWrappedInLazy -> "${FqNames.daggerDoubleCheck}.lazy(${parameter.name})"
+                        else -> parameter.name + ".get()"
+                      }
+
+                      addStatement(
+                        "%T.$functionName(instance, $param)",
+                        parameter.memberInjectorClass
+                      )
+                    }
+                    addStatement("return·instance")
+                  }
+
                   build()
                 }
               }

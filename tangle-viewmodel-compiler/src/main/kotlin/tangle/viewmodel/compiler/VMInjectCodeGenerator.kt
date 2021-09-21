@@ -45,11 +45,6 @@ class VMInjectCodeGenerator : TangleCodeGenerator() {
         ViewModelParams.create(module, viewModelClass, constructor)
       }
 
-    val viewModels = with(ViewModelFactoryGenerator()) {
-      viewModelParamsList
-        .map { generate(codeGenDir, it) }
-    }
-
     val moduleParams = viewModelParamsList
       .groupBy { it.packageName }
       .map { (packageName, byPackageName) ->
@@ -68,6 +63,6 @@ class VMInjectCodeGenerator : TangleCodeGenerator() {
         .map { generate(codeGenDir, it) }
     }
 
-    return viewModels + tangleScopeModules + tangleAppScopeModules
+    return tangleScopeModules + tangleAppScopeModules
   }
 }
