@@ -116,6 +116,17 @@ public data class TestScope(
     }
   }
 
+  private fun propertiesFile() {
+    File(testProjectDir, "gradle.properties")
+      .writeText(
+        """org.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g
+          |android.useAndroidX=true
+          |org.gradle.daemon=false
+          |org.gradle.caching=false
+        """.trimMargin()
+      )
+  }
+
   public fun module(buildFile: String) {
     File(testProjectDir, "module/src/main").mkdirs()
     File(testProjectDir, "module/src/main/AndroidManifest.xml")
@@ -125,16 +136,14 @@ public data class TestScope(
   }
 
   public fun build(vararg tasks: String): BuildResult {
-    File(testProjectDir, "gradle.properties")
-      .writeText("org.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g")
+    propertiesFile()
     settingsFile()
     projectBuildFile()
     return gradleRunner().withArguments(*tasks).build()
   }
 
   public fun tasks(vararg tasks: String): GradleRunner {
-    File(testProjectDir, "gradle.properties")
-      .writeText("org.gradle.jvmargs=-Xmx3g -XX:MaxMetaspaceSize=1g")
+    propertiesFile()
     settingsFile()
     projectBuildFile()
     return gradleRunner().withArguments(*tasks)
