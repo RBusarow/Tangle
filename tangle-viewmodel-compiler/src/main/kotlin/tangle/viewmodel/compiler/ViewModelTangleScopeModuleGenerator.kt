@@ -70,7 +70,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
                   viewModelParams.viewModelFactoryConstructorParams + viewModelParams.memberInjectedParams
 
                 addFunction(
-                  "provide_${viewModelParams.viewModelFactoryClassName.generateSimpleNameString()}"
+                  "provide_${viewModelParams.viewModelClassSimpleName}"
                 ) {
 
                   applyEach(factoryConstructorParams) { parameter ->
@@ -147,7 +147,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
                       val param = when {
                         parameter.isWrappedInProvider -> parameter.name
                         parameter.isWrappedInLazy -> "${FqNames.daggerDoubleCheck}.lazy(${parameter.name})"
-                        else -> parameter.name + ".get()"
+                        else -> parameter.name //+ ".get()"
                       }
 
                       addStatement(
