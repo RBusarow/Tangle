@@ -16,18 +16,20 @@
 package tangle.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
+import com.tschuchort.compiletesting.KotlinCompilation.Result
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.TestFactory
 import tangle.inject.test.utils.BaseTest
-import tangle.inject.test.utils.createFunction
-import tangle.inject.test.utils.factoryClass
-import tangle.inject.test.utils.myViewModelClass
+import tangle.inject.test.utils.targetClass
 import javax.inject.Provider
+import kotlin.reflect.full.companionObject
+import kotlin.reflect.full.companionObjectInstance
+import kotlin.reflect.full.functions
 
 class VMInjectGeneratorTest : BaseTest() {
 
   @TestFactory
-  fun `factory is generated without arguments`() = test {
+  fun `provider function is generated without arguments`() = test {
     compile(
       //language=kotlin
       """
@@ -36,20 +38,16 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
 
-      class MyViewModel @VMInject constructor() : ViewModel()
+      class Target @VMInject constructor() : ViewModel()
      """
     ) {
-      val factoryClass = myViewModelClass.factoryClass()
-      val factoryInstance = factoryClass.newInstance()
 
-      val getter = factoryClass.createFunction()
-
-      getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+      provideTarget()::class.java shouldBe targetClass
     }
   }
 
   @TestFactory
-  fun `factory is generated for an argument`() = test {
+  fun `provider function is generated for an argument`() = test {
     compile(
       //language=kotlin
       """
@@ -58,23 +56,17 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         name: String
       ) : ViewModel()
      """
     ) {
-      val factoryClass = myViewModelClass.factoryClass()
-
-      val constructor = factoryClass.declaredConstructors.single()
-      val factoryInstance = constructor.newInstance(Provider { "name" })
-      val getter = factoryClass.createFunction()
-
-      getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+      provideTarget(Provider { "name" })::class.java shouldBe targetClass
     }
   }
 
   @TestFactory
-  fun `factory is generated for a generic argument`() = test {
+  fun `provider function is generated for a generic argument`() = test {
     compile(
       //language=kotlin
       """
@@ -83,23 +75,17 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         names: List<String>
       ) : ViewModel()
      """
     ) {
-      val factoryClass = myViewModelClass.factoryClass()
-
-      val constructor = factoryClass.declaredConstructors.single()
-      val factoryInstance = constructor.newInstance(Provider { listOf("name") })
-      val getter = factoryClass.createFunction()
-
-      getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+      provideTarget(Provider { listOf("name") })::class.java shouldBe targetClass
     }
   }
 
   @TestFactory
-  fun `factory is generated for a dagger Lazy argument`() =
+  fun `provider function is generated for a dagger Lazy argument`() =
     test {
       compile(
         //language=kotlin
@@ -109,23 +95,17 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         names: dagger.Lazy<String>
       ) : ViewModel()
      """
       ) {
-        val factoryClass = myViewModelClass.factoryClass()
-
-        val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance(Provider { "name" })
-        val getter = factoryClass.createFunction()
-
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        provideTarget(Provider { "name" })::class.java shouldBe targetClass
       }
     }
 
   @TestFactory
-  fun `factory is generated for a dagger Lazy argument which is generic`() =
+  fun `provider function is generated for a dagger Lazy argument which is generic`() =
     test {
       compile(
         //language=kotlin
@@ -135,23 +115,17 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         names: dagger.Lazy<List<String>>
       ) : ViewModel()
      """
       ) {
-        val factoryClass = myViewModelClass.factoryClass()
-
-        val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance(Provider { listOf("name") })
-        val getter = factoryClass.createFunction()
-
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        provideTarget(Provider { listOf("name") })::class.java shouldBe targetClass
       }
     }
 
   @TestFactory
-  fun `factory is generated for a SavedStateHandle argument`() =
+  fun `provider function is generated for a SavedStateHandle argument`() =
     test {
       compile(
         //language=kotlin
@@ -162,23 +136,17 @@ class VMInjectGeneratorTest : BaseTest() {
       import androidx.lifecycle.ViewModel
       import tangle.viewmodel.VMInject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         savedStateHandle: SavedStateHandle
       ) : ViewModel()
      """
       ) {
-        val factoryClass = myViewModelClass.factoryClass()
-
-        val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance(Provider { SavedStateHandle() })
-        val getter = factoryClass.createFunction()
-
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        provideTarget(Provider { SavedStateHandle() })::class.java shouldBe targetClass
       }
     }
 
   @TestFactory
-  fun `factory is generated for a SavedStateHandle argument wrapped in Provider and a TangleParam argument`() =
+  fun `provider function is generated for a SavedStateHandle argument wrapped in Provider and a TangleParam argument`() =
     test {
       compile(
         //language=kotlin
@@ -192,21 +160,15 @@ class VMInjectGeneratorTest : BaseTest() {
       import javax.inject.Provider
       import javax.inject.Inject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         savedStateHandle: Provider<SavedStateHandle>,
         @TangleParam("name") val name: String
       ) : ViewModel()
      """
       ) {
-        val factoryClass = myViewModelClass.factoryClass()
-
-        val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance(
+        provideTarget(
           Provider { SavedStateHandle(mapOf("name" to "Leeroy")) }
-        )
-        val getter = factoryClass.createFunction()
-
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        )::class.java shouldBe targetClass
       }
     }
 
@@ -225,26 +187,20 @@ class VMInjectGeneratorTest : BaseTest() {
       import javax.inject.Provider
       import javax.inject.Inject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         savedStateHandle: Provider<SavedStateHandle>,
         @TangleParam("aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong") val name: String
       ) : ViewModel()
      """
       ) {
-        val factoryClass = myViewModelClass.factoryClass()
-
-        val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance(
+        provideTarget(
           Provider { SavedStateHandle(mapOf("aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong" to "Leeroy")) }
-        )
-        val getter = factoryClass.createFunction()
-
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        )::class.java shouldBe targetClass
       }
     }
 
   @TestFactory
-  fun `factory is generated for an argument named savedStateHandleProvider and a TangleParam argument`() =
+  fun `provider function is generated for an argument named savedStateHandleProvider and a TangleParam argument`() =
     test {
       compile(
         //language=kotlin
@@ -257,23 +213,16 @@ class VMInjectGeneratorTest : BaseTest() {
       import tangle.viewmodel.VMInject
       import javax.inject.Provider
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         @TangleParam("savedName") val name: String,
         savedStateHandleProvider: String
       ) : ViewModel()
      """
       ) {
-        val factoryClass = myViewModelClass.factoryClass()
-
-        val constructor = factoryClass.declaredConstructors.single()
-
-        val factoryInstance = constructor.newInstance(
+        provideTarget(
           Provider { "a string" },
           Provider { SavedStateHandle(mapOf("savedName" to "Leeroy")) }
-        )
-        val getter = factoryClass.createFunction()
-
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        )::class.java shouldBe targetClass
       }
     }
 
@@ -290,23 +239,17 @@ class VMInjectGeneratorTest : BaseTest() {
       import tangle.inject.TangleParam
       import tangle.viewmodel.VMInject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         @TangleParam("name") val name: String?
       ) : ViewModel()
      """
       ) {
-        val factoryClass = myViewModelClass.factoryClass()
-
-        val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance(Provider { SavedStateHandle() })
-        val getter = factoryClass.createFunction()
-
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        provideTarget(Provider { SavedStateHandle() })::class.java shouldBe targetClass
       }
     }
 
   @TestFactory
-  fun `factory is generated for a TangleParam argument`() =
+  fun `provider function is generated for a TangleParam argument`() =
     test {
       compile(
         //language=kotlin
@@ -318,25 +261,19 @@ class VMInjectGeneratorTest : BaseTest() {
       import tangle.inject.TangleParam
       import tangle.viewmodel.VMInject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         @TangleParam("name") val name: String
       ) : ViewModel()
      """
       ) {
-        val factoryClass = myViewModelClass.factoryClass()
-
-        val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance(
+        provideTarget(
           Provider { SavedStateHandle(mapOf("name" to "Leeroy")) }
-        )
-        val getter = factoryClass.createFunction()
-
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        )::class.java shouldBe targetClass
       }
     }
 
   @TestFactory
-  fun `factory is generated with SavedStateHandle and TangleParam arguments`() =
+  fun `provider function is generated with SavedStateHandle and TangleParam arguments`() =
     test {
       compile(
         //language=kotlin
@@ -348,26 +285,20 @@ class VMInjectGeneratorTest : BaseTest() {
       import tangle.inject.TangleParam
       import tangle.viewmodel.VMInject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         savedStateHandle: SavedStateHandle,
         @TangleParam("name") val name: String
       ) : ViewModel()
      """
       ) {
-        val factoryClass = myViewModelClass.factoryClass()
-
-        val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance(
+        provideTarget(
           Provider { SavedStateHandle(mapOf("name" to "Leeroy")) }
-        )
-        val getter = factoryClass.createFunction()
-
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        )::class.java shouldBe targetClass
       }
     }
 
   @TestFactory
-  fun `factory is generated with two TangleParam arguments`() =
+  fun `provider function is generated with two TangleParam arguments`() =
     test {
       compile(
         //language=kotlin
@@ -379,16 +310,13 @@ class VMInjectGeneratorTest : BaseTest() {
       import tangle.inject.TangleParam
       import tangle.viewmodel.VMInject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         @TangleParam("firstName") val firstName: String,
         @TangleParam("lastName") val lastName: String
       ) : ViewModel()
      """
       ) {
-        val factoryClass = myViewModelClass.factoryClass()
-
-        val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance(
+        provideTarget(
           Provider {
             SavedStateHandle(
               mapOf(
@@ -397,15 +325,12 @@ class VMInjectGeneratorTest : BaseTest() {
               )
             )
           }
-        )
-        val getter = factoryClass.createFunction()
-
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        )::class.java shouldBe targetClass
       }
     }
 
   @TestFactory
-  fun `factory is generated with two TangleParam arguments of different types`() =
+  fun `provider function is generated with two TangleParam arguments of different types`() =
     test {
       compile(
         //language=kotlin
@@ -417,16 +342,13 @@ class VMInjectGeneratorTest : BaseTest() {
       import tangle.inject.TangleParam
       import tangle.viewmodel.VMInject
 
-      class MyViewModel @VMInject constructor(
+      class Target @VMInject constructor(
         @TangleParam("name") val name: String,
         @TangleParam("age") val age: Int
       ) : ViewModel()
      """
       ) {
-        val factoryClass = myViewModelClass.factoryClass()
-
-        val constructor = factoryClass.declaredConstructors.single()
-        val factoryInstance = constructor.newInstance(
+        provideTarget(
           Provider {
             SavedStateHandle(
               mapOf(
@@ -435,10 +357,23 @@ class VMInjectGeneratorTest : BaseTest() {
               )
             )
           }
-        )
-        val getter = factoryClass.createFunction()
-
-        getter.invoke(factoryInstance)::class.java shouldBe myViewModelClass
+        )::class.java shouldBe targetClass
       }
     }
+
+  fun Result.provideTarget(vararg args: Any?): Any {
+    val moduleClass =
+      classLoader.loadClass("tangle.inject.tests.TangleViewModelScope_VMInject_Module").kotlin
+
+    val companionObject = moduleClass.companionObject!!
+
+    val funName = "provide_Target"
+
+    val providerFunction = companionObject.functions
+      .find { it.name == funName }
+
+    requireNotNull(providerFunction) { "could not find a function named `$funName`" }
+
+    return providerFunction.call(moduleClass.companionObjectInstance, *args)!!
+  }
 }

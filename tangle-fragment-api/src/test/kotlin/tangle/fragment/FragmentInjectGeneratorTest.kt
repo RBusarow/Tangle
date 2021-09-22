@@ -46,7 +46,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
       """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
       val factoryInstance = factoryClass.createStatic()
 
       val factoryImplClass = myFragmentFactoryImplClass
@@ -85,7 +85,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
       val factoryInstance = factoryClass.createStatic()
 
       val factoryImplClass = myFragmentFactoryImplClass
@@ -125,7 +125,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
 
       val factoryInstance = factoryClass.createStatic(Provider { "id value" })
 
@@ -171,7 +171,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
 
       val factoryInstance = factoryClass.createStatic(
         Provider { "baseId value" },
@@ -228,7 +228,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
 
       val factoryInstance = factoryClass.createStatic(
         Provider { 23 },
@@ -284,7 +284,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
 
       val factoryInstance = factoryClass.createStatic(
         Provider { "baseId value" }, Provider { "id value" }
@@ -332,7 +332,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
 
       val constructor = factoryClass.declaredConstructors.single()
 
@@ -366,7 +366,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       class MyFragment @Inject constructor() : BaseFragment()
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
 
       val constructor = factoryClass.declaredConstructors.single()
 
@@ -402,7 +402,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
 
       val fragmentInstance = factoryClass.newInstanceStatic()
       val factoryInstance = factoryClass.createStatic()
@@ -437,7 +437,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
 
       val constructor = factoryClass.declaredConstructors.single()
 
@@ -472,7 +472,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
 
       val constructor = factoryClass.declaredConstructors.single()
 
@@ -510,7 +510,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
 
       val constructor = factoryClass.declaredConstructors.single()
 
@@ -550,7 +550,7 @@ class FragmentInjectGeneratorTest : BaseTest() {
       }
      """
     ) {
-      val factoryClass = myFragmentClass.factoryClass()
+      val factoryClass = myFragmentClass.moduleClass()
 
       val constructor = factoryClass.declaredConstructors.single()
 

@@ -128,7 +128,7 @@ fun Class<*>.moduleFactoryClass(
   )
 }
 
-fun Class<*>.factoryClass(): Class<*> {
+fun Class<*>.moduleClass(): Class<*> {
   val enclosingClassString = enclosingClass?.let { "${it.simpleName}_" } ?: ""
 
   return classLoader.loadClass("${packageName()}$enclosingClassString${simpleName}_Factory")

@@ -81,7 +81,8 @@ data class ViewModelParams(
 
       val memberInjectParameters = viewModelClassDescriptor.memberInjectedParameters(module)
 
-      val viewModelConstructorParams = constructor.valueParameters.mapToParameters(module)
+      val viewModelConstructorParams = constructor.valueParameters
+        .mapToParameters(module)
 
       val (daggerConstructorParams, savedStateParams) = viewModelConstructorParams
         .partition { !it.isTangleParam }
