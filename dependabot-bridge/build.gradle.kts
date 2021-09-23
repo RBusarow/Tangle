@@ -161,7 +161,7 @@ dependencies {
   dependencySync("org.jetbrains.dokka:dokka-gradle-plugin:1.5.30")
   dependencySync("org.jetbrains.kotlin:kotlin-annotation-processing-embeddable:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-compiler-embeddable:1.5.21")
-  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.21")
+  dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin-api:1.5.31")
   dependencySync("org.jetbrains.kotlin:kotlin-gradle-plugin:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-reflect:1.5.21")
   dependencySync("org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.5.21")
