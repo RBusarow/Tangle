@@ -197,3 +197,56 @@ allprojects {
       }
     }
 }
+
+val createBenchmarkProject by tasks.registering(Copy::class) {
+
+  description = "Generates a full benchmarking project in the root build folder"
+  group = "profiling"
+
+  val benchmarkRoot = File(rootDir, "build/benchmark-project")
+
+  doFirst {
+    benchmarkRoot.deleteRecursively()
+  }
+
+  // This copies the current Gradle distribution to the new project.
+  // It also copies the libs.versions.toml file,
+  // so that the project automatically gets up-to-date dependencies.
+  from(rootDir) {
+    include("/gradle/**")
+    include("gradlew")
+    include("gradlew.bat")
+  }
+  into(benchmarkRoot)
+
+  doLast {
+    val tangleVersion = project.extra.properties["VERSION_NAME"] as String
+
+    benchmark.createBenchmarkProject(
+      numberOfModules = 100,
+      rootDir = benchmarkRoot,
+      tangleVersion = tangleVersion
+    )
+  }
+}
+
+val profile by tasks.registering(Exec::class) {
+
+  description = "Generates a benchmarking project, then runs Gradle-Profiler against it"
+  group = "profiling"
+
+  // The generated project uses mavenLocal() to get its Tangle dependencies.
+  // This was necessary to ensure that it's always using the current Tangle code.
+  // Originally it just used an included build,
+  // but that meant building the Tangle project as part of the profiled job.
+  getTasksByName("publishToMavenLocal", true)
+    .forEach { dependsOn(it) }
+
+  dependsOn(createBenchmarkProject)
+
+  // installs the Gradle-Profiler tool using HomeBrew (meaning it assumes it's running on a Mac)
+  commandLine("brew", "install", "gradle-profiler")
+
+  workingDir("./benchmarks")
+  commandLine("sh", "profile.sh")
+}
