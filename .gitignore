@@ -72,3 +72,5 @@ checksum.txt
 # copy of API docs for website.  Save the /styles dir before the CSS is slightly customized
 /website/static/api
 !/website/static/api/styles
+
+local.settings.gradle.kts

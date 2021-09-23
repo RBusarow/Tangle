@@ -1,0 +1,24 @@
+# Can specify scenarios to use when none are specified on the command line
+default-scenarios = ["clean_build_tangle", "clean_build_hilt"]
+
+# Scenarios are run in alphabetical order
+
+clean_build_tangle {
+    title = "Clean Tangle Build"
+    tasks = [":tangle-app:assembleDebug"]
+    gradle-args = ["--rerun-tasks", "--no-build-cache"]
+    cleanup-tasks = ["clean"]
+    run-using = tooling-api // value can be "cli" or "tooling-api"
+    daemon = none // value can be "warm", "cold", or "none"
+    warm-ups = 1 // even without a daemon, the first run is always longer
+}
+
+clean_build_hilt {
+    title = "Clean Hilt Build"
+    tasks = [":hilt-app:assembleDebug"]
+    gradle-args = ["--rerun-tasks", "--no-build-cache"]
+    cleanup-tasks = ["clean"]
+    run-using = tooling-api // value can be "cli" or "tooling-api"
+    daemon = none // value can be "warm", "cold", or "none"
+    warm-ups = 1 // even without a daemon, the first run is always longer
+}
