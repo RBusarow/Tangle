@@ -121,7 +121,7 @@ dependencies {
   dependencySync("com.squareup.retrofit2:retrofit:2.9.0")
   dependencySync("com.squareup:kotlinpoet:1.9.0")
 
-  dependencySync("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.21-1.0.0-beta07")
+  dependencySync("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.31-1.0.0")
   dependencySync("org.jlleitschuh.gradle:ktlint-gradle:10.2.0")
   dependencySync("com.vanniktech:gradle-maven-publish-plugin:0.18.0")
   dependencySync("androidx.hilt:hilt-compiler:1.0.0")
