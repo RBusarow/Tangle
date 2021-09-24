@@ -162,7 +162,7 @@ google-hilt-library = { module = "com.google.dagger:hilt-android", version.ref =
 google-hilt-pluginGradle = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "google-dagger" }
 google-hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "google-dagger" }
 
-google-ksp = "com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.21-1.0.0-beta07"
+google-ksp = "com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.31-1.0.0"
 
 google-material-android = { module = "com.google.android.material:material", version.ref = "google-material" }
 
