@@ -665,7 +665,7 @@ public class TanglePluginTest : BasePluginTest() {
 
       tangle {
         viewModelOptions {
-          composeEnabled = true // default is null
+          composeEnabled = false // default is null
         }
       }
 
@@ -690,7 +690,6 @@ public class TanglePluginTest : BasePluginTest() {
         "implementation com.rickbusarow.tangle:tangle-fragment-api",
         "implementation com.rickbusarow.tangle:tangle-viewmodel-activity",
         "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
-        "implementation com.rickbusarow.tangle:tangle-viewmodel-compose",
         "implementation com.rickbusarow.tangle:tangle-viewmodel-fragment",
         "implementation com.rickbusarow.tangle:tangle-work-api"
       )

@@ -52,7 +52,7 @@ public abstract class BasePluginTest : HermitJUnit5() {
   public fun BuildResult.tangleDeps(): List<String> = output
     .replace("[\\s\\S]*> Task :module:\\S*\\s*".toRegex(), "")
     .replace(
-      "\\s*BUILD SUCCESSFUL in \\d*[m]*s\\s*\\d* actionable task: \\d* executed\\s*".toRegex(), ""
+      "\\s*BUILD SUCCESSFUL in .*\\s*\\d* actionable task: \\d* executed\\s*".toRegex(), ""
     )
     .lines()
     .filterNot { it.isBlank() }
