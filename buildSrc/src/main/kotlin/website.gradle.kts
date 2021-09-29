@@ -99,7 +99,7 @@ fun File.updateTangleVersionRef(version: String) {
   val group = project.extra.properties["GROUP"] as String
 
   val pluginRegex =
-    """^([^'"\n]*['"])$group[^'"]*(['"].*) version (['"])[^'"]*(['"])${'$'}""".toRegex()
+    """^([^'"\n]*['"])$group[^'"]*(['"].*) version (['"])[^'"]*(['"].*)${'$'}""".toRegex()
   val moduleRegex = """^([^'"\n]*['"])$group:([^:]*):[^'"]*(['"].*)${'$'}""".toRegex()
 
   val newText = readText()
