@@ -239,7 +239,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-      """.trimIndent()
+        """.trimIndent()
       )
 
       build("deps").tangleDeps() shouldBe listOf(
@@ -275,7 +275,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-      """.trimIndent()
+        """.trimIndent()
       )
 
       build("deps").tangleDeps() shouldBe listOf(
@@ -313,7 +313,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-      """.trimIndent()
+        """.trimIndent()
       )
 
       build("deps").tangleDeps() shouldBe listOf(
@@ -352,7 +352,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-      """.trimIndent()
+        """.trimIndent()
       )
 
       build("deps").tangleDeps() shouldBe listOf(
@@ -392,7 +392,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-      """.trimIndent()
+        """.trimIndent()
       )
 
       build("deps").tangleDeps() shouldBe listOf(
@@ -434,7 +434,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-      """.trimIndent()
+        """.trimIndent()
       )
 
       build("deps").tangleDeps() shouldBe listOf(
@@ -473,7 +473,7 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       ${listDepsTasks()}
-      """.trimIndent()
+        """.trimIndent()
       )
 
       build("deps").tangleDeps() shouldBe listOf(

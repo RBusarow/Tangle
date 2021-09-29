@@ -46,7 +46,6 @@ public open class TanglePlugin : BasePlugin() {
       target.addAnvil("tangle-compiler")
 
       target.addFeatureDependencies(extension)
-
     }
   }
 

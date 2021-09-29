@@ -40,7 +40,6 @@ internal fun Project.projectAndroidDependencyConfigs() = configurations
   .mapNotNull { config ->
 
     config.androidDependencyConfigOrNull()
-
   }
 
 private fun Configuration.androidDependencyConfigOrNull(): AndroidDependencyConfig? {
