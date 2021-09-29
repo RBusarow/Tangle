@@ -18,3 +18,5 @@ updates:
     ignore:
       - dependency-name: "*kotlinx-coroutines-*"
         versions: [ "1.5.1-native-mt" ]
+      - dependency-name: "org.jetbrains.kotlin:kotlin-*"
+        versions: [ "1.5.31" ]
