@@ -42,38 +42,49 @@ public open class TanglePlugin : BasePlugin() {
         )
       }
 
-      target.pluginManager.withPlugin(ANVIL_ID) {
+      target.addImplementation("tangle-api")
+      target.addAnvil("tangle-compiler")
 
-        target.addImplementation("tangle-api")
+      target.addFeatureDependencies(extension)
 
-        if (extension.fragmentsEnabled) {
-          target.addImplementation("tangle-fragment-api")
-          target.addAnvil("tangle-fragment-compiler")
+    }
+  }
+
+  private fun Project.addFeatureDependencies(
+    extension: TangleExtension
+  ) {
+
+    val viewModelOptions = extension.viewModelOptions
+
+    projectAndroidDependencyConfigs()
+      .forEach { config ->
+
+        if (extension.fragmentsEnabled ?: config.fragments) {
+          addImplementation("tangle-fragment-api")
+          addAnvil("tangle-fragment-compiler")
         }
 
-        if (extension.workEnabled) {
-          target.addImplementation("tangle-work-api")
-          target.addAnvil("tangle-work-compiler")
+        if (extension.workEnabled ?: config.workManager) {
+          addImplementation("tangle-work-api")
+          addAnvil("tangle-work-compiler")
         }
 
-        val viewModelOptions = extension.viewModelOptions
+        if (viewModelOptions.enabled ?: config.viewModels) {
+          addImplementation("tangle-viewmodel-api")
+          addAnvil("tangle-viewmodel-compiler")
 
-        if (viewModelOptions.enabled) {
-          target.addImplementation("tangle-viewmodel-api")
-          target.addAnvil("tangle-viewmodel-compiler")
+          if (viewModelOptions.activitiesEnabled ?: config.activities) {
+            addImplementation("tangle-viewmodel-activity")
+          }
 
-          if (viewModelOptions.activitiesEnabled) {
-            target.addImplementation("tangle-viewmodel-activity")
+          if (viewModelOptions.composeEnabled ?: config.compose) {
+            addImplementation("tangle-viewmodel-compose")
           }
-          if (viewModelOptions.composeEnabled) {
-            target.addImplementation("tangle-viewmodel-compose")
-          }
-          if (viewModelOptions.fragmentsEnabled) {
-            target.addImplementation("tangle-viewmodel-fragment")
+          if (viewModelOptions.fragmentsEnabled ?: config.fragments) {
+            addImplementation("tangle-viewmodel-fragment")
           }
         }
       }
-    }
   }
 
   private fun Project.addAnvil(name: String) {

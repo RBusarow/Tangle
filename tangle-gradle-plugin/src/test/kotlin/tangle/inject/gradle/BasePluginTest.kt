@@ -49,13 +49,15 @@ public abstract class BasePluginTest : HermitJUnit5() {
   }
 
   @Language("RegExp")
-  public fun BuildResult.deps(): List<String> = output
+  public fun BuildResult.tangleDeps(): List<String> = output
     .replace("[\\s\\S]*> Task :module:\\S*\\s*".toRegex(), "")
     .replace(
       "\\s*BUILD SUCCESSFUL in \\d*[m]*s\\s*\\d* actionable task: \\d* executed\\s*".toRegex(), ""
     )
     .lines()
     .filterNot { it.isBlank() }
+    .filterNot { it.startsWith("api androidx") }
+    .filterNot { it.contains("com.squareup.anvil") }
     .sorted()
 
   public fun GradleRunner.shouldFailWithMessage(expectedMessage: String) {

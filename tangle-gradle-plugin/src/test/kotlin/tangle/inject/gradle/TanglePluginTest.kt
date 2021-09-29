@@ -86,11 +86,20 @@ public class TanglePluginTest : BasePluginTest() {
         }
       }
 
+      dependencies {
+        $activities
+        $fragments
+        $viewModels
+        $compose
+        $workManager
+      }
+
       ${listDepsTasks()}
       """.trimIndent()
     )
 
-    build("deps").deps() shouldBe listOf(
+    build("deps").tangleDeps() shouldBe listOf(
+      "anvil com.rickbusarow.tangle:tangle-compiler",
       "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
       "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
       "anvil com.rickbusarow.tangle:tangle-work-compiler",
@@ -98,6 +107,7 @@ public class TanglePluginTest : BasePluginTest() {
       "implementation com.rickbusarow.tangle:tangle-fragment-api",
       "implementation com.rickbusarow.tangle:tangle-viewmodel-activity",
       "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-compose",
       "implementation com.rickbusarow.tangle:tangle-viewmodel-fragment",
       "implementation com.rickbusarow.tangle:tangle-work-api"
     )
@@ -125,19 +135,29 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       tangle {
-        fragmentsEnabled = false // default is true
+        fragmentsEnabled = false // default is null
+      }
+
+      dependencies {
+        $activities
+        $fragments
+        $viewModels
+        $compose
+        $workManager
       }
 
       ${listDepsTasks()}
       """.trimIndent()
     )
 
-    build("deps").deps() shouldBe listOf(
+    build("deps").tangleDeps() shouldBe listOf(
+      "anvil com.rickbusarow.tangle:tangle-compiler",
       "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
       "anvil com.rickbusarow.tangle:tangle-work-compiler",
       "implementation com.rickbusarow.tangle:tangle-api",
       "implementation com.rickbusarow.tangle:tangle-viewmodel-activity",
       "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-compose",
       "implementation com.rickbusarow.tangle:tangle-viewmodel-fragment",
       "implementation com.rickbusarow.tangle:tangle-work-api"
     )
@@ -165,23 +185,304 @@ public class TanglePluginTest : BasePluginTest() {
       }
 
       tangle {
-        workEnabled = false // default is true
+        workEnabled = false // default is null
+      }
+
+      dependencies {
+        $activities
+        $fragments
+        $viewModels
+        $compose
+        $workManager
       }
 
       ${listDepsTasks()}
       """.trimIndent()
     )
 
-    build("deps").deps() shouldBe listOf(
+    build("deps").tangleDeps() shouldBe listOf(
+      "anvil com.rickbusarow.tangle:tangle-compiler",
       "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
       "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
       "implementation com.rickbusarow.tangle:tangle-api",
       "implementation com.rickbusarow.tangle:tangle-fragment-api",
       "implementation com.rickbusarow.tangle:tangle-viewmodel-activity",
       "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+      "implementation com.rickbusarow.tangle:tangle-viewmodel-compose",
       "implementation com.rickbusarow.tangle:tangle-viewmodel-fragment"
     )
   }
+
+  @TestFactory
+  fun `only base compiler and api should be enabled without corresponding androidx dependencies`() =
+    test {
+
+      //language=kotlin
+      module(
+        """
+      plugins {
+        id("com.android.library")
+        kotlin("android")
+        id("com.rickbusarow.tangle")
+      }
+
+      android {
+        compileSdk = 30
+
+        defaultConfig {
+          minSdk = 23
+          targetSdk = 30
+        }
+      }
+
+      dependencies {
+      }
+
+      ${listDepsTasks()}
+      """.trimIndent()
+      )
+
+      build("deps").tangleDeps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-compiler",
+        "implementation com.rickbusarow.tangle:tangle-api"
+      )
+    }
+
+  @TestFactory
+  fun `fragment compiler and api should be automatically enabled with androidx fragment dependencies`() =
+    test {
+
+      //language=kotlin
+      module(
+        """
+      plugins {
+        id("com.android.library")
+        kotlin("android")
+        id("com.rickbusarow.tangle")
+      }
+
+      android {
+        compileSdk = 30
+
+        defaultConfig {
+          minSdk = 23
+          targetSdk = 30
+        }
+      }
+
+      dependencies {
+        $fragments
+      }
+
+      ${listDepsTasks()}
+      """.trimIndent()
+      )
+
+      build("deps").tangleDeps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-compiler",
+        "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
+        "implementation com.rickbusarow.tangle:tangle-api",
+        "implementation com.rickbusarow.tangle:tangle-fragment-api"
+      )
+    }
+
+  @TestFactory
+  fun `viewmodel compiler and api should be automatically enabled with androidx viewmodel dependencies`() =
+    test {
+
+      //language=kotlin
+      module(
+        """
+      plugins {
+        id("com.android.library")
+        kotlin("android")
+        id("com.rickbusarow.tangle")
+      }
+
+      android {
+        compileSdk = 30
+
+        defaultConfig {
+          minSdk = 23
+          targetSdk = 30
+        }
+      }
+
+      dependencies {
+        $viewModels
+      }
+
+      ${listDepsTasks()}
+      """.trimIndent()
+      )
+
+      build("deps").tangleDeps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-compiler",
+        "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
+        "implementation com.rickbusarow.tangle:tangle-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-api"
+      )
+    }
+
+  @TestFactory
+  fun `viewmodel activity api should be automatically enabled with androidx viewmodel and activity dependencies`() =
+    test {
+
+      //language=kotlin
+      module(
+        """
+      plugins {
+        id("com.android.library")
+        kotlin("android")
+        id("com.rickbusarow.tangle")
+      }
+
+      android {
+        compileSdk = 30
+
+        defaultConfig {
+          minSdk = 23
+          targetSdk = 30
+        }
+      }
+
+      dependencies {
+        $activities
+        $viewModels
+      }
+
+      ${listDepsTasks()}
+      """.trimIndent()
+      )
+
+      build("deps").tangleDeps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-compiler",
+        "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
+        "implementation com.rickbusarow.tangle:tangle-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-activity",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-api"
+      )
+    }
+
+  @TestFactory
+  fun `viewmodel fragment api should be automatically enabled with androidx viewmodel and fragment dependencies`() =
+    test {
+
+      //language=kotlin
+      module(
+        """
+      plugins {
+        id("com.android.library")
+        kotlin("android")
+        id("com.rickbusarow.tangle")
+      }
+
+      android {
+        compileSdk = 30
+
+        defaultConfig {
+          minSdk = 23
+          targetSdk = 30
+        }
+      }
+
+      dependencies {
+        $fragments
+        $viewModels
+      }
+
+      ${listDepsTasks()}
+      """.trimIndent()
+      )
+
+      build("deps").tangleDeps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-compiler",
+        "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
+        "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
+        "implementation com.rickbusarow.tangle:tangle-api",
+        "implementation com.rickbusarow.tangle:tangle-fragment-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-fragment"
+      )
+    }
+
+  @TestFactory
+  fun `viewmodel compose api should be automatically enabled with androidx viewmodel and compose dependencies`() =
+    test {
+
+      //language=kotlin
+      module(
+        """
+      plugins {
+        id("com.android.library")
+        kotlin("android")
+        id("com.rickbusarow.tangle")
+      }
+
+      android {
+        compileSdk = 30
+
+        defaultConfig {
+          minSdk = 23
+          targetSdk = 30
+        }
+      }
+
+      dependencies {
+        $compose
+        $viewModels
+      }
+
+      ${listDepsTasks()}
+      """.trimIndent()
+      )
+
+      build("deps").tangleDeps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-compiler",
+        "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
+        "implementation com.rickbusarow.tangle:tangle-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-compose"
+      )
+    }
+
+  @TestFactory
+  fun `work compiler and api should be automatically enabled with androidx work dependencies`() =
+    test {
+
+      //language=kotlin
+      module(
+        """
+      plugins {
+        id("com.android.library")
+        kotlin("android")
+        id("com.rickbusarow.tangle")
+      }
+
+      android {
+        compileSdk = 30
+
+        defaultConfig {
+          minSdk = 23
+          targetSdk = 30
+        }
+      }
+
+      dependencies {
+        $workManager
+      }
+
+      ${listDepsTasks()}
+      """.trimIndent()
+      )
+
+      build("deps").tangleDeps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-compiler",
+        "anvil com.rickbusarow.tangle:tangle-work-compiler",
+        "implementation com.rickbusarow.tangle:tangle-api",
+        "implementation com.rickbusarow.tangle:tangle-work-api"
+      )
+    }
 
   @TestFactory
   fun `disabling viewModels in config should disable its dependencies`() = test {
@@ -206,15 +507,24 @@ public class TanglePluginTest : BasePluginTest() {
 
       tangle {
         viewModelOptions {
-          enabled = false // default is true
+          enabled = false // default is null
         }
+      }
+
+      dependencies {
+        $activities
+        $fragments
+        $viewModels
+        $compose
+        $workManager
       }
 
       ${listDepsTasks()}
       """.trimIndent()
     )
 
-    build("deps").deps() shouldBe listOf(
+    build("deps").tangleDeps() shouldBe listOf(
+      "anvil com.rickbusarow.tangle:tangle-compiler",
       "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
       "anvil com.rickbusarow.tangle:tangle-work-compiler",
       "implementation com.rickbusarow.tangle:tangle-api",
@@ -247,15 +557,24 @@ public class TanglePluginTest : BasePluginTest() {
 
       tangle {
         viewModelOptions {
-          fragmentsEnabled = false // default is true
+          fragmentsEnabled = false // default is null
         }
+      }
+
+      dependencies {
+        $activities
+        $fragments
+        $viewModels
+        $compose
+        $workManager
       }
 
       ${listDepsTasks()}
         """.trimIndent()
       )
 
-      build("deps").deps() shouldBe listOf(
+      build("deps").tangleDeps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-compiler",
         "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
         "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
         "anvil com.rickbusarow.tangle:tangle-work-compiler",
@@ -263,6 +582,7 @@ public class TanglePluginTest : BasePluginTest() {
         "implementation com.rickbusarow.tangle:tangle-fragment-api",
         "implementation com.rickbusarow.tangle:tangle-viewmodel-activity",
         "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-compose",
         "implementation com.rickbusarow.tangle:tangle-work-api"
       )
     }
@@ -291,28 +611,38 @@ public class TanglePluginTest : BasePluginTest() {
 
       tangle {
         viewModelOptions {
-          activitiesEnabled = false // default is true
+          activitiesEnabled = false // default is null
         }
+      }
+
+      dependencies {
+        $activities
+        $fragments
+        $viewModels
+        $compose
+        $workManager
       }
 
       ${listDepsTasks()}
         """.trimIndent()
       )
 
-      build("deps").deps() shouldBe listOf(
+      build("deps").tangleDeps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-compiler",
         "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
         "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
         "anvil com.rickbusarow.tangle:tangle-work-compiler",
         "implementation com.rickbusarow.tangle:tangle-api",
         "implementation com.rickbusarow.tangle:tangle-fragment-api",
         "implementation com.rickbusarow.tangle:tangle-viewmodel-api",
+        "implementation com.rickbusarow.tangle:tangle-viewmodel-compose",
         "implementation com.rickbusarow.tangle:tangle-viewmodel-fragment",
-        "implementation com.rickbusarow.tangle:tangle-work-api"
+        "implementation com.rickbusarow.tangle:tangle-work-api",
       )
     }
 
   @TestFactory
-  fun `enabling viewModels compose in config should disable the viewmodel compose api dependency`() =
+  fun `disabling viewModels compose in config should disable the viewmodel compose api dependency`() =
     test {
 
       //language=kotlin
@@ -335,15 +665,24 @@ public class TanglePluginTest : BasePluginTest() {
 
       tangle {
         viewModelOptions {
-          composeEnabled = true // default is false
+          composeEnabled = true // default is null
         }
+      }
+
+      dependencies {
+        $activities
+        $fragments
+        $viewModels
+        $compose
+        $workManager
       }
 
       ${listDepsTasks()}
         """.trimIndent()
       )
 
-      build("deps").deps() shouldBe listOf(
+      build("deps").tangleDeps() shouldBe listOf(
+        "anvil com.rickbusarow.tangle:tangle-compiler",
         "anvil com.rickbusarow.tangle:tangle-fragment-compiler",
         "anvil com.rickbusarow.tangle:tangle-viewmodel-compiler",
         "anvil com.rickbusarow.tangle:tangle-work-compiler",
@@ -370,7 +709,7 @@ public class TanglePluginTest : BasePluginTest() {
 
       tangle {
         viewModelOptions {
-          composeEnabled = true // default is false
+          composeEnabled = true // default is null
         }
       }
 
@@ -399,4 +738,12 @@ public class TanglePluginTest : BasePluginTest() {
     }
   }
   """.trimIndent()
+
+  public companion object {
+    private const val activities = "api(\"androidx.activity:activity:1.3.1\")"
+    private const val compose = "api(\"androidx.compose.ui:ui:1.0.2\")"
+    private const val fragments = "api(\"androidx.fragment:fragment:1.3.6\")"
+    private const val viewModels = "api(\"androidx.lifecycle:lifecycle-viewmodel:2.3.1\")"
+    private const val workManager = "api(\"androidx.work:work-runtime:2.6.0\")"
+  }
 }
