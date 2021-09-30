@@ -126,7 +126,7 @@ dependencies {
   dependencySync("com.vanniktech:gradle-maven-publish-plugin:0.18.0")
   dependencySync("androidx.hilt:hilt-compiler:1.0.0")
   dependencySync("androidx.hilt:hilt-work:1.0.0")
-  dependencySync("com.google.dagger:hilt-android-compiler:2.38.1")
+  dependencySync("com.google.dagger:hilt-android-compiler:2.39")
   dependencySync("com.google.dagger:hilt-android-gradle-plugin:2.38.1")
   dependencySync("com.google.dagger:hilt-android:2.38.1")
   dependencySync("com.google.dagger:hilt-android-testing:2.38.1")
