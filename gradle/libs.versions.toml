@@ -238,7 +238,7 @@ square-anvil-compiler-core = { module = "com.squareup.anvil:compiler", version.r
 square-anvil-compiler-utils = { module = "com.squareup.anvil:compiler-utils", version.ref = "anvil" }
 square-anvil-gradle = { module = "com.squareup.anvil:gradle-plugin", version.ref = "anvil" }
 
-square-kotlinPoet = "com.squareup:kotlinpoet:1.9.0"
+square-kotlinPoet = "com.squareup:kotlinpoet:1.10.1"
 
 square-moshi-adapters = { module = "com.squareup.moshi:moshi-adapters", version.ref = "square-moshi" }
 square-moshi-core = { module = "com.squareup.moshi:moshi", version.ref = "square-moshi" }

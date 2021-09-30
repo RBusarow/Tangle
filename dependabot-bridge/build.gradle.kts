@@ -119,7 +119,7 @@ dependencies {
   dependencySync("com.squareup.retrofit2:converter-moshi:2.9.0")
   dependencySync("com.squareup.retrofit2:retrofit-mock:2.9.0")
   dependencySync("com.squareup.retrofit2:retrofit:2.9.0")
-  dependencySync("com.squareup:kotlinpoet:1.9.0")
+  dependencySync("com.squareup:kotlinpoet:1.10.1")
 
   dependencySync("com.google.devtools.ksp:symbol-processing-gradle-plugin:1.5.30-1.0.0")
   dependencySync("org.jlleitschuh.gradle:ktlint-gradle:10.2.0")
