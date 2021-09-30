@@ -84,6 +84,18 @@ public data class TestScope(
             |    google()
             |    maven("https://plugins.gradle.org/m2/")
             |  }
+            |  configurations.all {
+            |    resolutionStrategy {
+            |
+            |      eachDependency {
+            |        // use dynamic version because Gradle-test add the **plugin** classpath,
+            |        // but not the other artifacts
+            |        if (requested.group == "com.rickbusarow.tangle") {
+            |          useTarget("${'$'}{requested.group}:${'$'}{requested.module.name}:0.1+")
+            |        }
+            |      }
+            |    }
+            |  }
             |}
             |""".trimMargin()
       )
