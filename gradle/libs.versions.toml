@@ -37,7 +37,7 @@ kotlinx-atomicfu = "0.16.3"
 kotlinx-coroutines = "1.5.2"
 kotlinx-knit = "0.3.0"
 
-google-dagger = "2.38.1"
+google-dagger = "2.39"
 google-material = "1.4.0"
 
 square-moshi = "1.12.0"
