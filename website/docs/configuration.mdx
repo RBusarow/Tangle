@@ -10,116 +10,16 @@ import TabItem from '@theme/TabItem';
 
 ## Gradle
 
-The simple way to apply Tangle is to just apply the gradle plugin. It will automatically add the
-Anvil plugin and Tangle dependencies.
+The simple way to apply Tangle is to just [apply the Gradle plugin](gradle-plugin).
 
-You can also just add dependencies yourself, without applying the plugin.
-
-Note that Tangle is specifically for Android and has Android-specific dependencies,
-so it should only be added to Android modules.
+You can also just add dependencies yourself, without applying the plugin:
 
 <Tabs groupId="language"
-  defaultValue="Kotlin Plugin"
+  defaultValue="Kotlin Dependencies"
   values={[
-    {label: 'Kotlin Plugin', value: 'Kotlin Plugin'},
-    {label: 'Groovy Plugin', value: 'Groovy Plugin'},
     {label: 'Kotlin Dependencies', value: 'Kotlin Dependencies'},
     {label: 'Groovy Dependencies', value: 'Groovy Dependencies'},
 ]}>
-
-<TabItem value="Kotlin Plugin">
-
-```kotlin
-// settings.gradle.kts
-
-pluginManagement {
-  repositories {
-    gradlePluginPortal()
-  }
-}
-```
-
-```kotlin
-// root project build.gradle.kts
-
-plugins {
-  // add Tangle and Anvil versions to the project's classpath
-  id("com.squareup.anvil") version <anvil_version> apply false
-  id("com.rickbusarow.tangle") version "0.13.2" apply false
-}
-```
-
-```kotlin
-// any Android module's build.gradle.kts
-
-plugins {
-  id("android-library") // or application, etc.
-  kotlin("android")
-  id("com.rickbusarow.tangle") version "0.14.0"
-}
-
-// optional
-tangle {
-  fragmentsEnabled = true // default is true
-  workEnabled = true // default is true
-
-  viewModelOptions {
-    enabled = true // default is true
-    activitiesEnabled = true // default is true
-    composeEnabled = true // default is false
-    fragmentsEnabled = true // default is true
-  }
-}
-```
-
-</TabItem>
-
-<TabItem value="Groovy Plugin">
-
-```groovy
-// settings.gradle
-
-pluginManagement {
-  repositories {
-    gradlePluginPortal()
-  }
-}
-```
-
-```groovy
-// root project build.gradle
-
-plugins {
-  // add Tangle and Anvil versions to the project's classpath
-  id 'com.squareup.anvil' version <anvil_version> apply false
-  id 'com.rickbusarow.tangle' version "0.13.2" apply false
-}
-```
-
-```groovy
-// any Android module's build.gradle
-
-plugins {
-  id 'android-library' // or application, etc.
-  kotlin("android")
-  id 'com.rickbusarow.tangle'
-}
-
-// optional
-tangle {
-  fragmentsEnabled true // default is true
-  workEnabled true // default is true
-
-  viewModelOptions {
-    enabled true // default is true
-    activitiesEnabled true // default is true
-    composeEnabled true // default is false
-    fragmentsEnabled true // default is true
-  }
-}
-```
-
-</TabItem>
 
 <TabItem value="Kotlin Dependencies">
 
@@ -135,25 +35,25 @@ plugins {
 dependencies {
 
   // Fragments
-  api("com.rickbusarow.tangle:tangle-fragment-api:0.14.0")
-  anvil("com.rickbusarow.tangle:tangle-fragment-compiler:0.14.0")
+  api("com.rickbusarow.tangle:tangle-fragment-api:0.13.2")
+  anvil("com.rickbusarow.tangle:tangle-fragment-compiler:0.13.2")
 
   // ViewModels
-  api("com.rickbusarow.tangle:tangle-viewmodel-api:0.14.0")
-  anvil("com.rickbusarow.tangle:tangle-viewmodel-compiler:0.14.0")
+  api("com.rickbusarow.tangle:tangle-viewmodel-api:0.13.2")
+  anvil("com.rickbusarow.tangle:tangle-viewmodel-compiler:0.13.2")
 
   // optional Activity ViewModel support
-  implementation("com.rickbusarow.tangle:tangle-viewmodel-activity:0.14.0")
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-activity:0.13.2")
 
   // optional Compose ViewModel support
-  implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.14.0")
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.13.2")
 
   // optional Fragment ViewModel support
-  implementation("com.rickbusarow.tangle:tangle-viewmodel-fragment:0.14.0")
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-fragment:0.13.2")
 
   // WorkManager
-  api("com.rickbusarow.tangle:tangle-work-api:0.14.0")
-  anvil("com.rickbusarow.tangle:tangle-work-compiler:0.14.0")
+  api("com.rickbusarow.tangle:tangle-work-api:0.13.2")
+  anvil("com.rickbusarow.tangle:tangle-work-compiler:0.13.2")
 }
 ```
 
@@ -173,25 +73,25 @@ plugins {
 dependencies {
 
   // Fragments
-  api 'com.rickbusarow.tangle:tangle-fragment-api:0.14.0'
-  anvil 'com.rickbusarow.tangle:tangle-fragment-compiler:0.14.0'
+  api 'com.rickbusarow.tangle:tangle-fragment-api:0.13.2'
+  anvil 'com.rickbusarow.tangle:tangle-fragment-compiler:0.13.2'
 
   // ViewModels
-  api 'com.rickbusarow.tangle:tangle-viewmodel-api:0.14.0'
-  anvil 'com.rickbusarow.tangle:tangle-viewmodel-compiler:0.14.0'
+  api 'com.rickbusarow.tangle:tangle-viewmodel-api:0.13.2'
+  anvil 'com.rickbusarow.tangle:tangle-viewmodel-compiler:0.13.2'
 
   // optional Activity ViewModel support
-  implementation 'com.rickbusarow.tangle:tangle-viewmodel-activity:0.14.0'
+  implementation 'com.rickbusarow.tangle:tangle-viewmodel-activity:0.13.2'
 
   // optional Compose ViewModel support
-  implementation 'com.rickbusarow.tangle:tangle-viewmodel-compose:0.14.0'
+  implementation 'com.rickbusarow.tangle:tangle-viewmodel-compose:0.13.2'
 
   // optional Fragment ViewModel support
-  implementation 'com.rickbusarow.tangle:tangle-viewmodel-fragment:0.14.0'
+  implementation 'com.rickbusarow.tangle:tangle-viewmodel-fragment:0.13.2'
 
   // WorkManager
-  api 'com.rickbusarow.tangle:tangle-work-api:0.14.0'
-  anvil 'com.rickbusarow.tangle:tangle-work-compiler:0.14.0'
+  api 'com.rickbusarow.tangle:tangle-work-api:0.13.2'
+  anvil 'com.rickbusarow.tangle:tangle-work-compiler:0.13.2'
 }
 ```
 </TabItem>

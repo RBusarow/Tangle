@@ -16,6 +16,7 @@
 module.exports = {
   Docs: [
     "configuration",
+    "gradle-plugin",
     "extending-anvil",
     "member-injection",
     {

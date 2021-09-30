@@ -29,16 +29,24 @@ public abstract class TangleExtension @Inject constructor(
   /**
    * Fragment code generation and API's enabled
    *
-   * default value is true
+   * If this property is set, then Tangle will use that setting regardless of what Androidx
+   * dependencies are in the classpath.
+   *
+   * If this property is not set, Tangle will automatically enable its Fragment dependencies if the
+   * module declares any `androidx.fragment` group dependencies.
    */
-  public var fragmentsEnabled: Boolean by objectFactory.property(FRAGMENTS_ENABLED)
+  public var fragmentsEnabled: Boolean? by objectFactory.property()
 
   /**
    * Worker/WorkManager code generation and API's enabled
    *
-   * default value is true
+   * If this property is set, then Tangle will use that setting regardless of what Androidx
+   * dependencies are in the classpath.
+   *
+   * If this property is not set, Tangle will automatically enable its Worker/WorkManager
+   * dependencies if the module declares any `androidx.work` group dependencies.
    */
-  public var workEnabled: Boolean by objectFactory.property(WORK_ENABLED)
+  public var workEnabled: Boolean? by objectFactory.property()
 
   /**
    * ViewModel configuration options
@@ -51,56 +59,18 @@ public abstract class TangleExtension @Inject constructor(
   public fun viewModelOptions(action: Action<ViewModelOptions>) {
     action.execute(viewModelOptions)
   }
-
-  internal companion object {
-    const val FRAGMENTS_ENABLED = true
-    const val WORK_ENABLED = true
-  }
 }
 
-public open class ViewModelOptions @Inject constructor(
-  objectFactory: ObjectFactory
-) {
+internal fun ObjectFactory.property(): ReadWriteProperty<Any, Boolean?> =
+  object : ReadWriteProperty<Any, Boolean?> {
 
-  /**
-   * ViewModel code generation enabled
-   *
-   * default value is true
-   */
-  public var enabled: Boolean by objectFactory.property(true)
+    val delegate = property(Boolean::class.java)
 
-  /**
-   * Activity ViewModel API's enabled
-   *
-   * default value is true
-   */
-  public var activitiesEnabled: Boolean by objectFactory.property(true)
-
-  /**
-   * Compose ViewModel API's enabled
-   *
-   * default value is false
-   */
-  public var composeEnabled: Boolean by objectFactory.property(false)
-
-  /**
-   * Fragment ViewModel API's enabled
-   *
-   * default value is true
-   */
-  public var fragmentsEnabled: Boolean by objectFactory.property(true)
-}
-
-internal inline fun <reified T> ObjectFactory.property(initialValue: T): ReadWriteProperty<Any, T> =
-  object : ReadWriteProperty<Any, T> {
-
-    val delegate = property(T::class.java).convention(initialValue)
-
-    override fun getValue(thisRef: Any, property: KProperty<*>): T {
-      return delegate.get()
+    override fun getValue(thisRef: Any, property: KProperty<*>): Boolean? {
+      return delegate.orNull
     }
 
-    override fun setValue(thisRef: Any, property: KProperty<*>, value: T) {
+    override fun setValue(thisRef: Any, property: KProperty<*>, value: Boolean?) {
       delegate.set(value)
     }
   }
