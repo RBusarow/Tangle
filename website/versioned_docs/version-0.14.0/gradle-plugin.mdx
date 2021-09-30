@@ -1,0 +1,184 @@
+---
+id: gradle-plugin
+sidebar_label: Gradle Plugin
+title: Gradle Plugin
+
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+The simplest way to apply Tangle is via the Gradle plugin.
+
+The plugin will automatically apply the Anvil compiler plugin and all required Tangle extensions.
+By default, the plugin will automatically determine which Tangle dependencies to add by inspecting
+the module's Androidx dependencies, and adding the corresponding Tangle features.
+
+For example, if a project has declared a Fragments dependency like so:
+
+```kotlin
+dependencies {
+  api("androidx.fragment:fragment")
+}
+```
+
+Then Tangle will add the tangle-fragment dependencies:
+- com.rickbusarow.tangle:tangle-fragment-api:0.13.2
+- com.rickbusarow.tangle:tangle-fragment-compiler:0.13.2
+
+
+<Tabs groupId="language"
+  defaultValue="Kotlin"
+  values={[
+    {label: 'Kotlin', value: 'Kotlin'},
+    {label: 'Groovy', value: 'Groovy'},
+]}>
+
+<TabItem value="Kotlin">
+
+```kotlin
+// settings.gradle.kts
+
+pluginManagement {
+  repositories {
+    gradlePluginPortal()
+  }
+}
+```
+
+```kotlin
+// root project build.gradle.kts
+
+plugins {
+  // add Tangle and Anvil versions to the project's classpath
+  id("com.squareup.anvil") version <anvil_version> apply false
+  id("com.rickbusarow.tangle") version "0.14.0" apply false
+}
+```
+
+```kotlin
+// any Android module's build.gradle.kts
+
+plugins {
+  id("android-library") // or application, etc.
+  kotlin("android")
+  id("com.rickbusarow.tangle") version "0.14.0"
+}
+```
+
+</TabItem>
+
+<TabItem value="Groovy">
+
+```groovy
+// settings.gradle
+
+pluginManagement {
+  repositories {
+    gradlePluginPortal()
+  }
+}
+```
+
+```groovy
+// root project build.gradle
+
+plugins {
+  // add Tangle and Anvil versions to the project's classpath
+  id 'com.squareup.anvil' version <anvil_version> apply false
+  id 'com.rickbusarow.tangle' version "0.14.0" apply false
+}
+```
+
+```groovy
+// any Android module's build.gradle
+
+plugins {
+  id 'android-library' // or application, etc.
+  kotlin("android")
+  id 'com.rickbusarow.tangle'
+}
+```
+
+</TabItem>
+
+</Tabs>
+
+## Explicitly defining behavior
+
+This automatic behavior may be overridden by using the `tangle { ... }` configuration block.
+
+These settings are prioritized ahead of the automatic configuration.  Note that explicitly setting
+a feature to `true` (enabled) will force the plugin to add dependencies and compiler extensions
+which probably aren't needed.  This functionality mostly exists for its ability to *disable* the
+Tangle functionality.
+
+<Tabs groupId="language"
+  defaultValue="Kotlin"
+  values={[
+    {label: 'Kotlin', value: 'Kotlin'},
+    {label: 'Groovy', value: 'Groovy'},
+]}>
+
+<TabItem value="Kotlin">
+
+```kotlin
+// any Android module's build.gradle.kts
+
+plugins {
+  id("android-library") // or application, etc.
+  kotlin("android")
+  id("com.rickbusarow.tangle") version "0.14.0"
+}
+
+// optional
+tangle {
+  // enables the Fragments feature regardless of the project's dependencies
+  fragmentsEnabled = true // default is null
+
+  // disables the Work/WorkManager feature regardless of the project's dependencies
+  workEnabled = false // default is null
+
+  viewModelOptions {
+    enabled = true // default is null
+    activitiesEnabled = true // default is null
+    composeEnabled = true // default is null
+    fragmentsEnabled = true // default is null
+  }
+}
+```
+
+</TabItem>
+
+<TabItem value="Groovy">
+
+```groovy
+// any Android module's build.gradle
+
+plugins {
+  id 'android-library' // or application, etc.
+  kotlin("android")
+  id 'com.rickbusarow.tangle'
+}
+
+// optional
+tangle {
+  // enables the Fragments feature regardless of the project's dependencies
+  fragmentsEnabled = true // default is null
+
+  // disables the Work/WorkManager feature regardless of the project's dependencies
+  workEnabled = false // default is null
+
+  viewModelOptions {
+    enabled true // default is null
+    activitiesEnabled true // default is null
+    composeEnabled true // default is null
+    fragmentsEnabled true // default is null
+  }
+}
+```
+
+</TabItem>
+
+
+</Tabs>

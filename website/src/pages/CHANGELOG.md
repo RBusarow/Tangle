@@ -1,6 +1,20 @@
+## 0.14.0
+
+#### 🐛 Bug Fixes
+
+- Gradle plugin will now automatically enable/disable Tangle features depending upon which Androidx dependencies a module has. ([#353](https://github.com/rbusarow/Tangle/pull/353))
+  - see [the Gradle plugin docs](https://rbusarow.github.io/Tangle/docs/gradle-plugin) for more information
+
+#### 🧰 Maintenance
+
+- kotlin version-related updates ([#358](https://github.com/rbusarow/Tangle/pull/358))
+  - Kotlin 1.5.30
+  - Compose 1.0.3
+- update KotlinPoet to 1.10.1 ([#359](https://github.com/rbusarow/Tangle/pull/359))
+
 ## 0.13.2
 
-### 🐛 Bug Fixes
+#### 🐛 Bug Fixes
 
 - make TanglePlugin apply the Anvil plugin eagerly ([#339](https://github.com/rbusarow/Tangle/pull/339))
 
