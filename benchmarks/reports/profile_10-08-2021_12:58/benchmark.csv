@@ -1,0 +1,15 @@
+scenario,Clean Tangle Build,Clean Hilt Build
+version,Gradle 7.2,Gradle 7.2
+tasks,:tangle-app:assembleDebug,:hilt-app:assembleDebug
+value,execution,execution
+warm-up build #1,22546,19637
+measured build #1,17914,19658
+measured build #2,18118,19583
+measured build #3,17455,20616
+measured build #4,17716,21185
+measured build #5,18147,20421
+measured build #6,17827,20631
+measured build #7,17928,19577
+measured build #8,18051,21469
+measured build #9,19026,21004
+measured build #10,19453,21484
