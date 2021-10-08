@@ -35,5 +35,8 @@
     ]
   },
   "main": "index.js",
-  "license": "MIT"
+  "license": "MIT",
+  "devDependencies": {
+    "html-loader": "^2.1.2"
+  }
 }
