@@ -18,6 +18,7 @@ module.exports = {
     "configuration",
     "gradle-plugin",
     "extending-anvil",
+    "benchmarks",
     "member-injection",
     {
       type: "category",
