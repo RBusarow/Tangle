@@ -35,6 +35,8 @@ class ComposeActivitiesIntegrationTest {
   @Test
   fun selected_item_is_passed_to_next_screen() {
 
+    Thread.sleep(500)
+
     testRule.onNodeWithText("Goldendoodle").performClick()
 
     Thread.sleep(500)
