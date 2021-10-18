@@ -48,6 +48,8 @@ jobs:
             gradle/libs.versions.toml
           arguments: |
             detekt --no-daemon
+          concurrent: true
+          gradle-build-scan-report: false
 
   ktlint:
 
@@ -76,6 +78,8 @@ jobs:
             gradle/libs.versions.toml
           arguments: |
             ktlintFormat
+          concurrent: true
+          gradle-build-scan-report: false
 
       # If KtLint generated changes, commit and push those changes.
       - name: commit changes
@@ -110,6 +114,8 @@ jobs:
             gradle/libs.versions.toml
           arguments: |
             updateWebsiteNextDocsVersionRefs
+          concurrent: true
+          gradle-build-scan-report: false
 
       - name: commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -124,6 +130,8 @@ jobs:
             gradle/libs.versions.toml
           arguments: |
             updateWebsitePackageJsonVersion
+          concurrent: true
+          gradle-build-scan-report: false
 
       - name: commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -157,6 +165,8 @@ jobs:
             gradle/libs.versions.toml
           arguments: |
             apicheck
+          concurrent: true
+          gradle-build-scan-report: false
 
   tests-ubuntu:
 
@@ -183,6 +193,8 @@ jobs:
             gradle/libs.versions.toml
           arguments: |
             testJvm
+          concurrent: true
+          gradle-build-scan-report: false
 
   instrumentation-tests:
     name: Instrumentation tests
