@@ -1,6 +1,6 @@
 name: CI
 
-on:  
+on:
   pull_request:
   workflow_dispatch:
   schedule:
@@ -41,8 +41,13 @@ jobs:
           java-version : '14'
           cache: 'gradle'
 
-      - name: detekt
-        run: ./gradlew detekt --no-daemon
+      - uses: burrunan/gradle-cache-action@v1
+        name: detekt
+        with:
+          gradle-dependencies-cache-key: |
+            gradle/libs.versions.toml
+          arguments: |
+            detekt --no-daemon
 
   ktlint:
 
@@ -63,9 +68,14 @@ jobs:
           java-version : '14'
           cache: 'gradle'
 
-      # formats all kotlin files
-      - name: KtLint format
-        run: ./gradlew ktlintformat -q --no-daemon
+      # formats all src files
+      - uses: burrunan/gradle-cache-action@v1
+        name: KtLint format
+        with:
+          gradle-dependencies-cache-key: |
+            gradle/libs.versions.toml
+          arguments: |
+            ktlintFormat
 
       # If KtLint generated changes, commit and push those changes.
       - name: commit changes
@@ -93,8 +103,13 @@ jobs:
           java-version : '14'
           cache: 'gradle'
 
-      - name: Sync versions in website docs
-        run: ./gradlew updateWebsiteNextDocsVersionRefs --no-daemon
+      - uses: burrunan/gradle-cache-action@v1
+        name: Sync versions in website docs
+        with:
+          gradle-dependencies-cache-key: |
+            gradle/libs.versions.toml
+          arguments: |
+            updateWebsiteNextDocsVersionRefs
 
       - name: commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -102,8 +117,13 @@ jobs:
           commit_message: update docs versions
           commit_options: '--no-verify --signoff'
 
-      - name: Update version in website package.json
-        run: ./gradlew updateWebsitePackageJsonVersion --no-daemon
+      - uses: burrunan/gradle-cache-action@v1
+        name: Update version in website package.json
+        with:
+          gradle-dependencies-cache-key: |
+            gradle/libs.versions.toml
+          arguments: |
+            updateWebsitePackageJsonVersion
 
       - name: commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -130,8 +150,13 @@ jobs:
           java-version : '14'
           cache: 'gradle'
 
-      - name: api check
-        run: ./gradlew apicheck --no-daemon
+      - uses: burrunan/gradle-cache-action@v1
+        name: api check
+        with:
+          gradle-dependencies-cache-key: |
+            gradle/libs.versions.toml
+          arguments: |
+            apicheck
 
   tests-ubuntu:
 
@@ -151,17 +176,13 @@ jobs:
           java-version : '14'
           cache: 'gradle'
 
-      - uses: actions/cache@v2
+      - uses: burrunan/gradle-cache-action@v1
+        name: all tests
         with:
-          path: |
-            ~/buildSrc/.gradle
-            ~/buildSrc/build
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
-
-      - name: all tests
-        run: ./gradlew testJvm --no-daemon
+          gradle-dependencies-cache-key: |
+            gradle/libs.versions.toml
+          arguments: |
+            testJvm
 
   instrumentation-tests:
     name: Instrumentation tests
