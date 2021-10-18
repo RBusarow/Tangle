@@ -75,7 +75,7 @@ jobs:
           gradle-dependencies-cache-key: |
             gradle/libs.versions.toml
           arguments: |
-            formatKotlin
+            ktlintFormat
 
       # If KtLint generated changes, commit and push those changes.
       - name: commit changes
