@@ -19,9 +19,9 @@ plugins {
 
 dependencies {
 
-  dependencySync("androidx.activity:activity-compose:1.3.1")
-  dependencySync("androidx.activity:activity-ktx:1.3.1")
-  dependencySync("androidx.activity:activity:1.3.1")
+  dependencySync("androidx.activity:activity-compose:1.4.0")
+  dependencySync("androidx.activity:activity-ktx:1.4.0")
+  dependencySync("androidx.activity:activity:1.4.0")
   dependencySync("androidx.annotation:annotation:1.2.0")
   dependencySync("androidx.appcompat:appcompat:1.3.1")
   dependencySync("androidx.arch.core:core-testing:2.1.0")
@@ -88,7 +88,7 @@ dependencies {
   dependencySync("com.google.auto.service:auto-service-annotations:1.0")
   dependencySync("com.google.auto.service:auto-service:1.0")
   dependencySync("com.google.auto:auto-common:1.2")
-  dependencySync("com.google.dagger:dagger-compiler:2.39.1")
+  dependencySync("com.google.dagger:dagger-compiler:2.40")
   dependencySync("com.google.dagger:dagger:2.39.1")
   dependencySync("com.jakewharton.timber:timber:5.0.1")
   dependencySync("com.rickbusarow.dispatch:dispatch-android-espresso:1.0.0-beta10")
