@@ -24,7 +24,6 @@ public class TanglePluginTest : BasePluginTest() {
   @TestFactory
   fun `default application should apply Anvil`() = test {
 
-    //language=kotlin
     module(
       """
       plugins {
@@ -68,7 +67,6 @@ public class TanglePluginTest : BasePluginTest() {
   @TestFactory
   fun `default application should add Tangle dependencies`() = test {
 
-    //language=kotlin
     module(
       """
       plugins {
@@ -116,7 +114,6 @@ public class TanglePluginTest : BasePluginTest() {
   @TestFactory
   fun `disabling fragments in config should disable their dependencies`() = test {
 
-    //language=kotlin
     module(
       """
       plugins {
@@ -166,7 +163,6 @@ public class TanglePluginTest : BasePluginTest() {
   @TestFactory
   fun `disabling work in config should disable its dependencies`() = test {
 
-    //language=kotlin
     module(
       """
       plugins {
@@ -217,7 +213,6 @@ public class TanglePluginTest : BasePluginTest() {
   fun `only base compiler and api should be enabled without corresponding androidx dependencies`() =
     test {
 
-      //language=kotlin
       module(
         """
       plugins {
@@ -252,7 +247,6 @@ public class TanglePluginTest : BasePluginTest() {
   fun `fragment compiler and api should be automatically enabled with androidx fragment dependencies`() =
     test {
 
-      //language=kotlin
       module(
         """
       plugins {
@@ -290,7 +284,6 @@ public class TanglePluginTest : BasePluginTest() {
   fun `viewmodel compiler and api should be automatically enabled with androidx viewmodel dependencies`() =
     test {
 
-      //language=kotlin
       module(
         """
       plugins {
@@ -328,7 +321,6 @@ public class TanglePluginTest : BasePluginTest() {
   fun `viewmodel activity api should be automatically enabled with androidx viewmodel and activity dependencies`() =
     test {
 
-      //language=kotlin
       module(
         """
       plugins {
@@ -368,7 +360,6 @@ public class TanglePluginTest : BasePluginTest() {
   fun `viewmodel fragment api should be automatically enabled with androidx viewmodel and fragment dependencies`() =
     test {
 
-      //language=kotlin
       module(
         """
       plugins {
@@ -410,7 +401,6 @@ public class TanglePluginTest : BasePluginTest() {
   fun `viewmodel compose api should be automatically enabled with androidx viewmodel and compose dependencies`() =
     test {
 
-      //language=kotlin
       module(
         """
       plugins {
@@ -450,7 +440,6 @@ public class TanglePluginTest : BasePluginTest() {
   fun `work compiler and api should be automatically enabled with androidx work dependencies`() =
     test {
 
-      //language=kotlin
       module(
         """
       plugins {
@@ -487,7 +476,6 @@ public class TanglePluginTest : BasePluginTest() {
   @TestFactory
   fun `disabling viewModels in config should disable its dependencies`() = test {
 
-    //language=kotlin
     module(
       """
       plugins {
@@ -537,7 +525,6 @@ public class TanglePluginTest : BasePluginTest() {
   fun `disabling viewModels fragments in config should disable the viewmodel fragment api dependency`() =
     test {
 
-      //language=kotlin
       module(
         """
       plugins {
@@ -591,7 +578,6 @@ public class TanglePluginTest : BasePluginTest() {
   fun `disabling viewModels activities in config should disable the viewmodel activity api dependency`() =
     test {
 
-      //language=kotlin
       module(
         """
       plugins {
@@ -645,7 +631,6 @@ public class TanglePluginTest : BasePluginTest() {
   fun `disabling viewModels compose in config should disable the viewmodel compose api dependency`() =
     test {
 
-      //language=kotlin
       module(
         """
       plugins {
@@ -698,7 +683,6 @@ public class TanglePluginTest : BasePluginTest() {
   @TestFactory
   fun `build will fail if applied to a module without AGP`() = test {
 
-    //language=kotlin
     module(
       """
       plugins {

@@ -34,7 +34,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
   @TestFactory
   fun `Worker factory is generated without any additional arguments`() = test {
     compile(
-      //language=kotlin
       """
     package tangle.inject.tests
 
@@ -68,7 +67,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
   @TestFactory
   fun `Worker assisted arguments may have any name`() = test {
     compile(
-      //language=kotlin
       """
     package tangle.inject.tests
 
@@ -102,7 +100,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
   @TestFactory
   fun `Worker assisted arguments may be in any order`() = test {
     compile(
-      //language=kotlin
       """
     package tangle.inject.tests
 
@@ -136,7 +133,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
   @TestFactory
   fun `Worker factory is generated with an injected argument`() = test {
     compile(
-      //language=kotlin
       """
     package tangle.inject.tests
 
@@ -171,7 +167,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
   @TestFactory
   fun `Worker may not have additional assisted args`() = test {
     compile(
-      //language=kotlin
       """
     package tangle.inject.tests
 
@@ -214,7 +209,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
   @TestFactory
   fun `Worker must have WorkerParameters assisted args`() = test {
     compile(
-      //language=kotlin
       """
     package tangle.inject.tests
 
@@ -254,7 +248,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
   @TestFactory
   fun `Worker must have Context assisted args`() = test {
     compile(
-      //language=kotlin
       """
     package tangle.inject.tests
 

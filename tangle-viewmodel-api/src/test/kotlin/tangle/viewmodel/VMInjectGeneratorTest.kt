@@ -31,7 +31,6 @@ class VMInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `provider function is generated without arguments`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -49,7 +48,6 @@ class VMInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `provider function is generated for an argument`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -68,7 +66,6 @@ class VMInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `provider function is generated for a generic argument`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -88,7 +85,6 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `provider function is generated for a dagger Lazy argument`() =
     test {
       compile(
-        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -108,7 +104,6 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `provider function is generated for a dagger Lazy argument which is generic`() =
     test {
       compile(
-        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -128,7 +123,6 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `provider function is generated for a SavedStateHandle argument`() =
     test {
       compile(
-        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -149,7 +143,6 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `provider function is generated for a SavedStateHandle argument wrapped in Provider and a TangleParam argument`() =
     test {
       compile(
-        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -176,7 +169,6 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `generated checkNotNull error message in factory should handle very long names`() =
     test {
       compile(
-        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -203,7 +195,6 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `provider function is generated for an argument named savedStateHandleProvider and a TangleParam argument`() =
     test {
       compile(
-        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -230,7 +221,6 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `nullable TangleParam-annotated arguments are just null if missing`() =
     test {
       compile(
-        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -252,7 +242,6 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `provider function is generated for a TangleParam argument`() =
     test {
       compile(
-        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -276,7 +265,6 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `provider function is generated with SavedStateHandle and TangleParam arguments`() =
     test {
       compile(
-        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -301,7 +289,6 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `provider function is generated with two TangleParam arguments`() =
     test {
       compile(
-        //language=kotlin
         """
       package tangle.inject.tests
 
@@ -333,7 +320,6 @@ class VMInjectGeneratorTest : BaseTest() {
   fun `provider function is generated with two TangleParam arguments of different types`() =
     test {
       compile(
-        //language=kotlin
         """
       package tangle.inject.tests
 

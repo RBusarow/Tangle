@@ -33,7 +33,6 @@ class ContributesFragmentGeneratorTest : BaseTest() {
   @TestFactory
   fun `regular inject annotation gets unqualified map binding`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -58,7 +57,6 @@ class ContributesFragmentGeneratorTest : BaseTest() {
   @TestFactory
   fun `FragmentInject annotation gets qualified map binding`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -90,7 +88,6 @@ class ContributesFragmentGeneratorTest : BaseTest() {
   @TestFactory
   fun `FragmentInject annotation gets provider function`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -124,7 +121,6 @@ class ContributesFragmentGeneratorTest : BaseTest() {
   @TestFactory
   fun `module scope should match contributed scope`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -150,7 +146,6 @@ class ContributesFragmentGeneratorTest : BaseTest() {
   @TestFactory
   fun `annotated class may extend an abstract base fragment`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -178,7 +173,6 @@ class ContributesFragmentGeneratorTest : BaseTest() {
   @TestFactory
   fun `annotated class must extend fragment`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 

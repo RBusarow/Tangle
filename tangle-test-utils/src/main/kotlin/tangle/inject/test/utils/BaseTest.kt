@@ -22,6 +22,7 @@ import hermit.test.junit.HermitJUnit5
 import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
+import org.intellij.lang.annotations.Language
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest
@@ -51,6 +52,7 @@ abstract class BaseTest : HermitJUnit5() {
 
   @Suppress("NewApi")
   protected fun compileWithDagger(
+    @Language("kotlin")
     vararg sources: String,
     shouldFail: Boolean = false,
     block: KotlinCompilation.Result.() -> Unit = { }
@@ -79,6 +81,7 @@ abstract class BaseTest : HermitJUnit5() {
 
   @Suppress("NewApi")
   protected fun TestScope.compile(
+    @Language("kotlin")
     vararg sources: String,
     shouldFail: Boolean = false,
     block: KotlinCompilation.Result.() -> Unit = { }
