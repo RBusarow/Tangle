@@ -27,7 +27,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory interface return type may be supertype of the fragment`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -65,7 +64,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory impl function name must match interface function name`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -102,7 +100,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory performs member injection in injected class`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -144,7 +141,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory performs member injection of lateinit var in super class`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -197,7 +193,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory performs member injection of lateinit var in intermediary super class`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -255,7 +250,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory performs member injection of lateinit var in grand-super class`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -309,7 +303,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory performs member injection of dagger lazy property`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -349,7 +342,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory performs member injection of dagger lazy lateinit var in super class`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -382,7 +374,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory is generated with only TangleParam arguments`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -418,7 +409,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory is generated with only constructor arguments`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -453,7 +443,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory is generated with a dagger Lazy argument`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -488,7 +477,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory is generated with a TangleParam and a constructor argument`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -528,7 +516,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory is generated with TangleParam and constructor arguments of the same name`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -566,7 +553,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `FragmentInject constructors must have a corresponding factory interface`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -589,7 +575,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory interface must have a corresponding FragmentInject constructor`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -618,7 +603,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory interface must have a function`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -645,7 +629,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory interface must have only one function`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -676,7 +659,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory interface must have a return type`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -706,7 +688,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `FragmentInject fragments must have ContributesFragment annotation`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -733,7 +714,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `factory arguments must be annotated with TangleParam`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -759,7 +739,6 @@ class FragmentInjectGeneratorTest : BaseTest() {
   @TestFactory
   fun `injected arguments must be supported by Bundle`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 

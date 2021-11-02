@@ -34,7 +34,6 @@ class TangleScopeIntegrationTest : BaseTest() {
 
   @Test
   fun `target may be injected without any injected members`() = compileWithDagger(
-    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -68,7 +67,6 @@ class TangleScopeIntegrationTest : BaseTest() {
 
   @Test
   fun `target may be injected with declared injected members`() = compileWithDagger(
-    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -112,7 +110,6 @@ class TangleScopeIntegrationTest : BaseTest() {
 
   @Test
   fun `target may be injected with superclass injected members`() = compileWithDagger(
-    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -159,7 +156,6 @@ class TangleScopeIntegrationTest : BaseTest() {
   @Test
   fun `target may be injected with declared injected members and superclass injected members`() =
     compileWithDagger(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -209,7 +205,6 @@ class TangleScopeIntegrationTest : BaseTest() {
   @Test
   fun `target may be injected from superclass`() =
     compileWithDagger(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -265,7 +260,6 @@ class TangleScopeIntegrationTest : BaseTest() {
   @Test
   fun `target may be injected with declared injected members from subcomponent`() =
     compileWithDagger(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -326,7 +320,6 @@ class TangleScopeIntegrationTest : BaseTest() {
   @Test
   fun `build will fail if target requires dependency from different scope`() =
     compileWithDagger(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -375,7 +368,6 @@ class TangleScopeIntegrationTest : BaseTest() {
   @Test
   fun `build will fail if target has TangleScope and injected constructor`() =
     compileWithDagger(
-      //language=kotlin
       """
       package tangle.inject.tests
 

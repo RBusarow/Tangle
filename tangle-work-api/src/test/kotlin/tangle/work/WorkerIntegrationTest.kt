@@ -39,7 +39,6 @@ class WorkerIntegrationTest : BaseTest() {
 
   @Test
   fun `worker is multi-bound into TangleAppScope`() = compileWithDagger(
-    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -86,7 +85,6 @@ class WorkerIntegrationTest : BaseTest() {
 
   @Test
   fun `TangleWorkerFactory is bound and contains Worker`() = compileWithDagger(
-    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -136,7 +134,6 @@ class WorkerIntegrationTest : BaseTest() {
 
   @Test
   fun `two components in classpath with same scope should not get duplicate bindings`() =
-    //language=kotlin
     compileWithDagger(
       """
       package tangle.inject.tests
@@ -162,7 +159,6 @@ class WorkerIntegrationTest : BaseTest() {
 
   @Test
   fun `two components in same package with same scope should not get duplicate bindings`() =
-    //language=kotlin
     compileWithDagger(
       """
       package tangle.inject.tests
