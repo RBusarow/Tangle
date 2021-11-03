@@ -41,7 +41,6 @@ class FragmentIntegrationTest : BaseTest() {
   @Test
   fun `fragment with FragmentInjectFactory is multi-bound into TangleFragmentProviderMap`() =
     compileWithDagger(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -78,7 +77,6 @@ class FragmentIntegrationTest : BaseTest() {
   @Test
   fun `fragment with FragmentInjectFactory can be created by TangleFragmentFactory`() =
     compileWithDagger(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -118,7 +116,6 @@ class FragmentIntegrationTest : BaseTest() {
   @Test
   fun `fragment with FragmentInjectFactory cannot be injected as Provider`() =
     compileWithDagger(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -153,7 +150,6 @@ class FragmentIntegrationTest : BaseTest() {
   @Test
   fun `fragment with normal Inject constructor is multi-bound into unqualified map`() =
     compileWithDagger(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -184,7 +180,6 @@ class FragmentIntegrationTest : BaseTest() {
   @Test
   fun `fragment with normal Inject constructor can be created by TangleFragmentFactory`() =
     compileWithDagger(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -218,7 +213,6 @@ class FragmentIntegrationTest : BaseTest() {
   @Test
   fun `fragment with normal Inject constructor can be injected as Provider`() =
     compileWithDagger(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -252,7 +246,6 @@ class FragmentIntegrationTest : BaseTest() {
 
   @Test
   fun `empty multibindings are created if no Fragments are bound`() = compileWithDagger(
-    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -267,7 +260,6 @@ class FragmentIntegrationTest : BaseTest() {
 
   @Test
   fun `two components in classpath with same scope should not get duplicate bindings`() =
-    //language=kotlin
     compileWithDagger(
       """
       package tangle.inject.tests
@@ -301,7 +293,6 @@ class FragmentIntegrationTest : BaseTest() {
 
   @Test
   fun `pre-existing FragmentFactory Module in classpath should not get duplicate bindings`() =
-    //language=kotlin
     compileWithDagger(
       """
       package tangle.inject.tests
@@ -321,6 +312,7 @@ class FragmentIntegrationTest : BaseTest() {
         val factory: TangleFragmentFactory
       ) : Fragment()
      """,
+      //language=kotlin
       """
       package tangle.fragment
 
@@ -363,7 +355,6 @@ class FragmentIntegrationTest : BaseTest() {
 
   @Test
   fun `two components in same package with same scope should not get duplicate bindings`() =
-    //language=kotlin
     compileWithDagger(
       """
       package tangle.inject.tests

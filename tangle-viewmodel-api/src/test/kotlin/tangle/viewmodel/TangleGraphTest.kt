@@ -39,7 +39,6 @@ class TangleGraphTest : BaseTest() {
 
   @Test
   fun `should hold viewModel keys`() = compileWithDagger(
-    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -72,7 +71,6 @@ class TangleGraphTest : BaseTest() {
 
   @Test
   fun `should provide ViewModel map subcomponent factory`() = compileWithDagger(
-    //language=kotlin
     """
       package tangle.inject.tests
 

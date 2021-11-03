@@ -17,6 +17,7 @@ package tangle.inject.gradle
 
 import org.gradle.testkit.runner.BuildResult
 import org.gradle.testkit.runner.GradleRunner
+import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.TestInfo
 import java.io.File
 
@@ -139,7 +140,10 @@ public data class TestScope(
       )
   }
 
-  public fun module(buildFile: String) {
+  public fun module(
+    @Language("kotlin")
+    buildFile: String
+  ) {
     File(testProjectDir, "module/src/main").mkdirs()
     File(testProjectDir, "module/src/main/AndroidManifest.xml")
       .writeText("<manifest package=\"module.foo\" />")

@@ -31,7 +31,6 @@ class FragmentInjectModuleGenerationTest : BaseTest() {
   @TestFactory
   fun `module scope should match contributed scope`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 
@@ -57,7 +56,6 @@ class FragmentInjectModuleGenerationTest : BaseTest() {
   @TestFactory
   fun `FragmentInject annotation gets qualified map binding`() = test {
     compile(
-      //language=kotlin
       """
       package tangle.inject.tests
 

@@ -30,7 +30,6 @@ class ViewModelIntegrationTest : BaseTest() {
 
   @Test
   fun `viewmodel is multi-bound into TangleViewModelScope`() = compileWithDagger(
-    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -63,7 +62,6 @@ class ViewModelIntegrationTest : BaseTest() {
 
   @Test
   fun `viewmodel key is multi-bound into TangleAppScope`() = compileWithDagger(
-    //language=kotlin
     """
       package tangle.inject.tests
 
@@ -93,7 +91,6 @@ class ViewModelIntegrationTest : BaseTest() {
 
   @Test
   fun `two components in classpath with same scope should not get duplicate bindings`() =
-    //language=kotlin
     compileWithDagger(
       """
       package tangle.inject.tests
@@ -105,6 +102,7 @@ class ViewModelIntegrationTest : BaseTest() {
       @MergeComponent(Unit::class)
       interface AppComponent
      """,
+      //language=kotlin
       """
       package tangle.inject.tests.other
 
@@ -119,7 +117,6 @@ class ViewModelIntegrationTest : BaseTest() {
 
   @Test
   fun `pre-existing Subcomponent factory Module in classpath should not get duplicate bindings`() =
-    //language=kotlin
     compileWithDagger(
       """
       package tangle.inject.tests
@@ -139,6 +136,7 @@ class ViewModelIntegrationTest : BaseTest() {
         val factory: TangleFragmentFactory
       ) : Fragment()
      """,
+      //language=kotlin
       """
       package tangle.viewmodel
 
@@ -168,7 +166,6 @@ class ViewModelIntegrationTest : BaseTest() {
 
   @Test
   fun `two components in same package with same scope should not get duplicate bindings`() =
-    //language=kotlin
     compileWithDagger(
       """
       package tangle.inject.tests
