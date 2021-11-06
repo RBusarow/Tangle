@@ -1,0 +1,72 @@
+{
+  "version-0.14.1/Docs": [
+    {
+      "type": "doc",
+      "id": "version-0.14.1/configuration"
+    },
+    {
+      "type": "doc",
+      "id": "version-0.14.1/gradle-plugin"
+    },
+    {
+      "type": "doc",
+      "id": "version-0.14.1/extending-anvil"
+    },
+    {
+      "type": "doc",
+      "id": "version-0.14.1/benchmarks"
+    },
+    {
+      "type": "doc",
+      "id": "version-0.14.1/member-injection"
+    },
+    {
+      "type": "category",
+      "label": "ViewModels",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-0.14.1/viewModels/viewModels"
+        },
+        {
+          "type": "doc",
+          "id": "version-0.14.1/viewModels/savedStateHandle"
+        },
+        {
+          "type": "doc",
+          "id": "version-0.14.1/viewModels/compose"
+        }
+      ],
+      "collapsible": true
+    },
+    {
+      "type": "category",
+      "label": "Fragments",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-0.14.1/fragments/fragments"
+        },
+        {
+          "type": "doc",
+          "id": "version-0.14.1/fragments/bundles"
+        }
+      ],
+      "collapsible": true
+    },
+    {
+      "type": "category",
+      "label": "WorkManager",
+      "collapsed": false,
+      "items": [
+        {
+          "type": "doc",
+          "id": "version-0.14.1/workManager/workManager"
+        }
+      ],
+      "collapsible": true
+    }
+  ]
+}
