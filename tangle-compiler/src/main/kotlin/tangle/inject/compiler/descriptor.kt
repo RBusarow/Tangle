@@ -43,11 +43,11 @@ import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 fun ClassDescriptor.isFragment() = defaultType
   .supertypes()
-  .any { it.classDescriptorForType().fqNameSafe == FqNames.androidxFragment }
+  .any { it.requireClassDescriptor().fqNameSafe == FqNames.androidxFragment }
 
 fun ClassDescriptor.isViewModel() = defaultType
   .supertypes()
-  .any { it.classDescriptorForType().fqNameSafe == FqNames.androidxViewModel }
+  .any { it.requireClassDescriptor().fqNameSafe == FqNames.androidxViewModel }
 
 fun ClassDescriptor.memberInjectedParameters(
   module: ModuleDescriptor
@@ -108,11 +108,11 @@ fun PropertyDescriptor.hasAnnotation(annotationFqName: FqName): Boolean {
 fun PropertyDescriptor.isNullable() = type.nullability() == NULLABLE
 fun KotlinType.isNullable() = nullability() == NULLABLE
 
-fun KotlinType.fqNameOrNull(): FqName? = classDescriptorForType()
+fun KotlinType.fqNameOrNull(): FqName? = requireClassDescriptor()
   .fqNameOrNull()
 
 fun TypeParameterDescriptor.boundClassName(): ClassName = representativeUpperBound
-  .classDescriptorForType()
+  .requireClassDescriptor()
   .asClassName()
 
 fun CallableMemberDescriptor.tangleParamNameOrNull(): String? {
@@ -163,7 +163,7 @@ fun List<AnnotationDescriptor>.qualifierAnnotationSpecs(
         when (value) {
           is KClassValue -> {
             val className = value.argumentType(module)
-              .classDescriptorForType()
+              .requireClassDescriptor()
               .asClassName()
             addMember("${name.asString()} = %T::class", className)
           }

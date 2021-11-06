@@ -111,7 +111,7 @@ fun List<KtAnnotationEntry>.qualifierAnnotationSpecs(
       .forEach { (name, value) ->
         when (value) {
           is KClassValue -> {
-            val className = value.argumentType(module).classDescriptorForType()
+            val className = value.argumentType(module).requireClassDescriptor()
               .asClassName()
             addMember("${name.asString()} = %T::class", className)
           }
