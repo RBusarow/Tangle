@@ -100,7 +100,7 @@ fun File.updateTangleVersionRef(version: String) {
 
   val pluginRegex =
     """^([^'"\n]*['"])$group[^'"]*(['"].*) version (['"])[^'"]*(['"].*)${'$'}""".toRegex()
-  val moduleRegex = """^([^'"\n]*['"])$group:([^:]*):[^'"]*(['"].*)${'$'}""".toRegex()
+  val moduleRegex = """^([^'"\n]*['"]?)$group:([^:]*):[^'"]*(['"]?.*)${'$'}""".toRegex()
 
   val newText = readText()
     .lines()
