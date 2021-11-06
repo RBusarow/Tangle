@@ -221,7 +221,7 @@ internal sealed class FragmentInjectParams {
       internal fun List<TangleParameter>.checkForBundleSafe(descriptor: ClassDescriptor) {
         fun TangleParameter.superTypeFqNames() = kotlinType.supertypes()
           .asSequence()
-          .map { it.classDescriptorForType().fqNameSafe }
+          .map { it.requireClassDescriptor().fqNameSafe }
 
         val notBundleSafe = filter { tangleParameter ->
           !BundleSafe.contains(tangleParameter.typeName) &&
