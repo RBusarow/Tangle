@@ -1,3 +1,19 @@
+# 0.14.1
+
+### 🐛 Bug Fixes
+
+- update Anvil to 2.3.8 ([#379](https://github.com/rbusarow/Tangle/pull/379))
+- remove inferred nullability for `TangleViewModelFactory.create` ([#378](https://github.com/rbusarow/Tangle/pull/378))
+
+### 🧰 Maintenance
+
+- Bump activity-ktx from 1.3.1 to 1.4.0 ([#372](https://github.com/rbusarow/Tangle/pull/372))
+- Bump navigation-ui-ktx from 2.4.0-alpha10 to 2.4.0-beta01 ([#371](https://github.com/rbusarow/Tangle/pull/371))
+- Bump auto-common from 1.1.2 to 1.2 ([#364](https://github.com/rbusarow/Tangle/pull/364))
+- Bump room-compiler from 2.4.0-alpha04 to 2.4.0-alpha05 ([#357](https://github.com/rbusarow/Tangle/pull/357))
+- Bump prismjs from 1.24.1 to 1.25.0 in /website ([#363](https://github.com/rbusarow/Tangle/pull/363))
+- Bump axios from 0.21.1 to 0.21.4 in /website ([#362](https://github.com/rbusarow/Tangle/pull/362))
+
 # 0.14.0
 
 ### 🐛 Bug Fixes
