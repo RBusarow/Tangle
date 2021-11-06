@@ -63,7 +63,7 @@ public class TangleViewModelFactory(
     }
 
   /** @suppress */
-  override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+  override fun <T : ViewModel> create(modelClass: Class<T>): T {
     return if (tangleViewModelKeys.contains(modelClass)) {
       tangleFactory.create(modelClass)
     } else {
