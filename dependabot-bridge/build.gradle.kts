@@ -109,7 +109,7 @@ dependencies {
   dependencySync("com.squareup.anvil:compiler-api:2.3.8")
   dependencySync("com.squareup.anvil:compiler-utils:2.3.8")
   dependencySync("com.squareup.anvil:compiler:2.3.8")
-  dependencySync("com.squareup.anvil:gradle-plugin:2.3.8")
+  dependencySync("com.squareup.anvil:gradle-plugin:2.3.9")
   dependencySync("com.squareup.moshi:moshi-adapters:1.12.0")
   dependencySync("com.squareup.moshi:moshi-kotlin-codegen:1.12.0")
   dependencySync("com.squareup.moshi:moshi-kotlin:1.12.0")
