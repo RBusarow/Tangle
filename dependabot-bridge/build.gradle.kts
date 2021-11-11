@@ -47,7 +47,7 @@ dependencies {
   dependencySync("androidx.lifecycle:lifecycle-runtime:2.3.1")
   dependencySync("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0-rc01")
   dependencySync("androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1")
-  dependencySync("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.3.1")
+  dependencySync("androidx.lifecycle:lifecycle-viewmodel-savedstate:2.4.0")
   dependencySync("androidx.lifecycle:lifecycle-viewmodel:2.3.1")
   dependencySync("androidx.navigation:navigation-common:2.4.0-beta01")
   dependencySync("androidx.navigation:navigation-compose:2.4.0-beta01")
