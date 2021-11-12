@@ -129,7 +129,7 @@ dependencies {
   dependencySync("com.google.dagger:hilt-android-compiler:2.39.1")
   dependencySync("com.google.dagger:hilt-android-gradle-plugin:2.39.1")
   dependencySync("com.google.dagger:hilt-android:2.39.1")
-  dependencySync("com.google.dagger:hilt-android-testing:2.39.1")
+  dependencySync("com.google.dagger:hilt-android-testing:2.40.1")
   dependencySync("androidx.hilt:hilt-navigation-compose:1.0.0-alpha03")
   dependencySync("dev.zacsweers.autoservice:auto-service-ksp:1.0.0")
   dependencySync("dev.zacsweers.moshix:moshi-ksp:0.14.1")
