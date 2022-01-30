@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,8 +12,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-import org.gradle.api.internal.artifacts.dsl.ModuleVersionSelectorParsers
 
 plugins {
   id("scabbard.gradle")
@@ -28,9 +26,7 @@ configurations.all {
   resolutionStrategy {
 
     eachDependency {
-      if (requested == ModuleVersionSelectorParsers.parser()
-          .parseNotation("com.github.kittinunf.result:result:3.0.0")
-      ) {
+      if (requested.module.toString() == "com.github.kittinunf.result:result") {
         useVersion("3.0.1")
         because("Transitive dependency of Scabbard, currently not available on mavenCentral()")
       }
