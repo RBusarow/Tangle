@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,6 @@
 
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
-import io.gitlab.arturbosch.detekt.detekt
 import org.jlleitschuh.gradle.ktlint.KtlintExtension
 import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
 
@@ -37,10 +36,11 @@ buildscript {
   }
 }
 
+@Suppress("UnstableApiUsage")
 plugins {
   kotlin("jvm")
+  alias(libs.plugins.detekt)
   id("com.github.ben-manes.versions") version "0.39.0"
-  id("io.gitlab.arturbosch.detekt") version "1.18.1"
   id("com.rickbusarow.module-check") version "0.11.2"
   id("com.osacky.doctor") version "0.7.3"
   id("com.dorongold.task-tree") version "2.1.0"
@@ -71,17 +71,10 @@ allprojects {
   }
 }
 
-@Suppress("DEPRECATION")
 detekt {
 
   parallel = true
   config = files("$rootDir/detekt/detekt-config.yml")
-
-  reports {
-    xml.enabled = false
-    html.enabled = true
-    txt.enabled = false
-  }
 }
 
 tasks.withType<DetektCreateBaselineTask> {
@@ -97,7 +90,13 @@ tasks.withType<DetektCreateBaselineTask> {
 
 tasks.withType<Detekt> {
 
-  setSource(files(rootDir))
+  reports {
+    xml.required.set(true)
+    html.required.set(true)
+    txt.required.set(false)
+  }
+
+  setSource(files(projectDir))
 
   include("**/*.kt", "**/*.kts")
   exclude("**/resources/**", "**/build/**", "**/src/test/java**", "**/src/test/kotlin**")
