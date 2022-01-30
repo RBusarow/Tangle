@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -28,20 +28,6 @@ import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.*
 import javax.inject.Provider
-
-fun KtAnnotationEntry.scope(module: ModuleDescriptor): FqName {
-  return findAnnotationArgument<KtClassLiteralExpression>(name = "scope", index = 0)
-    .let { classLiteralExpression ->
-      if (classLiteralExpression == null) {
-        throw TangleCompilationException(
-          "Couldn't find scope for ${fqNameOrNull(module)}.",
-          element = this
-        )
-      }
-
-      classLiteralExpression.requireFqName(module)
-    }
-}
 
 fun KtClassOrObject.vmInjectConstructor(module: ModuleDescriptor): KtConstructor<*>? {
   return annotatedConstructorOrNull(FqNames.vmInject, module)
