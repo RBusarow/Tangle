@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,7 +19,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   id("java-gradle-plugin")
   kotlin("jvm")
-  id("com.gradle.plugin-publish") version "0.16.0"
+  id("com.gradle.plugin-publish") version "0.20.0"
   `maven-publish`
 }
 

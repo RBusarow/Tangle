@@ -32,6 +32,7 @@ dependencies {
   api(libs.androidx.compose.compiler)
   api(libs.androidx.compose.runtime)
   api(libs.androidx.lifecycle.viewModel.core)
+  api(libs.androidx.lifecycle.viewModel.ktx)
   api(libs.androidx.navigation.common)
 
   compileOnly(libs.androidx.annotations)
