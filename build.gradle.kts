@@ -40,11 +40,11 @@ buildscript {
 plugins {
   kotlin("jvm")
   alias(libs.plugins.detekt)
-  id("com.github.ben-manes.versions") version "0.39.0"
-  id("com.rickbusarow.module-check") version "0.11.2"
-  id("com.osacky.doctor") version "0.7.3"
-  id("com.dorongold.task-tree") version "2.1.0"
-  id("org.jetbrains.kotlinx.binary-compatibility-validator") version "0.7.1"
+  alias(libs.plugins.gradleDoctor)
+  alias(libs.plugins.taskTree)
+  alias(libs.plugins.moduleCheck)
+  alias(libs.plugins.benManes)
+  alias(libs.plugins.kotlinx.binaryCompatibility)
   base
   dokka
   knit
@@ -126,7 +126,7 @@ allprojects {
 
   configure<KtlintExtension> {
     debug.set(false)
-
+    version.set("0.43.2")
     disabledRules.set(
       setOf(
         "no-wildcard-imports",
