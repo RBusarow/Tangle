@@ -25,7 +25,13 @@ import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
 import tangle.inject.compiler.FqNames
 import tangle.inject.compiler.TangleCodeGenerator
-import tangle.inject.compiler.components.fileGen.*
+import tangle.inject.compiler.components.fileGen.TangleAppScope_TangleInjectorMapProvider_Subcomponent_Generator
+import tangle.inject.compiler.components.fileGen.TangleAppScope_UserScope_to_Component_Module_Generator
+import tangle.inject.compiler.components.fileGen.UserScope_Default_InjectedClassToScopeClass_Module_Generator
+import tangle.inject.compiler.components.fileGen.UserScope_Default_TangleInjectorMap_Module_Generator
+import tangle.inject.compiler.components.fileGen.UserScope_Default_TangleScopeToComponentMap_Module_Generator
+import tangle.inject.compiler.components.fileGen.UserScope_TangleInjectorComponent_Generator
+import tangle.inject.compiler.components.fileGen.UserScope_TangleScopeMapProviderComponent_Generator
 import java.io.File
 
 @Suppress("UNUSED")
