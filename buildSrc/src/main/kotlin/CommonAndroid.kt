@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,24 +13,32 @@
  * limitations under the License.
  */
 
-import com.android.build.gradle.BaseExtension
+import com.android.build.api.dsl.ApplicationBaseFlavor
+import com.android.build.api.dsl.CommonExtension
+import com.android.build.api.dsl.LibraryBaseFlavor
 import org.gradle.api.JavaVersion.VERSION_1_8
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 @Suppress("UnstableApiUsage", "MagicNumber")
-fun BaseExtension.commonAndroid(target: Project) {
+fun CommonExtension<*, *, *, *>.commonAndroid(target: Project) {
 
   val publishedAsArtifact = target.extensions.findByName("com.vanniktech.maven.publish") != null
 
-  compileSdkVersion(31)
+  compileSdk = 31
 
   buildToolsVersion = "31.0.0"
 
   defaultConfig {
     minSdk = 21
-    targetSdk = 30
+
+    // `targetSdk` doesn't have a single base interface, as of AGP 7.1.0
+    when (this@defaultConfig) {
+      is LibraryBaseFlavor -> targetSdk = 30
+      is ApplicationBaseFlavor -> targetSdk = 30
+    }
 
     vectorDrawables {
       useSupportLibrary = true
@@ -56,14 +64,12 @@ fun BaseExtension.commonAndroid(target: Project) {
   }
 
   if (publishedAsArtifact) {
-    lintOptions {
-      disable("ObsoleteLintCustomCheck")
-      disable("MissingTranslation")
-      enable("InvalidPackage")
-      enable("Interoperability")
-      isAbortOnError = true
-      isCheckDependencies = true
-      isCheckAllWarnings = true
+    lint {
+      disable.addAll(setOf("ObsoleteLintCustomCheck", "MissingTranslation"))
+      enable.addAll(setOf("InvalidPackage", "Interoperability"))
+      abortOnError = true
+      checkDependencies = true
+      checkAllWarnings = true
     }
   }
 
