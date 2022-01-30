@@ -5,7 +5,7 @@ changeTracker = "0.7.3"
 coil = "1.4.0"
 dependencyAnalysis = "0.63.0"
 dispatch = "1.0.0-beta10"
-detekt = "1.17.0"
+detekt = "1.19.0"
 dokka = "1.5.31"
 gradleDoctor = "0.7.0"
 groovy = "3.0.9"
@@ -51,6 +51,7 @@ zacSweers-moshix = "0.14.1"
 [plugins]
 
 anvil = { id = "com.squareup.anvil", version.ref = "square-anvil" }
+detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 
 dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kotlinx-knit = { id = "kotlinx-knit", version.ref = "kotlinx-knit" }
