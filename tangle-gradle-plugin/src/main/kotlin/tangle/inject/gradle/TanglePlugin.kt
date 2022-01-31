@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,6 +18,7 @@ package tangle.inject.gradle
 import org.gradle.api.GradleException
 import org.gradle.api.Project
 import org.gradle.api.plugins.BasePlugin
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 public open class TanglePlugin : BasePlugin() {
 
@@ -29,7 +30,18 @@ public open class TanglePlugin : BasePlugin() {
       target.pluginManager.apply(ANVIL_ID)
     }
 
-    target.afterEvaluate {
+    target.afterEvaluate { project ->
+
+      project.tasks.withType(KotlinCompile::class.java)
+        .configureEach { kotlinCompile ->
+
+          kotlinCompile.kotlinOptions {
+
+            freeCompilerArgs = freeCompilerArgs + listOf(
+              "-Xopt-in=kotlin.RequiresOptIn"
+            )
+          }
+        }
 
       val hasAndroid = target.extensions.findByName("android") != null
 

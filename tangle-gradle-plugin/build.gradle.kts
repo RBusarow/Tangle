@@ -36,6 +36,8 @@ dependencies {
 
   implementation(libs.kotlin.annotation.processing)
   implementation(libs.kotlin.compiler)
+  implementation(libs.kotlin.gradle.plug)
+  implementation(libs.kotlin.gradle.pluginApi)
   implementation(libs.kotlin.reflect)
   implementation(libs.kotlin.stdlib.jdk8)
 
