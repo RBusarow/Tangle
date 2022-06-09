@@ -17,8 +17,35 @@ package tangle.fragment
 
 import androidx.fragment.app.Fragment
 
-public fun <A : Any> Fragment.arg(bundleKey: String): Lazy<A> = lazy {
+/**
+ * Lazily retrieve an argument passed to this fragment. You should generally prefer to use the
+ * inline version.
+ *
+ * @param bundleKey key used to pass this argument
+ * @param clazz type class expected for this argument
+ * @see FragmentInjectFactory for instantiating fragments with arguments
+ */
+public fun <A : Any?> Fragment.arg(bundleKey: String, clazz: Class<A>): Lazy<A> = lazy {
+  val args = arguments
+
+  if (args?.containsKey(bundleKey) != true)
+    throw IllegalStateException("Bundle does not contain key: $bundleKey")
+
+  val arg = args.get(bundleKey)
+
+  if (!clazz.isInstance(arg))
+    throw IllegalStateException("Bundle did not contain value of type ${clazz.simpleName} for key $bundleKey, had ${arg?.javaClass?.simpleName} instead")
+
+  // SAFETY: Just checked using isInstance
   @Suppress("UNCHECKED_CAST")
-  (arguments?.get(bundleKey) as? A)
-    ?: throw IllegalStateException("Bundle does not contain key: $bundleKey")
+  arg as A
 }
+
+/**
+ * Lazily retrieve an argument passed to this fragment.
+ *
+ * @param bundleKey key used to pass this argument
+ * @see FragmentInjectFactory for instantiating fragments with arguments
+ */
+public inline fun <reified A : Any?> Fragment.arg(bundleKey: String): Lazy<A> =
+  arg(bundleKey, A::class.java)
