@@ -1,5 +1,5 @@
 public final class tangle/fragment/ArgKt {
-	public static final fun arg (Landroidx/fragment/app/Fragment;Ljava/lang/String;)Lkotlin/Lazy;
+	public static final fun arg (Landroidx/fragment/app/Fragment;Ljava/lang/String;Ljava/lang/Class;)Lkotlin/Lazy;
 }
 
 public abstract interface annotation class tangle/fragment/ContributesFragment : java/lang/annotation/Annotation {
