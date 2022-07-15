@@ -15,45 +15,37 @@ jobs:
 
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - name: Check out repo
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
 
       # Node is required for npm
       - name: Set up Node
-        uses: actions/setup-node@v2
+        uses: actions/setup-node@v3
         with:
-          node-version: 14.x
+          node-version: 18.x
           cache: yarn
+          cache-dependency-path: website/yarn.lock
+
+      - name: yarn install
+        working-directory: website
+        run: yarn install --frozen-lockfile
 
       - name: Set up JDK
-        uses : actions/setup-java@v2
-        with :
-          distribution : 'temurin'
-          java-version : '11'
-          cache: 'gradle'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
 
       - uses: gradle/wrapper-validation-action@v1
 
-      - uses: burrunan/gradle-cache-action@v1
-        name: Update website API docs and changelog
+      - name: build website
+        uses: gradle/gradle-build-action@v2
         with:
-          gradle-dependencies-cache-key: |
-            gradle/libs.versions.toml
-          arguments: |
-            updateWebsiteApiDocs
-            updateWebsiteChangelog
-          concurrent: true
-          gradle-build-scan-report: false
-
-      # Install and build Docusaurus website
-      - name: Build Docusaurus website
-        run: |
-          cd website
-          yarn install
-          yarn run build
+          arguments: buildSite
+          cache-read-only: false
 
       - name: Deploy to GitHub Pages
         if: success()
-        uses: crazy-max/ghaction-github-pages@v2
+        uses: crazy-max/ghaction-github-pages@v3
         with:
           target_branch: gh-pages
           build_dir: website/build
