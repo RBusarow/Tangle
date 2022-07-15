@@ -16,7 +16,7 @@ automerge_label = "automerge" # default: automerge
 prioritize_ready_to_merge = true # default: false
 # will not do anything if a matching label is applied
 blocking_labels = ["DO NOT MERGE"]
-method = "squash"
+method = "rebase"
 
 [merge.automerge_dependencies]
 # auto merge all PRs opened by "dependabot" that are "minor" or "patch" version upgrades. "major" version upgrades will be ignored.
