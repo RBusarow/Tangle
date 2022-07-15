@@ -9,21 +9,15 @@ module.exports = {
   organizationName: "rbusarow", // Usually your GitHub org/user name.
   projectName: "Tangle", // Usually your repo name.
   themeConfig: {
-    hideableSidebar: true,
+    docs: {
+      sidebar: {
+        hideable: true,
+      }
+    },
     colorMode: {
       defaultMode: "light",
       disableSwitch: false,
       respectPrefersColorScheme: true,
-      switchConfig: {
-        darkIcon: '🌙',
-        lightIcon: '☀️',
-        darkIconStyle: {
-          marginLeft: '2px',
-        },
-        lightIconStyle: {
-          marginLeft: '2px',
-        },
-      },
     },
     announcementBar: {
       id: "supportus",
@@ -52,12 +46,12 @@ module.exports = {
           type: "docsVersionDropdown",
           position: "left",
           dropdownActiveClassDisabled: true,
-//          dropdownItemsAfter: [
-//            {
-//              to: "/versions",
-//              label: "All versions",
-//            },
-//          ],
+          dropdownItemsAfter: [
+            {
+              to: "/changelog",
+              label: "CHANGELOG",
+            },
+          ],
         },
         {
           label: "Api",
@@ -65,13 +59,13 @@ module.exports = {
           position: "left",
         },
         {
+          label: "Twitter",
           href: "https://twitter.com/rbusarow",
-          className: 'header-twitter-link',
           position: "right",
         },
         {
+          label: "GitHub",
           href: "https://github.com/rbusarow/Tangle/",
-          className: 'header-github-link',
           position: "right",
         },
       ],
@@ -106,19 +100,7 @@ module.exports = {
            * Base url to edit your site.
            * Docusaurus will compute the final editUrl with "editUrl + relativeDocPath"
            */
-          editUrl: 'https://github.com/RBusarow/Tangle/edit/main/website/',
-          /**
-           * For advanced cases, compute the edit url for each Markdown file yourself.
-           */
-          editUrl: function ({
-                               locale,
-                               version,
-                               versionDocsDirPath,
-                               docPath,
-                               permalink,
-                             }) {
-            return `https://github.com/RBusarow/Tangle/edit/main/website/${versionDocsDirPath}/${docPath}`;
-          },
+          editUrl: "https://github.com/rbusarow/Tangle/blob/main/website",
           /**
            * Useful if you commit localized files to git.
            * When Markdown files are localized, the edit url will target the localized file,
@@ -220,7 +202,7 @@ module.exports = {
         },
         blog: {
           showReadingTime: true,
-          editUrl: 'https://github.com/RBusarow/Tangle/edit/main/website/',
+          editUrl: 'https://github.com/RBusarow/Tangle',
         },
         theme: {
           customCss: require.resolve("./src/css/custom.css"),
