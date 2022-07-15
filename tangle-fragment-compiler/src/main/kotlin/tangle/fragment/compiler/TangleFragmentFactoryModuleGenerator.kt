@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,15 +23,24 @@ import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.classesAndInnerClasses
 import com.squareup.anvil.compiler.internal.hasAnnotation
 import com.squareup.anvil.compiler.internal.scope
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier.ABSTRACT
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.TypeSpec
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.descriptors.resolveClassByFqName
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation.FROM_BACKEND
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtFile
-import tangle.inject.compiler.*
+import tangle.inject.compiler.ClassNames
+import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.TangleCodeGenerator
+import tangle.inject.compiler.addFunction
+import tangle.inject.compiler.buildFile
+import tangle.inject.compiler.generateSimpleNameString
 import java.io.File
 
 @Suppress("unused")

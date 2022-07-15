@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,7 +19,14 @@ import io.kotest.matchers.shouldBe
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.TestFactory
 import tangle.inject.internal.TangleInjector
-import tangle.inject.test.utils.*
+import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.baseClass
+import tangle.inject.test.utils.createInstance
+import tangle.inject.test.utils.fieldsValues
+import tangle.inject.test.utils.membersInjector
+import tangle.inject.test.utils.provider
+import tangle.inject.test.utils.tangleInjector
+import tangle.inject.test.utils.targetClass
 
 @OptIn(InternalTangleApi::class)
 class TangleScopeTest : BaseTest() {

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -68,37 +68,38 @@ public data class TestScope(
     return File(testProjectDir, "build.gradle.kts").also {
       it.writeText(
         """buildscript {
-            |  repositories {
-            |    mavenCentral()
-            |    google()
-            |    maven("https://plugins.gradle.org/m2/")
-            |  }
-            |  dependencies {
-            |    classpath("com.squareup.anvil:gradle-plugin:$anvilVersion")
-            |    classpath("com.android.tools.build:gradle:$agpVersion")
-            |    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-            |  }
-            |}
-            |allprojects {
-            |  repositories {
-            |    mavenCentral()
-            |    google()
-            |    maven("https://plugins.gradle.org/m2/")
-            |  }
-            |  configurations.all {
-            |    resolutionStrategy {
-            |
-            |      eachDependency {
-            |        // use dynamic version because Gradle-test add the **plugin** classpath,
-            |        // but not the other artifacts
-            |        if (requested.group == "com.rickbusarow.tangle") {
-            |          useTarget("${'$'}{requested.group}:${'$'}{requested.module.name}:0.1+")
-            |        }
-            |      }
-            |    }
-            |  }
-            |}
-            |""".trimMargin()
+        |  repositories {
+        |    mavenCentral()
+        |    google()
+        |    maven("https://plugins.gradle.org/m2/")
+        |  }
+        |  dependencies {
+        |    classpath("com.squareup.anvil:gradle-plugin:$anvilVersion")
+        |    classpath("com.android.tools.build:gradle:$agpVersion")
+        |    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
+        |  }
+        |}
+        |allprojects {
+        |  repositories {
+        |    mavenCentral()
+        |    google()
+        |    maven("https://plugins.gradle.org/m2/")
+        |  }
+        |  configurations.all {
+        |    resolutionStrategy {
+        |
+        |      eachDependency {
+        |        // use dynamic version because Gradle-test add the **plugin** classpath,
+        |        // but not the other artifacts
+        |        if (requested.group == "com.rickbusarow.tangle") {
+        |          useTarget("${'$'}{requested.group}:${'$'}{requested.module.name}:0.1+")
+        |        }
+        |      }
+        |    }
+        |  }
+        |}
+        |
+        """.trimMargin()
       )
     }
   }
@@ -108,23 +109,24 @@ public data class TestScope(
     return File(testProjectDir, "settings.gradle.kts").also {
       it.writeText(
         """pluginManagement {
-          |  repositories {
-          |    gradlePluginPortal()
-          |    google()
-          |  }
-          |  resolutionStrategy {
-          |    eachPlugin {
-          |      if (requested.id.id.startsWith("com.android")) {
-          |        useVersion("$agpVersion")
-          |      }
-          |      if (requested.id.id.startsWith("org.jetbrains.kotlin")) {
-          |        useVersion("$kotlinVersion")
-          |      }
-          |    }
-          |  }
-          |}
-          |include(":module")
-          |""".trimMargin()
+        |  repositories {
+        |    gradlePluginPortal()
+        |    google()
+        |  }
+        |  resolutionStrategy {
+        |    eachPlugin {
+        |      if (requested.id.id.startsWith("com.android")) {
+        |        useVersion("$agpVersion")
+        |      }
+        |      if (requested.id.id.startsWith("org.jetbrains.kotlin")) {
+        |        useVersion("$kotlinVersion")
+        |      }
+        |    }
+        |  }
+        |}
+        |include(":module")
+        |
+        """.trimMargin()
       )
     }
   }

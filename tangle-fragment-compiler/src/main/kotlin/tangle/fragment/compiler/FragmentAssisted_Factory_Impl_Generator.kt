@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,18 +16,28 @@
 package tangle.fragment.compiler
 
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.CodeBlock
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 import org.jetbrains.kotlin.resolve.DescriptorUtils
 import tangle.fragment.compiler.FragmentInjectParams.Factory
-import tangle.inject.compiler.*
+import tangle.inject.compiler.ClassNames
+import tangle.inject.compiler.FileGenerator
+import tangle.inject.compiler.MemberNames
+import tangle.inject.compiler.applyEach
+import tangle.inject.compiler.buildFile
+import tangle.inject.compiler.uniqueName
+import tangle.inject.compiler.wrapInProvider
 import java.io.File
 
 /**
- * Similar to an Assisted factory.  This is generated from the `@FragmentInjectFactory` annotation.
+ * Similar to an Assisted factory. This is generated from the `@FragmentInjectFactory` annotation.
  *
- * It just delegates to the generated `*_Factory`,
- * except it constructs a Bundle and sets it in the Fragment instance before returning.
+ * It just delegates to the generated `*_Factory`, except it constructs a Bundle and sets it in the
+ * Fragment instance before returning.
  *
  * ```
  * public class MyFragment_Factory_Impl(

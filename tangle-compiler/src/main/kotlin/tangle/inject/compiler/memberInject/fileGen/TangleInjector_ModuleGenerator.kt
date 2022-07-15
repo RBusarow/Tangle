@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,10 +16,18 @@
 package tangle.inject.compiler.memberInject.fileGen
 
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
-import tangle.inject.compiler.*
+import com.squareup.kotlinpoet.TypeSpec
+import com.squareup.kotlinpoet.TypeVariableName
+import tangle.inject.compiler.ClassNames
+import tangle.inject.compiler.FileGenerator
+import tangle.inject.compiler.addFunction
+import tangle.inject.compiler.buildFile
 import tangle.inject.compiler.memberInject.MemberInjectParams
+import tangle.inject.compiler.tangleInjector
 import java.io.File
 
 /**

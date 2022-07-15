@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -29,9 +29,9 @@ import kotlin.properties.Delegates
 import io.kotest.matchers.shouldBe as kotestShouldBe
 
 public val kotlinVersions: List<String> = listOf("1.5.0", "1.5.30")
-public val agpVersions: List<String> = listOf(/*"4.2.1",*/ "7.0.2")
-public val gradleVersions: List<String> = listOf("7.0.2", /*"7.1.1",*/ "7.2")
-public val anvilVersions: List<String> = listOf(/*"2.3.0",*/ "2.3.4")
+public val agpVersions: List<String> = listOf("7.0.2")
+public val gradleVersions: List<String> = listOf("7.0.2", "7.2")
+public val anvilVersions: List<String> = listOf("2.3.4")
 
 public abstract class BasePluginTest : HermitJUnit5() {
 

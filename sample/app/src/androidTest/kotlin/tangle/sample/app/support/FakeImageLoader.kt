@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -20,9 +20,14 @@ import androidx.core.content.ContextCompat
 import coil.ImageLoader
 import coil.annotation.ExperimentalCoilApi
 import coil.bitmap.BitmapPool
-import coil.decode.DataSource
-import coil.memory.MemoryCache
-import coil.request.*
+import coil.decode.DataSource.MEMORY_CACHE
+import coil.memory.MemoryCache.Key
+import coil.request.DefaultRequestOptions
+import coil.request.Disposable
+import coil.request.ImageRequest
+import coil.request.ImageResult
+import coil.request.ImageResult.Metadata
+import coil.request.SuccessResult
 import com.squareup.anvil.annotations.ContributesBinding
 import tangle.sample.app.R
 import tangle.sample.core.AppScope
@@ -64,10 +69,10 @@ class FakeImageLoader @Inject constructor(
     return SuccessResult(
       drawable = puppy,
       request = request,
-      metadata = ImageResult.Metadata(
-        memoryCacheKey = MemoryCache.Key(""),
+      metadata = Metadata(
+        memoryCacheKey = Key(""),
         isSampled = false,
-        dataSource = DataSource.MEMORY_CACHE,
+        dataSource = MEMORY_CACHE,
         isPlaceholderMemoryCacheKeyPresent = false
       )
     )

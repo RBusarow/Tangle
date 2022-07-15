@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,12 +17,22 @@
 
 package tangle.inject.compiler
 
-import com.squareup.anvil.compiler.internal.*
+import com.squareup.anvil.compiler.internal.argumentType
+import com.squareup.anvil.compiler.internal.asClassName
+import com.squareup.anvil.compiler.internal.asTypeName
+import com.squareup.anvil.compiler.internal.requireClassDescriptor
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.MemberName
-import org.jetbrains.kotlin.descriptors.*
+import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
+import org.jetbrains.kotlin.descriptors.ClassDescriptor
+import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
+import org.jetbrains.kotlin.descriptors.ModuleDescriptor
+import org.jetbrains.kotlin.descriptors.PropertyDescriptor
+import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
+import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor
+import org.jetbrains.kotlin.descriptors.containingPackage
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.annotations.argumentValue
@@ -167,6 +177,7 @@ fun List<AnnotationDescriptor>.qualifierAnnotationSpecs(
               .asClassName()
             addMember("${name.asString()} = %T::class", className)
           }
+
           is EnumValue -> {
             val enumMember = MemberName(
               enclosingClassName = value.enumClassId.asSingleFqName()

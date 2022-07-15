@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,7 +24,10 @@ import com.squareup.kotlinpoet.ClassName
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtClassOrObject
-import tangle.inject.compiler.*
+import tangle.inject.compiler.AnnotationSpec
+import tangle.inject.compiler.ClassNames
+import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.generateSimpleNameString
 
 data class MergeComponentParams(
   val module: ModuleDescriptor,

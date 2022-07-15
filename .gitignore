@@ -45,11 +45,12 @@ Thumbs.db
 !/.idea/externalDependencies.xml
 # ktlint plugin settings
 !/.idea/ktlint.xml
+# detekt plugin settings
+!/.idea/detekt.xml
 !/.idea/icon.png
 
 /.idea/vcs.xml
 **/.idea/workspace.xml
-/.idea/ktlint.xml
 
 #NDK
 obj/

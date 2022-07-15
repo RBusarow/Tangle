@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,10 +23,16 @@ import com.squareup.anvil.compiler.internal.findAnnotation
 import com.squareup.anvil.compiler.internal.requireClassDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
-import tangle.inject.compiler.*
+import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.TangleCodeGenerator
+import tangle.inject.compiler.assistedInjectConstructor
+import tangle.inject.compiler.fragmentInjectConstructor
+import tangle.inject.compiler.injectConstructor
 import tangle.inject.compiler.memberInject.fileGen.TangleAppScope_TangleInjector_Scope_ModuleGenerator
 import tangle.inject.compiler.memberInject.fileGen.TangleInjectorGenerator
 import tangle.inject.compiler.memberInject.fileGen.TangleInjector_ModuleGenerator
+import tangle.inject.compiler.require
+import tangle.inject.compiler.vmInjectConstructor
 import java.io.File
 
 @Suppress("UNUSED")

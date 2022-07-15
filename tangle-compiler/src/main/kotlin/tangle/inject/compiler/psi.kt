@@ -17,7 +17,16 @@
 package tangle.inject.compiler
 
 import com.squareup.anvil.compiler.api.AnvilCompilationException
-import com.squareup.anvil.compiler.internal.*
+import com.squareup.anvil.compiler.internal.findAnnotation
+import com.squareup.anvil.compiler.internal.findAnnotationArgument
+import com.squareup.anvil.compiler.internal.fqNameOrNull
+import com.squareup.anvil.compiler.internal.hasAnnotation
+import com.squareup.anvil.compiler.internal.isFunctionType
+import com.squareup.anvil.compiler.internal.isGenericType
+import com.squareup.anvil.compiler.internal.isNullable
+import com.squareup.anvil.compiler.internal.requireFqName
+import com.squareup.anvil.compiler.internal.requireTypeName
+import com.squareup.anvil.compiler.internal.requireTypeReference
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
@@ -26,7 +35,15 @@ import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import dagger.Lazy
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.psi.*
+import org.jetbrains.kotlin.psi.KtAnnotationEntry
+import org.jetbrains.kotlin.psi.KtCallableDeclaration
+import org.jetbrains.kotlin.psi.KtClassOrObject
+import org.jetbrains.kotlin.psi.KtConstructor
+import org.jetbrains.kotlin.psi.KtStringTemplateExpression
+import org.jetbrains.kotlin.psi.KtTypeArgumentList
+import org.jetbrains.kotlin.psi.KtTypeProjection
+import org.jetbrains.kotlin.psi.KtTypeReference
+import org.jetbrains.kotlin.psi.allConstructors
 import javax.inject.Provider
 
 fun KtClassOrObject.vmInjectConstructor(module: ModuleDescriptor): KtConstructor<*>? {
@@ -166,8 +183,8 @@ internal fun <T : KtCallableDeclaration> TypeName.withJvmSuppressWildcardsIfNeed
 }
 
 /**
- * Delegate everything to Anvil's logic, but if it throws an exception,
- * catch that Anvil exception and re-brand as a Tangle exception.
+ * Delegate everything to Anvil's logic, but if it throws an exception, catch that Anvil exception
+ * and re-brand as a Tangle exception.
  *
  * This will hopefully prevent Tangle bugs getting reported to Anvil as Anvil bugs.
  */
@@ -180,15 +197,19 @@ internal inline fun <T, R> T.delegateToAnvilUnsafe(action: T.() -> R): R = try {
 /**
  * Converts the parameter list to comma separated argument list that can be used to call other
  * functions, e.g.
+ *
  * ```
  * [param0: String, param1: Int] -> "param0, param1"
  * ```
+ *
  * [asProvider] allows you to decide if each parameter is wrapped in a `Provider` interface. If
- * true, then the `get()` function will be called for the provider parameter. If false, then
- * then always only the parameter name will used in the argument list:
+ * true, then the `get()` function will be called for the provider parameter. If false, then then
+ * always only the parameter name will used in the argument list:
+ *
  * ```
  * "param0.get()" vs "param0"
  * ```
+ *
  * Set [includeModule] to true if a Dagger module instance is part of the argument list.
  */
 fun List<Parameter>.asArgumentList(

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,7 +19,16 @@ import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.TestFactory
-import tangle.inject.test.utils.*
+import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.createInstance
+import tangle.inject.test.utils.createStatic
+import tangle.inject.test.utils.factoryGet
+import tangle.inject.test.utils.getterFunction
+import tangle.inject.test.utils.isStatic
+import tangle.inject.test.utils.moduleClass
+import tangle.inject.test.utils.myFragmentClass
+import tangle.inject.test.utils.myFragmentFactoryImplClass
+import tangle.inject.test.utils.newInstanceStatic
 import javax.inject.Provider
 
 class FragmentInjectGeneratorTest : BaseTest() {

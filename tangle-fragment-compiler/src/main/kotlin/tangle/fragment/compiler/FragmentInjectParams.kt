@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,7 +15,14 @@
 
 package tangle.fragment.compiler
 
-import com.squareup.anvil.compiler.internal.*
+import com.squareup.anvil.compiler.internal.asClassName
+import com.squareup.anvil.compiler.internal.asTypeName
+import com.squareup.anvil.compiler.internal.findAnnotation
+import com.squareup.anvil.compiler.internal.generateClassName
+import com.squareup.anvil.compiler.internal.requireClassDescriptor
+import com.squareup.anvil.compiler.internal.safePackageString
+import com.squareup.anvil.compiler.internal.scope
+import com.squareup.anvil.compiler.internal.typeVariableNames
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
@@ -33,7 +40,15 @@ import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameSafe
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
 import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.types.typeUtil.supertypes
-import tangle.inject.compiler.*
+import tangle.inject.compiler.ConstructorInjectParameter
+import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.MemberInjectParameter
+import tangle.inject.compiler.TangleCompilationException
+import tangle.inject.compiler.generateSimpleNameString
+import tangle.inject.compiler.mapToParameters
+import tangle.inject.compiler.memberInjectedParameters
+import tangle.inject.compiler.require
+import tangle.inject.compiler.requireTangleParamName
 
 internal sealed class FragmentInjectParams {
   abstract val packageName: String

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,7 +17,12 @@ package tangle.inject.samples
 
 import tangle.inject.TangleGraph
 import tangle.inject.TangleScope
-import tangle.inject.test.utils.*
+import tangle.inject.test.utils.AppScope
+import tangle.inject.test.utils.Application
+import tangle.inject.test.utils.DaggerAppComponent
+import tangle.inject.test.utils.MyLogger
+import tangle.inject.test.utils.Sample
+import tangle.inject.test.utils.Timber
 import javax.inject.Inject
 
 class MemberInjectSample {

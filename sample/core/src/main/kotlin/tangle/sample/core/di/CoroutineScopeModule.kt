@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +18,12 @@ package tangle.sample.core.di
 import com.squareup.anvil.annotations.ContributesTo
 import dagger.Module
 import dagger.Provides
-import dispatch.core.*
+import dispatch.core.DefaultCoroutineScope
+import dispatch.core.DispatcherProvider
+import dispatch.core.IOCoroutineScope
+import dispatch.core.MainCoroutineScope
+import dispatch.core.MainImmediateCoroutineScope
+import dispatch.core.UnconfinedCoroutineScope
 import kotlinx.coroutines.CoroutineScope
 import tangle.sample.core.AppScope
 

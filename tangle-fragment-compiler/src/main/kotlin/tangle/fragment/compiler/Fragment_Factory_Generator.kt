@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,21 +17,34 @@ package tangle.fragment.compiler
 
 import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.anvil.compiler.internal.capitalize
-import com.squareup.kotlinpoet.*
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
+import com.squareup.kotlinpoet.PropertySpec
+import com.squareup.kotlinpoet.TypeSpec
 import tangle.fragment.compiler.FragmentInjectParams.Fragment
-import tangle.inject.compiler.*
+import tangle.inject.compiler.ClassNames
+import tangle.inject.compiler.FileGenerator
+import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.FunSpec
+import tangle.inject.compiler.Parameter
+import tangle.inject.compiler.addFunction
+import tangle.inject.compiler.applyEach
+import tangle.inject.compiler.asArgumentList
+import tangle.inject.compiler.buildFile
 import java.io.File
 
 /**
  * This generates a Factory for the Fragment itself, which is delegated to by the Factory
  * interface's implementation.
  *
- * It's equivalent to the factory which is generated for `@Inject` annotations,
- * because it provides all of the dependencies needed in order to create a new instance.
- * This is different from `@AssistedInject` constructor factories.
+ * It's equivalent to the factory which is generated for `@Inject` annotations, because it provides
+ * all of the dependencies needed in order to create a new instance. This is different from
+ * `@AssistedInject` constructor factories.
  *
  * given this Fragment definition:
+ *
  * ```
  * @ContributesFragment(Unit::class)
  * class MyFragment @FragmentInject constructor(
@@ -46,7 +59,9 @@ import java.io.File
  *   }
  * }
  * ```
+ *
  * This generator will create the following `MyFragment_Factory.kt`:
+ *
  * ```
  * public class MyFragment_Factory(
  *   internal val numbers: Provider<@JvmSuppressWildcards List<Int>>
@@ -64,6 +79,7 @@ import java.io.File
  *   }
  * }
  * ```
+ *
  * @see FragmentAssisted_Factory_Impl_Generator
  */
 internal object Fragment_Factory_Generator : FileGenerator<FragmentInjectParams.Fragment> {
@@ -199,8 +215,8 @@ internal object Fragment_Factory_Generator : FileGenerator<FragmentInjectParams.
   }
 
   /**
-   * If this factory doesn't take any arguments at all, then it's an object.
-   * If this factory needs a constructor, then obviously it's a class.
+   * If this factory doesn't take any arguments at all, then it's an object. If this factory needs a
+   * constructor, then obviously it's a class.
    */
   fun createTypeSpecBuilder(
     factoryConstructorParams: List<Parameter>,
@@ -212,8 +228,8 @@ internal object Fragment_Factory_Generator : FileGenerator<FragmentInjectParams.
   }
 
   /**
-   * If the whole factory is an object, just add content to it.
-   * Otherwise, add a companion object and add the new content there.
+   * If the whole factory is an object, just add content to it. Otherwise, add a companion object
+   * and add the new content there.
    */
   fun TypeSpec.Builder.addStatic(
     alreadyObject: Boolean,
