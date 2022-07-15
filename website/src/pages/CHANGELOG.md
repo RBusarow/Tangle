@@ -19,7 +19,7 @@
 #### 🐛 Bug Fixes
 
 - Gradle plugin will now automatically enable/disable Tangle features depending upon which Androidx dependencies a module has. ([#353](https://github.com/rbusarow/Tangle/pull/353))
-  - see [the Gradle plugin docs](https://rbusarow.github.io/Tangle/docs/gradle-plugin) for more information
+  - see [the Gradle plugin docs](/docs/gradle-plugin) for more information
 
 #### 🧰 Maintenance
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,6 +12,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+/**
+ * Looks for all references to Tangle artifacts in the md/mdx files in the un-versioned
+ * /website/docs. Updates all versions to the pre-release version.
+ */
+val checkWebsiteNextDocsVersionRefs by tasks.registering {
+
+  description = "Checks the \"next\" version docs for version changes"
+  group = "website"
+
+  doLast {
+
+    val version = project.extra.properties["VERSION_NAME"] as String
+
+    fileTree("$rootDir/website/docs") {
+      include("**/*.md*")
+    }
+      .forEach { file ->
+        file.updateTangleVersionRef(version, failOnChanges = true)
+      }
+  }
+}
 
 /**
  * Looks for all references to Tangle artifacts in the md/mdx files
@@ -30,14 +52,12 @@ val updateWebsiteNextDocsVersionRefs by tasks.registering {
       include("**/*.md*")
     }
       .forEach { file ->
-        file.updateTangleVersionRef(version)
+        file.updateTangleVersionRef(version, failOnChanges = false)
       }
   }
 }
 
-/**
- * Updates the "tangle" version in package.json
- */
+/** Updates the "tangle" version in package.json */
 val updateWebsitePackageJsonVersion by tasks.registering {
 
   description = "Updates the \"Tangle\" version in package.json"
@@ -75,6 +95,70 @@ val updateWebsitePackageJsonVersion by tasks.registering {
   }
 }
 
+/** Updates the "tangle" version in package.json */
+val checkWebsitePackageJsonVersion by tasks.registering {
+
+  description = "Checks the \"Tangle\" version in package.json"
+  group = "website"
+
+  doLast {
+    val version = project.extra.properties["VERSION_NAME"] as String
+
+    // this isn't very robust, but it's fine for this use-case
+    val versionReg = """(\s*"version"\s*:\s*")[^"]*("\s*,)""".toRegex()
+
+    // just in case some child object gets a "version" field, ignore it.
+    // This only works if the correct field comes first (which it does).
+    var foundOnce = false
+
+    with(File("$rootDir/website/package.json")) {
+      val oldText = readText()
+      val newText = oldText
+        .lines()
+        .joinToString("\n") { line ->
+
+          line.replace(versionReg) { matchResult ->
+
+            if (!foundOnce) {
+              foundOnce = true
+              val (prefix, suffix) = matchResult.destructured
+              "$prefix$version$suffix"
+            } else {
+              line
+            }
+          }
+        }
+      require(oldText == newText) {
+        "The website package.json version is out of date.  " +
+          "Run `./gradlew updateWebsitePackageJsonVersion` to update."
+      }
+    }
+  }
+}
+
+/**
+ * Looks for all references to Tangle artifacts in the project README.md to the current
+ * released version.
+ */
+val checkProjectReadmeVersionRefs by tasks.registering {
+
+  description =
+    "Updates the project-level README to use the latest published version in maven coordinates"
+  group = "documentation"
+
+  doLast {
+
+    val version = project.extra.properties["VERSION_NAME"] as String
+
+    File("$rootDir/README.md")
+      .updateTangleVersionRef(
+        version,
+        failOnChanges = true,
+        "updateProjectReadmeVersionRefs"
+      )
+  }
+}
+
 /**
  * Looks for all references to Tangle artifacts in the project README.md
  * to the current released version.
@@ -90,20 +174,27 @@ val updateProjectReadmeVersionRefs by tasks.registering {
     val version = project.extra.properties["VERSION_NAME"] as String
 
     File("$rootDir/README.md")
-      .updateTangleVersionRef(version)
+      .updateTangleVersionRef(version, failOnChanges = false)
   }
 }
 
-fun File.updateTangleVersionRef(version: String) {
+fun File.updateTangleVersionRef(
+  version: String,
+  failOnChanges: Boolean,
+  updateTaskName: String = ""
+) {
 
   val group = project.extra.properties["GROUP"] as String
 
-  val pluginRegex =
-    """^([^'"\n]*['"])$group[^'"]*(['"].*) version (['"])[^'"]*(['"].*)${'$'}""".toRegex()
-  val moduleRegex = """^([^'"\n]*['"]?)$group:([^:]*):[^'"]*(['"]?.*)${'$'}""".toRegex()
+  val pluginId = "com.rickbusarow.tangle"
 
-  val newText = readText()
-    .lines()
+  val pluginRegex =
+    """^([^'"\n]*['"])$pluginId[^'"]*(['"].*) version (['"])[^'"]*(['"].*)${'$'}""".toRegex()
+  val moduleRegex = """^([^'"\n]*['"])$group:([^:]*):[^'"]*(['"].*)${'$'}""".toRegex()
+
+  val oldText = readText()
+
+  val newText = oldText.lines()
     .joinToString("\n") { line ->
       line
         .replace(pluginRegex) { matchResult ->
@@ -120,44 +211,21 @@ fun File.updateTangleVersionRef(version: String) {
         }
     }
 
+  require(!failOnChanges || oldText == newText) {
+    "Tangle version references in $path are out of date.  " +
+      "Run `./gradlew $updateTaskName` to update."
+  }
+
   writeText(newText)
 }
 
-val startSite by tasks.registering(Exec::class) {
+val yarnInstall by tasks.registering(Exec::class) {
 
-  description = "launches the local development website"
+  description = "runs `yarn install` for the website"
   group = "website"
 
-  dependsOn(
-    versionDocs,
-    updateWebsiteApiDocs,
-    updateWebsiteChangelog,
-    updateWebsiteNextDocsVersionRefs,
-    updateWebsitePackageJsonVersion
-  )
-
   workingDir("./website")
-  commandLine("yarn", "run", "start")
-}
-
-val versionDocs by tasks.registering(Exec::class) {
-
-  description =
-    "creates a new version snapshot of website docs, using the current version defined in gradle.properties"
-  group = "website"
-
-  val existingVersions = with(File("./website/versions.json")) {
-    "\"([^\"]*)\"".toRegex()
-      .findAll(readText())
-      .flatMap { it.destructured.toList() }
-  }
-
-  val version = project.extra.properties["VERSION_NAME"] as String
-
-  enabled = version !in existingVersions
-
-  workingDir("./website")
-  commandLine("yarn", "run", "docusaurus", "docs:version", version)
+  commandLine("yarn", "install")
 }
 
 val updateWebsiteApiDocs by tasks.registering(Copy::class) {
@@ -167,7 +235,7 @@ val updateWebsiteApiDocs by tasks.registering(Copy::class) {
 
   doFirst {
     delete(
-      fileTree("./website/static/api") {
+      fileTree("$rootDir/website/static/api") {
         exclude("**/styles/*")
       }
     )
@@ -181,7 +249,7 @@ val updateWebsiteApiDocs by tasks.registering(Copy::class) {
     }
   )
 
-  into("./website/static/api")
+  into("$rootDir/website/static/api")
 }
 
 val updateWebsiteChangelog by tasks.registering(Copy::class) {
@@ -190,12 +258,12 @@ val updateWebsiteChangelog by tasks.registering(Copy::class) {
   group = "website"
 
   from("CHANGELOG.md")
-  into("./website/src/pages")
+  into("$rootDir/website/src/pages")
 
   doLast {
 
     // add one hashmark to each header, because GitHub and Docusaurus render them differently
-    val changelog = File("./website/src/pages/CHANGELOG.md")
+    val changelog = File("$rootDir/website/src/pages/CHANGELOG.md")
 
     val newText = changelog.readText()
       .lines()
@@ -205,7 +273,73 @@ val updateWebsiteChangelog by tasks.registering(Copy::class) {
 
           "$hashes# $text"
         }
+          // relativize all links?
+          .replace("https://rbusarow.github.io/Tangle", "")
       }
+
+    require(!newText.contains("http://localhost:3000")) {
+      "Don't forget to remove the hard-coded local development site root " +
+        "(`http://localhost:3000`) from the ChangeLog."
+    }
+
     changelog.writeText(newText)
   }
+}
+
+val versionDocs by tasks.registering(Exec::class) {
+
+  description =
+    "creates a new version snapshot of website docs, using the current version defined in gradle.properties"
+  group = "website"
+
+  val existingVersions = with(File("$rootDir/website/versions.json")) {
+    "\"([^\"]*)\"".toRegex()
+      .findAll(readText())
+      .flatMap { it.destructured.toList() }
+  }
+
+  val devVersions = ".*(?:-SNAPSHOT|-LOCAL)".toRegex()
+
+  val version = project.extra.properties["VERSION_NAME"] as String
+
+  enabled = version !in existingVersions && !version.matches(devVersions)
+
+  workingDir("$rootDir/website")
+  commandLine("yarn", "run", "docusaurus", "docs:version", version)
+}
+
+val startSite by tasks.registering(Exec::class) {
+
+  description = "launches the local development website"
+  group = "website"
+
+  dependsOn(
+    yarnInstall,
+    versionDocs,
+    updateWebsiteApiDocs,
+    updateWebsiteChangelog,
+    updateWebsiteNextDocsVersionRefs,
+    updateWebsitePackageJsonVersion
+  )
+
+  workingDir("$rootDir/website")
+  commandLine("yarn", "run", "start")
+}
+
+val buildSite by tasks.registering(Exec::class) {
+
+  description = "builds the website"
+  group = "website"
+
+  dependsOn(
+    yarnInstall,
+    versionDocs,
+    updateWebsiteApiDocs,
+    updateWebsiteChangelog,
+    updateWebsiteNextDocsVersionRefs,
+    updateWebsitePackageJsonVersion
+  )
+
+  workingDir("$rootDir/website")
+  commandLine("yarn", "run", "build")
 }
