@@ -1,0 +1,6 @@
+{
+  "labels": ["dependencies", "automerge"],
+  "extends": [
+    "config:base"
+  ]
+}
