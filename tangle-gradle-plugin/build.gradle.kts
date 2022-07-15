@@ -184,7 +184,7 @@ val generateBuildProperties by tasks.registering {
       |  const val GROUP = "$group"
       |}
       |
-    """.trimMargin()
+      """.trimMargin()
     )
   }
 }

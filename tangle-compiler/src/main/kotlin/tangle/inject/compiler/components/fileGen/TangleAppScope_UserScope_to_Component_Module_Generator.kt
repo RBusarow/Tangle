@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,10 +24,16 @@ import com.squareup.kotlinpoet.TypeSpec
 import org.jetbrains.kotlin.descriptors.resolveClassByFqName
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation
 import org.jetbrains.kotlin.name.FqName
-import tangle.inject.compiler.*
+import tangle.inject.compiler.AnnotationSpec
+import tangle.inject.compiler.ClassNames
+import tangle.inject.compiler.FileGenerator
 import tangle.inject.compiler.FileGenerator.Companion.CONSTANT_PACKAGE_NAME
+import tangle.inject.compiler.addFunction
+import tangle.inject.compiler.buildFile
 import tangle.inject.compiler.components.MergeComponentParams
+import tangle.inject.compiler.generateSimpleNameString
 import tangle.inject.compiler.memberInject.fileGen.TangleAppScope_TangleInjector_Scope_ModuleGenerator
+import tangle.inject.compiler.tangleScopeToComponentMap
 import java.io.File
 
 /**

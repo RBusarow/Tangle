@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -30,7 +30,7 @@ inline fun <reified T : Any, reified R : Any> T.getStaticPrivateFieldByName(name
     | -- existing member properties
     |${kClass.memberProperties.joinToString("\n")}
     |
-  """.trimMargin()
+    """.trimMargin()
   }
 
   property.isAccessible = true
@@ -49,7 +49,7 @@ inline fun <reified T : Any, reified R : Any> T.getPrivateFieldByName(name: Stri
     | -- existing member properties
     |${kClass.memberProperties.joinToString("\n")}
     |
-  """.trimMargin()
+    """.trimMargin()
   }
 
   property.isAccessible = true
@@ -68,7 +68,7 @@ inline fun <reified T : Any> T.getPrivateFunctionByName(name: String, vararg arg
     | -- existing member functions
     |${kClass.memberFunctions.joinToString("\n")}
     |
-  """.trimMargin()
+    """.trimMargin()
   }
 
   function.isAccessible = true

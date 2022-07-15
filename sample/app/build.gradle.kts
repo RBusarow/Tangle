@@ -30,7 +30,7 @@ android {
 
   Add this line somewhere, such as ~/.gradle/gradle.properties:
     tangle.dog.api.key=<your own key>
-  */
+   */
   val dogApiKey = project.extra.properties["tangle.dog.api.key"] as? String ?: ""
 
   defaultConfig {

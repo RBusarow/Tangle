@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -83,7 +83,7 @@ data class WorkerParams(
         |
         |actual assisted constructor parameters
         |${actual.joinToString("\n\t", "\t")}
-      """.trimMargin()
+        """.trimMargin()
       }
 
       return WorkerParams(

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,14 +19,37 @@ import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.anvil.compiler.api.createGeneratedFile
-import com.squareup.anvil.compiler.internal.*
-import com.squareup.kotlinpoet.*
+import com.squareup.anvil.compiler.internal.asClassName
+import com.squareup.anvil.compiler.internal.classesAndInnerClass
+import com.squareup.anvil.compiler.internal.findAnnotation
+import com.squareup.anvil.compiler.internal.generateClassName
+import com.squareup.anvil.compiler.internal.requireClassDescriptor
+import com.squareup.anvil.compiler.internal.safePackageString
+import com.squareup.anvil.compiler.internal.scope
+import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.kotlinpoet.ClassName
+import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.FunSpec
+import com.squareup.kotlinpoet.KModifier
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.TypeSpec
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
 import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtFile
 import tangle.fragment.compiler.FragmentInjectParams.Fragment
-import tangle.inject.compiler.*
+import tangle.inject.compiler.ClassNames
+import tangle.inject.compiler.ConstructorInjectParameter
+import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.TangleCodeGenerator
+import tangle.inject.compiler.applyEach
+import tangle.inject.compiler.asArgumentList
+import tangle.inject.compiler.buildFile
+import tangle.inject.compiler.fragmentInjectConstructor
+import tangle.inject.compiler.generateSimpleNameString
+import tangle.inject.compiler.injectConstructor
+import tangle.inject.compiler.isFragment
+import tangle.inject.compiler.require
 import java.io.File
 
 /**

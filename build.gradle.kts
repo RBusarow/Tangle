@@ -126,13 +126,24 @@ allprojects {
 
   configure<KtlintExtension> {
     debug.set(false)
-    version.set("0.43.2")
+    // when updating to 0.46.0:
+    // - Re-enable `experimental:type-parameter-list-spacing`
+    // - remove 'experimental' from 'argument-list-wrapping'
+    // - remove 'experimental' from 'no-empty-first-line-in-method-block'
+    version.set("0.45.2")
+    outputToConsole.set(true)
+    enableExperimentalRules.set(true)
     disabledRules.set(
       setOf(
-        "no-wildcard-imports",
         "max-line-length", // manually formatting still does this, and KTLint will still wrap long chains when possible
         "filename", // same as Detekt's MatchingDeclarationName, but Detekt's version can be suppressed and this can't
-        "experimental:argument-list-wrapping" // doesn't work half the time
+        "experimental:argument-list-wrapping", // doesn't work half the time
+        "experimental:no-empty-first-line-in-method-block", // code golf...
+        // This can be re-enabled once 0.46.0 is released
+        // https://github.com/pinterest/ktlint/issues/1435
+        "experimental:type-parameter-list-spacing",
+        // added in 0.46.0
+        "experimental:function-signature"
       )
     )
   }

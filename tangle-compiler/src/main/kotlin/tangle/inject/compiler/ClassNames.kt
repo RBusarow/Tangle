@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,10 +22,18 @@ import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeVariableName
 import com.squareup.kotlinpoet.asClassName
-import dagger.*
+import dagger.Binds
+import dagger.BindsInstance
+import dagger.Module
+import dagger.Provides
+import dagger.Subcomponent
 import dagger.internal.Factory
 import dagger.internal.InstanceFactory
-import dagger.multibindings.*
+import dagger.multibindings.ClassKey
+import dagger.multibindings.IntoMap
+import dagger.multibindings.IntoSet
+import dagger.multibindings.Multibinds
+import dagger.multibindings.StringKey
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Provider
