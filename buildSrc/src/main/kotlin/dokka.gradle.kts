@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,6 +12,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask
+import org.jlleitschuh.gradle.ktlint.tasks.KtLintFormatTask
 
 apply(plugin = "org.jetbrains.dokka")
 
@@ -34,6 +38,22 @@ subprojects {
     proj.tasks
       .withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask>()
       .configureEach {
+
+        // Dokka doesn't support configuration caching
+        notCompatibleWithConfigurationCache("Dokka doesn't support configuration caching")
+
+        // Dokka uses their outputs but doesn't explicitly depend upon them.
+        mustRunAfter(tasks.withType(KotlinCompile::class.java))
+        mustRunAfter(tasks.withType(KtLintCheckTask::class.java))
+        mustRunAfter(tasks.withType(KtLintFormatTask::class.java))
+
+        // The default moduleName for each module in the module list is its unqualified "name",
+        // meaning the list would be full of "api", "impl", etc.  Instead, use the module's maven
+        // artifact ID, if it has one, or default to its full Gradle path for internal modules.
+        val fullModuleName = proj.findProperty("POM_ARTIFACT_ID") as? String
+          ?: proj.path.removePrefix(":")
+
+        moduleName.set(fullModuleName)
 
         dependsOn(allprojects.mapNotNull { it.tasks.findByName("compileKotlin") })
 

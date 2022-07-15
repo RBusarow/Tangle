@@ -18,7 +18,7 @@ jobs:
     steps:
       # cancel previous jobs
       - name: Cancel Previous Runs
-        uses: styfle/cancel-workflow-action@0.9.0
+        uses: styfle/cancel-workflow-action@0.10.0
         env:
           access_token: '${{ github.token }}'
 
@@ -28,94 +28,113 @@ jobs:
     if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Set up JDK
-        uses : actions/setup-java@v2
-        with :
-          distribution : 'adopt'
-          java-version : '14'
-          cache: 'gradle'
-
-      - uses: burrunan/gradle-cache-action@v1
-        name: detekt
+        uses: actions/setup-java@v3
         with:
-          gradle-dependencies-cache-key: |
-            gradle/libs.versions.toml
-          arguments: |
-            detekt --no-daemon
-          concurrent: true
-          gradle-build-scan-report: false
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: detekt
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: detekt
+          cache-read-only: false
 
   ktlint:
 
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
+    if: github.actor != 'renovate[bot]'
 
     steps:
-      - uses: actions/checkout@v2
+      - name: check out with token (used by forks)
+        uses: actions/checkout@v3
+        if: github.event.pull_request.head.repo.full_name != github.repository
+
+      - name: check out with PAT (used by main repo)
+        uses: actions/checkout@v3
+        if: github.event.pull_request.head.repo.full_name == github.repository
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           fetch-depth: 0
 
       - name: Set up JDK
-        uses : actions/setup-java@v2
-        with :
-          distribution : 'adopt'
-          java-version : '14'
-          cache: 'gradle'
-
-      # formats all src files
-      - uses: burrunan/gradle-cache-action@v1
-        name: KtLint format
+        uses: actions/setup-java@v3
         with:
-          gradle-dependencies-cache-key: |
-            gradle/libs.versions.toml
-          arguments: |
-            ktlintFormat
-          concurrent: true
-          gradle-build-scan-report: false
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: KtLint format (used by main repo)
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: ktlintformat -q
+          cache-read-only: false
 
       # If KtLint generated changes, commit and push those changes.
-      - name: commit changes
+      - name: commit changes (used by main repo)
+        if: github.event.pull_request.head.repo.full_name == github.repository
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: Apply KtLint format
           commit_options: '--no-verify --signoff'
 
+      - name: KtLint check (used by forks)
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: ktlintCheck -q
+          cache-read-only: false
+
   versioning:
 
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
+    if: github.actor != 'renovate[bot]'
 
     steps:
-      - uses: actions/checkout@v2
+      - name: check out with token (used by forks)
+        uses: actions/checkout@v3
+        if: github.event.pull_request.head.repo.full_name != github.repository
+
+      - name: check out with PAT (used by main repo)
+        uses: actions/checkout@v3
+        if: github.event.pull_request.head.repo.full_name == github.repository
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.PERSONAL_ACCESS_TOKEN }}
           fetch-depth: 0
 
       - name: Set up JDK
-        uses : actions/setup-java@v2
-        with :
-          distribution : 'adopt'
-          java-version : '14'
-          cache: 'gradle'
-
-      - uses: burrunan/gradle-cache-action@v1
-        name: Sync versions in website docs
+        uses: actions/setup-java@v3
         with:
-          gradle-dependencies-cache-key: |
-            gradle/libs.versions.toml
-          arguments: |
-            updateWebsiteNextDocsVersionRefs
-          concurrent: true
-          gradle-build-scan-report: false
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: Check that the version is a -SNAPSHOT version
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: checkVersionIsSnapshot
+          cache-read-only: false
+
+      - name: Sync versions in website docs (used by main repo)
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: updateWebsiteNextDocsVersionRefs
+          cache-read-only: false
+
+      - name: Check versions in website docs (used by forks)
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: checkWebsiteNextDocsVersionRefs
+          cache-read-only: false
 
       - name: commit changes
         uses: stefanzweifel/git-auto-commit-action@v4
@@ -123,17 +142,22 @@ jobs:
           commit_message: update docs versions
           commit_options: '--no-verify --signoff'
 
-      - uses: burrunan/gradle-cache-action@v1
-        name: Update version in website package.json
+      - name: Update version in website package.json (used by main repo)
+        if: github.event.pull_request.head.repo.full_name == github.repository
+        uses: gradle/gradle-build-action@v2
         with:
-          gradle-dependencies-cache-key: |
-            gradle/libs.versions.toml
-          arguments: |
-            updateWebsitePackageJsonVersion
-          concurrent: true
-          gradle-build-scan-report: false
+          arguments: updateWebsitePackageJsonVersion
+          cache-read-only: false
 
-      - name: commit changes
+      - name: Check version in website package.json (used by forks)
+        if: github.event.pull_request.head.repo.full_name != github.repository
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: checkWebsitePackageJsonVersion
+          cache-read-only: false
+
+      - name: commit changes (used by main repo)
+        if: github.event.pull_request.head.repo.full_name == github.repository
         uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_message: update website versions
@@ -142,59 +166,48 @@ jobs:
   api-check:
 
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Set up JDK
-        uses : actions/setup-java@v2
-        with :
-          distribution : 'adopt'
-          java-version : '14'
-          cache: 'gradle'
-
-      - uses: burrunan/gradle-cache-action@v1
-        name: api check
+        uses: actions/setup-java@v3
         with:
-          gradle-dependencies-cache-key: |
-            gradle/libs.versions.toml
-          arguments: |
-            apicheck
-          concurrent: true
-          gradle-build-scan-report: false
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: api check
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: apicheck
+          cache-read-only: false
 
   tests-ubuntu:
 
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Set up JDK
-        uses : actions/setup-java@v2
-        with :
-          distribution : 'adopt'
-          java-version : '14'
-          cache: 'gradle'
-
-      - uses: burrunan/gradle-cache-action@v1
-        name: all tests
+        uses: actions/setup-java@v3
         with:
-          gradle-dependencies-cache-key: |
-            gradle/libs.versions.toml
-          arguments: |
-            testJvm
-          concurrent: true
-          gradle-build-scan-report: false
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: all tests
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: testJvm
+          cache-read-only: false
 
   instrumentation-tests:
     name: Instrumentation tests
@@ -202,27 +215,27 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      - uses: actions/checkout@v2
+      - uses: actions/checkout@v3
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           token: ${{ secrets.GITHUB_TOKEN }}
           fetch-depth: 0
 
       - name: Set up JDK
-        uses : actions/setup-java@v2
-        with :
-          distribution : 'adopt'
-          java-version : '14'
-          cache: 'gradle'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
 
       - uses: actions/cache@v2
         with:
           path: |
-            ~/buildSrc/.gradle
-            ~/buildSrc/build
+            **/.gradle
+            **/build
+            ~/.gradle/caches
+            ~/.gradle/wrapper
           key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle.kts', '**/gradle-wrapper.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-
+          restore-keys: ${{ runner.os }}-gradle-
 
       - name: Instrumentation Tests
         uses: reactivecircus/android-emulator-runner@v2
