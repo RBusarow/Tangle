@@ -44,7 +44,7 @@ google-ksp = "1.6.10-1.0.2"
 google-material = "1.5.0"
 
 rickBusarow-dependencySync = "0.11.4"
-rickBusarow-moduleCheck = "0.11.3"
+rickBusarow-moduleCheck = "0.12.3"
 
 square-anvil = "2.3.11-1-6-10"
 square-moshi = "1.13.0"
