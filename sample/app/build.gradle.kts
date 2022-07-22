@@ -17,7 +17,6 @@ plugins {
   androidApplication
   id("com.squareup.anvil")
   kotlin("kapt")
-  scabbard
 }
 
 android {
@@ -137,7 +136,7 @@ tasks.withType<org.jetbrains.kotlin.gradle.tasks.KotlinCompile>()
     kotlinOptions {
 
       freeCompilerArgs = freeCompilerArgs + listOf(
-        "-Xopt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
+        "-opt-in=kotlinx.coroutines.ExperimentalCoroutinesApi"
       )
     }
   }

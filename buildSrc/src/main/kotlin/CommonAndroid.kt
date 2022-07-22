@@ -20,7 +20,6 @@ import org.gradle.api.JavaVersion.VERSION_1_8
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
 @Suppress("UnstableApiUsage", "MagicNumber")
 fun CommonExtension<*, *, *, *>.commonAndroid(target: Project) {

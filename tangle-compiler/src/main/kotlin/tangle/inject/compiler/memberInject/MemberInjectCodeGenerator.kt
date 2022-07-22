@@ -18,9 +18,7 @@ package tangle.inject.compiler.memberInject
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.anvil.compiler.internal.classesAndInnerClass
-import com.squareup.anvil.compiler.internal.findAnnotation
-import com.squareup.anvil.compiler.internal.requireClassDescriptor
+import com.squareup.anvil.compiler.internal.reference.classAndInnerClassReferences
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
 import tangle.inject.compiler.FqNames
@@ -50,27 +48,26 @@ class MemberInjectCodeGenerator : TangleCodeGenerator() {
     module: ModuleDescriptor,
     projectFiles: Collection<KtFile>
   ): Collection<GeneratedFile> {
-
     return projectFiles
-      .classesAndInnerClass(module)
+      .classAndInnerClassReferences(module)
       .mapNotNull { clazz ->
 
-        val annotationEntry = clazz.findAnnotation(FqNames.tangleScope, module)
+        val annotationEntry = clazz.annotations.find { it.fqName == FqNames.tangleScope }
           ?: return@mapNotNull null
 
-        val injectConstructor = clazz.injectConstructor(module)
-          ?: clazz.fragmentInjectConstructor(module)
-          ?: clazz.assistedInjectConstructor(module)
-          ?: clazz.vmInjectConstructor(module)
+        val injectConstructor = clazz.injectConstructor()
+          ?: clazz.fragmentInjectConstructor()
+          ?: clazz.assistedInjectConstructor()
+          ?: clazz.vmInjectConstructor()
 
         require(
           injectConstructor == null,
-          { clazz.requireClassDescriptor(module) }
+          psi = { clazz.clazz }
         ) {
           "@TangleScope cannot be applied to classes which use injected constructors."
         }
 
-        MemberInjectParams.create(module, clazz, annotationEntry)
+        MemberInjectParams.create(clazz, annotationEntry)
       }
       .flatMap { params ->
         fileGenerators.mapNotNull { generator ->

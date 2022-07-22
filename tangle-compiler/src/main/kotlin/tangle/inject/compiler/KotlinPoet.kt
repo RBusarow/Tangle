@@ -12,13 +12,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:Suppress("TooManyFunctions")
 
 package tangle.inject.compiler
 
 import com.squareup.anvil.compiler.internal.argumentType
 import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.requireClassDescriptor
-import com.squareup.anvil.compiler.internal.requireFqName
+import com.squareup.anvil.compiler.internal.classDescriptor
+import com.squareup.anvil.compiler.internal.fqNameOrNull
+import com.squareup.anvil.compiler.internal.reference.AnnotationReference
+import com.squareup.anvil.compiler.internal.reference.TypeReference
+import com.squareup.anvil.compiler.internal.reference.TypeReference.Descriptor
+import com.squareup.anvil.compiler.internal.reference.TypeReference.Psi
+import com.squareup.anvil.compiler.internal.reference.asClassName
+import com.squareup.anvil.compiler.internal.reference.toClassReference
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
@@ -27,14 +34,9 @@ import com.squareup.kotlinpoet.MemberName
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
-import org.jetbrains.kotlin.builtins.isFunctionType
-import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.descriptors.PropertyDescriptor
-import org.jetbrains.kotlin.psi.KtAnnotationEntry
 import org.jetbrains.kotlin.resolve.constants.EnumValue
 import org.jetbrains.kotlin.resolve.constants.KClassValue
-import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 import java.io.ByteArrayOutputStream
 import kotlin.reflect.KClass
 
@@ -102,28 +104,26 @@ fun AnnotationSpec(
   .apply { block() }
   .build()
 
-fun List<KtAnnotationEntry>.qualifierAnnotationSpecs(
+fun List<AnnotationReference>.qualifierAnnotationSpecs(
   module: ModuleDescriptor
-): List<AnnotationSpec> = mapNotNull {
+): List<AnnotationSpec> = mapNotNull { annotationReference ->
 
-  val fqName = it.requireFqName(module)
+  val fqName = annotationReference.fqName
 
   if (fqName == FqNames.inject) return@mapNotNull null
 
-  val classDescriptor = fqName.requireClassDescriptor(module)
-
-  val qualifierAnnotation = classDescriptor.annotations
-    .findAnnotation(FqNames.qualifier)
+  val qualifierAnnotation = fqName.toClassReference(module).annotations
+    .find { it.fqName == FqNames.qualifier }
     ?: return@mapNotNull null
 
-  AnnotationSpec(classDescriptor.asClassName()) {
-    qualifierAnnotation.allValueArguments
-      .forEach { (name, value) ->
-        when (value) {
+  AnnotationSpec(qualifierAnnotation.classReference.asClassName()) {
+    qualifierAnnotation.arguments
+      .forEach { arg ->
+        when (val value = arg.value<Any>()) {
           is KClassValue -> {
-            val className = value.argumentType(module).requireClassDescriptor()
+            val className = value.argumentType(module).classDescriptor()
               .asClassName()
-            addMember("${name.asString()} = %T::class", className)
+            addMember("${arg.name} = %T::class", className)
           }
 
           is EnumValue -> {
@@ -132,35 +132,37 @@ fun List<KtAnnotationEntry>.qualifierAnnotationSpecs(
                 .asClassName(module),
               simpleName = value.enumEntryName.asString()
             )
-            addMember("${name.asString()} = %M", enumMember)
+            addMember("${arg.name} = %M", enumMember)
           }
           // String, int, long, ... other primitives.
-          else -> addMember("${name.asString()} = $value")
+          else -> addMember("${arg.name} = $value")
         }
       }
   }
 }
 
 internal fun TypeName.withJvmSuppressWildcardsIfNeeded(
-  callableMemberDescriptor: CallableMemberDescriptor
+  module: ModuleDescriptor,
+  typeReference: TypeReference
 ): TypeName {
   // If the parameter is annotated with @JvmSuppressWildcards, then add the annotation
   // to our type so that this information is forwarded when our Factory is compiled.
-  val hasJvmSuppressWildcards = callableMemberDescriptor.hasAnnotation(FqNames.jvmSuppressWildcards)
+  val hasJvmSuppressWildcards = when (typeReference) {
+    is Descriptor -> typeReference.type.annotations.hasAnnotation(FqNames.jvmSuppressWildcards)
+    is Psi ->
+      typeReference.type.annotationEntries
+        .any { it.fqNameOrNull(module) == FqNames.jvmSuppressWildcards }
+  }
 
   // Add the @JvmSuppressWildcards annotation even for simple generic return types like
   // Set<String>. This avoids some edge cases where Dagger chokes.
-  val isGenericType = callableMemberDescriptor.typeParameters.isNotEmpty()
-
-  val type = callableMemberDescriptor.safeAs<PropertyDescriptor>()?.type
-    ?: callableMemberDescriptor.valueParameters.first().type
+  val isGenericType = typeReference.isGenericType()
 
   // Same for functions.
-  val isFunctionType = type.isFunctionType
+  val isFunctionType = typeReference.isFunctionType()
 
   return when {
-    hasJvmSuppressWildcards || isGenericType -> this.jvmSuppressWildcards()
-    isFunctionType -> this.jvmSuppressWildcards()
+    hasJvmSuppressWildcards || isGenericType || isFunctionType -> this.jvmSuppressWildcards()
     else -> this
   }
 }
@@ -168,3 +170,11 @@ internal fun TypeName.withJvmSuppressWildcardsIfNeeded(
 fun ClassName.generateSimpleNameString(
   separator: String = "_"
 ): String = simpleNames.joinToString(separator)
+
+fun TypeSpec.Builder.addContributesTo(
+  scopeClassName: ClassName
+): TypeSpec.Builder = addAnnotation(
+  AnnotationSpec.builder(ClassNames.contributesTo)
+    .addMember("%T::class", scopeClassName)
+    .build()
+)

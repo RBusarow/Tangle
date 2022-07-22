@@ -16,34 +16,29 @@
 package tangle.fragment.compiler
 
 import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.asTypeName
-import com.squareup.anvil.compiler.internal.findAnnotation
-import com.squareup.anvil.compiler.internal.generateClassName
-import com.squareup.anvil.compiler.internal.requireClassDescriptor
+import com.squareup.anvil.compiler.internal.reference.ClassReference
+import com.squareup.anvil.compiler.internal.reference.FunctionReference
+import com.squareup.anvil.compiler.internal.reference.TypeParameterReference
+import com.squareup.anvil.compiler.internal.reference.TypeReference
+import com.squareup.anvil.compiler.internal.reference.allSuperTypeClassReferences
+import com.squareup.anvil.compiler.internal.reference.asClassName
+import com.squareup.anvil.compiler.internal.reference.generateClassName
 import com.squareup.anvil.compiler.internal.safePackageString
-import com.squareup.anvil.compiler.internal.scope
-import com.squareup.anvil.compiler.internal.typeVariableNames
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
-import com.squareup.kotlinpoet.TypeVariableName
 import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.DescriptorVisibilities
 import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.descriptors.Modality.ABSTRACT
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.psi.KtClass
-import org.jetbrains.kotlin.psi.KtClassOrObject
-import org.jetbrains.kotlin.psi.KtConstructor
-import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameSafe
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
-import org.jetbrains.kotlin.types.KotlinType
-import org.jetbrains.kotlin.types.typeUtil.supertypes
 import tangle.inject.compiler.ConstructorInjectParameter
 import tangle.inject.compiler.FqNames
 import tangle.inject.compiler.MemberInjectParameter
 import tangle.inject.compiler.TangleCompilationException
+import tangle.inject.compiler.find
 import tangle.inject.compiler.generateSimpleNameString
 import tangle.inject.compiler.mapToParameters
 import tangle.inject.compiler.memberInjectedParameters
@@ -59,39 +54,42 @@ internal sealed class FragmentInjectParams {
     override val packageName: String,
     override val scopeName: FqName,
     override val fragmentClassName: ClassName,
-    val fragmentClassDescriptor: ClassDescriptor,
+    val fragmentClass: ClassReference,
     val fragmentFactoryClassNameString: String,
     val fragmentFactoryClassName: ClassName,
-    val constructor: KtConstructor<*>,
+    val constructor: FunctionReference,
     val constructorParams: List<ConstructorInjectParameter>,
     val memberInjectedParams: List<MemberInjectParameter>,
-    val typeParameters: List<TypeVariableName>,
+    val typeParameters: List<TypeParameterReference>,
     val fragmentClassSimpleName: String,
     val fragmentTypeName: TypeName
   ) : FragmentInjectParams() {
     companion object {
       fun create(
         module: ModuleDescriptor,
-        fragmentClass: KtClassOrObject,
-        constructor: KtConstructor<*>
+        fragmentClass: ClassReference,
+        constructor: FunctionReference
       ): Fragment {
-        val packageName = fragmentClass.containingKtFile
-          .packageFqName
+        val packageName = fragmentClass.packageFqName
           .safePackageString(dotSuffix = false)
 
-        val fragmentClassDescriptor = fragmentClass.requireClassDescriptor(module)
+        val fragmentClassDescriptor = fragmentClass
 
-        val fragmentFactoryClassNameString = "${fragmentClass.generateClassName()}_Factory"
-        val fragmentFactoryClassName = ClassName(packageName, fragmentFactoryClassNameString)
+        val fragmentFactoryClassID = fragmentClass.generateClassName(suffix = "_Factory")
+        val fragmentFactoryClassName = fragmentFactoryClassID
+          .asClassName()
 
-        val scopeName = fragmentClass.scope(FqNames.contributesFragment, module)
+        val contributesFragmentAnnotation = fragmentClass.annotations
+          .find(FqNames.contributesFragment)!!
 
-        val memberInjectParameters = fragmentClassDescriptor.memberInjectedParameters(module)
+        val scopeName = contributesFragmentAnnotation.scope().fqName
 
-        val allFragmentConstructorParams = constructor.valueParameters
+        val memberInjectParameters = fragmentClassDescriptor.memberInjectedParameters()
+
+        val allFragmentConstructorParams = constructor.parameters
           .mapToParameters(module)
 
-        val typeParameters = fragmentClass.typeVariableNames(module)
+        val typeParameters = fragmentClass.typeParameters
 
         val fragmentClassSimpleName = fragmentClass.asClassName()
           .simpleNames
@@ -100,14 +98,16 @@ internal sealed class FragmentInjectParams {
         val fragmentClassName = fragmentClass.asClassName()
 
         val fragmentTypeName = fragmentClassName.let {
-          if (typeParameters.isEmpty()) it else it.parameterizedBy(typeParameters)
+          if (typeParameters.isEmpty()) it else it.parameterizedBy(
+            typeParameters.map { it.typeVariableName }
+          )
         }
         return Fragment(
           packageName = packageName,
           scopeName = scopeName,
           fragmentClassName = fragmentClassName,
-          fragmentClassDescriptor = fragmentClassDescriptor,
-          fragmentFactoryClassNameString = fragmentFactoryClassNameString,
+          fragmentClass = fragmentClassDescriptor,
+          fragmentFactoryClassNameString = fragmentFactoryClassName.simpleName,
           fragmentFactoryClassName = fragmentFactoryClassName,
           constructor = constructor,
           constructorParams = allFragmentConstructorParams,
@@ -125,55 +125,49 @@ internal sealed class FragmentInjectParams {
     override val scopeName: FqName,
     override val fragmentClassName: ClassName,
     val fragmentParams: Fragment,
-    val factoryDescriptor: ClassDescriptor,
-    val factoryInterface: KtClassOrObject,
+    val factoryClass: ClassReference,
     val factoryInterfaceClassName: ClassName,
     val fragmentFactoryClassName: ClassName,
     val factoryImplClassName: ClassName,
-    val typeParameters: List<TypeVariableName>,
+    val typeParameters: List<TypeParameterReference>,
     val tangleParams: List<TangleParameter>,
     val functionName: String
   ) : FragmentInjectParams() {
     data class TangleParameter(
       val key: String,
       val name: String,
-      val kotlinType: KotlinType,
+      val type: TypeReference,
       val typeName: TypeName
     )
 
     companion object {
       fun create(
         module: ModuleDescriptor,
-        factoryInterface: KtClassOrObject,
-        fragmentClass: KtClass,
-        constructor: KtConstructor<*>
+        factoryInterface: ClassReference,
+        fragmentClass: ClassReference,
+        constructor: FunctionReference
       ): Factory {
-        val packageName = factoryInterface.containingKtFile
-          .packageFqName
-          .safePackageString(dotSuffix = false)
+        val packageName = factoryInterface.packageFqName.safePackageString(dotSuffix = false)
 
-        val contributesAnnotation = fragmentClass.findAnnotation(
-          FqNames.contributesFragment, module
-        )
+        val contributesAnnotation = fragmentClass.annotations.find(FqNames.contributesFragment)
 
         require(
           value = contributesAnnotation != null,
-          declarationDescriptor = { fragmentClass.requireClassDescriptor(module) }
+          fragmentClass
         ) {
           "@${FqNames.fragmentInject.shortName().asString()}-annotated Fragments must also " +
             "have a `${FqNames.contributesFragment.asString()}` class annotation."
         }
 
-        val scopeName = fragmentClass.scope(FqNames.contributesFragment, module)
+        val scopeClass = fragmentClass.annotations.find(FqNames.contributesFragment)!!.scope()
+        val scopeName = scopeClass.fqName
 
-        val fragmentFactoryClassName =
-          ClassName(packageName, "${fragmentClass.generateClassName()}_Factory")
+        val fragmentFactoryClassName = fragmentClass.generateClassName(suffix = "_Factory")
+          .asClassName()
 
-        val factoryDescriptor = factoryInterface.requireClassDescriptor(module)
+        val functions = factoryInterface.functions
 
-        val functions = factoryDescriptor.functions()
-
-        require(functions.size == 1, factoryDescriptor) {
+        require(functions.size == 1, factoryInterface) {
           "@${FqNames.fragmentInjectFactory.shortName().asString()}-annotated types must have " +
             "exactly one abstract function -- without a default implementation -- " +
             "which returns the ${FqNames.fragmentInject.shortName().asString()} Fragment type."
@@ -181,9 +175,9 @@ internal sealed class FragmentInjectParams {
 
         val function = functions[0]
 
-        val typeParameters = factoryInterface.typeVariableNames(module)
+        val typeParameters = factoryInterface.typeParameters
 
-        val functionParameters = function.valueParameters
+        val functionParameters = function.parameters
 
         val factoryInterfaceClassName = factoryInterface.asClassName()
         val factoryImplSimpleName =
@@ -193,15 +187,15 @@ internal sealed class FragmentInjectParams {
         val tangleParams = functionParameters.map {
           TangleParameter(
             it.requireTangleParamName(),
-            it.name.asString(),
-            it.type,
-            it.type.asTypeName()
+            it.name,
+            it.type(),
+            it.type().asTypeName()
           )
         }
 
-        tangleParams.checkForBundleSafe(factoryDescriptor)
+        tangleParams.checkForBundleSafe(factoryInterface)
 
-        val functionName = function.name.asString()
+        val functionName = function.name
 
         val fragmentParams =
           Fragment.create(module, fragmentClass, constructor)
@@ -211,8 +205,7 @@ internal sealed class FragmentInjectParams {
           scopeName = scopeName,
           fragmentClassName = fragmentParams.fragmentClassName,
           fragmentParams = fragmentParams,
-          factoryDescriptor = factoryDescriptor,
-          factoryInterface = factoryInterface,
+          factoryClass = factoryInterface,
           factoryInterfaceClassName = factoryInterfaceClassName,
           fragmentFactoryClassName = fragmentFactoryClassName,
           factoryImplClassName = factoryImplClassName,
@@ -233,10 +226,10 @@ internal sealed class FragmentInjectParams {
         }
         .toList()
 
-      internal fun List<TangleParameter>.checkForBundleSafe(descriptor: ClassDescriptor) {
-        fun TangleParameter.superTypeFqNames() = kotlinType.supertypes()
-          .asSequence()
-          .map { it.requireClassDescriptor().fqNameSafe }
+      internal fun List<TangleParameter>.checkForBundleSafe(classReference: ClassReference) {
+        fun TangleParameter.superTypeFqNames() = type.asClassReference()
+          .allSuperTypeClassReferences(false)
+          .map { it.fqName }
 
         val notBundleSafe = filter { tangleParameter ->
           !BundleSafe.contains(tangleParameter.typeName) &&
@@ -251,7 +244,7 @@ internal sealed class FragmentInjectParams {
           ) { "${it.name}: ${it.typeName}" }
 
           throw TangleCompilationException(
-            descriptor,
+            classReference,
             "Tangle found Fragment runtime arguments which cannot " +
               "be inserted into a Bundle: $listString"
           )

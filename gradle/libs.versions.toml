@@ -3,16 +3,16 @@ androidTools = "7.1.2"
 benManes = "0.41.0"
 changeTracker = "0.7.3"
 coil = "1.4.0"
-dependencyAnalysis = "0.63.0"
+dependencyAnalysis = "1.10.0"
 dispatch = "1.0.0-beta10"
-detekt = "1.19.0"
-dokka = "1.6.10"
+detekt = "1.20.0"
+dokka = "1.7.0"
 gradleDoctor = "0.7.3"
 groovy = "3.0.9"
 hermit = "0.9.5"
 jUnit = "5.8.2"
 kotest = "5.1.0"
-kotlin = "1.6.10"
+kotlin = "1.7.0"
 ktlint-gradle = "10.2.1"
 
 sonarPlugin = "2.6.1"
@@ -22,7 +22,7 @@ taskTree = "2.1.0"
 
 androidx-activity = "1.4.0"
 androidx-compose-runtime = "1.1.0-rc01"
-androidx-compose-compiler = "1.1.0-rc02"
+androidx-compose-compiler = "1.2.0"
 androidx-fragment-version = "1.4.1"
 androidx-hilt = "1.0.0"
 androidx-lifecycle = "2.4.0"
@@ -37,16 +37,16 @@ androidx-work-version = "2.7.1"
 kotlinx-atomicfu = "0.17.0"
 kotlinx-binaryCompatibility = "0.8.0"
 kotlinx-coroutines = "1.6.0"
-kotlinx-knit = "0.3.0"
+kotlinx-knit = "0.4.0"
 
-google-dagger = "2.40.5"
-google-ksp = "1.6.10-1.0.2"
+google-dagger = "2.42"
+google-ksp = "1.7.0-1.0.6"
 google-material = "1.5.0"
 
 rickBusarow-dependencySync = "0.11.4"
 rickBusarow-moduleCheck = "0.12.3"
 
-square-anvil = "2.3.11-1-6-10"
+square-anvil = "2.4.1"
 square-moshi = "1.13.0"
 square-okhttp = "4.9.3"
 square-retrofit = "2.9.0"
@@ -217,13 +217,14 @@ kotest-properties = { module = "io.kotest:kotest-property-jvm", version.ref = "k
 kotest-runner = { module = "io.kotest:kotest-runner-junit5-jvm", version.ref = "kotest" }
 
 kotlin-annotation-processing = { module = "org.jetbrains.kotlin:kotlin-annotation-processing-embeddable", version.ref = "kotlin" }
+kotlin-bom = { module = "org.jetbrains.kotlin:kotlin-bom", version.ref = "kotlin" }
 kotlin-compiler = { module = "org.jetbrains.kotlin:kotlin-compiler-embeddable", version.ref = "kotlin" }
 kotlin-gradle-plug = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin", version.ref = "kotlin" }
 kotlin-gradle-pluginApi = { module = "org.jetbrains.kotlin:kotlin-gradle-plugin-api", version.ref = "kotlin" }
 kotlin-reflect = { module = "org.jetbrains.kotlin:kotlin-reflect", version.ref = "kotlin" }
 kotlin-stdlib-jdk8 = { module = "org.jetbrains.kotlin:kotlin-stdlib-jdk8", version.ref = "kotlin" }
 
-kotlin-compile-testing = "com.github.tschuchortdev:kotlin-compile-testing:1.4.7"
+kotlin-compile-testing = "com.github.tschuchortdev:kotlin-compile-testing:1.4.9"
 
 kotlinx-atomicfu = { module = "org.jetbrains.kotlinx:atomicfu-gradle-plugin", version.ref = "kotlinx-atomicfu" }
 kotlinx-coroutines-android = { module = "org.jetbrains.kotlinx:kotlinx-coroutines-android", version.ref = "kotlinx-coroutines" }
@@ -258,7 +259,7 @@ square-anvil-compiler-core = { module = "com.squareup.anvil:compiler", version.r
 square-anvil-compiler-utils = { module = "com.squareup.anvil:compiler-utils", version.ref = "square-anvil" }
 square-anvil-gradle = { module = "com.squareup.anvil:gradle-plugin", version.ref = "square-anvil" }
 
-square-kotlinPoet = "com.squareup:kotlinpoet:1.10.2"
+square-kotlinPoet = "com.squareup:kotlinpoet:1.12.0"
 
 square-moshi-adapters = { module = "com.squareup.moshi:moshi-adapters", version.ref = "square-moshi" }
 square-moshi-core = { module = "com.squareup.moshi:moshi", version.ref = "square-moshi" }

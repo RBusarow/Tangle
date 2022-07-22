@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,6 +15,9 @@
 
 package tangle.inject.compiler
 
+import com.squareup.anvil.compiler.internal.reference.ClassReference
+import com.squareup.anvil.compiler.internal.reference.ClassReference.Descriptor
+import com.squareup.anvil.compiler.internal.reference.ClassReference.Psi
 import org.jetbrains.kotlin.codegen.CompilationException
 import org.jetbrains.kotlin.com.intellij.psi.PsiElement
 import org.jetbrains.kotlin.com.intellij.psi.PsiNameIdentifierOwner
@@ -38,6 +41,12 @@ class TangleCompilationException(
   ) : this(message, cause = cause, element = annotationDescriptor.identifier)
 
   constructor(
+    classReference: ClassReference,
+    message: String,
+    cause: Throwable? = null
+  ) : this(message, cause = cause, element = classReference.findPsi())
+
+  constructor(
     declarationDescriptor: DeclarationDescriptor,
     message: String,
     cause: Throwable? = null
@@ -52,6 +61,26 @@ val AnnotationDescriptor.identifier: PsiElement?
 
 inline fun require(
   value: Boolean,
+  classReference: ClassReference,
+  cause: Throwable? = null,
+  lazyMessage: () -> String
+) {
+  contract {
+    returns() implies value
+  }
+  if (!value) {
+    throw TangleCompilationException(lazyMessage(), cause, classReference.findPsi())
+  }
+}
+
+@PublishedApi
+internal fun ClassReference.findPsi() = when (this) {
+  is Descriptor -> clazz.findPsi() as PsiElement
+  is Psi -> clazz
+}
+
+inline fun require(
+  value: Boolean,
   declarationDescriptor: DeclarationDescriptor,
   cause: Throwable? = null,
   lazyMessage: () -> String
@@ -61,6 +90,21 @@ inline fun require(
   }
   if (!value) {
     throw TangleCompilationException(lazyMessage(), cause, declarationDescriptor.findPsi())
+  }
+}
+
+@JvmName("requirePsi")
+inline fun require(
+  value: Boolean,
+  psi: () -> PsiElement,
+  cause: Throwable? = null,
+  lazyMessage: () -> String
+) {
+  contract {
+    returns() implies value
+  }
+  if (!value) {
+    throw TangleCompilationException(lazyMessage(), cause, psi())
   }
 }
 

@@ -19,97 +19,117 @@ package tangle.inject.compiler
 
 import com.squareup.anvil.compiler.internal.argumentType
 import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.asTypeName
-import com.squareup.anvil.compiler.internal.requireClassDescriptor
+import com.squareup.anvil.compiler.internal.classDescriptor
+import com.squareup.anvil.compiler.internal.reference.ClassReference
+import com.squareup.anvil.compiler.internal.reference.ParameterReference
+import com.squareup.anvil.compiler.internal.reference.PropertyReference
+import com.squareup.anvil.compiler.internal.reference.Visibility.PRIVATE
+import com.squareup.anvil.compiler.internal.reference.allSuperTypeClassReferences
+import com.squareup.anvil.compiler.internal.reference.argumentAt
+import com.squareup.anvil.compiler.internal.reference.asClassName
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.MemberName
 import org.jetbrains.kotlin.descriptors.CallableMemberDescriptor
-import org.jetbrains.kotlin.descriptors.ClassDescriptor
 import org.jetbrains.kotlin.descriptors.DeclarationDescriptor
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.descriptors.PropertyDescriptor
 import org.jetbrains.kotlin.descriptors.TypeParameterDescriptor
-import org.jetbrains.kotlin.descriptors.ValueParameterDescriptor
 import org.jetbrains.kotlin.descriptors.annotations.AnnotationDescriptor
 import org.jetbrains.kotlin.descriptors.containingPackage
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.name.Name
 import org.jetbrains.kotlin.resolve.annotations.argumentValue
 import org.jetbrains.kotlin.resolve.constants.EnumValue
 import org.jetbrains.kotlin.resolve.constants.KClassValue
 import org.jetbrains.kotlin.resolve.descriptorUtil.annotationClass
 import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameOrNull
 import org.jetbrains.kotlin.resolve.descriptorUtil.fqNameSafe
-import org.jetbrains.kotlin.resolve.descriptorUtil.getAllSuperClassifiers
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
 import org.jetbrains.kotlin.resolve.scopes.MemberScope
 import org.jetbrains.kotlin.types.KotlinType
 import org.jetbrains.kotlin.types.typeUtil.TypeNullability.NULLABLE
 import org.jetbrains.kotlin.types.typeUtil.nullability
 import org.jetbrains.kotlin.types.typeUtil.representativeUpperBound
-import org.jetbrains.kotlin.types.typeUtil.supertypes
-import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 
-fun ClassDescriptor.isFragment() = defaultType
-  .supertypes()
-  .any { it.requireClassDescriptor().fqNameSafe == FqNames.androidxFragment }
+fun ClassReference.isFragment() = allSuperTypeClassReferences(true)
+  .any { it.fqName == FqNames.androidxFragment }
 
-fun ClassDescriptor.isViewModel() = defaultType
-  .supertypes()
-  .any { it.requireClassDescriptor().fqNameSafe == FqNames.androidxViewModel }
+fun ClassReference.isViewModel() = allSuperTypeClassReferences(true)
+  .any { it.fqName == FqNames.androidxViewModel }
 
-fun ClassDescriptor.memberInjectedParameters(
-  module: ModuleDescriptor
-): List<MemberInjectParameter> =
-  memberInjectedProperties(module)
-    .mapToParameters(module)
-
-fun ClassDescriptor.memberInjectedProperties(
-  module: ModuleDescriptor
-): List<CallableMemberDescriptor> {
-
-  return getAllSuperClassifiers()
+/**
+ * Returns all member-injected parameters for the receiver class *and any superclasses*.
+ *
+ * We use Psi whenever possible, to support generated code.
+ *
+ * Order is important. Dagger expects the properties of the most-upstream class to be listed first
+ * in a factory's constructor.
+ *
+ * Given the hierarchy: Impl -> Middle -> Base The order of dependencies in `Impl_Factory`'s
+ * constructor should be: Base -> Middle -> Impl
+ */
+fun ClassReference.memberInjectedParameters(): List<MemberInjectParameter> {
+  return allSuperTypeClassReferences(includeSelf = true)
+    .filterNot { it.isInterface() }
     .toList()
-    // start parsing at the class which is extended by the target class,
-    // so that the last class is the root of the hierarchy
-    .reversed()
-    // no point in parsing android/androidx classes for injected params, so skip them
-    .filter { it.containingPackage()?.asString()?.startsWith("android") == false }
-    // look for any @Inject-annotated members.
-    // Upstream properties are parsed before the properties they override.
-    // If a property has already been added from a downstream class, then ignore it.
-    .fold(mutableMapOf<Name, CallableMemberDescriptor>()) { acc, classifierDescriptor ->
-
-      classifierDescriptor.fqNameSafe
-        .requireClassDescriptor(module)
-        .unsubstitutedMemberScope
-        .memberInjectedProperties()
-        .forEach {
-          if (!acc.contains(it.name)) {
-            acc[it.name] = it
-          }
-        }
-      acc
+    .foldRight(listOf()) { classReference, acc ->
+      acc + classReference.declaredMemberInjectParameters(acc)
     }
-    .values
-    .toList()
+}
+
+/**
+ * @param superParameters injected parameters from any super-classes, regardless of whether they're
+ *   overridden by the receiver class
+ * @return the member-injected parameters for this class only, not including any super-classes
+ */
+private fun ClassReference.declaredMemberInjectParameters(
+  superParameters: List<Parameter>
+): List<MemberInjectParameter> {
+  return properties
+    .filter { it.isAnnotatedWith(FqNames.inject) }
+    .filter { it.visibility() != PRIVATE }
+    .fold(listOf()) { acc, property ->
+      val uniqueName = property.name.uniqueParameterName(superParameters, acc)
+      acc + property.toMemberInjectParameter(uniqueName = uniqueName)
+    }
+}
+
+/**
+ * Returns a name which is unique when compared to the [Parameter.originalName] of the
+ * [superParameters] argument.
+ *
+ * This is necessary for member-injected parameters, because a subclass may override a parameter
+ * which is member-injected in the super. The `MembersInjector` corresponding to the subclass must
+ * have unique constructor parameters for each declaration, so their names must be unique.
+ *
+ * This mimics Dagger's method of unique naming. If there are three parameters named "foo", the
+ * unique parameter names will be [foo, foo2, foo3].
+ */
+internal fun String.uniqueParameterName(
+  vararg superParameters: List<Parameter>
+): String {
+  val numDuplicates = superParameters.sumOf { list ->
+    list.count { it.name == this }
+  }
+
+  return if (numDuplicates == 0) {
+    this
+  } else {
+    this + (numDuplicates + 1)
+  }
 }
 
 fun MemberScope.memberInjectedProperties(): List<PropertyDescriptor> {
-
   return getContributedDescriptors(DescriptorKindFilter.VARIABLES)
     .filterIsInstance<PropertyDescriptor>()
     .filter { it.hasAnnotation(FqNames.inject) }
 }
 
 fun CallableMemberDescriptor.hasAnnotation(annotationFqName: FqName): Boolean {
-
   return annotations.hasAnnotation(annotationFqName)
 }
 
 fun PropertyDescriptor.hasAnnotation(annotationFqName: FqName): Boolean {
-
   // `@Inject lateinit var` is really `@field:Inject lateinit var`, which needs `backingField`
   return backingField?.annotations?.hasAnnotation(annotationFqName)
     ?: annotations.hasAnnotation(annotationFqName)
@@ -118,12 +138,26 @@ fun PropertyDescriptor.hasAnnotation(annotationFqName: FqName): Boolean {
 fun PropertyDescriptor.isNullable() = type.nullability() == NULLABLE
 fun KotlinType.isNullable() = nullability() == NULLABLE
 
-fun KotlinType.fqNameOrNull(): FqName? = requireClassDescriptor()
+fun KotlinType.fqNameOrNull(): FqName? = classDescriptor()
   .fqNameOrNull()
 
 fun TypeParameterDescriptor.boundClassName(): ClassName = representativeUpperBound
-  .requireClassDescriptor()
+  .classDescriptor()
   .asClassName()
+
+fun PropertyReference.tangleParamNameOrNull(): String? {
+  return annotations.find { it.fqName == FqNames.tangleParam }
+    ?.argumentAt("name", 0)
+    ?.value<String>()
+    ?.toString()
+}
+
+fun ParameterReference.tangleParamNameOrNull(): String? {
+  return annotations.find { it.fqName == FqNames.tangleParam }
+    ?.argumentAt("name", 0)
+    ?.value<String>()
+    ?.toString()
+}
 
 fun CallableMemberDescriptor.tangleParamNameOrNull(): String? {
   return annotations.findAnnotation(FqNames.tangleParam)
@@ -140,25 +174,17 @@ fun CallableMemberDescriptor.requireTangleParamName(): String {
     )
 }
 
-fun ValueParameterDescriptor.tangleParamNameOrNull(): String? {
-  return annotations.findAnnotation(FqNames.tangleParam)
-    ?.argumentValue("name")
-    ?.value
-    ?.toString()
-}
-
-fun ValueParameterDescriptor.requireTangleParamName(): String {
+fun ParameterReference.requireTangleParamName(): String {
   return tangleParamNameOrNull()
     ?: throw TangleCompilationException(
-      this,
-      "could not find a @TangleParam annotation for parameter `${name.asString()}`"
+      this.declaringFunction.declaringClass,
+      "could not find a @TangleParam annotation for parameter `$name`"
     )
 }
 
 fun List<AnnotationDescriptor>.qualifierAnnotationSpecs(
   module: ModuleDescriptor
 ): List<AnnotationSpec> = mapNotNull {
-
   if (it.fqName == FqNames.inject) return@mapNotNull null
 
   val classDescriptor = it.annotationClass ?: return@mapNotNull null
@@ -173,7 +199,7 @@ fun List<AnnotationDescriptor>.qualifierAnnotationSpecs(
         when (value) {
           is KClassValue -> {
             val className = value.argumentType(module)
-              .requireClassDescriptor()
+              .classDescriptor()
               .asClassName()
             addMember("${name.asString()} = %T::class", className)
           }
@@ -193,56 +219,48 @@ fun List<AnnotationDescriptor>.qualifierAnnotationSpecs(
   }
 }
 
-fun List<CallableMemberDescriptor>.mapToParameters(
-  module: ModuleDescriptor
-): List<MemberInjectParameter> {
+fun PropertyReference.toMemberInjectParameter(
+  uniqueName: String
+): MemberInjectParameter {
+  val propertyReference = this
 
-  return map { callableMemberDescriptor ->
+  val annotations = propertyReference.annotations
+  val type = propertyReference.type()
 
-    val type = callableMemberDescriptor.safeAs<PropertyDescriptor>()?.type
-      ?: callableMemberDescriptor.valueParameters.first().type
+  val typeFqName = type.asClassReference().fqName
 
-    val typeFqName = type.fqNameOrNull()
+  val isWrappedInProvider = typeFqName == FqNames.provider
+  val isWrappedInLazy = typeFqName == FqNames.daggerLazy
 
-    val isWrappedInProvider = typeFqName == FqNames.provider
-    val isWrappedInLazy = typeFqName == FqNames.daggerLazy
+  val unwrappedTypeOrSelf = if (isWrappedInLazy || isWrappedInProvider) {
+    type.unwrappedTypes.first()
+  } else type
 
-    val annotations = callableMemberDescriptor.annotations.toList()
+  val typeName = unwrappedTypeOrSelf.asTypeName()
+    .withJvmSuppressWildcardsIfNeeded(module, unwrappedTypeOrSelf)
 
-    val typeName = when {
-      type.isNullable() -> type.asTypeName()
-        .copy(nullable = true)
+  val tangleParamName = propertyReference.tangleParamNameOrNull()
 
-      isWrappedInLazy || isWrappedInProvider ->
-        type.argumentType().asTypeName()
+  val qualifiers = annotations.qualifierAnnotationSpecs(module)
 
-      else -> type.asTypeName()
-    }.withJvmSuppressWildcardsIfNeeded(callableMemberDescriptor)
+  val containingDeclaration = propertyReference.declaringClass
+  val packageName = propertyReference.declaringClass.packageFqName.asString()
 
-    val tangleParamName = callableMemberDescriptor.tangleParamNameOrNull()
+  val containingClass = containingDeclaration.asClassName()
+  val memberInjectorClassName = "${containingClass}_MembersInjector"
+  val memberInjectorClass = ClassName(packageName, memberInjectorClassName)
 
-    val qualifiers = annotations.qualifierAnnotationSpecs(module)
-
-    val containingDeclaration = callableMemberDescriptor.containingDeclaration
-    val packageName = containingDeclaration.requireContainingPackage().asString()
-
-    val containingClass = containingDeclaration.fqNameSafe.asClassName(module)
-    val memberInjectorClassName =
-      "${containingClass}_MembersInjector"
-    val memberInjectorClass = ClassName(packageName, memberInjectorClassName)
-
-    MemberInjectParameter(
-      name = callableMemberDescriptor.name.asString(),
-      typeName = typeName,
-      providerTypeName = typeName.wrapInProvider(),
-      lazyTypeName = typeName.wrapInLazy(),
-      isWrappedInProvider = isWrappedInProvider,
-      isWrappedInLazy = isWrappedInLazy,
-      tangleParamName = tangleParamName,
-      qualifiers = qualifiers,
-      memberInjectorClass = memberInjectorClass
-    )
-  }
+  return MemberInjectParameter(
+    name = uniqueName,
+    typeName = typeName,
+    providerTypeName = typeName.wrapInProvider(),
+    lazyTypeName = typeName.wrapInLazy(),
+    isWrappedInProvider = isWrappedInProvider,
+    isWrappedInLazy = isWrappedInLazy,
+    tangleParamName = tangleParamName,
+    qualifiers = qualifiers,
+    memberInjectorClass = memberInjectorClass
+  )
 }
 
 fun DeclarationDescriptor.requireContainingPackage() = containingPackage()

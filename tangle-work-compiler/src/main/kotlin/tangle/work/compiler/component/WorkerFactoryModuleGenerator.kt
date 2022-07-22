@@ -16,7 +16,6 @@
 package tangle.work.compiler.component
 
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.TypeSpec
 import org.jetbrains.kotlin.descriptors.resolveClassByFqName
@@ -24,6 +23,7 @@ import org.jetbrains.kotlin.incremental.components.NoLookupLocation
 import org.jetbrains.kotlin.name.FqName
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
+import tangle.inject.compiler.addContributesTo
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
 import tangle.inject.compiler.generateSimpleNameString
@@ -37,10 +37,10 @@ object WorkerFactoryModuleGenerator : FileGenerator<MergeComponentParams> {
     params: MergeComponentParams
   ): GeneratedFile? {
 
-    val moduleFqName =
-      FqName(
-        "${params.subcomponentModulePackageName}.${params.mergeComponentWorkerFactoryModuleClassName.simpleName}"
-      )
+    val moduleFqName = FqName(
+      "${params.subcomponentModulePackageName}." +
+        params.mergeComponentWorkerFactoryModuleClassName.simpleName
+    )
 
     // If the (Dagger) Module for this scope already exists in a different Gradle module,
     // it can't be created again here without creating a duplicate binding
@@ -61,11 +61,7 @@ object WorkerFactoryModuleGenerator : FileGenerator<MergeComponentParams> {
 
     val content = FileSpec.buildFile(packageName, className.simpleName) {
       TypeSpec.objectBuilder(className)
-        .addAnnotation(
-          AnnotationSpec.builder(ClassNames.contributesTo)
-            .addMember("%T::class", params.scopeClassName)
-            .build()
-        )
+        .addContributesTo(params.scopeClassName)
         .addAnnotation(ClassNames.module)
         .addFunction(
           "provide_${ClassNames.tangleWorkerFactory.generateSimpleNameString()}"

@@ -22,7 +22,6 @@ import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
-import org.jetbrains.kotlin.resolve.DescriptorUtils
 import tangle.fragment.compiler.FragmentInjectParams.Factory
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
@@ -60,7 +59,7 @@ import java.io.File
  * }
  * ```
  */
-internal object FragmentAssisted_Factory_Impl_Generator : FileGenerator<FragmentInjectParams.Factory> {
+internal object FragmentAssisted_Factory_Impl_Generator : FileGenerator<Factory> {
 
   override fun generate(
     codeGenDir: File,
@@ -73,7 +72,7 @@ internal object FragmentAssisted_Factory_Impl_Generator : FileGenerator<Fragment
     val packageName = factoryParams.packageName
     val fragmentFactoryClassName = fragmentParams.fragmentFactoryClassName
     val fragmentTypeName = fragmentParams.fragmentClassName
-    val factoryDescriptor = factoryParams.factoryDescriptor
+    val factoryClass = factoryParams.factoryClass
 
     val factoryInterfaceClassName = factoryParams.factoryInterfaceClassName
     val factoryImplClassName = factoryParams.factoryImplClassName
@@ -87,13 +86,13 @@ internal object FragmentAssisted_Factory_Impl_Generator : FileGenerator<Fragment
     val content = FileSpec.buildFile(packageName, factoryImplClassName.simpleName) {
       TypeSpec.classBuilder(factoryImplClassName)
         .apply {
-          if (DescriptorUtils.isInterface(factoryDescriptor)) {
+          if (factoryClass.isInterface()) {
             addSuperinterface(factoryInterfaceClassName)
           } else {
             superclass(factoryInterfaceClassName)
           }
         }
-        .applyEach(typeParameters) { addTypeVariable(it) }
+        .applyEach(typeParameters) { addTypeVariable(it.typeVariableName) }
         .primaryConstructor(
           FunSpec.constructorBuilder()
             .addParameter(delegateFactoryName, fragmentFactoryClassName)

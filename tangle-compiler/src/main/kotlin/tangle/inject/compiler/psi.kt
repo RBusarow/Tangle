@@ -17,118 +17,82 @@
 package tangle.inject.compiler
 
 import com.squareup.anvil.compiler.api.AnvilCompilationException
-import com.squareup.anvil.compiler.internal.findAnnotation
-import com.squareup.anvil.compiler.internal.findAnnotationArgument
-import com.squareup.anvil.compiler.internal.fqNameOrNull
-import com.squareup.anvil.compiler.internal.hasAnnotation
-import com.squareup.anvil.compiler.internal.isFunctionType
-import com.squareup.anvil.compiler.internal.isGenericType
-import com.squareup.anvil.compiler.internal.isNullable
-import com.squareup.anvil.compiler.internal.requireFqName
-import com.squareup.anvil.compiler.internal.requireTypeName
-import com.squareup.anvil.compiler.internal.requireTypeReference
+import com.squareup.anvil.compiler.internal.reference.AnnotationReference
+import com.squareup.anvil.compiler.internal.reference.ClassReference
+import com.squareup.anvil.compiler.internal.reference.FunctionReference
+import com.squareup.anvil.compiler.internal.reference.ParameterReference
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.asClassName
-import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import dagger.Lazy
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.psi.KtAnnotationEntry
-import org.jetbrains.kotlin.psi.KtCallableDeclaration
-import org.jetbrains.kotlin.psi.KtClassOrObject
-import org.jetbrains.kotlin.psi.KtConstructor
-import org.jetbrains.kotlin.psi.KtStringTemplateExpression
-import org.jetbrains.kotlin.psi.KtTypeArgumentList
-import org.jetbrains.kotlin.psi.KtTypeProjection
-import org.jetbrains.kotlin.psi.KtTypeReference
-import org.jetbrains.kotlin.psi.allConstructors
 import javax.inject.Provider
 
-fun KtClassOrObject.vmInjectConstructor(module: ModuleDescriptor): KtConstructor<*>? {
-  return annotatedConstructorOrNull(FqNames.vmInject, module)
+fun ClassReference.vmInjectConstructor(): FunctionReference? {
+  return annotatedConstructorOrNull(FqNames.vmInject)
 }
 
-fun KtClassOrObject.assistedInjectConstructor(module: ModuleDescriptor): KtConstructor<*>? {
-  return annotatedConstructorOrNull(FqNames.assistedInject, module)
+fun ClassReference.assistedInjectConstructor(): FunctionReference? {
+  return annotatedConstructorOrNull(FqNames.assistedInject)
 }
 
-fun KtClassOrObject.fragmentInjectConstructor(
-  module: ModuleDescriptor
-): KtConstructor<*>? {
-  return annotatedConstructorOrNull(FqNames.fragmentInject, module)
+fun ClassReference.fragmentInjectConstructor(): FunctionReference? {
+  return annotatedConstructorOrNull(FqNames.fragmentInject)
 }
 
-fun KtClassOrObject.injectConstructor(
-  module: ModuleDescriptor
-): KtConstructor<*>? {
-  return annotatedConstructorOrNull(FqNames.inject, module)
+fun ClassReference.injectConstructor(): FunctionReference? {
+  return annotatedConstructorOrNull(FqNames.inject)
 }
 
-internal fun KtClassOrObject.annotatedConstructorOrNull(
-  annotationFqName: FqName,
-  module: ModuleDescriptor
-): KtConstructor<*>? {
-  val constructors = allConstructors.filter {
-    it.hasAnnotation(annotationFqName, module)
+internal fun ClassReference.annotatedConstructorOrNull(
+  annotationFqName: FqName
+): FunctionReference? {
+  val constructors = constructors.filter {
+    it.hasAnnotation(annotationFqName)
   }
 
   return when (constructors.size) {
     0 -> null
-    1 -> if (constructors[0].hasAnnotation(annotationFqName, module)) constructors[0] else null
+    1 -> if (constructors[0].hasAnnotation(annotationFqName)) constructors[0] else null
     else -> throw TangleCompilationException(
-      "Types may only contain one injected constructor.",
-      element = this
+      classReference = this,
+      "Types may only contain one injected constructor."
     )
   }
 }
 
-internal fun KtAnnotationEntry.tangleParamName(): String? {
-  return findAnnotationArgument<KtStringTemplateExpression>(name = "name", index = 0)
-    ?.entries
-    ?.firstOrNull()
-    ?.text
-}
+fun <T : AnnotationReference> Iterable<T>.find(fqName: FqName): T? = find { it.fqName == fqName }
 
-fun List<KtCallableDeclaration>.mapToParameters(
+fun FunctionReference.hasAnnotation(fqName: FqName): Boolean =
+  annotations.any { it.fqName == fqName }
+
+fun List<ParameterReference>.mapToParameters(
   module: ModuleDescriptor
 ): List<ConstructorInjectParameter> =
-  mapIndexed { index, parameter ->
-    val typeElement = parameter.typeReference?.typeElement
-    val typeFqName = typeElement?.fqNameOrNull(module)
+  map { parameter ->
+
+    val annotations = parameter.annotations
+    val type = parameter.type()
+
+    val typeFqName = type.asClassReference().fqName
 
     val isWrappedInProvider = typeFqName == FqNames.provider
     val isWrappedInLazy = typeFqName == FqNames.daggerLazy
 
-    val annotations = parameter.annotationEntries
+    val unwrappedTypeOrSelf = if (isWrappedInLazy || isWrappedInProvider) {
+      type.unwrappedTypes.first()
+    } else type
 
-    val typeName = when {
-      parameter.requireTypeReference(module).isNullable() ->
-        parameter.requireTypeReference(module).requireTypeName(module).copy(nullable = true)
+    val typeName = unwrappedTypeOrSelf.asTypeName()
+      .withJvmSuppressWildcardsIfNeeded(module, unwrappedTypeOrSelf)
 
-      isWrappedInProvider || isWrappedInLazy ->
-        typeElement!!.children
-          .filterIsInstance<KtTypeArgumentList>()
-          .single()
-          .children
-          .filterIsInstance<KtTypeProjection>()
-          .single()
-          .children
-          .filterIsInstance<KtTypeReference>()
-          .single()
-          .requireTypeName(module)
-
-      else -> parameter.requireTypeReference(module).requireTypeName(module)
-    }.withJvmSuppressWildcardsIfNeeded(parameter, module)
-
-    val tangleParamName = parameter
-      .findAnnotation(FqNames.tangleParam, module)
-      ?.tangleParamName()
+    val tangleParamName = parameter.tangleParamNameOrNull()
 
     val qualifiers = annotations.qualifierAnnotationSpecs(module)
 
-    val baseName = parameter.name ?: "param$index"
+    val baseName = parameter.name
 
     val name = when {
       isWrappedInLazy -> "${baseName}Lazy"
@@ -136,7 +100,7 @@ fun List<KtCallableDeclaration>.mapToParameters(
       else -> baseName
     }
 
-    val isDaggerAssisted = annotations.any { it.requireFqName(module) == FqNames.daggerAssisted }
+    val isDaggerAssisted = annotations.any { it.fqName == FqNames.daggerAssisted }
 
     ConstructorInjectParameter(
       name = name,
@@ -157,29 +121,6 @@ fun TypeName.wrapInProvider(): ParameterizedTypeName {
 
 fun TypeName.wrapInLazy(): ParameterizedTypeName {
   return Lazy::class.asClassName().parameterizedBy(this)
-}
-
-internal fun <T : KtCallableDeclaration> TypeName.withJvmSuppressWildcardsIfNeeded(
-  callableDeclaration: T,
-  module: ModuleDescriptor
-): TypeName {
-  // If the parameter is annotated with @JvmSuppressWildcards, then add the annotation
-  // to our type so that this information is forwarded when our Factory is compiled.
-  val hasJvmSuppressWildcards =
-    callableDeclaration.typeReference?.hasAnnotation(FqNames.jvmSuppressWildcards, module) ?: false
-
-  // Add the @JvmSuppressWildcards annotation even for simple generic return types like
-  // Set<String>. This avoids some edge cases where Dagger chokes.
-  val isGenericType = callableDeclaration.typeReference?.isGenericType() ?: false
-
-  // Same for functions.
-  val isFunctionType = callableDeclaration.typeReference?.isFunctionType() ?: false
-
-  return when {
-    hasJvmSuppressWildcards || isGenericType -> this.jvmSuppressWildcards()
-    isFunctionType -> this.jvmSuppressWildcards()
-    else -> this
-  }
 }
 
 /**
@@ -205,7 +146,6 @@ internal inline fun <T, R> T.delegateToAnvilUnsafe(action: T.() -> R): R = try {
  * [asProvider] allows you to decide if each parameter is wrapped in a `Provider` interface. If
  * true, then the `get()` function will be called for the provider parameter. If false, then then
  * always only the parameter name will used in the argument list:
- *
  * ```
  * "param0.get()" vs "param0"
  * ```

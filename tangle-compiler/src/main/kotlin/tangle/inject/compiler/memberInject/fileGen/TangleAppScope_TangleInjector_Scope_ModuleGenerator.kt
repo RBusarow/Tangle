@@ -21,6 +21,7 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.TypeSpec
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
+import tangle.inject.compiler.addContributesTo
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
 import tangle.inject.compiler.generateSimpleNameString
@@ -61,11 +62,7 @@ internal object TangleAppScope_TangleInjector_Scope_ModuleGenerator : FileGenera
       addType(
         TypeSpec.objectBuilder(params.tangleAppScopeModuleClassName)
           .addAnnotation(ClassNames.module)
-          .addAnnotation(
-            AnnotationSpec.builder(ClassNames.contributesTo)
-              .addMember("%T::class", ClassNames.tangleAppScope)
-              .build()
-          )
+          .addContributesTo(ClassNames.tangleAppScope)
           .addFunction("provide${params.injectedClassName.generateSimpleNameString()}Scope") {
             addAnnotation(ClassNames.provides)
             addAnnotation(ClassNames.tangleScopeMap)

@@ -18,9 +18,7 @@ package tangle.inject.compiler.components
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.anvil.compiler.internal.classesAndInnerClasses
-import com.squareup.anvil.compiler.internal.findAnnotation
-import com.squareup.anvil.compiler.internal.scope
+import com.squareup.anvil.compiler.internal.reference.classAndInnerClassReferences
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
 import tangle.inject.compiler.FqNames
@@ -53,16 +51,17 @@ class TangleInjectorMergeComponentCodeGenerator : TangleCodeGenerator() {
     module: ModuleDescriptor,
     projectFiles: Collection<KtFile>
   ): Collection<GeneratedFile> = projectFiles
-    .flatMap { it.classesAndInnerClasses(module) }
+    .classAndInnerClassReferences(module)
     .mapNotNull { clazz ->
 
-      val (annotation, forSubcomponent) = clazz.findAnnotation(FqNames.mergeComponent, module)
+      val (annotation, forSubcomponent) = clazz.annotations
+        .find { it.fqName == FqNames.mergeComponent }
         ?.let { it to false }
-        ?: clazz.findAnnotation(FqNames.mergeSubcomponent, module)
+        ?: clazz.annotations.find { it.fqName == FqNames.mergeSubcomponent }
           ?.let { it to true }
         ?: return@mapNotNull null
 
-      val scopeFqName = annotation.scope(module)
+      val scopeFqName = annotation.scope(parameterIndex = 0).fqName
 
       // don't generate code for the internal scopes
       when (scopeFqName) {
@@ -70,7 +69,7 @@ class TangleInjectorMergeComponentCodeGenerator : TangleCodeGenerator() {
         FqNames.tangleViewModelScope -> return@mapNotNull null
       }
 
-      MergeComponentParams.create(module, scopeFqName, clazz, forSubcomponent)
+      MergeComponentParams.create(module, scopeFqName, clazz.clazz, forSubcomponent)
     }
     .distinctBy { it.scopeFqName }
     .flatMap { params ->
@@ -78,4 +77,5 @@ class TangleInjectorMergeComponentCodeGenerator : TangleCodeGenerator() {
         generator.generate(codeGenDir, params)
       }
     }
+    .toList()
 }

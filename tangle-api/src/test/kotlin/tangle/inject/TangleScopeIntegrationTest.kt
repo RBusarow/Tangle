@@ -22,11 +22,13 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.parallel.Execution
 import org.junit.jupiter.api.parallel.ExecutionMode
 import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.appComponent
 import tangle.inject.test.utils.appComponentFactoryCreate
 import tangle.inject.test.utils.createFunction
 import tangle.inject.test.utils.createInstance
 import tangle.inject.test.utils.daggerAppComponent
 import tangle.inject.test.utils.fieldsValues
+import tangle.inject.test.utils.getPrivateFieldByName
 import tangle.inject.test.utils.targetClass
 
 @Execution(ExecutionMode.SAME_THREAD)
@@ -309,8 +311,7 @@ class TangleScopeIntegrationTest : BaseTest() {
       val component = daggerAppComponent.createFunction()
         .invoke(null)
 
-      val userComponent = component::class.java.getMethod("getUserComponent")
-        .invoke(component)
+      val userComponent: Any = appComponent.getPrivateFieldByName("userComponent", component)
 
       TangleGraph.add(component)
       TangleGraph.add(userComponent)

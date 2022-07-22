@@ -26,8 +26,10 @@ repositories {
 val kotlinVersion = libs.versions.kotlin.get()
 
 dependencies {
+  implementation(platform(libs.kotlin.bom))
 
   compileOnly(gradleApi())
+
   implementation(libs.kotlin.reflect)
   implementation(libs.kotlin.stdlib.jdk8)
   implementation(libs.kotlin.annotation.processing)
@@ -46,19 +48,4 @@ dependencies {
   implementation(libs.android.gradle)
   implementation(libs.dokka.gradle)
   implementation(libs.kotlinx.knit.gradle)
-
-  implementation(libs.scabbard)
-
-  implementation(libs.square.anvil.gradle)
-}
-
-configurations.all {
-  resolutionStrategy {
-
-    eachDependency {
-      when {
-        requested.group == "org.jetbrains.kotlin" -> useVersion(kotlinVersion)
-      }
-    }
-  }
 }

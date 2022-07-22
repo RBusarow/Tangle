@@ -19,9 +19,9 @@ import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.classesAndInnerClasses
-import com.squareup.anvil.compiler.internal.hasAnnotation
-import com.squareup.anvil.compiler.internal.requireClassDescriptor
+import com.squareup.anvil.compiler.internal.reference.asClassName
+import com.squareup.anvil.compiler.internal.reference.classAndInnerClassReferences
+import com.squareup.anvil.compiler.internal.reference.toClassReference
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
 import org.jetbrains.kotlin.psi.psiUtil.nonStaticOuterClasses
@@ -46,18 +46,20 @@ class FragmentInjectGenerator : TangleCodeGenerator() {
     val paramsList = projectFiles
       .flatMap { file ->
 
-        val factoryParams = file.classesAndInnerClasses(module)
-          .filter { it.hasAnnotation(FqNames.fragmentInjectFactory, module) }
+        val factoryParams = listOf(file).classAndInnerClassReferences(module)
+          .filter { it.isAnnotatedWith(FqNames.fragmentInjectFactory) }
           .map { factoryInterface ->
 
-            factoryInterface.nonStaticOuterClasses()
-              .firstOrNull { it.fragmentInjectConstructor(module) != null }
+            factoryInterface.clazz
+              .nonStaticOuterClasses()
+              .map { it.toClassReference(module) }
+              .firstOrNull { it.fragmentInjectConstructor() != null }
               ?.let { fragmentClass ->
                 Factory.create(
-                  module,
-                  factoryInterface,
-                  fragmentClass,
-                  fragmentClass.fragmentInjectConstructor(module)!!
+                  module = module,
+                  factoryInterface = factoryInterface,
+                  fragmentClass = fragmentClass,
+                  constructor = fragmentClass.fragmentInjectConstructor()!!
                 )
               } ?: throw TangleCompilationException(
               "The @${FqNames.fragmentInjectFactory.shortName().asString()}-annotated interface " +
@@ -68,16 +70,13 @@ class FragmentInjectGenerator : TangleCodeGenerator() {
 
         val alreadyParsedFragments = factoryParams.map { it.fragmentClassName }.toSet()
 
-        file.classesAndInnerClasses(module)
+        listOf(file).classAndInnerClassReferences(module)
           .filterNot { it.asClassName() in alreadyParsedFragments }
           .forEach { clazz ->
 
             if (clazz.asClassName() in alreadyParsedFragments) return@forEach
 
-            require(
-              clazz.fragmentInjectConstructor(module) == null,
-              { clazz.requireClassDescriptor(module) }
-            ) {
+            require(clazz.fragmentInjectConstructor() == null, clazz) {
               "@${FqNames.fragmentInject.shortName().asString()} must only be applied " +
                 "to the constructor of a Fragment, and that fragment must have a corresponding " +
                 FqNames.fragmentInjectFactory.shortName().asString() +
@@ -85,9 +84,8 @@ class FragmentInjectGenerator : TangleCodeGenerator() {
             }
           }
 
-        listOf(factoryParams, factoryParams.map { it.fragmentParams })
+        factoryParams.toList().plus(factoryParams.map { it.fragmentParams })
       }
-      .flatten()
       .toList()
 
     if (paramsList.isEmpty()) {

@@ -31,6 +31,7 @@ dependencies {
 
   compileOnly(libs.google.auto.service.processor)
 
+  testImplementation(libs.kotlin.reflect)
   testImplementation(projects.tangleApi)
   testImplementation(projects.tangleCompiler)
   testImplementation(projects.tangleFragmentCompiler)

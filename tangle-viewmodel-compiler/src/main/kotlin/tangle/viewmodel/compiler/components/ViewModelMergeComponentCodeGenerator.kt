@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,8 +18,7 @@ package tangle.viewmodel.compiler.components
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.anvil.compiler.internal.classesAndInnerClasses
-import com.squareup.anvil.compiler.internal.hasAnnotation
+import com.squareup.anvil.compiler.internal.reference.classAndInnerClassReferences
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
 import tangle.inject.compiler.FqNames
@@ -43,8 +42,8 @@ class ViewModelMergeComponentCodeGenerator : TangleCodeGenerator() {
     module: ModuleDescriptor,
     projectFiles: Collection<KtFile>
   ): Collection<GeneratedFile> = projectFiles
-    .flatMap { it.classesAndInnerClasses(module) }
-    .filter { it.hasAnnotation(FqNames.mergeComponent, module) }
+    .classAndInnerClassReferences(module)
+    .filter { it.isAnnotatedWith(FqNames.mergeComponent) }
     .map { MergeComponentParams.create(it, module) }
     .distinctBy { it.scopeFqName }
     .flatMap { params ->
@@ -52,4 +51,5 @@ class ViewModelMergeComponentCodeGenerator : TangleCodeGenerator() {
         generator.generate(codeGenDir, params)
       }
     }
+    .toList()
 }

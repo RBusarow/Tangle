@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -23,8 +23,8 @@ import tangle.inject.internal.TangleScopeMapProvider
 import tangle.inject.internal.TangleScopeMapProviderComponent
 
 /**
- * Holds a reference to the application's Dagger graph,
- * so that it can be accessed by internal tooling.
+ * Holds a reference to the application's Dagger graph, so that it can be accessed by internal
+ * tooling.
  *
  * This should be initialized as soon as possible after initializing the AppComponent.
  *
@@ -37,15 +37,15 @@ public object TangleGraph {
   internal val components: MutableSet<Any> = mutableSetOf()
 
   /**
-   * Sets a reference to the application's Dagger graph,
-   * so that it can be accessed by internal tooling.
+   * Sets a reference to the application's Dagger graph, so that it can be accessed by internal
+   * tooling.
    *
    * This should be initialized as soon as possible after initializing the AppComponent.
    *
-   * This function has been renamed to `add`.  This "init" version will be removed soon.
+   * This function has been renamed to `add`. This "init" version will be removed soon.
    *
-   * @sample tangle.inject.samples.TangleGraphSample.tangleGraphSample
    * @param component the application-scoped Dagger component
+   * @sample tangle.inject.samples.TangleGraphSample.tangleGraphSample
    * @since 0.10.0
    */
   @Deprecated(
@@ -57,13 +57,13 @@ public object TangleGraph {
   }
 
   /**
-   * Sets a reference to the application's Dagger graph,
-   * so that it can be accessed by internal tooling.
+   * Sets a reference to the application's Dagger graph, so that it can be accessed by internal
+   * tooling.
    *
    * This should be initialized as soon as possible after initializing the AppComponent.
    *
-   * @sample tangle.inject.samples.TangleGraphSample.tangleGraphSample
    * @param component the application-scoped Dagger component
+   * @sample tangle.inject.samples.TangleGraphSample.tangleGraphSample
    * @since 0.13.0
    */
   public fun add(component: Any) {
@@ -108,8 +108,8 @@ public object TangleGraph {
   /**
    * Performs member/field injection upon [target] using its bound scope.
    *
-   * Be sure to call [TangleGraph.add] with your scope's Component or Subcomponent
-   * before calling this function.
+   * Be sure to call [TangleGraph.add] with your scope's Component or Subcomponent before calling
+   * this function.
    *
    * @sample tangle.inject.samples.MemberInjectSample.memberInjectSample
    * @since 0.13.0
@@ -124,7 +124,6 @@ public object TangleGraph {
 
     val componentClass = componentClassForScope(scopeClass, provider)
 
-    @Suppress("UNCHECKED_CAST")
     val injectorProvider = (get(componentClass) as TangleInjectorComponent)
       .injectors[target::class.java]
 
@@ -167,12 +166,26 @@ public object TangleGraph {
     val componentClass = provider
       .scopeClassToComponentClass[scopeClass]
 
+    println(
+      """
+      ### provider maps
+
+      -- scope class to component class
+      ${provider.scopeClassToComponentClass.toList().joinToString("\n      ")}
+
+      -- injected class to scope class
+      ${provider.injectedClassToScopeClass.toList().joinToString("\n      ")}
+
+      ================
+      """.trimIndent()
+    )
+
     requireNotNull(componentClass) {
       """
-    ${provider.scopeClassToComponentClass.entries.joinToString("\n")}
-
-      No Component or Subcomponent scope is defined for the scope ${scopeClass.canonicalName}.
-      """.trimIndent()
+      |${provider.scopeClassToComponentClass.entries.joinToString("\n")}
+      |
+      |No Component or Subcomponent scope is defined for the scope: ${scopeClass.canonicalName}.
+      """.trimMargin()
     }
 
     return componentClass

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -81,6 +81,9 @@ inline fun <T, E : Executable> E.use(block: (E) -> T): T {
 val Result.appComponentFactory: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.AppComponent\$Factory")
 
+val Result.appComponent: KClass<out Any>
+  get() = classLoader.loadClass("tangle.inject.tests.AppComponent").kotlin
+
 val Result.daggerAppComponent: Class<*>
   get() = classLoader.loadClass("tangle.inject.tests.DaggerAppComponent")
 
@@ -116,7 +119,7 @@ val Result.provideMyFragment: Method
 
 fun Method.annotationClasses() = annotations.map { it.annotationClass }
 fun Class<*>.annotationClasses() = annotations.map { it.annotationClass }
-fun KClass<*>.property(name: String) = memberProperties
+fun <T : Any> KClass<T>.property(name: String) = memberProperties
   .first { it.name == name }
 
 fun Any.provider() = Provider { this }
