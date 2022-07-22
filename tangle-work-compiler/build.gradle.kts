@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,8 +15,12 @@
 
 plugins {
   javaLibrary
-  id("com.vanniktech.maven.publish")
+  published
   kotlin("kapt")
+}
+
+tanglePublishing {
+  artifactId.set("tangle-work-compiler")
 }
 
 experimentalAnvil()
@@ -27,6 +31,7 @@ dependencies {
 
   api(libs.kotlin.compiler)
   api(libs.square.anvil.compiler.api)
+  api(libs.square.anvil.compiler.utils)
   api(libs.square.kotlinPoet)
 
   api(projects.tangleCompiler)
@@ -36,7 +41,6 @@ dependencies {
 
   implementation(libs.google.dagger.api)
   implementation(libs.square.anvil.annotations)
-  implementation(libs.square.anvil.compiler.utils)
 
   testImplementation(libs.bundles.hermit)
   testImplementation(libs.bundles.kotest)

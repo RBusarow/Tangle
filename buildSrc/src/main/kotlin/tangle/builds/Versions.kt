@@ -13,15 +13,10 @@
  * limitations under the License.
  */
 
-rootProject.name = "buildSrc"
-enableFeaturePreview("VERSION_CATALOGS")
-enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
+package tangle.builds
 
-@Suppress("UnstableApiUsage")
-dependencyResolutionManagement {
-  versionCatalogs {
-    create("libs") {
-      from(files("../gradle/libs.versions.toml"))
-    }
-  }
-}
+const val GROUP = "com.rickbusarow.tangle"
+const val PLUGIN_ID = "com.rickbusarow.tangle"
+const val VERSION_NAME = "0.15.0-SNAPSHOT"
+const val SOURCE_WEBSITE = "https://github.com/rbusarow/Tangle"
+const val DOCS_WEBSITE = "https://rbusarow.github.io/Tangle"

@@ -24,10 +24,7 @@ subprojects {
   val proj = this
 
   val includeSubproject = when {
-    path == ":tangle-test-utils" -> false
-    path == ":tangle-test-utils-android" -> false
     path.endsWith("tests") -> false
-    path.endsWith("compiler") -> false
     proj.parent?.path == ":sample" -> false
     else -> File("${proj.projectDir}/src").exists()
   }
@@ -47,11 +44,7 @@ subprojects {
         mustRunAfter(tasks.withType(KtLintCheckTask::class.java))
         mustRunAfter(tasks.withType(KtLintFormatTask::class.java))
 
-        // The default moduleName for each module in the module list is its unqualified "name",
-        // meaning the list would be full of "api", "impl", etc.  Instead, use the module's maven
-        // artifact ID, if it has one, or default to its full Gradle path for internal modules.
-        val fullModuleName = proj.findProperty("POM_ARTIFACT_ID") as? String
-          ?: proj.path.removePrefix(":")
+        val fullModuleName = project.path.removePrefix(":")
 
         moduleName.set(fullModuleName)
 

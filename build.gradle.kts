@@ -30,13 +30,16 @@ buildscript {
     classpath(libs.android.gradle)
     classpath(libs.square.anvil.gradle)
     classpath(libs.google.ksp)
-    classpath(libs.vanniktech.maven.publish)
     classpath(libs.kotlin.gradle.plug)
     classpath(libs.ktlint.gradle)
   }
 }
 
-@Suppress("UnstableApiUsage")
+// `alias(libs.______)` inside the plugins block throws a false positive warning
+// https://youtrack.jetbrains.com/issue/KTIJ-19369
+// There's also an IntelliJ plugin to disable this warning globally:
+// https://plugins.jetbrains.com/plugin/18949-gradle-libs-error-suppressor
+@Suppress("DSL_SCOPE_VIOLATION")
 plugins {
   kotlin("jvm")
   alias(libs.plugins.detekt)
@@ -99,7 +102,13 @@ tasks.withType<Detekt> {
   setSource(files(projectDir))
 
   include("**/*.kt", "**/*.kts")
-  exclude("**/resources/**", "**/build/**", "**/src/test/java**", "**/src/test/kotlin**")
+  exclude(
+    "**/resources/**",
+    "**/build/**",
+    "**/src/test/java**",
+    "**/src/integrationTest/kotlin**",
+    "**/src/test/kotlin**"
+  )
 
   // Target version of the generated JVM bytecode. It is used for type resolution.
   this.jvmTarget = "1.8"
@@ -153,15 +162,10 @@ allprojects {
 }
 
 apiValidation {
-  /**
-   * Packages that are excluded from public API dumps even if they
-   * contain public API.
-   */
+  /** Packages that are excluded from public API dumps even if they contain public API. */
   ignoredPackages.add("tangle.inject.api.internal")
 
-  /**
-   * Sub-projects that are excluded from API validation
-   */
+  /** Sub-projects that are excluded from API validation */
   ignoredProjects.addAll(
     listOf(
       "tangle-test-utils",
@@ -177,9 +181,9 @@ apiValidation {
   )
 
   /**
-   * Set of annotations that exclude API from being public.
-   * Typically, it is all kinds of `@InternalApi` annotations that mark
-   * effectively private API that cannot be actually private for technical reasons.
+   * Set of annotations that exclude API from being public. Typically, it is all kinds of
+   * `@InternalApi` annotations that mark effectively private API that cannot be actually private
+   * for technical reasons.
    */
   nonPublicMarkers.add("tangle.api.internal.InternalTangleApi")
 }
@@ -267,5 +271,18 @@ doctor {
     // JAVA_HOME is /Users/rbusarow/Library/Java/JavaVirtualMachines/azul-11-ARM64
     // Gradle is using /Users/rbusarow/Library/Java/JavaVirtualMachines/azul-11-ARM64/zulu-11.jdk/Contents/Home
     ensureJavaHomeMatches.set(false)
+  }
+}
+
+// Hack for ensuring that when 'publishToMavenLocal' is invoked from the root project,
+// all subprojects are published.  This is used in plugin tests.
+val publishToMavenLocal by tasks.registering {
+  subprojects.forEach { sub ->
+    dependsOn(sub.tasks.matching { it.name == "publishToMavenLocal" })
+  }
+}
+val publishToMavenLocalNoDokka by tasks.registering {
+  subprojects.forEach { sub ->
+    dependsOn(sub.tasks.matching { it.name == "publishToMavenLocalNoDokka" })
   }
 }
