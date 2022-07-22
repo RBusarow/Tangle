@@ -24,7 +24,7 @@ val checkWebsiteNextDocsVersionRefs by tasks.registering {
 
   doLast {
 
-    val version = project.extra.properties["VERSION_NAME"] as String
+    val version = tangle.builds.VERSION_NAME
 
     fileTree("$rootDir/website/docs") {
       include("**/*.md*")
@@ -36,8 +36,8 @@ val checkWebsiteNextDocsVersionRefs by tasks.registering {
 }
 
 /**
- * Looks for all references to Tangle artifacts in the md/mdx files
- * in the un-versioned /website/docs. Updates all versions to the pre-release version.
+ * Looks for all references to Tangle artifacts in the md/mdx files in the un-versioned
+ * /website/docs. Updates all versions to the pre-release version.
  */
 val updateWebsiteNextDocsVersionRefs by tasks.registering {
 
@@ -46,7 +46,7 @@ val updateWebsiteNextDocsVersionRefs by tasks.registering {
 
   doLast {
 
-    val version = project.extra.properties["VERSION_NAME"] as String
+    val version = tangle.builds.VERSION_NAME
 
     fileTree("$rootDir/website/docs") {
       include("**/*.md*")
@@ -65,7 +65,7 @@ val updateWebsitePackageJsonVersion by tasks.registering {
 
   doLast {
 
-    val version = project.extra.properties["VERSION_NAME"] as String
+    val version = tangle.builds.VERSION_NAME
 
     // this isn't very robust, but it's fine for this use-case
     val versionReg = """(\s*"version"\s*:\s*")[^"]*("\s*,)""".toRegex()
@@ -102,7 +102,7 @@ val checkWebsitePackageJsonVersion by tasks.registering {
   group = "website"
 
   doLast {
-    val version = project.extra.properties["VERSION_NAME"] as String
+    val version = tangle.builds.VERSION_NAME
 
     // this isn't very robust, but it's fine for this use-case
     val versionReg = """(\s*"version"\s*:\s*")[^"]*("\s*,)""".toRegex()
@@ -137,8 +137,8 @@ val checkWebsitePackageJsonVersion by tasks.registering {
 }
 
 /**
- * Looks for all references to Tangle artifacts in the project README.md to the current
- * released version.
+ * Looks for all references to Tangle artifacts in the project README.md to the current released
+ * version.
  */
 val checkProjectReadmeVersionRefs by tasks.registering {
 
@@ -148,7 +148,7 @@ val checkProjectReadmeVersionRefs by tasks.registering {
 
   doLast {
 
-    val version = project.extra.properties["VERSION_NAME"] as String
+    val version = tangle.builds.VERSION_NAME
 
     File("$rootDir/README.md")
       .updateTangleVersionRef(
@@ -160,8 +160,8 @@ val checkProjectReadmeVersionRefs by tasks.registering {
 }
 
 /**
- * Looks for all references to Tangle artifacts in the project README.md
- * to the current released version.
+ * Looks for all references to Tangle artifacts in the project README.md to the current released
+ * version.
  */
 val updateProjectReadmeVersionRefs by tasks.registering {
 
@@ -171,7 +171,7 @@ val updateProjectReadmeVersionRefs by tasks.registering {
 
   doLast {
 
-    val version = project.extra.properties["VERSION_NAME"] as String
+    val version = tangle.builds.VERSION_NAME
 
     File("$rootDir/README.md")
       .updateTangleVersionRef(version, failOnChanges = false)
@@ -300,7 +300,7 @@ val versionDocs by tasks.registering(Exec::class) {
 
   val devVersions = ".*(?:-SNAPSHOT|-LOCAL)".toRegex()
 
-  val version = project.extra.properties["VERSION_NAME"] as String
+  val version = tangle.builds.VERSION_NAME
 
   enabled = version !in existingVersions && !version.matches(devVersions)
 

@@ -42,6 +42,7 @@ dependencies {
   implementation(kotlin("stdlib-jdk8", version = kotlinVersion))
   implementation(kotlin("reflect", version = kotlinVersion))
 
+  implementation(libs.vanniktech.publish)
   implementation(libs.android.gradle)
   implementation(libs.dokka.gradle)
   implementation(libs.kotlinx.knit.gradle)

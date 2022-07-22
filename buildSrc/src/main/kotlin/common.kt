@@ -63,6 +63,9 @@ fun Project.common() {
       .forEach { (key, value) ->
         systemProperty(key, value!!)
       }
+
+    // Allow unit tests to run in parallel
+    maxParallelForks = Runtime.getRuntime().availableProcessors()
   }
 
   tasks.register("moveJavaSrcToKotlin") {

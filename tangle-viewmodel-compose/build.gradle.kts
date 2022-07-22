@@ -15,8 +15,13 @@
 
 plugins {
   androidLibrary
-  id("com.vanniktech.maven.publish")
+  published
 }
+
+tanglePublishing {
+  artifactId.set("tangle-viewmodel-compose")
+}
+
 android {
 
   buildFeatures {
@@ -34,6 +39,8 @@ dependencies {
   api(libs.androidx.lifecycle.viewModel.core)
   api(libs.androidx.lifecycle.viewModel.ktx)
   api(libs.androidx.navigation.common)
+
+  api(projects.tangleViewmodelApi)
 
   compileOnly(libs.androidx.annotations)
 

@@ -21,7 +21,7 @@ import org.intellij.lang.annotations.Language
 import org.junit.jupiter.api.TestInfo
 import java.io.File
 
-public data class TestScope(
+data class TestScope(
   val testInfo: TestInfo,
   val gradleVersion: String,
   val kotlinVersion: String,
@@ -29,7 +29,7 @@ public data class TestScope(
   val anvilVersion: String
 ) {
 
-  public val classNameDir: File by lazy {
+  val classNameDir: File by lazy {
     val className = testInfo.testClass
       .get()
       .simpleName
@@ -40,7 +40,7 @@ public data class TestScope(
     }
   }
 
-  public val testProjectDir: File by lazy {
+  val testProjectDir: File by lazy {
     val testName = testInfo.displayName
       .replace("[^a-zA-Z0-9]".toRegex(), "_")
       .replace("_{2,}".toRegex(), "_")
@@ -56,61 +56,50 @@ public data class TestScope(
     }
   }
 
-  public fun gradleRunner(): GradleRunner = GradleRunner.create()
+  fun gradleRunner(): GradleRunner = GradleRunner.create()
     .forwardOutput()
     .withGradleVersion(gradleVersion)
-    .withPluginClasspath()
     // .withDebug(true)
     .withProjectDir(testProjectDir)
 
-  public fun projectBuildFile(): File {
+  fun projectBuildFile(): File {
     testProjectDir.mkdirs()
     return File(testProjectDir, "build.gradle.kts").also {
       it.writeText(
-        """buildscript {
-        |  repositories {
-        |    mavenCentral()
-        |    google()
-        |    maven("https://plugins.gradle.org/m2/")
-        |  }
+        """
+        |buildscript {
         |  dependencies {
         |    classpath("com.squareup.anvil:gradle-plugin:$anvilVersion")
         |    classpath("com.android.tools.build:gradle:$agpVersion")
         |    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
         |  }
+        |  repositories {
+        |    mavenCentral()
+        |    mavenLocal()
+        |    google()
+        |  }
         |}
         |allprojects {
         |  repositories {
         |    mavenCentral()
+        |    mavenLocal()
         |    google()
-        |    maven("https://plugins.gradle.org/m2/")
-        |  }
-        |  configurations.all {
-        |    resolutionStrategy {
-        |
-        |      eachDependency {
-        |        // use dynamic version because Gradle-test add the **plugin** classpath,
-        |        // but not the other artifacts
-        |        if (requested.group == "com.rickbusarow.tangle") {
-        |          useTarget("${'$'}{requested.group}:${'$'}{requested.module.name}:0.1+")
-        |        }
-        |      }
-        |    }
         |  }
         |}
-        |
         """.trimMargin()
       )
     }
   }
 
-  public fun settingsFile(): File {
+  fun settingsFile(): File {
     testProjectDir.mkdirs()
     return File(testProjectDir, "settings.gradle.kts").also {
       it.writeText(
-        """pluginManagement {
+        """
+        |pluginManagement {
         |  repositories {
         |    gradlePluginPortal()
+        |    mavenLocal()
         |    google()
         |  }
         |  resolutionStrategy {
@@ -118,12 +107,28 @@ public data class TestScope(
         |      if (requested.id.id.startsWith("com.android")) {
         |        useVersion("$agpVersion")
         |      }
+        |      if (requested.id.id == "com.rickbusarow.tangle") {
+        |        useVersion("${BuildProperties.VERSION}")
+        |      }
         |      if (requested.id.id.startsWith("org.jetbrains.kotlin")) {
         |        useVersion("$kotlinVersion")
+        |      }
+        |      if (requested.id.id == "com.squareup.anvil") {
+        |        useVersion("$anvilVersion")
         |      }
         |    }
         |  }
         |}
+        |
+        |dependencyResolutionManagement {
+        |  @Suppress("UnstableApiUsage")
+        |  repositories {
+        |    mavenCentral()
+        |    mavenLocal()
+        |    google()
+        |  }
+        |}
+        |
         |include(":module")
         |
         """.trimMargin()
@@ -142,7 +147,7 @@ public data class TestScope(
       )
   }
 
-  public fun module(
+  fun module(
     @Language("kotlin")
     buildFile: String
   ) {
@@ -153,14 +158,14 @@ public data class TestScope(
       .writeText(buildFile)
   }
 
-  public fun build(vararg tasks: String): BuildResult {
+  fun build(vararg tasks: String): BuildResult {
     propertiesFile()
     settingsFile()
     projectBuildFile()
     return gradleRunner().withArguments(*tasks).build()
   }
 
-  public fun tasks(vararg tasks: String): GradleRunner {
+  fun tasks(vararg tasks: String): GradleRunner {
     propertiesFile()
     settingsFile()
     projectBuildFile()

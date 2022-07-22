@@ -34,7 +34,6 @@ gradleEnterprise {
     publishAlways()
 
     tag(if (System.getenv("CI").isNullOrBlank()) "Local" else "CI")
-    tag(extra.properties["VERSION_NAME"] as String)
 
     val githubActionID = System.getenv("GITHUB_ACTION")
 

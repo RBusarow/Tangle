@@ -12,21 +12,51 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import org.gradle.api.tasks.testing.logging.TestExceptionFormat
-import org.gradle.api.tasks.testing.logging.TestLogEvent
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+import tangle.builds.GROUP
+import tangle.builds.VERSION_NAME
 
 plugins {
+  javaLibrary
+  published
+  id("com.gradle.plugin-publish") version "0.21.0"
   id("java-gradle-plugin")
-  kotlin("jvm")
-  id("com.gradle.plugin-publish") version "0.20.0"
-  `maven-publish`
+  idea
 }
 
-repositories {
-  google()
-  mavenCentral()
-  maven("https://oss.sonatype.org/content/repositories/snapshots")
+tanglePublishing {
+  artifactId.set("tangle-gradle-plugin")
+}
+
+val main by sourceSets.getting
+val test by sourceSets.getting
+
+val integrationTest by java.sourceSets.registering {
+  kotlin.apply {
+    compileClasspath += main.output
+      .plus(test.output)
+      .plus(configurations.testRuntimeClasspath.get())
+    runtimeClasspath += output + compileClasspath
+  }
+}
+
+// mark the integrationTest directory as a test directory in the IDE
+idea {
+  module {
+    integrationTest.configure {
+      allSource.srcDirs
+        .forEach { srcDir ->
+          module.testSourceDirs.add(srcDir)
+        }
+    }
+  }
+}
+
+val integrationTestCompile by configurations.registering {
+  extendsFrom(configurations["testCompileOnly"])
+}
+val integrationTestRuntime by configurations.registering {
+  extendsFrom(configurations["testRuntimeOnly"])
 }
 
 dependencies {
@@ -42,69 +72,10 @@ dependencies {
   testImplementation(libs.bundles.hermit)
   testImplementation(libs.bundles.jUnit)
   testImplementation(libs.bundles.kotest)
-}
 
-kotlin {
-  explicitApi()
-}
-
-val ci = !System.getenv("CI").isNullOrBlank()
-
-tasks.withType<KotlinCompile>()
-  .configureEach {
-
-    doFirst {
-      val tangleVersion = project.extra.properties["VERSION_NAME"] as String
-
-      System.setProperty("tangle.version", tangleVersion)
-    }
-
-    kotlinOptions {
-
-      allWarningsAsErrors = false
-
-      jvmTarget = "1.8"
-    }
-  }
-
-tasks.withType<Test> {
-  useJUnitPlatform()
-
-  testLogging {
-    events = setOf(
-      TestLogEvent.PASSED,
-      TestLogEvent.FAILED
-    )
-    exceptionFormat = TestExceptionFormat.FULL
-    showExceptions = true
-    showCauses = true
-    showStackTraces = true
-  }
-
-  project
-    .properties
-    .asSequence()
-    .filter { (key, value) ->
-      key.startsWith("tangle") && value != null
-    }
-    .forEach { (key, value) ->
-      systemProperty(key, value!!)
-    }
-}
-
-java {
-  // force Java 8 source when building java-only artifacts.
-  // This is different than the Kotlin jvm target.
-  sourceCompatibility = JavaVersion.VERSION_1_8
-  targetCompatibility = JavaVersion.VERSION_1_8
-}
-
-val testJvm by tasks.registering {
-  dependsOn("test")
-}
-
-val buildTests by tasks.registering {
-  dependsOn("testClasses")
+  "integrationTestImplementation"(libs.bundles.hermit)
+  "integrationTestImplementation"(libs.bundles.jUnit)
+  "integrationTestImplementation"(libs.bundles.kotest)
 }
 
 gradlePlugin {
@@ -112,8 +83,10 @@ gradlePlugin {
     create("tangle") {
       id = "com.rickbusarow.tangle"
       group = "com.rickbusarow.tangle"
+      displayName = "Tangle"
       implementationClass = "tangle.inject.gradle.TanglePlugin"
-      version = project.extra.properties["VERSION_NAME"] as String
+      version = VERSION_NAME
+      description = "Create Android component bindings for Dagger with Anvil"
     }
   }
 }
@@ -122,11 +95,11 @@ pluginBundle {
   website = "https://github.com/RBusarow/Tangle"
   vcsUrl = "https://github.com/RBusarow/Tangle"
   description = "Create Android component bindings for Dagger with Anvil"
-  tags = listOf("android", "dagger2", "kotlin", "kotlin-compiler-plugin")
 
-  plugins {
-    getByName("tangle") {
-      displayName = "Create Android component bindings for Dagger with Anvil"
+  (plugins) {
+    "tangle" {
+      displayName = "Tangle"
+      tags = listOf("android", "dagger2", "kotlin", "kotlin-compiler-plugin")
     }
   }
 }
@@ -147,13 +120,6 @@ tasks.create("setupPluginUploadFromEnvironment") {
   }
 }
 
-/*
-Adapted from Anvil:
-https://github.com/square/anvil/blob/main/gradle-plugin/generate_build_properties.gradle
-
-This pipes the current version and group from gradle.properties into generated source,
-so that the plugin always applies the correct artifacts.
- */
 val generatedDirPath = "$buildDir/generated/sources/build-properties/kotlin/main"
 sourceSets {
   main.configure {
@@ -163,18 +129,23 @@ sourceSets {
 
 val generateBuildProperties by tasks.registering {
 
-  val version = project.extra.properties["VERSION_NAME"] as String
-  val group = project.extra.properties["GROUP"] as String
+  val version = VERSION_NAME
+  val group = GROUP
 
   val buildPropertiesDir = File(generatedDirPath)
-  val buildPropertiesFile = File(buildPropertiesDir, "BuildProperties.kt")
+  val buildPropertiesFile = File(
+    buildPropertiesDir,
+    "tangle/inject/gradle/BuildProperties.kt"
+  )
 
+  inputs.file(rootProject.file("buildSrc/src/main/kotlin/tangle/builds/Versions.kt"))
   inputs.properties(mapOf("version" to version, "group" to group))
   outputs.file(buildPropertiesFile)
 
   doLast {
 
-    buildPropertiesDir.mkdirs()
+    buildPropertiesDir.deleteRecursively()
+    buildPropertiesFile.parentFile.mkdirs()
 
     buildPropertiesFile.writeText(
       """package tangle.inject.gradle
@@ -189,8 +160,92 @@ val generateBuildProperties by tasks.registering {
   }
 }
 
-tasks.withType<KotlinCompile>()
-  .configureEach {
+val generatedTestDirPath = "$buildDir/generated/sources/build-properties/kotlin/test"
+sourceSets {
+  test.configure {
+    java.srcDir(project.file(generatedTestDirPath))
+  }
+  integrationTest.configure {
+    java.srcDir(project.file(generatedTestDirPath))
+  }
+}
+val generateTestVersions by tasks.registering {
 
+  val testVersionsDir = File(generatedTestDirPath)
+  val testVersionsFile = File(testVersionsDir, "tangle/inject/gradle/TestVersions.kt")
+
+  inputs.file(rootProject.file("buildSrc/src/main/kotlin/tangle/builds/Versions.kt"))
+  inputs.file(rootProject.file("gradle/libs.versions.toml"))
+  outputs.file(testVersionsFile)
+
+  doLast {
+
+    testVersionsDir.deleteRecursively()
+    testVersionsFile.parentFile.mkdirs()
+
+    testVersionsFile.writeText(
+      """package tangle.inject.gradle
+      |
+      |object TestVersions {
+      |  const val AGP = "${libs.versions.androidTools.get()}"
+      |  const val ANVIL = "${libs.versions.square.anvil.get()}"
+      |  const val GRADLE = "${gradle.gradleVersion}"
+      |  const val KOTLIN = "${libs.versions.kotlin.get()}"
+      |
+      |  const val ACTIVITY = "${libs.versions.androidx.activity.get()}"
+      |  const val FRAGMENT = "${libs.versions.androidx.fragment.version.get()}"
+      |  const val LIFECYCLE = "${libs.versions.androidx.lifecycle.get()}"
+      |  const val COMPOSE = "${libs.versions.androidx.compose.runtime.get()}"
+      |  const val WORK = "${libs.versions.androidx.work.version.get()}"
+      |}
+      |
+      """.trimMargin()
+    )
+  }
+}
+
+tasks.withType<KotlinCompile>().configureEach {
+  dependsOn(generateBuildProperties)
+}
+
+tasks.matching {
+  it.name in setOf(
+    "javaSourcesJar",
+    "runKtlintCheckOverMainSourceSet",
+    "runKtlintFormatOverMainSourceSet"
+  )
+}
+  .configureEach {
     dependsOn(generateBuildProperties)
   }
+
+tasks.matching {
+  it.name in setOf(
+    "compileIntegrationTestKotlin",
+    "compileTestKotlin",
+    "runKtlintCheckOverIntegrationTestSourceSet",
+    "runKtlintCheckOverTestSourceSet",
+    "runKtlintFormatOverIntegrationTestSourceSet",
+    "runKtlintFormatOverTestSourceSet"
+  )
+}
+  .configureEach {
+    dependsOn(generateTestVersions)
+  }
+
+val integrationTestTask = tasks.register("integrationTest", Test::class) {
+  val integrationTestSourceSet = java.sourceSets["integrationTest"]
+  testClassesDirs = integrationTestSourceSet.output.classesDirs
+  classpath = integrationTestSourceSet.runtimeClasspath
+  dependsOn(rootProject.tasks.matching { it.name == "publishToMavenLocalNoDokka" })
+}
+
+tasks.matching { it.name == "check" }.all { dependsOn(integrationTestTask) }
+
+kotlin {
+  val compilations = target.compilations
+
+  compilations.getByName("integrationTest") {
+    associateWith(compilations.getByName("main"))
+  }
+}
