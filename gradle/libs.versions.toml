@@ -46,7 +46,7 @@ google-material = "1.5.0"
 rickBusarow-dependencySync = "0.11.4"
 rickBusarow-moduleCheck = "0.12.3"
 
-square-anvil = "2.4.1"
+square-anvil = "2.4.1-1-6"
 square-moshi = "1.13.0"
 square-okhttp = "4.9.3"
 square-retrofit = "2.9.0"
