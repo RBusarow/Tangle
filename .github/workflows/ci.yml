@@ -89,7 +89,7 @@ jobs:
         if: github.event.pull_request.head.repo.full_name != github.repository
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: ktlintCheck -q
+          arguments: ktlintCheck
           cache-read-only: false
 
   versioning:
