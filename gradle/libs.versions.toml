@@ -41,7 +41,7 @@ kotlinx-knit = "0.4.0"
 
 google-dagger = "2.42"
 google-ksp = "1.7.0-1.0.6"
-google-material = "1.5.0"
+google-material = "1.6.1"
 
 rickBusarow-dependencySync = "0.11.4"
 rickBusarow-moduleCheck = "0.12.3"
