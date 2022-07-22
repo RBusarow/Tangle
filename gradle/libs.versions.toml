@@ -40,7 +40,7 @@ kotlinx-coroutines = "1.6.0"
 kotlinx-knit = "0.4.0"
 
 google-dagger = "2.42"
-google-ksp = "1.7.0-1.0.6"
+google-ksp = "1.7.10-1.0.6"
 google-material = "1.5.0"
 
 rickBusarow-dependencySync = "0.11.4"
