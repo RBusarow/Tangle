@@ -273,5 +273,4 @@ class FragmentsPluginTest : BasePluginTest() {
     }
   }
   """.trimIndent()
-
 }
