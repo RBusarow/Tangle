@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,7 +18,7 @@ package tangle.viewmodel.compiler
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.anvil.compiler.internal.classesAndInnerClasses
+import com.squareup.anvil.compiler.internal.reference.classAndInnerClassReferences
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
 import tangle.inject.compiler.TangleCodeGenerator
@@ -34,11 +34,10 @@ class VMInjectCodeGenerator : TangleCodeGenerator() {
     module: ModuleDescriptor,
     projectFiles: Collection<KtFile>
   ): Collection<GeneratedFile> {
-
     val viewModelParamsList = projectFiles
-      .flatMap { it.classesAndInnerClasses(module) }
+      .classAndInnerClassReferences(module)
       .mapNotNull {
-        val constructor = it.vmInjectConstructor(module) ?: return@mapNotNull null
+        val constructor = it.vmInjectConstructor() ?: return@mapNotNull null
         it to constructor
       }
       .map { (viewModelClass, constructor) ->

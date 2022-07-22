@@ -19,11 +19,9 @@ import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.anvil.compiler.api.createGeneratedFile
-import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.classesAndInnerClasses
-import com.squareup.anvil.compiler.internal.hasAnnotation
-import com.squareup.anvil.compiler.internal.scope
-import com.squareup.kotlinpoet.AnnotationSpec
+import com.squareup.anvil.compiler.internal.reference.ClassReference
+import com.squareup.anvil.compiler.internal.reference.asClassName
+import com.squareup.anvil.compiler.internal.reference.classAndInnerClassReferences
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier.ABSTRACT
@@ -33,13 +31,14 @@ import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.descriptors.resolveClassByFqName
 import org.jetbrains.kotlin.incremental.components.NoLookupLocation.FROM_BACKEND
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.psi.KtClassOrObject
 import org.jetbrains.kotlin.psi.KtFile
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FqNames
 import tangle.inject.compiler.TangleCodeGenerator
+import tangle.inject.compiler.addContributesTo
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
+import tangle.inject.compiler.find
 import tangle.inject.compiler.generateSimpleNameString
 import java.io.File
 
@@ -52,16 +51,17 @@ class TangleFragmentFactoryModuleGenerator : TangleCodeGenerator() {
     module: ModuleDescriptor,
     projectFiles: Collection<KtFile>
   ): Collection<GeneratedFile> = projectFiles
-    .flatMap { it.classesAndInnerClasses(module) }
-    .filter { it.hasAnnotation(FqNames.mergeComponent, module) }
+    .classAndInnerClassReferences(module)
+    .filter { it.isAnnotatedWith(FqNames.mergeComponent) }
     // fast path for excluding duplicate binding modules if they're in the same source
-    .distinctBy { it.scope(FqNames.mergeComponent, module) }
+    .distinctBy { it.annotations.find(FqNames.mergeComponent)!!.scope() }
     .mapNotNull { generateComponent(codeGenDir, module, it) }
+    .toList()
 
   private fun generateComponent(
     codeGenDir: File,
     module: ModuleDescriptor,
-    clazz: KtClassOrObject
+    clazz: ClassReference
   ): GeneratedFile? {
     // Every single instance of this generated Module will have the same FqName,
     // except for the scope name which is prepended to the interface name.
@@ -72,8 +72,8 @@ class TangleFragmentFactoryModuleGenerator : TangleCodeGenerator() {
     // Modules for a different scope are okay.
     val packageName = "tangle.fragment"
 
-    val scopeFqName = clazz.scope(FqNames.mergeComponent, module)
-    val scopeClassName = scopeFqName.asClassName(module)
+    val scopeFqName = clazz.annotations.find(FqNames.mergeComponent)!!.scope()
+    val scopeClassName = scopeFqName.asClassName()
     val scopeClassNameString = scopeClassName.generateSimpleNameString()
 
     val moduleClassNameString = "${scopeClassNameString}_Tangle_FragmentFactory_Module"
@@ -96,11 +96,7 @@ class TangleFragmentFactoryModuleGenerator : TangleCodeGenerator() {
     val content = FileSpec.buildFile(packageName, moduleClassNameString) {
       TypeSpec.interfaceBuilder(moduleClassName)
         .addAnnotation(ClassNames.module)
-        .addAnnotation(
-          AnnotationSpec.builder(ClassNames.contributesTo)
-            .addMember("%T::class", scopeFqName.asClassName(module))
-            .build()
-        )
+        .addContributesTo(scopeFqName.asClassName())
         .addFunction("bindProviderMap") {
           addAnnotation(ClassNames.multibinds)
           addModifiers(ABSTRACT)

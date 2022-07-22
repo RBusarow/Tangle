@@ -15,14 +15,10 @@
 
 package tangle.inject.compiler.memberInject
 
-import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.requireClassDescriptor
-import com.squareup.anvil.compiler.internal.requireFqName
-import com.squareup.anvil.compiler.internal.scope
+import com.squareup.anvil.compiler.internal.reference.AnnotationReference
+import com.squareup.anvil.compiler.internal.reference.ClassReference
+import com.squareup.anvil.compiler.internal.reference.asClassName
 import com.squareup.kotlinpoet.ClassName
-import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.psi.KtAnnotationEntry
-import org.jetbrains.kotlin.psi.KtClassOrObject
 import tangle.inject.compiler.generateSimpleNameString
 import tangle.inject.compiler.memberInjectedParameters
 
@@ -39,20 +35,17 @@ data class MemberInjectParams(
 ) {
   companion object {
     fun create(
-      module: ModuleDescriptor,
-      clazz: KtClassOrObject,
-      annotationEntry: KtAnnotationEntry
+      clazz: ClassReference,
+      annotationEntry: AnnotationReference
     ): MemberInjectParams {
+      val packageName = clazz.packageFqName.asString()
 
-      val packageName = clazz.containingKtFile.packageFqName.asString()
+      val injectedClassName = clazz.asClassName()
 
-      val injectedClassName = clazz.requireFqName().asClassName(module)
+      val injectedParams = clazz.memberInjectedParameters()
 
-      val injectedParams = clazz.requireClassDescriptor(module)
-        .memberInjectedParameters(module)
-
-      val scope = annotationEntry.scope(module)
-      val scopeClassName = scope.asClassName(module)
+      val scope = annotationEntry.scope(parameterIndex = 0)
+      val scopeClassName = scope.asClassName()
 
       val injectedClassNameBase = injectedClassName.generateSimpleNameString()
 

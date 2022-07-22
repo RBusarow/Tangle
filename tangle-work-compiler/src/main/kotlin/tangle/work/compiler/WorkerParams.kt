@@ -15,12 +15,11 @@
 
 package tangle.work.compiler
 
-import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.requireClassDescriptor
+import com.squareup.anvil.compiler.internal.reference.ClassReference
+import com.squareup.anvil.compiler.internal.reference.FunctionReference
+import com.squareup.anvil.compiler.internal.reference.asClassName
 import com.squareup.kotlinpoet.ClassName
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
-import org.jetbrains.kotlin.psi.KtClassOrObject
-import org.jetbrains.kotlin.psi.KtConstructor
 import tangle.inject.compiler.ConstructorInjectParameter
 import tangle.inject.compiler.FqNames
 import tangle.inject.compiler.mapToParameters
@@ -40,15 +39,15 @@ data class WorkerParams(
   companion object {
 
     val expectedAssistedArgTypes = listOf(
-      FqNames.context.asString(), FqNames.workerParameters.asString()
+      FqNames.context.asString(),
+      FqNames.workerParameters.asString()
     )
 
     fun create(
       module: ModuleDescriptor,
-      workerClass: KtClassOrObject,
-      constructor: KtConstructor<*>
+      workerClass: ClassReference,
+      constructor: FunctionReference
     ): WorkerParams {
-
       val workerClassClassName = workerClass.asClassName()
       val workerClassNameString = workerClassClassName.simpleName
       val packageName = workerClassClassName.packageName
@@ -56,7 +55,7 @@ data class WorkerParams(
       val assistedFactoryClassNameString = "${workerClassNameString}_AssistedFactory"
       val assistedFactoryClassName = ClassName(packageName, assistedFactoryClassNameString)
 
-      val constructorParams = constructor.valueParameters
+      val constructorParams = constructor.parameters
         .mapToParameters(module)
 
       val assistedArgs = constructorParams.filter { it.isDaggerAssisted }
@@ -67,13 +66,13 @@ data class WorkerParams(
 
       require(
         argTypes == expectedAssistedArgTypes,
-        { workerClass.requireClassDescriptor(module) }
+        workerClass
       ) {
-
         val actual = assistedArgs.map { "${it.name}: ${it.typeName}" }
 
         val expected = listOf(
-          "context: ${FqNames.context.asString()}", "params: ${FqNames.workerParameters.asString()}"
+          "context: ${FqNames.context.asString()}",
+          "params: ${FqNames.workerParameters.asString()}"
         )
 
         """@TangleWorker-annotated classes may only have Context and WorkerParameters as @Assisted-annotated parameters.

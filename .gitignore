@@ -48,6 +48,7 @@ Thumbs.db
 # detekt plugin settings
 !/.idea/detekt.xml
 !/.idea/icon.png
+!/.idea/runConfigurations/all_tests.xml
 
 /.idea/vcs.xml
 **/.idea/workspace.xml

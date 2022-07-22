@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -15,18 +15,17 @@
 
 package tangle.viewmodel.compiler.components
 
-import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.requireFqName
+import com.squareup.anvil.compiler.internal.reference.ClassReference
+import com.squareup.anvil.compiler.internal.reference.asClassName
 import com.squareup.anvil.compiler.internal.safePackageString
-import com.squareup.anvil.compiler.internal.scope
 import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.psi.KtClassOrObject
 import tangle.inject.compiler.AnnotationSpec
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.find
 import tangle.inject.compiler.generateSimpleNameString
 import tangle.viewmodel.compiler.tangleViewModelScope
 
@@ -36,7 +35,7 @@ data class MergeComponentParams(
   val subcomponentModulePackageName: String,
   val scopeFqName: FqName,
   val scopeClassName: ClassName,
-  val componentClass: KtClassOrObject,
+  val componentClass: ClassReference,
   val keysSubcomponentClassName: ClassName,
   val keysSubcomponentFactoryClassName: ClassName,
   val mapSubcomponentClassName: ClassName,
@@ -47,14 +46,15 @@ data class MergeComponentParams(
   val scopeQualifier: AnnotationSpec
 ) {
   companion object {
-    fun create(clazz: KtClassOrObject, module: ModuleDescriptor): MergeComponentParams {
+    fun create(clazz: ClassReference, module: ModuleDescriptor): MergeComponentParams {
+      val packageName = clazz.packageFqName.safePackageString()
 
-      val packageName = clazz.containingKtFile.packageFqName.safePackageString()
+      val scopeClass = clazz.annotations.find(FqNames.mergeComponent)!!.scope()
+      val scopeFqName = scopeClass.fqName
+      val scopeClassName = scopeClass.asClassName()
 
-      val scopeFqName = clazz.scope(FqNames.mergeComponent, module)
-      val scopeClassName = scopeFqName.asClassName(module)
       val scopeQualifier = AnnotationSpec(ClassNames.named) {
-        addMember("%S", "${clazz.requireFqName().asString()}--${scopeClassName.canonicalName}")
+        addMember("%S", "${clazz.fqName.asString()}--${scopeClassName.canonicalName}")
       }
 
       val localScope = scopeClassName.generateSimpleNameString()

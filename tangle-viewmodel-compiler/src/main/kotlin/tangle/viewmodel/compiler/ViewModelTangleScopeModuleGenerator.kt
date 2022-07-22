@@ -26,6 +26,7 @@ import com.squareup.kotlinpoet.buildCodeBlock
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
 import tangle.inject.compiler.FqNames
+import tangle.inject.compiler.addContributesTo
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.applyEach
 import tangle.inject.compiler.asArgumentList
@@ -50,11 +51,7 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
         TypeSpec
           .interfaceBuilder(ClassName(packageName, moduleName))
           .addAnnotation(ClassNames.module)
-          .addAnnotation(
-            AnnotationSpec.builder(ClassNames.contributesTo)
-              .addMember("%T::class", ClassNames.tangleViewModelScope)
-              .build()
-          )
+          .addContributesTo(ClassNames.tangleViewModelScope)
           .applyEach(params.viewModelParamsList) { viewModelParams ->
 
             addFunction(

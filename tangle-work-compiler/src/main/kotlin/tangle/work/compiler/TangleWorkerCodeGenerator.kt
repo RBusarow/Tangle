@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -18,8 +18,7 @@ package tangle.work.compiler
 import com.google.auto.service.AutoService
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.anvil.compiler.internal.classesAndInnerClasses
-import com.squareup.anvil.compiler.internal.hasAnnotation
+import com.squareup.anvil.compiler.internal.reference.classAndInnerClassReferences
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtFile
 import tangle.inject.compiler.FqNames
@@ -36,16 +35,16 @@ class TangleWorkerCodeGenerator : TangleCodeGenerator() {
     module: ModuleDescriptor,
     projectFiles: Collection<KtFile>
   ): Collection<GeneratedFile> {
-
     val workerParamsList = projectFiles
-      .flatMap { it.classesAndInnerClasses(module) }
-      .filter { it.hasAnnotation(FqNames.tangleWorker, module) }
+      .classAndInnerClassReferences(module)
+      .filter { it.isAnnotatedWith(FqNames.tangleWorker) }
       .mapNotNull { workerClass ->
 
-        val constructor = workerClass.assistedInjectConstructor(module) ?: return@mapNotNull null
+        val constructor = workerClass.assistedInjectConstructor() ?: return@mapNotNull null
 
         WorkerParams.create(module, workerClass, constructor)
       }
+      .toList()
 
     val factoryInterfaces = workerParamsList
       .map { AssistedWorkerFactoryGenerator.generate(codeGenDir, it) }

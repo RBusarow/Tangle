@@ -33,12 +33,12 @@ fun Project.common() {
         jvmTarget = "1.8"
 
         freeCompilerArgs = freeCompilerArgs + listOf(
-          "-Xjvm-default=enable",
+          "-Xjvm-default=all",
           "-Xallow-result-return-type",
-          "-Xopt-in=kotlin.contracts.ExperimentalContracts",
-          "-Xopt-in=kotlin.Experimental",
-          "-Xopt-in=kotlin.time.ExperimentalTime",
-          "-Xopt-in=kotlin.RequiresOptIn",
+          "-opt-in=kotlin.contracts.ExperimentalContracts",
+          "-opt-in=kotlin.Experimental",
+          "-opt-in=kotlin.time.ExperimentalTime",
+          "-opt-in=kotlin.RequiresOptIn",
           "-Xinline-classes"
         )
       }
@@ -125,7 +125,7 @@ fun Project.experimentalAnvil() {
       kotlinOptions {
 
         freeCompilerArgs = freeCompilerArgs + listOf(
-          "-Xopt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
+          "-opt-in=com.squareup.anvil.annotations.ExperimentalAnvilApi"
         )
       }
     }

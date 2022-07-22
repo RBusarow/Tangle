@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -160,7 +160,7 @@ private fun projectBuildFile(rootDir: File, tangleVersion: String) = BuildFile(
       |
       |      kotlinOptions {
       |        freeCompilerArgs = freeCompilerArgs + listOf(
-      |          "-Xopt-in=kotlin.RequiresOptIn"
+      |          "-opt-in=kotlin.RequiresOptIn"
       |        )
       |      }
       |    }

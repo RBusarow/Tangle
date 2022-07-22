@@ -52,5 +52,5 @@ dependencies {
   implementation(libs.androidx.savedstate)
 
   implementation(projects.tangleApi)
-  implementation(projects.tangleViewmodelApi)
+  api(projects.tangleViewmodelApi)
 }

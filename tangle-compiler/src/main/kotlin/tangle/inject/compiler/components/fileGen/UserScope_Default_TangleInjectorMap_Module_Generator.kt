@@ -16,13 +16,13 @@
 package tangle.inject.compiler.components.fileGen
 
 import com.squareup.anvil.compiler.api.GeneratedFile
-import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier
 import com.squareup.kotlinpoet.TypeSpec
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
+import tangle.inject.compiler.addContributesTo
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
 import tangle.inject.compiler.components.MergeComponentParams
@@ -56,11 +56,7 @@ internal object UserScope_Default_TangleInjectorMap_Module_Generator : FileGener
     val content = FileSpec.buildFile(packageName, classNameString) {
       TypeSpec.interfaceBuilder(className)
         .addAnnotation(ClassNames.module)
-        .addAnnotation(
-          AnnotationSpec.builder(ClassNames.contributesTo)
-            .addMember("%T::class", params.scopeClassName)
-            .build()
-        )
+        .addContributesTo(params.scopeClassName)
         .addFunction("bindTangleInjectorMap") {
           addAnnotation(ClassNames.multibinds)
           addModifiers(KModifier.ABSTRACT)

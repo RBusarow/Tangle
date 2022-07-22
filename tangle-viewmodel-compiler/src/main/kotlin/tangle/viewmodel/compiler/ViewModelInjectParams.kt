@@ -16,13 +16,11 @@
 package tangle.viewmodel.compiler
 
 import com.squareup.anvil.compiler.internal.asClassName
-import com.squareup.anvil.compiler.internal.asTypeName
-import com.squareup.anvil.compiler.internal.findAnnotation
-import com.squareup.anvil.compiler.internal.generateClassName
-import com.squareup.anvil.compiler.internal.requireClassDescriptor
+import com.squareup.anvil.compiler.internal.reference.ClassReference
+import com.squareup.anvil.compiler.internal.reference.FunctionReference
+import com.squareup.anvil.compiler.internal.reference.asClassName
+import com.squareup.anvil.compiler.internal.reference.generateClassName
 import com.squareup.anvil.compiler.internal.safePackageString
-import com.squareup.anvil.compiler.internal.scope
-import com.squareup.anvil.compiler.internal.typeVariableNames
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.TypeName
@@ -34,16 +32,13 @@ import org.jetbrains.kotlin.descriptors.FunctionDescriptor
 import org.jetbrains.kotlin.descriptors.Modality.ABSTRACT
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
-import org.jetbrains.kotlin.psi.KtClass
-import org.jetbrains.kotlin.psi.KtClassOrObject
-import org.jetbrains.kotlin.psi.KtConstructor
 import org.jetbrains.kotlin.resolve.scopes.DescriptorKindFilter
-import org.jetbrains.kotlin.types.KotlinType
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.ConstructorInjectParameter
 import tangle.inject.compiler.FqNames
 import tangle.inject.compiler.MemberInjectParameter
 import tangle.inject.compiler.Parameter
+import tangle.inject.compiler.find
 import tangle.inject.compiler.generateSimpleNameString
 import tangle.inject.compiler.mapToParameters
 import tangle.inject.compiler.memberInjectedParameters
@@ -68,12 +63,12 @@ data class ViewModelParams(
   override val packageName: String,
   override val scopeName: FqName,
   override val viewModelClassName: ClassName,
-  val viewModelClassDescriptor: ClassDescriptor,
+  val viewModelClassDescriptor: ClassReference,
   val viewModelConstructorParams: List<ConstructorInjectParameter>,
   val viewModelFactoryClassNameString: String,
   val viewModelFactoryClassName: ClassName,
   val viewModelFactoryConstructorParams: List<Parameter>,
-  val constructor: KtConstructor<*>,
+  val constructor: FunctionReference,
   val memberInjectedParams: List<MemberInjectParameter>,
   val typeParameters: List<TypeVariableName>,
   val viewModelClassSimpleName: String,
@@ -83,24 +78,17 @@ data class ViewModelParams(
   companion object {
     fun create(
       module: ModuleDescriptor,
-      viewModelClass: KtClassOrObject,
-      constructor: KtConstructor<*>
+      viewModelClass: ClassReference,
+      constructor: FunctionReference
     ): ViewModelParams {
+      val packageName = viewModelClass.packageFqName.safePackageString()
 
-      val packageName = viewModelClass.containingKtFile
-        .packageFqName
-        .safePackageString(dotSuffix = false)
+      val viewModelFactoryClassName = viewModelClass.generateClassName(suffix = "_Factory")
+        .asClassName()
 
-      val viewModelClassDescriptor = viewModelClass.requireClassDescriptor(module)
+      val memberInjectParameters = viewModelClass.memberInjectedParameters()
 
-      val viewModelFactoryClassNameString = "${viewModelClass.generateClassName()}_Factory"
-      val viewModelFactoryClassName = ClassName(packageName, viewModelFactoryClassNameString)
-
-      // val scopeName = viewModelClass.scope(FqNames.contributesViewModel, module)
-
-      val memberInjectParameters = viewModelClassDescriptor.memberInjectedParameters(module)
-
-      val viewModelConstructorParams = constructor.valueParameters
+      val viewModelConstructorParams = constructor.parameters
         .mapToParameters(module)
 
       val (daggerConstructorParams, savedStateParams) = viewModelConstructorParams
@@ -122,7 +110,7 @@ data class ViewModelParams(
         daggerConstructorParams + memberInjectParameters
       }
 
-      val typeParameters = viewModelClass.typeVariableNames(module)
+      val typeParameters = viewModelClass.typeParameters.map { it.typeVariableName }
 
       val viewModelClassSimpleName = viewModelClass.asClassName()
         .simpleNames
@@ -144,9 +132,9 @@ data class ViewModelParams(
         packageName = packageName,
         scopeName = FqNames.tangleAppScope,
         viewModelClassName = viewModelClassName,
-        viewModelClassDescriptor = viewModelClassDescriptor,
+        viewModelClassDescriptor = viewModelClass,
         viewModelConstructorParams = viewModelConstructorParams,
-        viewModelFactoryClassNameString = viewModelFactoryClassNameString,
+        viewModelFactoryClassNameString = viewModelFactoryClassName.simpleName,
         viewModelFactoryClassName = viewModelFactoryClassName,
         viewModelFactoryConstructorParams = factoryConstructorParams,
         constructor = constructor,
@@ -181,8 +169,7 @@ data class Factory(
   override val scopeName: FqName,
   override val viewModelClassName: ClassName,
   val viewModelParams: ViewModelParams,
-  val factoryDescriptor: ClassDescriptor,
-  val factoryInterface: KtClassOrObject,
+  val factoryInterface: ClassReference,
   val factoryInterfaceClassName: ClassName,
   val viewModelFactoryClassName: ClassName,
   val factoryImplClassName: ClassName,
@@ -192,43 +179,37 @@ data class Factory(
   data class TangleParameter(
     val key: String,
     val name: String,
-    val kotlinType: KotlinType,
     val typeName: TypeName
   )
 
   companion object {
     fun create(
       module: ModuleDescriptor,
-      factoryInterface: KtClassOrObject,
-      viewModelClass: KtClass,
-      constructor: KtConstructor<*>
+      factoryInterface: ClassReference,
+      viewModelClass: ClassReference,
+      constructor: FunctionReference
     ): Factory {
-      val packageName = factoryInterface.containingKtFile
-        .packageFqName
-        .safePackageString(dotSuffix = false)
+      val packageName = factoryInterface.packageFqName.safePackageString(dotSuffix = false)
 
-      val contributesAnnotation = viewModelClass.findAnnotation(
-        FqNames.contributesViewModel, module
-      )
+      val contributesAnnotation = viewModelClass.annotations.find(FqNames.contributesViewModel)
 
       require(
         value = contributesAnnotation != null,
-        declarationDescriptor = { viewModelClass.requireClassDescriptor(module) }
+        classReference = viewModelClass
       ) {
         "@${FqNames.vmInject.shortName().asString()}-annotated ViewModels must also " +
           "have a `${FqNames.contributesViewModel.asString()}` class annotation."
       }
 
-      val scopeName = viewModelClass.scope(FqNames.contributesViewModel, module)
+      val scopeClass = viewModelClass.annotations.find(FqNames.mergeComponent)!!.scope()
+      val scopeFqName = scopeClass.fqName
 
-      val viewModelFactoryClassName =
-        ClassName(packageName, "${viewModelClass.generateClassName()}_Factory")
+      val viewModelFactoryClassName = viewModelClass.generateClassName(suffix = "_Factory")
+        .asClassName()
 
-      val factoryDescriptor = factoryInterface.requireClassDescriptor(module)
+      val functions = factoryInterface.functions
 
-      val functions = factoryDescriptor.functions()
-
-      require(functions.size == 1, factoryDescriptor) {
+      require(functions.size == 1, factoryInterface) {
         "@${FqNames.vmInjectFactory.shortName().asString()}-annotated types must have " +
           "exactly one abstract function -- without a default implementation -- " +
           "which returns the ${FqNames.vmInject.shortName().asString()} ViewModel type."
@@ -236,7 +217,7 @@ data class Factory(
 
       val function = functions[0]
 
-      val functionParameters = function.valueParameters
+      val functionParameters = function.parameters
 
       val factoryInterfaceClassName = factoryInterface.asClassName()
       val factoryImplSimpleName =
@@ -246,25 +227,21 @@ data class Factory(
       val tangleParams = functionParameters.map {
         TangleParameter(
           it.requireTangleParamName(),
-          it.name.asString(),
-          it.type,
-          it.type.asTypeName()
+          it.name,
+          it.type().asTypeName()
         )
       }
 
-      // tangleParams.checkForBundleSafe(factoryDescriptor)
-
-      val functionName = function.name.asString()
+      val functionName = function.name
 
       val viewModelParams =
         ViewModelParams.create(module, viewModelClass, constructor)
 
       return Factory(
         packageName = packageName,
-        scopeName = scopeName,
+        scopeName = scopeFqName,
         viewModelClassName = viewModelParams.viewModelClassName,
         viewModelParams = viewModelParams,
-        factoryDescriptor = factoryDescriptor,
         factoryInterface = factoryInterface,
         factoryInterfaceClassName = factoryInterfaceClassName,
         viewModelFactoryClassName = viewModelFactoryClassName,

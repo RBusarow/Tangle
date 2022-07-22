@@ -25,6 +25,7 @@ import org.jetbrains.kotlin.incremental.components.NoLookupLocation
 import org.jetbrains.kotlin.name.FqName
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
+import tangle.inject.compiler.addContributesTo
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
 import tangle.inject.compiler.generateSimpleNameString
@@ -64,11 +65,7 @@ object WorkerSubcomponentFactoryModuleGenerator : FileGenerator<MergeComponentPa
 
     val content = FileSpec.buildFile(packageName, className.simpleName) {
       TypeSpec.interfaceBuilder(className)
-        .addAnnotation(
-          AnnotationSpec.builder(ClassNames.contributesTo)
-            .addMember("%T::class", params.scopeClassName)
-            .build()
-        )
+        .addContributesTo(params.scopeClassName)
         .addAnnotation(
           AnnotationSpec.builder(ClassNames.module)
             .addMember(

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,13 +21,12 @@ import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
 import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.appComponent
 import tangle.inject.test.utils.createFunction
 import tangle.inject.test.utils.daggerAppComponent
-import tangle.inject.test.utils.invokeGet
+import tangle.inject.test.utils.getPrivateFieldByName
 import tangle.inject.test.utils.myFragmentClass
-import tangle.inject.test.utils.property
 import javax.inject.Provider
-import kotlin.reflect.KProperty1
 
 interface FragmentComponent {
   @get:TangleFragmentProviderMap
@@ -235,11 +234,15 @@ class FragmentIntegrationTest : BaseTest() {
 
       val component = daggerAppComponent.createFunction()
         .invoke(null)
-        .cast<FragmentComponent>()
-      val fragment = component::class.property("myFragmentProvider")
-        .cast<KProperty1<FragmentComponent, Provider<Fragment>>>()
-        .get(component)
-        .invokeGet()
+
+      requireNotNull(component)
+
+      val provider: Provider<Fragment> = appComponent.getPrivateFieldByName(
+        "myFragmentProvider",
+        component
+      )
+
+      val fragment = provider.get()
 
       fragment::class.java shouldBe myFragmentClass
     }

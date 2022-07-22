@@ -24,6 +24,7 @@ import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.TypeVariableName
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
+import tangle.inject.compiler.addContributesTo
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.buildFile
 import tangle.inject.compiler.memberInject.MemberInjectParams
@@ -64,11 +65,7 @@ internal object TangleInjector_ModuleGenerator : FileGenerator<MemberInjectParam
       addType(
         TypeSpec.interfaceBuilder(params.userScopeModuleClassName)
           .addAnnotation(ClassNames.module)
-          .addAnnotation(
-            AnnotationSpec.builder(ClassNames.contributesTo)
-              .addMember("%T::class", scopeClassName)
-              .build()
-          )
+          .addContributesTo(scopeClassName)
           .addFunction("bind${params.injectorName}") {
             addAnnotation(ClassNames.binds)
             addModifiers(KModifier.ABSTRACT)

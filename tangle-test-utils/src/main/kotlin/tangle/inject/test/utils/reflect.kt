@@ -15,6 +15,7 @@
 
 package tangle.inject.test.utils
 
+import kotlin.reflect.KClass
 import kotlin.reflect.full.memberFunctions
 import kotlin.reflect.full.memberProperties
 import kotlin.reflect.jvm.isAccessible
@@ -25,7 +26,7 @@ inline fun <reified T : Any, reified R : Any> T.getStaticPrivateFieldByName(name
   val property = kClass.memberProperties.find { it.name == name }
 
   requireNotNull(property) {
-    """Cannot find a property named `$name` in ${kClass::qualifiedName}.
+    """Cannot find a property named `$name` in ${kClass.qualifiedName}.
     |
     | -- existing member properties
     |${kClass.memberProperties.joinToString("\n")}
@@ -38,13 +39,36 @@ inline fun <reified T : Any, reified R : Any> T.getStaticPrivateFieldByName(name
   return property.getter.call(this) as R
 }
 
+inline fun <T : Any, reified R : Any> KClass<T>.getPrivateFieldByName(
+  name: String,
+  receiverInstance: Any
+): R {
+  val kClass = this
+
+  val property = kClass.memberProperties.find { it.name == name }
+
+  requireNotNull(property) {
+    """Cannot find a property named `$name` in ${kClass.qualifiedName}.
+    |
+    | -- existing member properties
+    |${kClass.memberProperties.joinToString("\n")}
+    |
+    """.trimMargin()
+  }
+
+  property.isAccessible = true
+
+  @Suppress("UNCHECKED_CAST")
+  return property.get(receiverInstance as T) as R
+}
+
 inline fun <reified T : Any, reified R : Any> T.getPrivateFieldByName(name: String): R {
   val kClass = T::class
 
   val property = kClass.memberProperties.find { it.name == name }
 
   requireNotNull(property) {
-    """Cannot find a property named `$name` in ${kClass::qualifiedName}.
+    """Cannot find a property named `$name` in ${kClass.qualifiedName}.
     |
     | -- existing member properties
     |${kClass.memberProperties.joinToString("\n")}
@@ -63,7 +87,7 @@ inline fun <reified T : Any> T.getPrivateFunctionByName(name: String, vararg arg
   val function = kClass.memberFunctions.find { it.name == name }
 
   requireNotNull(function) {
-    """Cannot find a function named `$name` in ${kClass::qualifiedName}.
+    """Cannot find a function named `$name` in ${kClass.qualifiedName}.
     |
     | -- existing member functions
     |${kClass.memberFunctions.joinToString("\n")}

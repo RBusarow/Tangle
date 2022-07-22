@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -22,7 +22,7 @@ experimentalAnvil()
 
 dependencies {
 
-  kapt(libs.google.auto.service.processor)
+  kapt(libs.google.dagger.compiler)
 
   api(libs.bundles.hermit)
   api(libs.bundles.jUnit)
@@ -31,7 +31,6 @@ dependencies {
   api(libs.google.dagger.compiler)
   api(libs.javax.annotation.jsr250.api)
   api(libs.junit.vintage)
-  api(libs.kotlin.annotation.processing)
   api(libs.kotlin.compile.testing)
   api(libs.kotlin.compiler)
   api(libs.kotlin.reflect)

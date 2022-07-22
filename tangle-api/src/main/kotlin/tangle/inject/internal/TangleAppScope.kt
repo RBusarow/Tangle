@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -16,8 +16,8 @@
 package tangle.inject.internal
 
 /**
- * Used for singleton scoping of Tangle dependencies,
- * running parallel to the App-scoped component.
+ * Used for singleton scoping of Tangle dependencies, running parallel to the App-scoped component.
  * This scope eliminates some need for additional scoping annotations.
  */
+@Suppress("UnnecessaryAbstractClass")
 public abstract class TangleAppScope private constructor()

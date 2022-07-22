@@ -31,6 +31,8 @@ dependencies {
   api(libs.kotlin.compiler)
   api(libs.kotlin.reflect)
   api(libs.square.anvil.compiler.api)
+  api(libs.square.anvil.compiler.core)
+  api(libs.square.anvil.compiler.utils)
   api(libs.square.kotlinPoet)
 
   compileOnly(libs.androidx.annotations)
@@ -38,7 +40,6 @@ dependencies {
 
   implementation(libs.google.dagger.api)
   implementation(libs.square.anvil.annotations)
-  api(libs.square.anvil.compiler.utils)
 
   testImplementation(libs.bundles.hermit)
   testImplementation(libs.bundles.kotest)

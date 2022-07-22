@@ -42,8 +42,8 @@ buildscript {
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
   kotlin("jvm")
+  alias(libs.plugins.dependencyAnalysis)
   alias(libs.plugins.detekt)
-  alias(libs.plugins.gradleDoctor)
   alias(libs.plugins.taskTree)
   alias(libs.plugins.moduleCheck)
   alias(libs.plugins.benManes)
@@ -263,15 +263,6 @@ val profile by tasks.registering(Exec::class) {
 
   workingDir("./benchmarks")
   commandLine("sh", "profile.sh")
-}
-doctor {
-  disallowCleanTaskDependencies.set(false)
-  javaHome {
-    // this is throwing a false positive
-    // JAVA_HOME is /Users/rbusarow/Library/Java/JavaVirtualMachines/azul-11-ARM64
-    // Gradle is using /Users/rbusarow/Library/Java/JavaVirtualMachines/azul-11-ARM64/zulu-11.jdk/Contents/Home
-    ensureJavaHomeMatches.set(false)
-  }
 }
 
 // Hack for ensuring that when 'publishToMavenLocal' is invoked from the root project,

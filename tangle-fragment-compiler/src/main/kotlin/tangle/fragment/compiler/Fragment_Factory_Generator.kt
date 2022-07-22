@@ -31,6 +31,7 @@ import tangle.inject.compiler.FunSpec
 import tangle.inject.compiler.Parameter
 import tangle.inject.compiler.addFunction
 import tangle.inject.compiler.applyEach
+import tangle.inject.compiler.applyIf
 import tangle.inject.compiler.asArgumentList
 import tangle.inject.compiler.buildFile
 import java.io.File
@@ -44,7 +45,6 @@ import java.io.File
  * `@AssistedInject` constructor factories.
  *
  * given this Fragment definition:
- *
  * ```
  * @ContributesFragment(Unit::class)
  * class MyFragment @FragmentInject constructor(
@@ -61,7 +61,6 @@ import java.io.File
  * ```
  *
  * This generator will create the following `MyFragment_Factory.kt`:
- *
  * ```
  * public class MyFragment_Factory(
  *   internal val numbers: Provider<@JvmSuppressWildcards List<Int>>
@@ -98,18 +97,16 @@ internal object Fragment_Factory_Generator : FileGenerator<FragmentInjectParams.
 
     val content = FileSpec.buildFile(packageName, fragmentFactoryClassNameString) {
       typeSpecBuilder
-        .applyEach(params.typeParameters) { addTypeVariable(it) }
+        .applyEach(params.typeParameters) { addTypeVariable(it.typeVariableName) }
         .addSuperinterface(ClassNames.daggerFactory.parameterizedBy(params.fragmentTypeName))
-        .apply {
-          if (factoryConstructorParams.isNotEmpty()) {
-            primaryConstructor(
-              FunSpec.constructorBuilder()
-                .applyEach(factoryConstructorParams) { parameter ->
-                  addParameter(parameter.name, parameter.providerTypeName)
-                }
-                .build()
-            )
-          }
+        .applyIf(factoryConstructorParams.isNotEmpty()) {
+          primaryConstructor(
+            FunSpec.constructorBuilder()
+              .applyEach(factoryConstructorParams) { parameter ->
+                addParameter(parameter.name, parameter.providerTypeName)
+              }
+              .build()
+          )
         }
         .applyEach(factoryConstructorParams) { parameter ->
 
