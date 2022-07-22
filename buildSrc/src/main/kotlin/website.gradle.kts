@@ -184,7 +184,7 @@ fun File.updateTangleVersionRef(
   updateTaskName: String = ""
 ) {
 
-  val group = project.extra.properties["GROUP"] as String
+  val group = tangle.builds.GROUP
 
   val pluginId = "com.rickbusarow.tangle"
 
