@@ -38,11 +38,17 @@ class ComposeActivitiesIntegrationTest {
   fun selected_item_is_passed_to_next_screen() = runBlocking {
 
     retry {
-      testRule.onNodeWithText("Goldendoodle").performClick()
+      testRule.onNodeWithText(
+        text = "Goldendoodle",
+        useUnmergedTree = true
+      ).performClick()
     }
 
     retry {
-      testRule.onNodeWithText("awesome temperament")
+      testRule.onNodeWithText(
+        text = "awesome temperament",
+        useUnmergedTree = true
+      )
         .performScrollTo()
         .assertIsDisplayed()
     }
