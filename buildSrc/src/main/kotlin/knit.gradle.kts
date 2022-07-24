@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -12,11 +12,23 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-apply(plugin = "kotlinx-knit")
+plugins {
+  id("kotlinx-knit")
+}
 
 extensions.configure<kotlinx.knit.KnitPluginExtension> {
+  moduleRoots = listOf(".")
 
+  moduleDocs = "build/dokka/htmlMultiModule"
+  dokkaMultiModuleRoot = "build/dokka/htmlMultiModule"
+  moduleMarkers = listOf("build.gradle", "build.gradle.kts")
+  siteRoot = "https://rbusarow.github.io/Tangle/api/"
+}
+
+// Build API docs for all modules with dokka before running Knit
+tasks.withType<kotlinx.knit.KnitTask>().configureEach {
+  notCompatibleWithConfigurationCache("")
+  dependsOn("dokkaHtmlMultiModule")
   rootDir = rootProject.rootDir
 
   files = fileTree(project.rootDir) {
@@ -32,16 +44,4 @@ extensions.configure<kotlinx.knit.KnitPluginExtension> {
       "**/.gradle/**"
     )
   }
-
-  moduleRoots = listOf(".")
-
-  moduleDocs = "build/dokka"
-  moduleMarkers = listOf("build.gradle", "build.gradle.kts")
-  siteRoot = "https://rbusarow.github.io/Tangle/api/"
 }
-
-// Build API docs for all modules with dokka before running Knit
-tasks.withType<kotlinx.knit.KnitTask>()
-  .configureEach {
-    dependsOn("dokkaHtmlMultiModule")
-  }

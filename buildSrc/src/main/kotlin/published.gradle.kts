@@ -31,6 +31,7 @@ import kotlin.reflect.KProperty
 
 plugins {
   id("com.vanniktech.maven.publish.base")
+  id("dokka")
   id("dependency-guard")
 }
 
