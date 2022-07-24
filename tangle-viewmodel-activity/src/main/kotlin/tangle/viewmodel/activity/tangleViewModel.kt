@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -24,7 +24,7 @@ import tangle.viewmodel.internal.TangleViewModelFactory
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.
  *
- * @sample tangle.viewmodel.samples.TangleFragmentDelegateSample.byTangleViewModelSample
+ * @sample tangle.viewmodel.samples.TangleActivityDelegateSample.byTangleViewModelSample
  * @return lazy [ViewModel] instance of the specified type, injected by Tangle/Anvil/Dagger
  * @since 0.11.0
  */
