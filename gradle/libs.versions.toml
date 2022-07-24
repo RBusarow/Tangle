@@ -205,7 +205,7 @@ javax-annotation-jsr250-api = "javax.annotation:jsr250-api:1.0"
 
 javax-inject = "javax.inject:javax.inject:1"
 
-jmailen-gradle-kotlinter-gradle = "org.jmailen.gradle:kotlinter-gradle:3.4.5"
+jmailen-gradle-kotlinter-gradle = "org.jmailen.gradle:kotlinter-gradle:3.11.1"
 
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jUnit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "jUnit" }
