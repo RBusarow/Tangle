@@ -40,8 +40,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.collectAsLazyPagingItems
 import androidx.paging.compose.items
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import tangle.sample.core.isMetric
 import tangle.sample.data.breed.BreedSummary
 import tangle.viewmodel.compose.tangleViewModel
@@ -72,7 +71,6 @@ internal fun BreedList(
   }
 }
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 internal fun BreedListItem(
   useMetric: Boolean,
@@ -92,7 +90,7 @@ internal fun BreedListItem(
       verticalAlignment = Alignment.CenterVertically
     ) {
       Image(
-        painter = rememberImagePainter(breedSummary.imageUrl),
+        painter = rememberAsyncImagePainter(breedSummary.imageUrl),
         contentDescription = "picture of ${breedSummary.name}",
         Modifier
           .size(180.dp)
