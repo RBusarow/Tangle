@@ -1,0 +1,15 @@
+androidx.annotation:annotation:1.3.0
+androidx.arch.core:core-common:2.1.0
+androidx.arch.core:core-runtime:2.1.0
+androidx.lifecycle:lifecycle-common:2.4.0
+androidx.lifecycle:lifecycle-livedata-core:2.4.0
+androidx.lifecycle:lifecycle-viewmodel-savedstate:2.4.0
+androidx.lifecycle:lifecycle-viewmodel:2.4.0
+androidx.savedstate:savedstate:1.2.0
+com.google.dagger:dagger:2.42
+javax.inject:javax.inject:1
+org.jetbrains.kotlin:kotlin-stdlib-common:1.7.0
+org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.7.0
+org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.7.0
+org.jetbrains.kotlin:kotlin-stdlib:1.7.0
+org.jetbrains:annotations:13.0
