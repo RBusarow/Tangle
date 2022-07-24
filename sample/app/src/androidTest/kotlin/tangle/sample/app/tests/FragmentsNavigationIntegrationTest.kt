@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,26 +21,29 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.coroutines.runBlocking
 import org.junit.Test
 import org.junit.runner.RunWith
+import tangle.sample.app.support.retry
 import tangle.sample.ui.fragmentsWithArchNavigation.FragmentsArchNavigationMainActivity
 
 @RunWith(AndroidJUnit4::class)
 class FragmentsNavigationIntegrationTest {
 
   @Test
-  fun selected_item_is_passed_to_next_screen() {
+  fun selected_item_is_passed_to_next_screen() = runBlocking {
+
     ActivityScenario.launch(FragmentsArchNavigationMainActivity::class.java)
 
-    Thread.sleep(500)
+    retry {
+      Espresso.onView(ViewMatchers.withText("Goldendoodle"))
+        .perform(ViewActions.click())
+    }
 
-    Espresso.onView(ViewMatchers.withText("Goldendoodle"))
-      .perform(ViewActions.click())
-
-    Thread.sleep(500)
-
-    Espresso.onView(ViewMatchers.withText("awesome temperament"))
-      .perform(ViewActions.scrollTo())
-      .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    retry {
+      Espresso.onView(ViewMatchers.withText("awesome temperament"))
+        .perform(ViewActions.scrollTo())
+        .check(ViewAssertions.matches(ViewMatchers.isDisplayed()))
+    }
   }
 }
