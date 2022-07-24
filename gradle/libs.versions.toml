@@ -13,7 +13,7 @@ gradleDoctor = "0.8.1"
 groovy = "3.0.12"
 hermit = "0.9.5"
 jUnit = "5.8.2"
-kotest = "5.3.2"
+kotest = "5.4.0"
 kotlin = "1.7.0"
 ktlint-gradle = "10.3.0"
 
@@ -55,7 +55,7 @@ square-retrofit = "2.9.0"
 
 vanniktech-publish = "0.21.0"
 
-zacSweers-moshix = "0.16.6"
+zacSweers-moshix = "0.18.3"
 
 [plugins]
 
@@ -205,7 +205,7 @@ javax-annotation-jsr250-api = "javax.annotation:jsr250-api:1.0"
 
 javax-inject = "javax.inject:javax.inject:1"
 
-jmailen-gradle-kotlinter-gradle = "org.jmailen.gradle:kotlinter-gradle:3.4.5"
+jmailen-gradle-kotlinter-gradle = "org.jmailen.gradle:kotlinter-gradle:3.11.1"
 
 junit-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "jUnit" }
 junit-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "jUnit" }
@@ -255,7 +255,7 @@ rickBusarow-dispatch-test-jUnit4 = { module = "com.rickbusarow.dispatch:dispatch
 rickBusarow-dispatch-test-jUnit5 = { module = "com.rickbusarow.dispatch:dispatch-test-junit5", version.ref = "dispatch" }
 rickBusarow-dispatch-viewModel = { module = "com.rickbusarow.dispatch:dispatch-android-viewmodel", version.ref = "dispatch" }
 
-robolectric = "org.robolectric:robolectric:4.7.3"
+robolectric = "org.robolectric:robolectric:4.8.1"
 
 scabbard = "gradle.plugin.dev.arunkumar:scabbard-gradle-plugin:0.5.0"
 
