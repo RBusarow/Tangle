@@ -17,65 +17,52 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import org.jlleitschuh.gradle.ktlint.tasks.KtLintCheckTask
 import org.jlleitschuh.gradle.ktlint.tasks.KtLintFormatTask
 
-apply(plugin = "org.jetbrains.dokka")
+plugins {
+  id("org.jetbrains.dokka")
+}
 
-subprojects {
+tasks
+  .withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask>()
+  .configureEach {
 
-  val proj = this
+    // Dokka doesn't support configuration caching
+    notCompatibleWithConfigurationCache("Dokka doesn't support configuration caching")
 
-  val includeSubproject = when {
-    path.endsWith("tests") -> false
-    proj.parent?.path == ":sample" -> false
-    else -> File("${proj.projectDir}/src").exists()
-  }
+    // Dokka uses their outputs but doesn't explicitly depend upon them.
+    mustRunAfter(tasks.withType(KotlinCompile::class.java))
+    mustRunAfter(tasks.withType(KtLintCheckTask::class.java))
+    mustRunAfter(tasks.withType(KtLintFormatTask::class.java))
 
-  if (includeSubproject) {
-    apply(plugin = "org.jetbrains.dokka")
+    val fullModuleName = project.path.removePrefix(":")
 
-    proj.tasks
-      .withType<org.jetbrains.dokka.gradle.AbstractDokkaLeafTask>()
-      .configureEach {
+    moduleName.set(fullModuleName)
 
-        // Dokka doesn't support configuration caching
-        notCompatibleWithConfigurationCache("Dokka doesn't support configuration caching")
+    dokkaSourceSets {
 
-        // Dokka uses their outputs but doesn't explicitly depend upon them.
-        mustRunAfter(tasks.withType(KotlinCompile::class.java))
-        mustRunAfter(tasks.withType(KtLintCheckTask::class.java))
-        mustRunAfter(tasks.withType(KtLintFormatTask::class.java))
+      getByName("main") {
 
-        val fullModuleName = project.path.removePrefix(":")
-
-        moduleName.set(fullModuleName)
-
-        dependsOn(allprojects.mapNotNull { it.tasks.findByName("compileKotlin") })
-
-        dokkaSourceSets {
-
-          getByName("main") {
-
-            samples.setFrom(
-              fileTree(proj.projectDir) {
-                include("**/samples/**")
-              }
-            )
-
-            if (File("${proj.projectDir}/README.md").exists()) {
-              includes.from(files("${proj.projectDir}/README.md"))
-            }
-
-            sourceLink {
-              localDirectory.set(file("src/main"))
-
-              val modulePath = proj.path.replace(":", "/").replaceFirst("/", "")
-
-              // URL showing where the source code can be accessed through the web browser
-              remoteUrl.set(uri("https://github.com/RBusarow/Tangle/blob/main/$modulePath/src/main").toURL())
-              // Suffix which is used to append the line number to the URL. Use #L for GitHub
-              remoteLineSuffix.set("#L")
-            }
+        samples.setFrom(
+          fileTree(projectDir) {
+            include("**/samples/**")
           }
+        )
+
+        val readmeFile = file("$projectDir/README.md")
+
+        if (readmeFile.exists()) {
+          includes.from(readmeFile)
+        }
+
+        sourceLink {
+          localDirectory.set(file("src/main"))
+
+          val modulePath = path.replace(":", "/").replaceFirst("/", "")
+
+          // URL showing where the source code can be accessed through the web browser
+          remoteUrl.set(uri("https://github.com/RBusarow/Tangle/blob/main/$modulePath/src/main").toURL())
+          // Suffix which is used to append the line number to the URL. Use #L for GitHub
+          remoteLineSuffix.set("#L")
         }
       }
-  }
+    }
 }

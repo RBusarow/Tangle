@@ -3,6 +3,6 @@
   "extends": [
     "config:base"
   ],
-  "rebaseWhen": "never",
+  "rebaseWhen": "conflicted",
   "rebaseLabel": "rebase"
 }
