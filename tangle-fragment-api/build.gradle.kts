@@ -24,14 +24,17 @@ tanglePublishing {
 
 dependencies {
 
-  api(libs.androidx.fragment.ktx)
-  api(libs.google.dagger.api)
+  api(libs.androidx.fragment.core)
+  api(libs.javax.inject)
 
   api(projects.tangleApi)
 
   compileOnly(libs.google.auto.service.processor)
 
+  implementation(libs.google.dagger.api)
+
   testImplementation(libs.kotlin.reflect)
+
   testImplementation(projects.tangleApi)
   testImplementation(projects.tangleCompiler)
   testImplementation(projects.tangleFragmentCompiler)

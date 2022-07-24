@@ -29,7 +29,7 @@ kotlin {
 dependencies {
 
   api(libs.androidx.annotations)
-  api(libs.google.dagger.api)
+  api(libs.javax.inject)
 
   compileOnly(libs.google.auto.service.processor)
 

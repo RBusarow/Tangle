@@ -29,14 +29,12 @@ dependencies {
 
   kapt(libs.google.auto.service.processor)
 
-  api(libs.kotlin.compiler)
   api(libs.kotlin.reflect)
   api(libs.square.anvil.compiler.api)
   api(libs.square.kotlinPoet)
 
   api(projects.tangleCompiler)
 
-  compileOnly(libs.androidx.annotations)
   compileOnly(libs.google.auto.service.processor)
 
   implementation(libs.google.dagger.api)

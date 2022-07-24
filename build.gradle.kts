@@ -277,3 +277,9 @@ val publishToMavenLocalNoDokka by tasks.registering {
     dependsOn(sub.tasks.matching { it.name == "publishToMavenLocalNoDokka" })
   }
 }
+
+moduleCheck {
+  checks {
+    sortDependencies = true
+  }
+}
