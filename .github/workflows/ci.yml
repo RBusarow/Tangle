@@ -25,7 +25,7 @@ jobs:
   detekt:
 
     runs-on: ubuntu-latest
-    if: github.actor != 'dependabot[bot]' && github.actor != 'dependabot-preview[bot]'
+    if: github.actor != 'renovate[bot]'
 
     steps:
       - uses: actions/checkout@v3
@@ -44,6 +44,30 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: detekt
+          cache-read-only: false
+
+  dependency-guard:
+
+    runs-on: ubuntu-latest
+    if: github.actor != 'renovate[bot]'
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: dependency-guard
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: dependencyGuard
           cache-read-only: false
 
   ktlint:
