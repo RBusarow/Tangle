@@ -55,7 +55,7 @@ square-retrofit = "2.9.0"
 
 vanniktech-publish = "0.21.0"
 
-zacSweers-moshix = "0.16.6"
+zacSweers-moshix = "0.18.3"
 
 [plugins]
 
