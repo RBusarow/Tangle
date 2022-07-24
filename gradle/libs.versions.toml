@@ -30,6 +30,7 @@ androidx-hilt = "1.0.0"
 androidx-lifecycle = "2.5.1"
 androidx-navigation-version = "2.5.1"
 androidx-paging = "3.1.1"
+androidx-paging-compose = "1.0.0-alpha16"
 androidx-room = "2.4.3"
 androidx-startup = "1.1.1"
 androidx-test-core = "1.4.0"
@@ -135,7 +136,7 @@ androidx-navigation-runtime-ktx = { module = "androidx.navigation:navigation-run
 androidx-navigation-ui-ktx = { module = "androidx.navigation:navigation-ui-ktx", version.ref = "androidx-navigation-version" }
 
 androidx-paging-android = { module = "androidx.paging:paging-runtime-ktx", version.ref = "androidx-paging" }
-androidx-paging-compose = "androidx.paging:paging-compose:1.0.0-alpha14"
+androidx-paging-compose = { module = "androidx.paging:paging-compose", version.ref = "androidx-paging-compose" }
 androidx-paging-jvm = { module = "androidx.paging:paging-common-ktx", version.ref = "androidx-paging" }
 
 androidx-room-common = { module = "androidx.room:room-common", version.ref = "androidx-room" }
