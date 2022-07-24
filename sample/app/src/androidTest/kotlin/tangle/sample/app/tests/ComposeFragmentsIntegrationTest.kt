@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -21,9 +21,11 @@ import androidx.compose.ui.test.onNodeWithText
 import androidx.compose.ui.test.performClick
 import androidx.compose.ui.test.performScrollTo
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.coroutines.runBlocking
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import tangle.sample.app.support.retry
 import tangle.sample.ui.composeWithFragments.ComposeWithFragmentsMainActivity
 
 @RunWith(AndroidJUnit4::class)
@@ -33,16 +35,16 @@ class ComposeFragmentsIntegrationTest {
   val testRule = createAndroidComposeRule(ComposeWithFragmentsMainActivity::class.java)
 
   @Test
-  fun selected_item_is_passed_to_next_screen() {
+  fun selected_item_is_passed_to_next_screen() = runBlocking {
 
-    Thread.sleep(500)
+    retry {
+      testRule.onNodeWithText("Goldendoodle").performClick()
+    }
 
-    testRule.onNodeWithText("Goldendoodle").performClick()
-
-    Thread.sleep(500)
-
-    testRule.onNodeWithText("awesome temperament")
-      .performScrollTo()
-      .assertIsDisplayed()
+    retry {
+      testRule.onNodeWithText("awesome temperament")
+        .performScrollTo()
+        .assertIsDisplayed()
+    }
   }
 }

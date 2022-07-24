@@ -6,6 +6,7 @@ public final class tangle/inject/TangleGraph {
 	public final fun add (Ljava/lang/Object;)V
 	public final fun componentClassForScope (Ljava/lang/Class;Ltangle/inject/internal/TangleScopeMapProvider;)Ljava/lang/Class;
 	public final fun get (Ljava/lang/Class;)Ljava/lang/Object;
+	public final fun getComponents ()Ljava/util/Set;
 	public final fun init (Ljava/lang/Object;)V
 }
 
