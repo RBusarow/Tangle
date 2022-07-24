@@ -28,6 +28,7 @@ experimentalAnvil()
 dependencies {
   kapt(libs.google.auto.service.processor)
 
+  api(libs.javax.inject)
   api(libs.kotlin.compiler)
   api(libs.kotlin.reflect)
   api(libs.square.anvil.compiler.api)

@@ -64,18 +64,15 @@ dependencies {
   compileOnly(libs.android.gradle)
   compileOnly(libs.kotlin.reflect)
 
-  implementation(libs.kotlin.annotation.processing)
-  implementation(libs.kotlin.compiler)
-  implementation(libs.kotlin.reflect)
   implementation(libs.kotlin.stdlib.jdk8)
-
-  testImplementation(libs.bundles.hermit)
-  testImplementation(libs.bundles.jUnit)
-  testImplementation(libs.bundles.kotest)
 
   "integrationTestImplementation"(libs.bundles.hermit)
   "integrationTestImplementation"(libs.bundles.jUnit)
   "integrationTestImplementation"(libs.bundles.kotest)
+
+  testImplementation(libs.bundles.hermit)
+  testImplementation(libs.bundles.jUnit)
+  testImplementation(libs.bundles.kotest)
 }
 
 gradlePlugin {
