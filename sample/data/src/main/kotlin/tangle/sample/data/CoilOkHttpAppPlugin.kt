@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -19,12 +19,12 @@ import android.app.Application
 import android.content.Context
 import coil.Coil
 import coil.ImageLoader
-import coil.util.CoilUtils
+import coil.disk.DiskCache.Builder
+import coil.memory.MemoryCache
 import com.squareup.anvil.annotations.ContributesMultibinding
 import com.squareup.anvil.annotations.ContributesTo
 import dagger.Module
 import dagger.Provides
-import okhttp3.OkHttpClient
 import tangle.sample.core.AppPlugin
 import tangle.sample.core.AppScope
 import tangle.sample.core.di.ApplicationContext
@@ -45,20 +45,27 @@ class CoilOkHttpAppPlugin @Inject constructor(
 @ContributesTo(AppScope::class)
 object CoilImageLoaderModule {
 
+  private const val MEM_CACHE_MAX_SIZE = 0.25
+  private const val DISK_CACHE_MAX_SIZE = 0.02
+
   @Provides
   fun provideImageLoader(
     @ApplicationContext
-    context: Context,
-    okHttpClient: OkHttpClient
+    context: Context
   ): ImageLoader {
 
-    val client = okHttpClient
-      .newBuilder()
-      .cache(CoilUtils.createDefaultCache(context))
-      .build()
-
     return ImageLoader.Builder(context)
-      .okHttpClient(client)
+      .memoryCache {
+        MemoryCache.Builder(context)
+          .maxSizePercent(MEM_CACHE_MAX_SIZE)
+          .build()
+      }
+      .diskCache {
+        Builder()
+          .directory(context.cacheDir.resolve("image_cache"))
+          .maxSizePercent(DISK_CACHE_MAX_SIZE)
+          .build()
+      }
       .build()
   }
 }

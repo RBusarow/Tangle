@@ -35,11 +35,9 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import coil.annotation.ExperimentalCoilApi
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import tangle.sample.data.breed.BreedDetail
 
-@OptIn(ExperimentalCoilApi::class)
 @Composable
 internal fun BreedDetail(
   useMetric: Boolean,
@@ -58,7 +56,7 @@ internal fun BreedDetail(
     ) {
 
       Image(
-        painter = rememberImagePainter(breedDetail.imageUrl),
+        painter = rememberAsyncImagePainter(breedDetail.imageUrl),
         contentDescription = "picture of ${breedDetail.name}",
         modifier = Modifier
           .padding(8.dp)

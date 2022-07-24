@@ -15,70 +15,58 @@
 
 package tangle.sample.app.support
 
-import android.content.Context
-import androidx.core.content.ContextCompat
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import coil.ComponentRegistry
 import coil.ImageLoader
-import coil.annotation.ExperimentalCoilApi
-import coil.bitmap.BitmapPool
 import coil.decode.DataSource.MEMORY_CACHE
-import coil.memory.MemoryCache.Key
+import coil.disk.DiskCache
+import coil.memory.MemoryCache
 import coil.request.DefaultRequestOptions
 import coil.request.Disposable
 import coil.request.ImageRequest
 import coil.request.ImageResult
-import coil.request.ImageResult.Metadata
 import coil.request.SuccessResult
 import com.squareup.anvil.annotations.ContributesBinding
-import tangle.sample.app.R
+import kotlinx.coroutines.CompletableDeferred
 import tangle.sample.core.AppScope
-import tangle.sample.core.di.ApplicationContext
-import tangle.sample.core.requireNotNull
 import javax.inject.Inject
 
 // https://coil-kt.github.io/coil/image_loaders/#testing
 @ContributesBinding(AppScope::class)
-class FakeImageLoader @Inject constructor(
-  @ApplicationContext
-  private val context: Context
-) : ImageLoader {
-
-  @OptIn(ExperimentalCoilApi::class)
-  private val disposable = object : Disposable {
-    override val isDisposed get() = true
-    override fun dispose() = Unit
-    override suspend fun await() = Unit
-  }
-
-  private val puppy = ContextCompat.getDrawable(context, R.drawable.puppy).requireNotNull()
+class FakeImageLoader @Inject constructor() : ImageLoader {
 
   override val defaults = DefaultRequestOptions()
-
-  // Optionally, you can add a custom fake memory cache implementation.
-  override val memoryCache get() = throw UnsupportedOperationException()
-
-  override val bitmapPool = BitmapPool(0)
+  override val components = ComponentRegistry()
+  override val memoryCache: MemoryCache? get() = null
+  override val diskCache: DiskCache? get() = null
 
   override fun enqueue(request: ImageRequest): Disposable {
     // Always call onStart before onSuccess.
-    request.target?.onStart(placeholder = puppy)
-    request.target?.onSuccess(result = puppy)
-    return disposable
+    request.target?.onStart(request.placeholder)
+    val result = ColorDrawable(Color.BLACK)
+    request.target?.onSuccess(result)
+    return object : Disposable {
+      override val job = CompletableDeferred(newResult(request, result))
+      override val isDisposed get() = true
+      override fun dispose() = Unit
+    }
   }
 
   override suspend fun execute(request: ImageRequest): ImageResult {
+    return newResult(request, ColorDrawable(Color.BLACK))
+  }
+
+  private fun newResult(request: ImageRequest, drawable: Drawable): SuccessResult {
     return SuccessResult(
-      drawable = puppy,
+      drawable = drawable,
       request = request,
-      metadata = Metadata(
-        memoryCacheKey = Key(""),
-        isSampled = false,
-        dataSource = MEMORY_CACHE,
-        isPlaceholderMemoryCacheKeyPresent = false
-      )
+      dataSource = MEMORY_CACHE
     )
   }
 
-  override fun shutdown() = Unit
+  override fun newBuilder() = throw UnsupportedOperationException()
 
-  override fun newBuilder() = ImageLoader.Builder(context)
+  override fun shutdown() = Unit
 }
