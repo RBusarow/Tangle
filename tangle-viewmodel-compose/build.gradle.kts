@@ -35,22 +35,18 @@ android {
 dependencies {
 
   api(libs.androidx.compose.compiler)
-  api(libs.androidx.compose.runtime)
-  api(libs.androidx.lifecycle.viewModel.core)
-  api(libs.androidx.lifecycle.viewModel.ktx)
-  api(libs.androidx.navigation.common)
-
-  api(projects.tangleViewmodelApi)
 
   compileOnly(libs.androidx.annotations)
 
-  implementation(libs.androidx.activity.compose)
-  implementation(libs.androidx.appcompat)
+  implementation(libs.androidx.activity.core)
+  implementation(libs.androidx.compose.runtime)
+  implementation(libs.androidx.compose.ui.core)
   implementation(libs.androidx.fragment.core)
-  implementation(libs.androidx.fragment.ktx)
   implementation(libs.androidx.lifecycle.viewModel.compose)
+  implementation(libs.androidx.lifecycle.viewModel.core)
+  implementation(libs.androidx.navigation.common)
   implementation(libs.androidx.savedstate)
 
   implementation(projects.tangleApi)
-  api(projects.tangleViewmodelApi)
+  implementation(projects.tangleViewmodelApi)
 }

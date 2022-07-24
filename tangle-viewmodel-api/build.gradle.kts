@@ -24,13 +24,14 @@ tanglePublishing {
 
 dependencies {
 
-  api(libs.androidx.lifecycle.viewModel.savedstate)
+  api(libs.androidx.lifecycle.viewModel.core)
   api(libs.androidx.savedstate)
-  api(libs.google.dagger.api)
+  api(libs.javax.inject)
 
   api(projects.tangleApi)
 
-  implementation(libs.androidx.lifecycle.viewModel.core)
+  implementation(libs.androidx.lifecycle.viewModel.savedstate)
+  implementation(libs.google.dagger.api)
 
   testCompileOnly(libs.google.auto.service.processor)
 

@@ -27,7 +27,9 @@ dependencies {
   api(libs.androidx.work.core)
   api(libs.google.dagger.api)
 
-  api(projects.tangleApi)
+  implementation(libs.javax.inject)
+
+  implementation(projects.tangleApi)
 
   testCompileOnly(libs.google.auto.service.processor)
 
