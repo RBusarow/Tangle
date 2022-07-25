@@ -49,6 +49,9 @@ suspend inline fun retry(
       } catch (e: AssertionFailedError) {
         exception = AssertionFailedError(clue + e.message)
         delay(RETRY_POLLING_INTERVAL)
+      } catch (e: AssertionError) {
+        exception = AssertionError(clue + e.message)
+        delay(RETRY_POLLING_INTERVAL)
       }
     }
   } ?: exception?.let {
