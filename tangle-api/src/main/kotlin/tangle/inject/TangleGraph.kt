@@ -166,20 +166,6 @@ public object TangleGraph {
     val componentClass = provider
       .scopeClassToComponentClass[scopeClass]
 
-    println(
-      """
-      ### provider maps
-
-      -- scope class to component class
-      ${provider.scopeClassToComponentClass.toList().joinToString("\n      ")}
-
-      -- injected class to scope class
-      ${provider.injectedClassToScopeClass.toList().joinToString("\n      ")}
-
-      ================
-      """.trimIndent()
-    )
-
     requireNotNull(componentClass) {
       """
       |${provider.scopeClassToComponentClass.entries.joinToString("\n")}

@@ -187,6 +187,47 @@ jobs:
           commit_message: update website versions
           commit_options: '--no-verify --signoff'
 
+  website:
+    name: build website
+    runs-on: ubuntu-latest
+    steps:
+
+      - name: Check out repo
+        uses: actions/checkout@v3
+
+      # Node is required for npm
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          cache: yarn
+          cache-dependency-path: website/yarn.lock
+
+      - name: Install Yarn
+        working-directory: website
+        run: |
+          yarn install --frozen-lockfile
+
+      - uses: gradle/wrapper-validation-action@v1
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu'
+          java-version: '11'
+
+      - name: build website
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: buildSite
+          cache-read-only: false
+
+      - name: knit check
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: knitcheck
+          cache-read-only: false
+
   api-check:
 
     runs-on: ubuntu-latest
