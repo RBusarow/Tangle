@@ -33,7 +33,9 @@ dependencies {
 
   implementation(libs.google.dagger.api)
 
+  testImplementation(libs.junit.junit4)
   testImplementation(libs.kotlin.reflect)
+  testImplementation(libs.robolectric)
 
   testImplementation(projects.tangleApi)
   testImplementation(projects.tangleCompiler)

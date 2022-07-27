@@ -1,7 +1,3 @@
-public final class tangle/fragment/ArgKt {
-	public static final fun arg (Landroidx/fragment/app/Fragment;Ljava/lang/String;)Lkotlin/Lazy;
-}
-
 public abstract interface annotation class tangle/fragment/ContributesFragment : java/lang/annotation/Annotation {
 	public abstract fun replaces ()[Ljava/lang/Class;
 	public abstract fun scope ()Ljava/lang/Class;
