@@ -26,7 +26,7 @@ fun CommonExtension<*, *, *, *>.commonAndroid(target: Project) {
 
   val publishedAsArtifact = target.extensions.findByName("com.vanniktech.maven.publish") != null
 
-  compileSdk = 31
+  compileSdk = 32
 
   buildToolsVersion = "31.0.0"
 
@@ -35,8 +35,8 @@ fun CommonExtension<*, *, *, *>.commonAndroid(target: Project) {
 
     // `targetSdk` doesn't have a single base interface, as of AGP 7.1.0
     when (this@defaultConfig) {
-      is LibraryBaseFlavor -> targetSdk = 30
-      is ApplicationBaseFlavor -> targetSdk = 30
+      is LibraryBaseFlavor -> targetSdk = 32
+      is ApplicationBaseFlavor -> targetSdk = 32
     }
 
     vectorDrawables {
