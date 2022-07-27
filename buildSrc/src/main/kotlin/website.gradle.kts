@@ -288,8 +288,8 @@ val updateWebsiteChangelog by tasks.registering(Copy::class) {
 
 val versionDocs by tasks.registering(Exec::class) {
 
-  description =
-    "creates a new version snapshot of website docs, using the current version defined in gradle.properties"
+  description = "creates a new version snapshot of website docs, " +
+      "using the current version defined in gradle.properties"
   group = "website"
 
   val existingVersions = with(File("$rootDir/website/versions.json")) {
@@ -306,6 +306,8 @@ val versionDocs by tasks.registering(Exec::class) {
 
   workingDir("$rootDir/website")
   commandLine("yarn", "run", "docusaurus", "docs:version", version)
+
+  dependsOn(yarnInstall)
 }
 
 val startSite by tasks.registering(Exec::class) {
