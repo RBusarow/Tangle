@@ -1,3 +1,28 @@
+# 0.15.0
+
+The `0.15.0` version is built using these major dependencies:
+
+| library             | version |
+|:--------------------|:--------|
+| Anvil               | 2.4.1   |
+| Dagger              | 2.43    |
+| Kotlin              | 1.7.0   |
+| androidx.compose    | 1.2.0   |
+| androidx.core       | 1.2.0   |
+| androidx.work       | 2.7.1   |
+| androidx.activity   | 1.5.1   |
+| androidx.fragment   | 1.5.1   |
+| androidx.lifecycle  | 2.5.1   |
+| androidx.savedstate | 1.2.0   |
+
+### 🐛 Bug Fixes
+
+- Allow Fragment::arg with nullable parameters [@oldwomanjosiah](https://github.com/oldwomanjosiah) ([#420](https://github.com/rbusarow/Tangle/pull/420))
+
+### Contributors
+
+@RBusarow, @oldwomanjosiah
+
 # 0.14.1
 
 ### 🐛 Bug Fixes

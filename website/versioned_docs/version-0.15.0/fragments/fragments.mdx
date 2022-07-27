@@ -1,0 +1,289 @@
+---
+title: Fragments
+
+sidebar_label: Fragments
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+Tangle performs Fragment injection using **constructor** injection, just like the rest of a
+typical Dagger/Anvil graph. There are several steps to configuration,
+with two different paths at the end.
+
+### 1. Set up Gradle
+
+<Tabs groupId="language"
+defaultValue="Kotlin Plugin"
+values={[
+    {label: 'Kotlin Plugin', value: 'Kotlin Plugin'},
+    {label: 'Groovy Plugin', value: 'Groovy Plugin'},
+    {label: 'Kotlin dependencies block', value: 'Kotlin dependencies block'},
+    {label: 'Groovy dependencies block', value: 'Groovy dependencies block'},
+]}>
+
+<TabItem value="Kotlin Plugin">
+
+```kotlin
+// any Android module's build.gradle.kts
+plugins {
+  id("android-library") // or application, etc.
+  kotlin("android")
+  id("com.rickbusarow.tangle")
+}
+
+tangle {
+  fragmentsEnabled = true // default is null
+}
+```
+
+</TabItem>
+
+<TabItem value="Groovy Plugin">
+
+```groovy
+// any Android module's build.gradle
+plugins {
+  id 'android-library' // or application, etc.
+  kotlin("android")
+  id 'com.rickbusarow.tangle'
+}
+
+// optional
+tangle {
+  fragmentsEnabled true // default is null
+}
+```
+
+</TabItem>
+
+<TabItem value="Kotlin dependencies block">
+
+```kotlin
+// any Android module's build.gradle.kts
+plugins {
+  id("android-library") // or application, etc.
+  kotlin("android")
+  id("com.squareup.anvil")
+}
+
+dependencies {
+  api("com.rickbusarow.tangle:tangle-fragment-api:0.15.0-SNAPSHOT")
+  anvil("com.rickbusarow.tangle:tangle-fragment-compiler:0.15.0-SNAPSHOT")
+}
+```
+
+</TabItem>
+
+<TabItem value="Groovy dependencies block">
+
+```groovy
+// any Android module's build.gradle
+plugins {
+  id 'android-library' // or application, etc.
+  kotlin("android")
+  id 'com.squareup.anvil'
+}
+
+dependencies {
+  api 'com.rickbusarow.tangle:tangle-fragment-api:0.15.0-SNAPSHOT'
+  anvil 'com.rickbusarow.tangle:tangle-fragment-compiler:0.15.0-SNAPSHOT'
+}
+```
+
+</TabItem>
+</Tabs>
+
+### 2. Use Anvil for the app-scoped Component
+
+Tangle uses the [MergeComponent] annotation from [Anvil] to identify the application's Component
+and add its own dependencies to the Dagger graph.
+
+For anyone already using Anvil, there's probably nothing to be done here.
+
+Anvil uses `KClass<T>` references to define scopes.  A common pattern is to define an `AppScope`
+class specifically for this purpose in a low-level shared (Gradle) module:
+
+```kotlin
+package myApp.core.anvil
+
+abstract class AppScope private constructor()
+```
+
+Then at your application Component, use `MergeComponent` with this scope:
+
+```kotlin
+package myApp.app
+
+import com.squareup.anvil.annotations.MergeComponent
+import myApp.core.anvil.AppScope
+
+@MergeComponent(AppScope::class)
+interface MyAppComponent
+```
+
+### 3. Set the custom FragmentFactory
+
+New Fragment instances are provided by [TangleFragmentFactory].  This custom factory
+is automatically added to any Dagger graph for any `@MergeComponent`-annotated Component.
+
+:::note
+
+If a requested Fragment is not contained within Tangle's bindings, `TangleFragmentFactory` will
+fall back to using the default initialization with an empty constructor.  This means that large
+projects can be migrated gradually.
+
+If a project was already doing Fragment constructor injection using vanilla Dagger, they were
+probably already binding into a
+`Map<Class<out Fragment>, Provider<@JvmSuppressWildcards Fragment>>`. That is what Tangle uses,
+so existing multi-bound graphs will often support gradual migrations as well.
+
+:::
+
+Any [FragmentManager] used within the application will need to have its `fragmentFactory`
+property set to a `TangleFragmentFactory` instance.  This means the
+`AppCompatActivity.supportFragmentManager`, and possibly `Fragment.childFragmentManager` as well.
+This is easiest if your application uses an abstract base class.
+
+```kotlin
+abstract class BaseActivity : AppCompatActivity() {
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    supportFragmentManager.fragmentFactory = Components.get<BaseActivityComponent>()
+                                              .tangleFragmentFactory
+    super.onCreate(savedInstanceState)
+  }
+}
+```
+
+<details>
+  <summary>Click to see how <code>Components</code> works</summary>
+
+In a core module, define this singleton.
+```kotlin
+package myApp.core.anvil
+
+object Components {
+  @PublishedApi
+  internal val _components = mutableSetOf<Any>()
+
+  /** Set by Application class after creating app component */
+  fun add(component: Any) {
+    _components.add(component)
+  }
+
+  inline fun <reified T> get(): T = _components
+    .filterIsInstance<T>()
+    .single()
+}
+```
+
+In your application, save off the AppComponent instance.
+
+```kotlin
+package myApp.core.anvil
+
+class MyApplication : Application() {
+
+  override fun onCreate() {
+    val component = DaggerMyAppComponent.factory()
+                      .create(/*...*/)
+
+    Components.add(component)
+
+    super.onCreate()
+  }
+}
+```
+
+Anywhere you need to, create a "component" interface with whatever dependency properties you need,
+and annotate it with `@ContributesTo(<some scope definition>)`.  Your AppComponent will
+automatically implement this interface,
+which means that an implementation of it will be stored in `Components`.
+
+```kotlin
+import com.squareup.anvil.annotations.ContributesTo
+
+@ContributesTo(AppScope::class)
+interface BaseActivityComponent {
+  val tangleFragmentFactory: TangleFragmentFactory
+}
+```
+Now, `Components.get<BaseActivityComponent>()` will return `MyAppComponent`
+safely cast to `BaseActivityComponent`, and you can access its properties.
+
+```kotlin
+val fragmentFactory = Components.get<BaseActivityComponent>()
+                                .tangleFragmentFactory
+```
+</details>
+
+### 4. Contribute Fragments to the graph
+
+Finally, add the Fragments themselves.  For basic injection, the only difference
+from any other constructor-injected class is that you must add the [ContributesFragment] annotation.
+This will ensure that the Fragment is included in the [TangleFragmentFactory].
+
+```kotlin
+import tangle.fragment.ContributesFragment
+
+@ContributesFragment(AppScope::class)
+class MyFragment @Inject constructor(
+  val myRepository: MyRepository
+) : Fragment() {
+  // ...
+}
+```
+
+
+### 5. Create Fragments with the FragmentManager
+
+All the pieces are now in place, and your FragmentManagers are able to create Fragments with Dagger
+dependencies.
+
+```kotlin
+class MyActivity: BaseActivity() {
+
+  override fun onCreate(savedInstanceState: Bundle?) {
+    super.onCreate(savedInstanceState)
+    supportFragmentManager.beginTransaction()
+      .add<MyFragment>(R.id.fragmentContainer)
+      .commit()
+  }
+}
+```
+
+### Next step -- "Assisted" Bundle injection
+
+Tangle is able to generate type-safe factories for Bundle arguments, similar to [AssistedInject].
+Read about this more in [bundle injection](bundles).
+
+```kotlin
+@ContributesFragment(AppScope::class)
+class MyFragment @FragmentInject constructor() : Fragment() {
+
+  val name by arg<String>("name")
+
+  @FragmentInjectFactory
+  interface Factory {
+    fun create(@TangleParam("name") name: String): MyFragment
+  }
+}
+```
+
+
+
+
+
+[Anvil]: https://github.com/square/anvil
+[MergeComponent]: https://github.com/square/anvil#scopes
+
+[Dagger]: https://dagger.dev
+[AssistedInject]: https://dagger.dev/dev-guide/assisted-injection
+[Hilt]: https://dagger.dev/hilt/view-model.html
+
+[FragmentManager]: https://developer.android.com/reference/kotlin/androidx/fragment/app/FragmentManager
+[SavedStateHandle]: https://developer.android.com/topic/libraries/architecture/viewmodel-savedstate
+
+[ContributesFragment]: https://rbusarow.github.io/Tangle/api/tangle-fragment-api/tangle.fragment/-contributes-fragment/index.html
+[TangleFragmentFactory]: https://rbusarow.github.io/Tangle/api/tangle-fragment-api/tangle.fragment/-tangle-fragment-factory
