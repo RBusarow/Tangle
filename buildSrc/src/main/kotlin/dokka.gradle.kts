@@ -66,3 +66,7 @@ tasks
       }
     }
 }
+
+tasks.withType<Javadoc> {
+  dependsOn("dokkaJavadoc")
+}

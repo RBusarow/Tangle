@@ -74,7 +74,7 @@ configure<MavenPublishBaseExtension> {
 
   when {
     pluginManager.hasPlugin("java-gradle-plugin") -> {
-      configure(GradlePlugin(javadocJar = Dokka(taskName = "dokkaHtml"), sourcesJar = true))
+      // nothing to do.  This is handled by the `com.gradle.plugin-publish` plugin.
     }
 
     pluginManager.hasPlugin("com.android.library") -> {
@@ -82,7 +82,7 @@ configure<MavenPublishBaseExtension> {
     }
 
     else -> {
-      configure(KotlinJvm(javadocJar = Dokka(taskName = "dokkaHtml"), sourcesJar = true))
+      configure(KotlinJvm(javadocJar = Dokka(taskName = "dokkaJavadoc"), sourcesJar = true))
     }
   }
 }

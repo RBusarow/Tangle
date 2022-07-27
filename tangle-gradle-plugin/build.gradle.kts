@@ -18,9 +18,9 @@ import tangle.builds.VERSION_NAME
 
 plugins {
   javaLibrary
-  published
-  id("com.gradle.plugin-publish") version "0.21.0"
   id("java-gradle-plugin")
+  id("com.gradle.plugin-publish") version "1.0.0"
+  published
   idea
 }
 
@@ -93,12 +93,7 @@ pluginBundle {
   vcsUrl = "https://github.com/RBusarow/Tangle"
   description = "Create Android component bindings for Dagger with Anvil"
 
-  (plugins) {
-    "tangle" {
-      displayName = "Tangle"
-      tags = listOf("android", "dagger2", "kotlin", "kotlin-compiler-plugin")
-    }
-  }
+  tags = setOf("android", "dagger2", "kotlin", "kotlin-compiler-plugin")
 }
 
 tasks.create("setupPluginUploadFromEnvironment") {
