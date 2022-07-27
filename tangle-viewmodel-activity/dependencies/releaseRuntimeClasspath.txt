@@ -10,7 +10,7 @@ androidx.core:core:1.8.0
 androidx.lifecycle:lifecycle-common:2.5.1
 androidx.lifecycle:lifecycle-livedata-core:2.5.1
 androidx.lifecycle:lifecycle-runtime:2.5.1
-androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.0
+androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1
 androidx.lifecycle:lifecycle-viewmodel-savedstate:2.5.1
 androidx.lifecycle:lifecycle-viewmodel:2.5.1
 androidx.savedstate:savedstate:1.2.0
