@@ -1,0 +1,36 @@
+{
+  "Docs": [
+    "configuration",
+    "gradle-plugin",
+    "extending-anvil",
+    "benchmarks",
+    "member-injection",
+    {
+      "type": "category",
+      "label": "ViewModels",
+      "collapsed": false,
+      "items": [
+        "viewModels/viewModels",
+        "viewModels/savedStateHandle",
+        "viewModels/compose"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "Fragments",
+      "collapsed": false,
+      "items": [
+        "fragments/fragments",
+        "fragments/bundles"
+      ]
+    },
+    {
+      "type": "category",
+      "label": "WorkManager",
+      "collapsed": false,
+      "items": [
+        "workManager/workManager"
+      ]
+    }
+  ]
+}

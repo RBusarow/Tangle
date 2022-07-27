@@ -1,0 +1,129 @@
+---
+id: configuration
+sidebar_label: Configuration
+title: Configuration
+
+---
+
+import Tabs from '@theme/Tabs';
+import TabItem from '@theme/TabItem';
+
+## Gradle
+
+The simple way to apply Tangle is to just [apply the Gradle plugin](gradle-plugin).
+
+You can also just add dependencies yourself, without applying the plugin:
+
+<Tabs groupId="language"
+  defaultValue="Kotlin Dependencies"
+  values={[
+    {label: 'Kotlin Dependencies', value: 'Kotlin Dependencies'},
+    {label: 'Groovy Dependencies', value: 'Groovy Dependencies'},
+]}>
+
+<TabItem value="Kotlin Dependencies">
+
+```kotlin
+// any Android module's build.gradle.kts
+
+plugins {
+  id("android-library") // or application, etc.
+  kotlin("android")
+  id("com.squareup.anvil")
+}
+
+dependencies {
+
+  // Fragments
+  api("com.rickbusarow.tangle:tangle-fragment-api:0.15.0-SNAPSHOT")
+  anvil("com.rickbusarow.tangle:tangle-fragment-compiler:0.15.0-SNAPSHOT")
+
+  // ViewModels
+  api("com.rickbusarow.tangle:tangle-viewmodel-api:0.15.0-SNAPSHOT")
+  anvil("com.rickbusarow.tangle:tangle-viewmodel-compiler:0.15.0-SNAPSHOT")
+
+  // optional Activity ViewModel support
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-activity:0.15.0-SNAPSHOT")
+
+  // optional Compose ViewModel support
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-compose:0.15.0-SNAPSHOT")
+
+  // optional Fragment ViewModel support
+  implementation("com.rickbusarow.tangle:tangle-viewmodel-fragment:0.15.0-SNAPSHOT")
+
+  // WorkManager
+  api("com.rickbusarow.tangle:tangle-work-api:0.15.0-SNAPSHOT")
+  anvil("com.rickbusarow.tangle:tangle-work-compiler:0.15.0-SNAPSHOT")
+}
+```
+
+</TabItem>
+
+<TabItem value="Groovy Dependencies">
+
+```groovy
+// any Android module's build.gradle
+
+plugins {
+  id 'android-library' // or application, etc.
+  kotlin("android")
+  id 'com.squareup.anvil'
+}
+
+dependencies {
+
+  // Fragments
+  api 'com.rickbusarow.tangle:tangle-fragment-api:0.15.0-SNAPSHOT'
+  anvil 'com.rickbusarow.tangle:tangle-fragment-compiler:0.15.0-SNAPSHOT'
+
+  // ViewModels
+  api 'com.rickbusarow.tangle:tangle-viewmodel-api:0.15.0-SNAPSHOT'
+  anvil 'com.rickbusarow.tangle:tangle-viewmodel-compiler:0.15.0-SNAPSHOT'
+
+  // optional Activity ViewModel support
+  implementation 'com.rickbusarow.tangle:tangle-viewmodel-activity:0.15.0-SNAPSHOT'
+
+  // optional Compose ViewModel support
+  implementation 'com.rickbusarow.tangle:tangle-viewmodel-compose:0.15.0-SNAPSHOT'
+
+  // optional Fragment ViewModel support
+  implementation 'com.rickbusarow.tangle:tangle-viewmodel-fragment:0.15.0-SNAPSHOT'
+
+  // WorkManager
+  api 'com.rickbusarow.tangle:tangle-work-api:0.15.0-SNAPSHOT'
+  anvil 'com.rickbusarow.tangle:tangle-work-compiler:0.15.0-SNAPSHOT'
+}
+```
+</TabItem>
+
+</Tabs>
+
+## Setting up the Tangle graph
+
+In order to connect Tangle to your application-scoped Dagger component,
+call `TangleGraph.add(...)` immediately after creating the component.
+
+```kotlin
+import android.app.Application
+import tangle.inject.TangleGraph
+
+class MyApplication : Application() {
+
+  override fun onCreate() {
+    super.onCreate()
+
+    val myAppComponent = DaggerMyAppComponent.factory()
+      .create(this)
+
+    TangleGraph.add(myAppComponent)
+  }
+}
+```
+## Next steps
+
+Tangle is now able to generate its code and hook in to Dagger.
+
+Check out these features to start using Tangle in your project:
+- [Fragments](fragments/fragments.mdx)
+- [ViewModels](viewModels/viewModels.md)
+- [WorkManager](workManager/workManager.md)
