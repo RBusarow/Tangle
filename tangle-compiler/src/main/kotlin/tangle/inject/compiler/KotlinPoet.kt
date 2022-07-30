@@ -35,6 +35,7 @@ import com.squareup.kotlinpoet.TypeName
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
+import org.jetbrains.kotlin.psi.KtConstantExpression
 import org.jetbrains.kotlin.resolve.constants.EnumValue
 import org.jetbrains.kotlin.resolve.constants.KClassValue
 import java.io.ByteArrayOutputStream
@@ -111,19 +112,19 @@ fun List<AnnotationReference>.qualifierAnnotationSpecs(
   val fqName = annotationReference.fqName
 
   if (fqName == FqNames.inject) return@mapNotNull null
-
-  val qualifierAnnotation = fqName.toClassReference(module).annotations
-    .find { it.fqName == FqNames.qualifier }
-    ?: return@mapNotNull null
+  if (
+    fqName.toClassReference(module)
+      .annotations
+      .none { it.fqName == FqNames.qualifier }
+  ) return@mapNotNull null
 
   AnnotationSpec(annotationReference.classReference.asClassName()) {
-    qualifierAnnotation.arguments
+    annotationReference.arguments
       .forEach { arg ->
         when (val value = arg.value<Any>()) {
           is KClassValue -> {
-            val className = value.argumentType(module).classDescriptor()
-              .asClassName()
-            addMember("${arg.name} = %T::class", className)
+            val className = value.argumentType(module).classDescriptor().asClassName()
+            addMember("${arg.resolvedName} = %T::class", className)
           }
 
           is EnumValue -> {
@@ -132,10 +133,12 @@ fun List<AnnotationReference>.qualifierAnnotationSpecs(
                 .asClassName(module),
               simpleName = value.enumEntryName.asString()
             )
-            addMember("${arg.name} = %M", enumMember)
+            addMember("${arg.resolvedName} = %M", enumMember)
           }
           // String, int, long, ... other primitives.
-          else -> addMember("${arg.name} = $value")
+          is String -> addMember("${arg.resolvedName} = %S", value)
+          is Char -> addMember("${arg.resolvedName} = '%L'", value)
+          else -> addMember("${arg.resolvedName} = %L", value)
         }
       }
   }
