@@ -484,6 +484,36 @@ class VMInjectGeneratorTest : BaseTest() {
     property.get(instance) shouldBe expected
   }
 
+  @TestFactory
+  fun `string interpolation error message`() = test {
+    compile(
+      """
+      package tangle.inject.test
+
+      import androidx.lifecycle.ViewModel
+      import tangle.viewmodel.VMInject
+      import javax.inject.Qualifier
+
+      @Qualifier
+      annotation class SomeQualifier(val value: String)
+
+      const val WORLD: String = "world!"
+
+      class Target @VMInject constructor(
+        @SomeQualifier("Hello, ${'$'}WORLD")
+        val qualified: String
+      ) : ViewModel()
+      """,
+      shouldFail = true
+    ) {
+      messages shouldContain """
+        String Interpolation in Qualifier Arguments is not currently supported
+        Here: "Hello, ${'$'}WORLD"
+        In: "@SomeQualifier("Hello, ${'$'}WORLD")"
+      """.trimIndent()
+    }
+  }
+
   @Test
   fun `qualified argument without binding should fail`() = compileWithDagger(
     """
