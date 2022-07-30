@@ -21,6 +21,7 @@ import com.squareup.kotlinpoet.AnnotationSpec
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.KModifier.ABSTRACT
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.TypeSpec
 import com.squareup.kotlinpoet.buildCodeBlock
 import tangle.inject.compiler.ClassNames
@@ -83,7 +84,13 @@ class ViewModelTangleScopeModuleGenerator : FileGenerator<TangleScopeModule> {
                 ) {
 
                   applyEach(factoryConstructorParams) { parameter ->
-                    addParameter(parameter.name, parameter.providerTypeName)
+                    addParameter(
+                      ParameterSpec.builder(parameter.name, parameter.providerTypeName)
+                        .applyEach(parameter.qualifiers) { annotation ->
+                          addAnnotation(annotation)
+                        }
+                        .build()
+                    )
                   }
 
                   returns(viewModelParams.viewModelClassName)
