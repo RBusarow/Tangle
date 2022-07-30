@@ -24,7 +24,6 @@ import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
 import tangle.inject.InternalTangleApi
-import tangle.inject.TangleGraph
 import tangle.inject.test.utils.BaseTest
 import tangle.inject.test.utils.appComponentFactoryCreate
 import tangle.inject.test.utils.property
@@ -194,7 +193,11 @@ class VMInjectGeneratorTest : BaseTest() {
      """
       ) {
         provideTarget(
-          Provider { SavedStateHandle(mapOf("aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong" to "Leeroy")) }
+          Provider { SavedStateHandle(
+            mapOf(
+              "aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong" to "Leeroy"
+            )
+          ) }
         )::class.java shouldBe targetClass
       }
     }
@@ -465,7 +468,7 @@ class VMInjectGeneratorTest : BaseTest() {
 
     @OptIn(InternalTangleApi::class)
     val instance: ViewModel =
-        appComponentFactoryCreate(expected, unexpected)
+      appComponentFactoryCreate(expected, unexpected)
         .cast<TangleViewModelComponent>()
         .tangleViewModelMapSubcomponentFactory
         .create(SavedStateHandle.createHandle(null, null))
