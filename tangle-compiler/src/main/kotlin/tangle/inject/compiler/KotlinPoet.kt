@@ -20,7 +20,9 @@ import com.squareup.anvil.compiler.internal.argumentType
 import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.classDescriptor
 import com.squareup.anvil.compiler.internal.fqNameOrNull
+import com.squareup.anvil.compiler.internal.reference.AnnotationArgumentReference
 import com.squareup.anvil.compiler.internal.reference.AnnotationReference
+import com.squareup.anvil.compiler.internal.reference.ClassReference
 import com.squareup.anvil.compiler.internal.reference.TypeReference
 import com.squareup.anvil.compiler.internal.reference.TypeReference.Descriptor
 import com.squareup.anvil.compiler.internal.reference.TypeReference.Psi
@@ -38,6 +40,8 @@ import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.psi.KtConstantExpression
 import org.jetbrains.kotlin.resolve.constants.EnumValue
 import org.jetbrains.kotlin.resolve.constants.KClassValue
+import org.jetbrains.kotlin.utils.addToStdlib.safeAs
+import org.jetbrains.kotlin.utils.sure
 import java.io.ByteArrayOutputStream
 import kotlin.reflect.KClass
 
@@ -121,6 +125,26 @@ fun List<AnnotationReference>.qualifierAnnotationSpecs(
   AnnotationSpec(annotationReference.classReference.asClassName()) {
     annotationReference.arguments
       .forEach { arg ->
+        // TODO: Anvil's PSI Parsing for AnnotationArgumentReference.Psi currently does not fold
+        //   constants within string templates correctly, instead always taking only the first leaf
+        //   node. This causes an annotation like `@MyQualifier("Hello, $world")` to generate
+        //   `@MyQualifier("Hello, ")`, which is obviously incorrect. This could be resolved here
+        //   (in a separate PR) if desired, but it would be better to upstream the change.
+        //   See: https://github.com/square/anvil/blob/main/compiler-utils/src/main/java/com/squareup/anvil/compiler/internal/reference/AnnotationArgumentReference.kt#L267
+        if (arg is AnnotationArgumentReference.Psi && arg.argument.stringTemplateExpression?.hasInterpolation() == true) {
+          throw TangleCompilationException(
+            buildString {
+              appendLine("String Interpolation in Qualifier Arguments is not currently supported")
+              appendLine("Here: ${arg.argument.text}")
+              annotationReference
+                .safeAs<AnnotationReference.Psi>()
+                ?.annotation?.text
+                ?.let { append("In: \"$it\"") }
+            },
+            element = arg.argument
+          )
+        }
+
         when (val value = arg.value<Any>()) {
           is KClassValue -> {
             val className = value.argumentType(module).classDescriptor().asClassName()
