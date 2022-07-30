@@ -16,12 +16,20 @@
 package tangle.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
+import androidx.lifecycle.ViewModel
 import com.tschuchort.compiletesting.KotlinCompilation.Result
 import io.kotest.matchers.shouldBe
+import org.jetbrains.kotlin.utils.addToStdlib.cast
+import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.TestFactory
+import tangle.inject.InternalTangleApi
+import tangle.inject.TangleGraph
 import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.appComponentFactoryCreate
+import tangle.inject.test.utils.property
 import tangle.inject.test.utils.targetClass
 import javax.inject.Provider
+import kotlin.reflect.KProperty1
 import kotlin.reflect.full.companionObject
 import kotlin.reflect.full.companionObjectInstance
 import kotlin.reflect.full.functions
@@ -40,7 +48,6 @@ class VMInjectGeneratorTest : BaseTest() {
       class Target @VMInject constructor() : ViewModel()
      """
     ) {
-
       provideTarget()::class.java shouldBe targetClass
     }
   }
@@ -186,7 +193,13 @@ class VMInjectGeneratorTest : BaseTest() {
      """
       ) {
         provideTarget(
-          Provider { SavedStateHandle(mapOf("aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong" to "Leeroy")) }
+          Provider {
+            SavedStateHandle(
+              mapOf(
+                "aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong" to "Leeroy"
+              )
+            )
+          }
         )::class.java shouldBe targetClass
       }
     }
@@ -346,6 +359,72 @@ class VMInjectGeneratorTest : BaseTest() {
         )::class.java shouldBe targetClass
       }
     }
+
+  @Test
+  fun `provided argument should keep qualifier annotations`() = compileWithDagger(
+    """
+    package tangle.inject.tests
+
+    import androidx.lifecycle.ViewModel
+    import com.squareup.anvil.annotations.ContributesTo
+    import com.squareup.anvil.annotations.MergeComponent
+    import dagger.BindsInstance
+    import dagger.Component
+    import tangle.inject.test.utils.AppScope
+    import javax.inject.Singleton
+    import tangle.viewmodel.VMInject
+    import javax.inject.Qualifier
+
+    @Qualifier
+    annotation class SomeQualifier
+
+    @Qualifier
+    annotation class SomeOtherQualifier
+
+    @Singleton
+    @MergeComponent(AppScope::class)
+    interface AppComponent {
+      @Component.Factory
+      interface Factory {
+        fun create(
+          @BindsInstance
+          @SomeQualifier
+          someArg: String,
+
+          @BindsInstance
+          @SomeOtherQualifier
+          someOtherArg: String,
+        ): AppComponent
+      }
+    }
+
+    class Target @VMInject constructor(
+      @SomeQualifier
+      val someArg: String
+    ) : ViewModel() {
+      fun get() = someArg
+    }
+    """
+  ) {
+    val expected = "Expected"
+    val unexpected = "Unexpected"
+    val component = appComponentFactoryCreate(expected, unexpected)
+
+    TangleGraph.add(component)
+
+    @OptIn(InternalTangleApi::class)
+    val instance: ViewModel =
+      TangleGraph
+        .get<TangleViewModelComponent>()
+        .tangleViewModelMapSubcomponentFactory
+        .create(SavedStateHandle.createHandle(null, null))
+        .viewModelProviderMap[targetClass]!!
+        .get()!!
+
+    val property: KProperty1<ViewModel, *> = instance::class.property("someArg").cast()
+
+    property.get(instance) shouldBe expected
+  }
 
   fun Result.provideTarget(vararg args: Any?): Any {
     val moduleClass =
