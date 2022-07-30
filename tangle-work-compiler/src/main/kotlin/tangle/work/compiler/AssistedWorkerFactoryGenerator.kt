@@ -20,11 +20,14 @@ import com.squareup.kotlinpoet.FileSpec
 import com.squareup.kotlinpoet.FunSpec
 import com.squareup.kotlinpoet.KModifier.OVERRIDE
 import com.squareup.kotlinpoet.KModifier.PRIVATE
+import com.squareup.kotlinpoet.ParameterSpec
+import com.squareup.kotlinpoet.ParameterSpec.Companion
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
 import com.squareup.kotlinpoet.PropertySpec
 import com.squareup.kotlinpoet.TypeSpec
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.FileGenerator
+import tangle.inject.compiler.applyEach
 import tangle.inject.compiler.asArgumentList
 import tangle.inject.compiler.buildFile
 import java.io.File
@@ -55,7 +58,11 @@ object AssistedWorkerFactoryGenerator : FileGenerator<WorkerParams> {
                 addAnnotation(ClassNames.inject)
 
                 constructorParams.forEach { param ->
-                  addParameter(param.name, param.providerTypeName)
+                  addParameter(
+                    ParameterSpec.builder(param.name, param.providerTypeName)
+                      .applyEach(param.qualifiers) { addAnnotation(it) }
+                      .build()
+                  )
                 }
               }
                 .build()

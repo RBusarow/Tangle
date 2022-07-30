@@ -22,8 +22,11 @@ import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.TestFactory
 import tangle.inject.test.utils.BaseTest
 import tangle.inject.test.utils.createInstance
+import tangle.inject.test.utils.getInjectConstructor
 import tangle.inject.test.utils.invokeCreate
 import tangle.inject.test.utils.invokeGet
+import tangle.inject.test.utils.parameter
+import tangle.inject.test.utils.shouldHaveAnnotation
 import javax.inject.Provider
 
 class WorkerFactoryGeneratorTest : BaseTest() {
@@ -55,7 +58,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     }
     """
     ) {
-
       val factory = myWorker_FactoryClass.createInstance()
       val assistedFactory = myWorker_AssistedFactoryClass.createInstance()
 
@@ -88,7 +90,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     }
     """
     ) {
-
       val factory = myWorker_FactoryClass.createInstance()
       val assistedFactory = myWorker_AssistedFactoryClass.createInstance()
 
@@ -121,7 +122,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     }
     """
     ) {
-
       val factory = myWorker_FactoryClass.createInstance()
       val assistedFactory = myWorker_AssistedFactoryClass.createInstance()
 
@@ -155,7 +155,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     }
     """
     ) {
-
       val factory = myWorker_FactoryClass.createInstance(Provider { "string" })
       val assistedFactory = myWorker_AssistedFactoryClass.createInstance(Provider { "string" })
 
@@ -190,7 +189,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     """,
       shouldFail = true
     ) {
-
       messages shouldContainIgnoringWhitespaces """
         @TangleWorker-annotated classes may only have Context and WorkerParameters as @Assisted-annotated parameters.
 
@@ -231,7 +229,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     """,
       shouldFail = true
     ) {
-
       messages shouldContainIgnoringWhitespaces """
         @TangleWorker-annotated classes may only have Context and WorkerParameters as @Assisted-annotated parameters.
 
@@ -270,7 +267,6 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     """,
       shouldFail = true
     ) {
-
       messages shouldContainIgnoringWhitespaces """
         @TangleWorker-annotated classes may only have Context and WorkerParameters as @Assisted-annotated parameters.
 
@@ -281,6 +277,46 @@ class WorkerFactoryGeneratorTest : BaseTest() {
           actual assisted constructor parameters
           	params: androidx.work.WorkerParameters
           """
+    }
+  }
+
+  @TestFactory
+  fun `qualified injected arguments are passed correctly`() = test {
+    compile(
+      """
+    package tangle.inject.tests
+
+    import android.content.Context
+    import androidx.work.Worker
+    import androidx.work.WorkerParameters
+    import dagger.assisted.Assisted
+    import dagger.assisted.AssistedInject
+    import tangle.work.TangleWorker
+    import javax.inject.Qualifier
+
+    @Qualifier
+    @Retention(AnnotationRetention.RUNTIME)
+    annotation class SomeQualifier
+
+    @TangleWorker
+    class MyWorker @AssistedInject constructor(
+      @Assisted context: Context,
+      @Assisted params: WorkerParameters,
+      @SomeQualifier
+      val qualified: String
+    ) : Worker(context, params) {
+      override fun doWork(): Result {
+        return Result.success()
+      }
+    }
+    """
+      ) {
+      val constructor = myWorker_AssistedFactoryClass.getInjectConstructor()
+
+      val annotationClasses = constructor.parameter("qualified")
+      val clazz = classLoader.loadClass("tangle.inject.tests.SomeQualifier")
+
+      annotationClasses shouldHaveAnnotation clazz.kotlin
     }
   }
 }

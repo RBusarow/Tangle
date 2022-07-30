@@ -17,13 +17,17 @@ package tangle.inject.test.utils
 
 import com.tschuchort.compiletesting.KotlinCompilation.Result
 import dagger.internal.Factory
+import io.kotest.matchers.collections.shouldContain
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import java.lang.reflect.Executable
 import java.lang.reflect.Member
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
+import javax.inject.Inject
 import javax.inject.Provider
+import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
+import kotlin.reflect.KFunction
 import kotlin.reflect.full.memberProperties
 
 val Member.isStatic: Boolean
@@ -60,11 +64,20 @@ fun <T> T.factoryGet(): Any = cast<Factory<*>>().get()
 fun Result.appComponentFactoryCreate(
   vararg initargs: Any?
 ): Any {
-
   return daggerAppComponent.factoryFunction()
     .invoke(null)
     .invokeCreate(*initargs)
 }
+
+fun <T> Class<out T>.getInjectConstructor(): KFunction<T> =
+  kotlin.constructors.single { constructor ->
+    constructor.annotations.any { it.annotationClass == Inject::class }
+  }
+
+fun KFunction<*>.parameter(name: String) = parameters.single { it.name == name }
+
+infix fun KAnnotatedElement.shouldHaveAnnotation(annotation: KClass<*>) =
+  annotations.map { it.annotationClass } shouldContain annotation
 
 inline fun <T, E : Executable> E.use(block: (E) -> T): T {
   // Deprecated since Java 9, but many projects still use JDK 8 for compilation.
