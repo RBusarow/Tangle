@@ -116,7 +116,7 @@ fun List<AnnotationReference>.qualifierAnnotationSpecs(
     .find { it.fqName == FqNames.qualifier }
     ?: return@mapNotNull null
 
-  AnnotationSpec(qualifierAnnotation.classReference.asClassName()) {
+  AnnotationSpec(annotationReference.classReference.asClassName()) {
     qualifierAnnotation.arguments
       .forEach { arg ->
         when (val value = arg.value<Any>()) {
