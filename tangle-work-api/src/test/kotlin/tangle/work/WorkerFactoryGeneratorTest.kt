@@ -18,15 +18,14 @@ package tangle.work
 import android.content.Context
 import androidx.work.WorkerParameters
 import hermit.test.mockk.resetsMockk
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.TestFactory
 import tangle.inject.test.utils.BaseTest
 import tangle.inject.test.utils.createInstance
-import tangle.inject.test.utils.getInjectConstructor
 import tangle.inject.test.utils.invokeCreate
 import tangle.inject.test.utils.invokeGet
-import tangle.inject.test.utils.parameter
-import tangle.inject.test.utils.shouldHaveAnnotation
+import javax.inject.Inject
 import javax.inject.Provider
 
 class WorkerFactoryGeneratorTest : BaseTest() {
@@ -310,13 +309,18 @@ class WorkerFactoryGeneratorTest : BaseTest() {
       }
     }
     """
-      ) {
-      val constructor = myWorker_AssistedFactoryClass.getInjectConstructor()
-
-      val annotationClasses = constructor.parameter("qualified")
+    ) {
       val clazz = classLoader.loadClass("tangle.inject.tests.SomeQualifier")
 
-      annotationClasses shouldHaveAnnotation clazz.kotlin
+      val constructor = myWorker_AssistedFactoryClass.kotlin.constructors
+        .single { constructor ->
+          constructor.annotations.any { it.annotationClass == Inject::class }
+        }
+
+      val annotationClasses = constructor.parameters.single { it.name == "qualified" }
+        .annotations.map { it.annotationClass }
+
+      annotationClasses shouldContain clazz.kotlin
     }
   }
 }

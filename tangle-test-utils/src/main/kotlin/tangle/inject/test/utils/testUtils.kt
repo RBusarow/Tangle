@@ -69,16 +69,6 @@ fun Result.appComponentFactoryCreate(
     .invokeCreate(*initargs)
 }
 
-fun <T> Class<out T>.getInjectConstructor(): KFunction<T> =
-  kotlin.constructors.single { constructor ->
-    constructor.annotations.any { it.annotationClass == Inject::class }
-  }
-
-fun KFunction<*>.parameter(name: String) = parameters.single { it.name == name }
-
-infix fun KAnnotatedElement.shouldHaveAnnotation(annotation: KClass<*>) =
-  annotations.map { it.annotationClass } shouldContain annotation
-
 inline fun <T, E : Executable> E.use(block: (E) -> T): T {
   // Deprecated since Java 9, but many projects still use JDK 8 for compilation.
   @Suppress("DEPRECATION")
