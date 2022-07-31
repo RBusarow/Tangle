@@ -193,11 +193,13 @@ class VMInjectGeneratorTest : BaseTest() {
      """
       ) {
         provideTarget(
-          Provider { SavedStateHandle(
-            mapOf(
-              "aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong" to "Leeroy"
+          Provider {
+            SavedStateHandle(
+              mapOf(
+                "aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong" to "Leeroy"
+              )
             )
-          ) }
+          }
         )::class.java shouldBe targetClass
       }
     }
