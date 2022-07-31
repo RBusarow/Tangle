@@ -31,7 +31,6 @@ import tangle.inject.test.utils.myFragmentClass
 import tangle.inject.test.utils.myFragmentFactoryImplClass
 import tangle.inject.test.utils.newInstanceStatic
 import tangle.inject.test.utils.tangleUnitFragmentInjectModuleClass
-import tangle.inject.test.utils.tangleUnitFragmentModuleClass
 import tangle.inject.test.utils.tangleUnitFragmentModuleCompanionClass
 import javax.inject.Provider
 import kotlin.reflect.full.memberFunctions
