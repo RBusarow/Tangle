@@ -171,7 +171,11 @@ class ContributesFragmentGenerator : TangleCodeGenerator() {
                 argument.isWrappedInLazy -> argument.lazyTypeName
                 else -> argument.typeName
               }
-              addParameter(argument.name, paramType)
+              addParameter(
+                ParameterSpec.builder(argument.name, paramType)
+                  .applyEach(argument.qualifiers) { addAnnotation(it) }
+                  .build()
+              )
             }
             returns(binding.fragmentClassName)
             addStatement("return·%T.newInstance($args)", fragmentFactoryClassName)

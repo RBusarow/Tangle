@@ -15,6 +15,7 @@
 
 package tangle.fragment
 
+import io.kotest.matchers.collections.shouldContain
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.junit.jupiter.api.Disabled
@@ -29,7 +30,11 @@ import tangle.inject.test.utils.moduleClass
 import tangle.inject.test.utils.myFragmentClass
 import tangle.inject.test.utils.myFragmentFactoryImplClass
 import tangle.inject.test.utils.newInstanceStatic
+import tangle.inject.test.utils.tangleUnitFragmentInjectModuleClass
+import tangle.inject.test.utils.tangleUnitFragmentModuleClass
+import tangle.inject.test.utils.tangleUnitFragmentModuleCompanionClass
 import javax.inject.Provider
+import kotlin.reflect.full.memberFunctions
 
 class FragmentInjectGeneratorTest : BaseTest() {
 
@@ -773,6 +778,53 @@ class FragmentInjectGeneratorTest : BaseTest() {
 
       messages shouldContain "Tangle found Fragment runtime arguments which cannot " +
         "be inserted into a Bundle: [name: tangle.inject.tests.Illegal]"
+    }
+  }
+
+  @TestFactory
+  fun `qualified inject parameter propagates qualifiers`() = test {
+    compile(
+      """
+      package tangle.inject.tests
+
+      import androidx.fragment.app.Fragment
+      import tangle.fragment.*
+      import tangle.inject.TangleParam
+      import javax.inject.Qualifier
+      import javax.inject.Inject
+
+      @Qualifier
+      annotation class SomeQualifier
+
+      @ContributesFragment(Unit::class)
+      class MyFragment @FragmentInject constructor(
+        @SomeQualifier
+        private val qualified: String
+      ) : Fragment() {
+
+        @FragmentInjectFactory
+        interface Factory {
+          fun create(
+            @TangleParam("name") name: String
+          ): MyFragment
+        }
+      }
+      """
+    ) {
+      val someQualifier = classLoader.loadClass("tangle.inject.tests.SomeQualifier").kotlin
+
+      val factoryProviderAnnotations = tangleUnitFragmentInjectModuleClass
+        .kotlin.memberFunctions.single { it.name == "provide_MyFragment_Factory" }
+        .parameters.single { it.name == "qualified" }
+        .annotations.map { it.annotationClass }
+
+      val internalFragmentProviderAnnotations = tangleUnitFragmentModuleCompanionClass
+        .kotlin.memberFunctions.single { it.name == "provide_MyFragment" }
+        .parameters.single { it.name == "qualified" }
+        .annotations.map { it.annotationClass }
+
+      factoryProviderAnnotations shouldContain someQualifier
+      internalFragmentProviderAnnotations shouldContain someQualifier
     }
   }
 }
