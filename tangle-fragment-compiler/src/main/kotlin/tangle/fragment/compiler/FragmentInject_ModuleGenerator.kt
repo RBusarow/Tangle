@@ -18,6 +18,7 @@ package tangle.fragment.compiler
 import com.squareup.anvil.compiler.api.GeneratedFile
 import com.squareup.kotlinpoet.ClassName
 import com.squareup.kotlinpoet.FileSpec
+import com.squareup.kotlinpoet.ParameterSpec
 import com.squareup.kotlinpoet.TypeSpec
 import tangle.fragment.compiler.FragmentInject_ModuleGenerator.FragmentBindingModuleParams
 import tangle.inject.compiler.ClassNames
@@ -78,7 +79,11 @@ internal object FragmentInject_ModuleGenerator : FileGenerator<FragmentBindingMo
             ) {
               addAnnotation(ClassNames.provides)
               factoryConstructorParams.forEach { argument ->
-                addParameter(argument.name, argument.typeName.wrapInProvider())
+                addParameter(
+                  ParameterSpec.builder(argument.name, argument.typeName.wrapInProvider())
+                    .applyEach(argument.qualifiers) { addAnnotation(it) }
+                    .build()
+                )
               }
               returns(params.factoryInterfaceClassName)
               addStatement(
