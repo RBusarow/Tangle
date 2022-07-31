@@ -17,17 +17,13 @@ package tangle.inject.test.utils
 
 import com.tschuchort.compiletesting.KotlinCompilation.Result
 import dagger.internal.Factory
-import io.kotest.matchers.collections.shouldContain
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import java.lang.reflect.Executable
 import java.lang.reflect.Member
 import java.lang.reflect.Method
 import java.lang.reflect.Modifier
-import javax.inject.Inject
 import javax.inject.Provider
-import kotlin.reflect.KAnnotatedElement
 import kotlin.reflect.KClass
-import kotlin.reflect.KFunction
 import kotlin.reflect.full.memberProperties
 
 val Member.isStatic: Boolean
