@@ -122,12 +122,8 @@ fun List<AnnotationReference>.qualifierAnnotationSpecs(
   AnnotationSpec(annotationReference.classReference.asClassName()) {
     annotationReference.arguments
       .forEach { arg ->
-        // Anvil's PSI Parsing for AnnotationArgumentReference.Psi currently does not fold
-        //   constants within string templates correctly, instead always taking only the first leaf
-        //   node. This causes an annotation like `@MyQualifier("Hello, $world")` to generate
-        //   `@MyQualifier("Hello, ")`, which is obviously incorrect. This could be resolved here
-        //   (in a separate PR) if desired, but it would be better to upstream the change.
-        //   See: https://github.com/square/anvil/blob/main/compiler-utils/src/main/java/com/squareup/anvil/compiler/internal/reference/AnnotationArgumentReference.kt#L267
+        // Anvil 2.4.1 does not resolve constant-interpolated string templates correctly,
+        // this should be removed for the next version of Anvil
         if (
           arg is AnnotationArgumentReference.Psi &&
           arg.argument.stringTemplateExpression?.hasInterpolation() == true
