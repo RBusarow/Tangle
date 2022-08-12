@@ -1,9 +1,9 @@
 [versions]
-androidTools = "7.2.1"
+androidTools = "7.2.2"
 benManes = "0.42.0"
 changeTracker = "0.7.3"
 coil = "2.1.0"
-dependencyAnalysis = "1.11.3"
+dependencyAnalysis = "1.12.0"
 dispatch = "1.0.0-beta10"
 detekt = "1.21.0"
 # can't update Dokka until AGP 7.3+ https://github.com/Kotlin/dokka/issues/2472
@@ -85,7 +85,7 @@ androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref
 
 androidx-annotations = "androidx.annotation:annotation:1.4.0"
 
-androidx-appcompat = "androidx.appcompat:appcompat:1.4.2"
+androidx-appcompat = "androidx.appcompat:appcompat:1.5.0"
 
 androidx-arch-test-core = "androidx.arch.core:core-testing:2.1.0"
 
