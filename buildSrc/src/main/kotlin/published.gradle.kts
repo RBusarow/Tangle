@@ -15,7 +15,6 @@
 @file:Suppress("UndocumentedPublicProperty")
 
 import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
-import com.vanniktech.maven.publish.GradlePlugin
 import com.vanniktech.maven.publish.JavadocJar.Dokka
 import com.vanniktech.maven.publish.KotlinJvm
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
@@ -46,59 +45,66 @@ version = VERSION_NAME
 
 var skipDokka = false
 
-configure<MavenPublishBaseExtension> {
-  publishToMavenCentral(DEFAULT)
-  signAllPublications()
-  pom {
-    description.set("Android dependency injection using Anvil")
-    url.set(SOURCE_WEBSITE)
-    licenses {
-      license {
-        name.set("The Apache Software License, Version 2.0")
-        url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
-        distribution.set("repo")
-      }
-    }
-    scm {
-      url.set("$SOURCE_WEBSITE/")
-      connection.set("scm:git:git://github.com/rbusarow/Tangle.git")
-      developerConnection.set("scm:git:ssh://git@github.com/rbusarow/Tangle.git")
-    }
-    developers {
-      developer {
-        id.set("rbusarow")
-        name.set("Rick Busarow")
-      }
-    }
+when {
+  pluginManager.hasPlugin("java-gradle-plugin") -> {
+    // nothing to do.  This is handled by the `com.gradle.plugin-publish` plugin.
   }
 
-  when {
-    pluginManager.hasPlugin("java-gradle-plugin") -> {
-      // nothing to do.  This is handled by the `com.gradle.plugin-publish` plugin.
-    }
+  pluginManager.hasPlugin("com.android.library") -> {
+    configurePublish(android = true)
+  }
 
-    pluginManager.hasPlugin("com.android.library") -> {
-      configure(AndroidSingleVariantLibrary(sourcesJar = true))
-    }
-
-    else -> {
-      configure(KotlinJvm(javadocJar = Dokka(taskName = "dokkaJavadoc"), sourcesJar = true))
-    }
+  else -> {
+    configurePublish(android = false)
   }
 }
 
-afterEvaluate {
-  project.configure<PublishingExtension> {
-    publications
-      .filterIsInstance<MavenPublication>()
-      .forEach {
-        it.groupId = GROUP
-        it.artifactId = settings.artifactId.get()
-      }
-  }
-  project.configure<MavenPublishBaseExtension> {
+fun configurePublish(android: Boolean) {
+  configure<MavenPublishBaseExtension> {
+    publishToMavenCentral(DEFAULT)
+    signAllPublications()
     pom {
-      name.set(settings.artifactId)
+      description.set("Android dependency injection using Anvil")
+      url.set(SOURCE_WEBSITE)
+      licenses {
+        license {
+          name.set("The Apache Software License, Version 2.0")
+          url.set("https://www.apache.org/licenses/LICENSE-2.0.txt")
+          distribution.set("repo")
+        }
+      }
+      scm {
+        url.set("$SOURCE_WEBSITE/")
+        connection.set("scm:git:git://github.com/rbusarow/Tangle.git")
+        developerConnection.set("scm:git:ssh://git@github.com/rbusarow/Tangle.git")
+      }
+      developers {
+        developer {
+          id.set("rbusarow")
+          name.set("Rick Busarow")
+        }
+      }
+    }
+
+    if (android) {
+      configure(AndroidSingleVariantLibrary(sourcesJar = true))
+    } else {
+      configure(KotlinJvm(javadocJar = Dokka(taskName = "dokkaJavadoc"), sourcesJar = true))
+    }
+  }
+  afterEvaluate {
+    project.configure<PublishingExtension> {
+      publications
+        .filterIsInstance<MavenPublication>()
+        .forEach {
+          it.groupId = GROUP
+          it.artifactId = settings.artifactId.get()
+        }
+    }
+    project.configure<MavenPublishBaseExtension> {
+      pom {
+        name.set(settings.artifactId)
+      }
     }
   }
 }
