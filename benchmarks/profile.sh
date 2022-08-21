@@ -6,7 +6,9 @@ ITERATIONS=10
 NOW="$(date +'%m-%d-%Y_%R')"
 
 # relative path to where reports are created.  Each report creates its own sub-directory
-REPORT_DIR=reports/profile_$NOW
+# replace ':' with '-' in order to support Windows
+# e.g., 10-25-2020_20-45-16
+REPORT_DIR=reports/profile_${NOW/:/-}
 
 # relative path to the root directory of this project
 PROJECT_ROOT=../build/benchmark-project
