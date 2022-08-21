@@ -1,4 +1,4 @@
-com.google.dagger:dagger:2.43
+com.google.dagger:dagger:2.43.2
 com.squareup.anvil:annotations:2.4.1
 com.squareup.anvil:compiler-api:2.4.1
 com.squareup.anvil:compiler-utils:2.4.1

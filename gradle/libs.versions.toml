@@ -41,7 +41,7 @@ kotlinx-binaryCompatibility = "0.11.0"
 kotlinx-coroutines = "1.6.4"
 kotlinx-knit = "0.4.0"
 
-google-dagger = "2.43"
+google-dagger = "2.43.2"
 google-ksp = "1.7.0-1.0.6"
 google-material = "1.6.1"
 
