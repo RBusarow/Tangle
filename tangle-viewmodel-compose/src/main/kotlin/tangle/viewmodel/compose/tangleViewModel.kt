@@ -15,12 +15,11 @@
 
 package tangle.viewmodel.compose
 
-import android.content.ContextWrapper
 import androidx.activity.ComponentActivity
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalView
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
+import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.HasDefaultViewModelProviderFactory
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
@@ -79,24 +78,16 @@ public inline fun <reified VM : ViewModel> tangleViewModel(
 internal fun currentFragmentOrNull(
   viewModelStoreOwner: ViewModelStoreOwner
 ): Fragment? {
-
-  val activity = LocalContext.current.let {
-    var ctx = it
-    while (ctx is ContextWrapper) {
-      if (ctx is FragmentActivity) {
-        return@let ctx
-      }
-      ctx = ctx.baseContext
+  val view = LocalView.current
+  return try {
+    FragmentManager.findFragment<Fragment>(view).takeIf {
+      // let's make sure the fragment for a view is the correct store owner
+      it.viewLifecycleOwner == viewModelStoreOwner
     }
+  } catch (_: IllegalStateException) {
+    // current scope is not a fragment
     null
-  } ?: return null
-
-  return activity.supportFragmentManager
-    .fragments
-    .firstOrNull { fragment ->
-
-      fragment.viewLifecycleOwnerLiveData.value == viewModelStoreOwner
-    }
+  }
 }
 
 @PublishedApi
