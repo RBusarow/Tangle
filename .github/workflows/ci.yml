@@ -11,7 +11,7 @@ on:
 env:
   macosGradleArgs: '-Dorg.gradle.jvmargs=-Xmx10g -Dfile.encoding=UTF-8 -XX:+UseParallelGC'
   ubuntuGradleArgs: '-Dorg.gradle.jvmargs=-Xmx5g -Dfile.encoding=UTF-8 -XX:+UseParallelGC'
-  windowsGradleArgs: '-Dorg.gradle.jvmargs=-Xmx4g -Dfile.encoding=UTF-8 -XX:+UseParallelGC'
+  windowsGradleArgs: '-Dorg.gradle.jvmargs=-Xmx3500m -Dfile.encoding=UTF-8 -XX:+UseParallelGC'
 
 jobs:
 
@@ -280,7 +280,7 @@ jobs:
     runs-on: macos-latest
     strategy:
       matrix:
-        api-level: [ 24, 29, 32 ]
+        api-level: [ 24, 29 ]
     timeout-minutes: 25
 
     steps:
