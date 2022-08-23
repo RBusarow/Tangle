@@ -342,6 +342,7 @@ jobs:
 
     runs-on: ubuntu-latest
     needs: instrumented-tests-matrix
+    if: always()
 
     steps:
       - name: require that the instrumented test matrix has passed
