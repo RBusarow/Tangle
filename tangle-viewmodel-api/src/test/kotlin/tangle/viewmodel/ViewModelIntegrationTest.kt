@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -17,13 +17,17 @@ package tangle.viewmodel
 
 import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.string.shouldContain
 import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
 import tangle.inject.InternalTangleApi
 import tangle.inject.test.utils.BaseTest
+import tangle.inject.test.utils.appComponentFactoryCreate
 import tangle.inject.test.utils.createFunction
 import tangle.inject.test.utils.daggerAppComponent
 import tangle.inject.test.utils.myViewModelClass
+import tangle.inject.test.utils.propertyValue
+import tangle.inject.test.utils.targetClass
 
 @OptIn(InternalTangleApi::class)
 class ViewModelIntegrationTest : BaseTest() {
@@ -182,4 +186,156 @@ class ViewModelIntegrationTest : BaseTest() {
       interface AppComponent2
      """
     )
+
+  @Test
+  fun `viewModel arguments with typed qualifiers get qualified bindings`() = compileWithDagger(
+    """
+    package tangle.inject.tests
+
+    import androidx.lifecycle.ViewModel
+    import com.squareup.anvil.annotations.ContributesTo
+    import com.squareup.anvil.annotations.MergeComponent
+    import dagger.BindsInstance
+    import dagger.Component
+    import tangle.inject.test.utils.AppScope
+    import javax.inject.Singleton
+    import tangle.viewmodel.VMInject
+    import javax.inject.Qualifier
+
+    @Qualifier
+    annotation class SomeQualifier
+
+    @Qualifier
+    annotation class SomeOtherQualifier
+
+    @Singleton
+    @MergeComponent(AppScope::class)
+    interface AppComponent {
+      @Component.Factory
+      interface Factory {
+        fun create(
+          @BindsInstance
+          @SomeQualifier
+          someArg: String,
+
+          @BindsInstance
+          @SomeOtherQualifier
+          someOtherArg: String,
+        ): AppComponent
+      }
+    }
+
+    class Target @VMInject constructor(
+      @SomeQualifier
+      val someArg: String
+    ) : ViewModel() {
+      fun get() = someArg
+    }
+    """
+  ) {
+    val expected = "Expected"
+    val unexpected = "Unexpected"
+
+    val viewModel = appComponentFactoryCreate(expected, unexpected)
+      .cast<TangleViewModelComponent>()
+      .tangleViewModelMapSubcomponentFactory
+      .create(SavedStateHandle())
+      .viewModelProviderMap[targetClass]!!
+      .get()!!
+
+    viewModel::class.java shouldBe targetClass
+
+    viewModel.propertyValue<String>("someArg") shouldBe expected
+  }
+
+  @Test
+  fun `viewModel arguments with named qualifiers get qualified bindings`() = compileWithDagger(
+    """
+    package tangle.inject.tests
+
+    import androidx.lifecycle.ViewModel
+    import com.squareup.anvil.annotations.ContributesTo
+    import com.squareup.anvil.annotations.MergeComponent
+    import dagger.BindsInstance
+    import dagger.Component
+    import javax.inject.Named
+    import javax.inject.Singleton
+    import tangle.inject.test.utils.AppScope
+    import tangle.viewmodel.VMInject
+
+    @Singleton
+    @MergeComponent(AppScope::class)
+    interface AppComponent {
+      @Component.Factory
+      interface Factory {
+        fun create(
+          @BindsInstance
+          @Named("A")
+          someArg: String,
+
+          @BindsInstance
+          @Named("B")
+          someOtherArg: String,
+        ): AppComponent
+      }
+    }
+
+    class Target @VMInject constructor(
+      @Named("A")
+      val someArg: String
+    ) : ViewModel()
+    """
+  ) {
+    val expected = "Expected"
+    val unexpected = "Unexpected"
+
+    val viewModel = appComponentFactoryCreate(expected, unexpected)
+      .cast<TangleViewModelComponent>()
+      .tangleViewModelMapSubcomponentFactory
+      .create(SavedStateHandle.createHandle(null, null))
+      .viewModelProviderMap[targetClass]!!
+      .get()!!
+
+    viewModel::class.java shouldBe targetClass
+
+    viewModel.propertyValue<String>("someArg") shouldBe expected
+  }
+
+  @Test
+  fun `qualified argument without binding should fail`() = compileWithDagger(
+    """
+    package tangle.inject.test
+
+    import androidx.lifecycle.ViewModel
+    import com.squareup.anvil.annotations.MergeComponent
+    import dagger.Component
+    import dagger.BindsInstance
+    import dagger.Provides
+    import tangle.viewmodel.VMInject
+    import javax.inject.Qualifier
+    import javax.inject.Singleton
+    import tangle.inject.test.utils.AppScope
+
+    @Qualifier
+    annotation class SomeQualifier
+
+    @Singleton
+    @MergeComponent(AppScope::class)
+    interface AppComponent {
+      @Component.Factory
+      interface Factory {
+        fun create(@BindsInstance unqualified: String): AppComponent
+      }
+    }
+
+    class Target @VMInject constructor(
+      @SomeQualifier
+      val someArg: String
+    ) : ViewModel()
+    """,
+    shouldFail = true
+  ) {
+    messages shouldContain "[Dagger/MissingBinding] @tangle.inject.test.SomeQualifier " +
+      "java.lang.String cannot be provided without an @Provides-annotated method."
+  }
 }

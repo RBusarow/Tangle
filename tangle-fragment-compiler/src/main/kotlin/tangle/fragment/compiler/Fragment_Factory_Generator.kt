@@ -110,10 +110,13 @@ internal object Fragment_Factory_Generator : FileGenerator<FragmentInjectParams.
         }
         .applyEach(factoryConstructorParams) { parameter ->
 
+          val qualifierAnnotationSpecs = parameter.qualifiers
+
           addProperty(
             PropertySpec.Companion.builder(parameter.name, parameter.providerTypeName)
               .initializer(parameter.name)
               .addModifiers(KModifier.INTERNAL)
+              .applyEach(qualifierAnnotationSpecs) { addAnnotation(it) }
               .build()
           )
         }

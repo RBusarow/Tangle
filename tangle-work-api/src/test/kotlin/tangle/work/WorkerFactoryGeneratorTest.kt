@@ -25,7 +25,6 @@ import tangle.inject.test.utils.BaseTest
 import tangle.inject.test.utils.createInstance
 import tangle.inject.test.utils.invokeCreate
 import tangle.inject.test.utils.invokeGet
-import javax.inject.Inject
 import javax.inject.Provider
 
 class WorkerFactoryGeneratorTest : BaseTest() {
@@ -287,7 +286,7 @@ class WorkerFactoryGeneratorTest : BaseTest() {
   }
 
   @TestFactory
-  fun `qualified injected arguments are passed correctly`() = test {
+  fun `qualified inject parameter propagates qualifiers`() = test {
     compile(
       """
     package tangle.inject.tests
@@ -320,11 +319,10 @@ class WorkerFactoryGeneratorTest : BaseTest() {
       val clazz = classLoader.loadClass("tangle.inject.tests.SomeQualifier")
 
       val constructor = myWorker_AssistedFactoryClass.kotlin.constructors
-        .single { constructor ->
-          constructor.annotations.any { it.annotationClass == Inject::class }
-        }
+        .single()
 
-      val annotationClasses = constructor.parameters.single { it.name == "qualified" }
+      val annotationClasses = constructor.parameters
+        .single { it.name == "qualified" }
         .annotations.map { it.annotationClass }
 
       annotationClasses shouldContain clazz.kotlin
