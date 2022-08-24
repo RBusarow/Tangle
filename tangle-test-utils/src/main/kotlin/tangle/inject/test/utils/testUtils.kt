@@ -122,4 +122,10 @@ fun Class<*>.annotationClasses() = annotations.map { it.annotationClass }
 fun <T : Any> KClass<T>.property(name: String) = memberProperties
   .first { it.name == name }
 
+fun <T> Any.propertyValue(name: String): T {
+  val property = this::class.property(name)
+  @Suppress("UNCHECKED_CAST")
+  return property.call(this) as T
+}
+
 fun Any.provider() = Provider { this }
