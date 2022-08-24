@@ -89,7 +89,7 @@ fun configurePublish(android: Boolean) {
     if (android) {
       configure(AndroidSingleVariantLibrary(sourcesJar = true))
     } else {
-      configure(KotlinJvm(javadocJar = Dokka(taskName = "dokkaJavadoc"), sourcesJar = true))
+      configure(KotlinJvm(javadocJar = Dokka(taskName = "dokkaHtml"), sourcesJar = true))
     }
   }
   afterEvaluate {

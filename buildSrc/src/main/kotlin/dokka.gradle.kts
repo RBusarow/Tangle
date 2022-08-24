@@ -68,5 +68,5 @@ tasks
 }
 
 tasks.withType<Javadoc> {
-  dependsOn("dokkaJavadoc")
+  dependsOn("dokkaHtml")
 }
