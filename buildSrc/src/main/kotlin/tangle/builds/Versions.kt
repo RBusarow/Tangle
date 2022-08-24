@@ -17,6 +17,6 @@ package tangle.builds
 
 const val GROUP = "com.rickbusarow.tangle"
 const val PLUGIN_ID = "com.rickbusarow.tangle"
-const val VERSION_NAME = "0.15.1-SNAPSHOT"
+const val VERSION_NAME = "0.15.1"
 const val SOURCE_WEBSITE = "https://github.com/rbusarow/Tangle"
 const val DOCS_WEBSITE = "https://rbusarow.github.io/Tangle"

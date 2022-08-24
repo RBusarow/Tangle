@@ -1,3 +1,66 @@
+# 0.15.1
+
+The `0.15.1` version is built using these major dependencies:
+
+| library             | version |
+|:--------------------|:--------|
+| Anvil               | 2.4.2   |
+| Dagger              | 2.43.2  |
+| Kotlin              | 1.7.0   |
+| androidx.compose    | 1.2.1   |
+| androidx.core       | 1.2.0   |
+| androidx.work       | 2.7.1   |
+| androidx.activity   | 1.5.1   |
+| androidx.fragment   | 1.5.2   |
+| androidx.lifecycle  | 2.5.1   |
+| androidx.savedstate | 1.2.0   |
+
+### 🐛 Bug Fixes
+
+- Fragment lookup for compose ViewModelStoreOwner fix [@jakoss](https://github.com/jakoss) ([#527](https://github.com/rbusarow/Tangle/pull/527))
+- Qualifier Annotation Fix [@oldwomanjosiah](https://github.com/oldwomanjosiah) ([#513](https://github.com/rbusarow/Tangle/pull/513))
+- make benchmarks results Windows-friendly [@rbusarow](https://github.com/rbusarow) ([#531](https://github.com/rbusarow/Tangle/pull/531))
+
+### 🧰 Maintenance
+
+- Update dependency com.autonomousapps.dependency-analysis to v1.13.1 ([#541](https://github.com/rbusarow/Tangle/pull/541))
+- Update dependency mathjs to v11.1.0 ([#540](https://github.com/rbusarow/Tangle/pull/540))
+- Update dependency io.mockk:mockk to v1.12.7 ([#533](https://github.com/rbusarow/Tangle/pull/533))
+- Update dependency com.autonomousapps.dependency-analysis to v1.13.0 ([#535](https://github.com/rbusarow/Tangle/pull/535))
+- Update square-anvil to v2.4.2 ([#538](https://github.com/rbusarow/Tangle/pull/538))
+- revert paging-compose to 1.0.0-alpha14 ([#539](https://github.com/rbusarow/Tangle/pull/539))
+- Update dependency androidx.paging:paging-compose to v1.0.0-alpha16 ([#434](https://github.com/rbusarow/Tangle/pull/434))
+- use `gradle-build-action` for caching in instrumented tests and add AVD caching ([#536](https://github.com/rbusarow/Tangle/pull/536))
+- Update dependency mdx-mermaid to v1.3.2 ([#532](https://github.com/rbusarow/Tangle/pull/532))
+- Update dependency org.robolectric:robolectric to v4.8.2 ([#534](https://github.com/rbusarow/Tangle/pull/534))
+- Update dependency mermaid to v9.1.6 ([#529](https://github.com/rbusarow/Tangle/pull/529))
+- Update dependency androidx.test:orchestrator to v1.4.1 ([#436](https://github.com/rbusarow/Tangle/pull/436))
+- Update coil to v2.2.0 ([#528](https://github.com/rbusarow/Tangle/pull/528))
+- Update androidx-fragment-version to v1.5.2 ([#521](https://github.com/rbusarow/Tangle/pull/521))
+- Update google-dagger to v2.43.2 ([#476](https://github.com/rbusarow/Tangle/pull/476))
+- Update androidx-compose-runtime to v1.2.1 ([#522](https://github.com/rbusarow/Tangle/pull/522))
+- Update dependency gradle to v7.5.1 ([#520](https://github.com/rbusarow/Tangle/pull/520))
+- Update kotest to v5.4.2 ([#523](https://github.com/rbusarow/Tangle/pull/523))
+- Update dependency androidx.appcompat:appcompat to v1.5.0 ([#524](https://github.com/rbusarow/Tangle/pull/524))
+- Update dependency com.android.tools.build:gradle to v7.2.2 ([#518](https://github.com/rbusarow/Tangle/pull/518))
+- Update docusaurus monorepo to v2.0.1 ([#514](https://github.com/rbusarow/Tangle/pull/514))
+- Update dependency com.autonomousapps.dependency-analysis to v1.12.0 ([#516](https://github.com/rbusarow/Tangle/pull/516))
+- Update dependency Chart.js to v3.9.1 ([#517](https://github.com/rbusarow/Tangle/pull/517))
+- Update dependency mermaid to v9.1.5 ([#519](https://github.com/rbusarow/Tangle/pull/519))
+- Update dependency com.autonomousapps.dependency-analysis to v1.11.3 ([#512](https://github.com/rbusarow/Tangle/pull/512))
+- Update kotest to v5.4.1 ([#510](https://github.com/rbusarow/Tangle/pull/510))
+- Update dependency com.autonomousapps.dependency-analysis to v1.11.2 ([#511](https://github.com/rbusarow/Tangle/pull/511))
+- Update dependency com.autonomousapps.dependency-analysis to v1.11.1 ([#509](https://github.com/rbusarow/Tangle/pull/509))
+
+### New Contributors
+- @jakoss made their first contribution in https://github.com/RBusarow/Tangle/pull/527
+
+### Contributors
+
+@RBusarow, @jakoss and @oldwomanjosiah
+
+**Full Changelog**: https://github.com/RBusarow/Tangle/compare/0.15.0...0.15.1
+
 # 0.15.0
 
 The `0.15.0` version is built using these major dependencies:
