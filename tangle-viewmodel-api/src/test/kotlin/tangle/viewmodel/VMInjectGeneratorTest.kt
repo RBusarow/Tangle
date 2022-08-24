@@ -48,6 +48,7 @@ class VMInjectGeneratorTest : BaseTest() {
       class Target @VMInject constructor() : ViewModel()
      """
     ) {
+
       provideTarget()::class.java shouldBe targetClass
     }
   }
@@ -193,13 +194,7 @@ class VMInjectGeneratorTest : BaseTest() {
      """
       ) {
         provideTarget(
-          Provider {
-            SavedStateHandle(
-              mapOf(
-                "aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong" to "Leeroy"
-              )
-            )
-          }
+          Provider { SavedStateHandle(mapOf("aNameWhichIsVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryVeryLong" to "Leeroy")) }
         )::class.java shouldBe targetClass
       }
     }
@@ -517,7 +512,8 @@ class VMInjectGeneratorTest : BaseTest() {
     """,
     shouldFail = true
   ) {
-    messages shouldContain "[Dagger/MissingBinding] @tangle.inject.test.SomeQualifier java.lang.String cannot be provided without an @Provides-annotated method."
+    messages shouldContain "[Dagger/MissingBinding] @tangle.inject.test.SomeQualifier " +
+      "java.lang.String cannot be provided without an @Provides-annotated method."
   }
 
   fun Result.provideTarget(vararg args: Any?): Any {

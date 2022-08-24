@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -57,6 +57,7 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     }
     """
     ) {
+
       val factory = myWorker_FactoryClass.createInstance()
       val assistedFactory = myWorker_AssistedFactoryClass.createInstance()
 
@@ -89,6 +90,7 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     }
     """
     ) {
+
       val factory = myWorker_FactoryClass.createInstance()
       val assistedFactory = myWorker_AssistedFactoryClass.createInstance()
 
@@ -121,6 +123,7 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     }
     """
     ) {
+
       val factory = myWorker_FactoryClass.createInstance()
       val assistedFactory = myWorker_AssistedFactoryClass.createInstance()
 
@@ -154,6 +157,7 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     }
     """
     ) {
+
       val factory = myWorker_FactoryClass.createInstance(Provider { "string" })
       val assistedFactory = myWorker_AssistedFactoryClass.createInstance(Provider { "string" })
 
@@ -188,6 +192,7 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     """,
       shouldFail = true
     ) {
+
       messages shouldContainIgnoringWhitespaces """
         @TangleWorker-annotated classes may only have Context and WorkerParameters as @Assisted-annotated parameters.
 
@@ -228,6 +233,7 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     """,
       shouldFail = true
     ) {
+
       messages shouldContainIgnoringWhitespaces """
         @TangleWorker-annotated classes may only have Context and WorkerParameters as @Assisted-annotated parameters.
 
@@ -266,6 +272,7 @@ class WorkerFactoryGeneratorTest : BaseTest() {
     """,
       shouldFail = true
     ) {
+
       messages shouldContainIgnoringWhitespaces """
         @TangleWorker-annotated classes may only have Context and WorkerParameters as @Assisted-annotated parameters.
 
