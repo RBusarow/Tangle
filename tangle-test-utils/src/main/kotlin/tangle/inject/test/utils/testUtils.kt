@@ -60,6 +60,7 @@ fun <T> T.factoryGet(): Any = cast<Factory<*>>().get()
 fun Result.appComponentFactoryCreate(
   vararg initargs: Any?
 ): Any {
+
   return daggerAppComponent.factoryFunction()
     .invoke(null)
     .invokeCreate(*initargs)
