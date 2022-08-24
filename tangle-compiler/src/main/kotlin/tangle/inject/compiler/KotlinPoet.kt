@@ -20,7 +20,6 @@ import com.squareup.anvil.compiler.internal.argumentType
 import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.classDescriptor
 import com.squareup.anvil.compiler.internal.fqNameOrNull
-import com.squareup.anvil.compiler.internal.reference.AnnotationArgumentReference
 import com.squareup.anvil.compiler.internal.reference.AnnotationReference
 import com.squareup.anvil.compiler.internal.reference.TypeReference
 import com.squareup.anvil.compiler.internal.reference.TypeReference.Descriptor
@@ -38,7 +37,6 @@ import com.squareup.kotlinpoet.jvm.jvmSuppressWildcards
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.resolve.constants.EnumValue
 import org.jetbrains.kotlin.resolve.constants.KClassValue
-import org.jetbrains.kotlin.utils.addToStdlib.safeAs
 import java.io.ByteArrayOutputStream
 import kotlin.reflect.KClass
 
@@ -113,34 +111,15 @@ fun List<AnnotationReference>.qualifierAnnotationSpecs(
   val fqName = annotationReference.fqName
 
   if (fqName == FqNames.inject) return@mapNotNull null
-  if (
-    fqName.toClassReference(module)
-      .annotations
-      .none { it.fqName == FqNames.qualifier }
-  ) return@mapNotNull null
+
+  val annotationClass = fqName.toClassReference(module)
+  if (!annotationClass.isAnnotatedWith(FqNames.qualifier)) {
+    return@mapNotNull null
+  }
 
   AnnotationSpec(annotationReference.classReference.asClassName()) {
     annotationReference.arguments
       .forEach { arg ->
-        // Anvil 2.4.1 does not resolve constant-interpolated string templates correctly,
-        // this should be removed for the next version of Anvil
-        if (
-          arg is AnnotationArgumentReference.Psi &&
-          arg.argument.stringTemplateExpression?.hasInterpolation() == true
-        ) {
-          throw TangleCompilationException(
-            buildString {
-              appendLine("String Interpolation in Qualifier Arguments is not currently supported")
-              appendLine("Here: ${arg.argument.text}")
-              annotationReference
-                .safeAs<AnnotationReference.Psi>()
-                ?.annotation?.text
-                ?.let { append("In: \"$it\"") }
-            },
-            element = arg.argument
-          )
-        }
-
         when (val value = arg.value<Any>()) {
           is KClassValue -> {
             val className = value.argumentType(module).classDescriptor().asClassName()
