@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2021 Rick Busarow
+ * Copyright (C) 2022 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -481,36 +481,6 @@ class VMInjectGeneratorTest : BaseTest() {
     val property: KProperty1<ViewModel, *> = instance::class.property("someArg").cast()
 
     property.get(instance) shouldBe expected
-  }
-
-  @TestFactory
-  fun `string interpolation error message`() = test {
-    compile(
-      """
-      package tangle.inject.test
-
-      import androidx.lifecycle.ViewModel
-      import tangle.viewmodel.VMInject
-      import javax.inject.Qualifier
-
-      @Qualifier
-      annotation class SomeQualifier(val value: String)
-
-      const val WORLD: String = "world!"
-
-      class Target @VMInject constructor(
-        @SomeQualifier("Hello, ${'$'}WORLD")
-        val qualified: String
-      ) : ViewModel()
-      """,
-      shouldFail = true
-    ) {
-      messages shouldContain """
-        String Interpolation in Qualifier Arguments is not currently supported
-        Here: "Hello, ${'$'}WORLD"
-        In: "@SomeQualifier("Hello, ${'$'}WORLD")"
-      """.trimIndent()
-    }
   }
 
   @Test
