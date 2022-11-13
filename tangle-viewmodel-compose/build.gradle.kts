@@ -34,8 +34,6 @@ android {
 
 dependencies {
 
-  api(libs.androidx.compose.compiler)
-
   compileOnly(libs.androidx.annotations)
 
   implementation(libs.androidx.activity.core)
