@@ -20,6 +20,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelLazy
 import tangle.inject.InternalTangleApi
 import tangle.viewmodel.internal.TangleViewModelFactory
+import kotlin.LazyThreadSafetyMode.NONE
 
 /**
  * Equivalent to the Androidx ktx `by viewModels()` delegate.
@@ -29,13 +30,14 @@ import tangle.viewmodel.internal.TangleViewModelFactory
  * @since 0.11.0
  */
 @OptIn(InternalTangleApi::class)
-public inline fun <reified VM : ViewModel> ComponentActivity.tangleViewModel(): Lazy<VM> {
+public inline fun <reified VM : ViewModel> ComponentActivity.tangleViewModel(): Lazy<VM> =
+  lazy(NONE) {
 
-  val viewModelFactory = TangleViewModelFactory(
-    owner = this,
-    defaultArgs = intent.extras,
-    defaultFactory = defaultViewModelProviderFactory
-  )
+    val viewModelFactory = TangleViewModelFactory(
+      owner = this,
+      defaultArgs = intent.extras,
+      defaultFactory = defaultViewModelProviderFactory
+    )
 
-  return ViewModelLazy(VM::class, { viewModelStore }, { viewModelFactory })
-}
+    ViewModelLazy(VM::class, { viewModelStore }, { viewModelFactory }).value
+  }
