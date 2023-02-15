@@ -14,7 +14,8 @@
  */
 
 plugins {
-  `kotlin-dsl`
+  // TODO
+  `kotlin-dsl`.version("3.2.2")
 }
 
 repositories {
