@@ -178,7 +178,6 @@ fun CallableMemberDescriptor.requireTangleParamName(): String {
 fun ParameterReference.requireTangleParamName(): String {
   return tangleParamNameOrNull()
     ?: throw TangleCompilationException(
-      // TODO
       (this.declaringFunction as MemberFunctionReference).declaringClass,
       "could not find a @TangleParam annotation for parameter `$name`"
     )
