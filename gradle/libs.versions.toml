@@ -1,5 +1,5 @@
 [versions]
-androidTools = "7.2.2"
+androidTools = "7.3.1"
 benManes = "0.42.0"
 changeTracker = "0.7.3"
 coil = "2.2.0"
@@ -58,7 +58,7 @@ square-moshi = "1.13.0"
 square-okhttp = "4.10.0"
 square-retrofit = "2.9.0"
 
-vanniktech-publish = "0.21.0"
+vanniktech-publish = "0.24.0"
 
 zacSweers-moshix = "0.18.3"
 

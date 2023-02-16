@@ -18,9 +18,8 @@ import com.vanniktech.maven.publish.AndroidSingleVariantLibrary
 import com.vanniktech.maven.publish.JavadocJar.Dokka
 import com.vanniktech.maven.publish.KotlinJvm
 import com.vanniktech.maven.publish.MavenPublishBaseExtension
-import com.vanniktech.maven.publish.SonatypeHost.DEFAULT
+import com.vanniktech.maven.publish.SonatypeHost.Companion.DEFAULT
 import com.vanniktech.maven.publish.tasks.JavadocJar
-import com.vanniktech.maven.publish.tasks.SourcesJar
 import org.jetbrains.dokka.gradle.AbstractDokkaLeafTask
 import tangle.builds.GROUP
 import tangle.builds.SOURCE_WEBSITE
@@ -124,9 +123,6 @@ tasks.withType(PublishToMavenRepository::class.java).configureEach {
 }
 
 tasks.withType(Jar::class.java).configureEach {
-  notCompatibleWithConfigurationCache("")
-}
-tasks.withType(SourcesJar::class.java).configureEach {
   notCompatibleWithConfigurationCache("")
 }
 tasks.withType(JavadocJar::class.java).configureEach {
