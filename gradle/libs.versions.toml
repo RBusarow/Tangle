@@ -7,7 +7,7 @@ dependencyAnalysis = "1.13.1"
 dispatch = "1.0.0-beta10"
 detekt = "1.21.0"
 # can't update Dokka until AGP 7.3+ https://github.com/Kotlin/dokka/issues/2472
-dokka = "1.6.10"
+dokka = "1.8.10"
 dropbox-dependencyGuard = "0.3.1"
 gradleDoctor = "0.8.1"
 groovy = "3.0.12"
