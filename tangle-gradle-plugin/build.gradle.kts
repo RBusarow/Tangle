@@ -198,6 +198,7 @@ tasks.withType<KotlinCompile>().configureEach {
 tasks.matching {
   it.name in setOf(
     "javaSourcesJar",
+    "sourcesJar",
     "runKtlintCheckOverMainSourceSet",
     "runKtlintFormatOverMainSourceSet"
   )
