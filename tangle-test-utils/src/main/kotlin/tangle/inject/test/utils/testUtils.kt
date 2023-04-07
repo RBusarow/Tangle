@@ -15,9 +15,9 @@
 
 package tangle.inject.test.utils
 
+import androidx.annotation.RequiresApi
 import com.tschuchort.compiletesting.KotlinCompilation.Result
 import dagger.internal.Factory
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 import java.lang.reflect.Executable
 import java.lang.reflect.Member
 import java.lang.reflect.Method
@@ -54,7 +54,7 @@ fun <T : Any> Class<T>.createStatic(
   .invoke(null, *initargs) as T
 
 @Suppress("UNCHECKED_CAST")
-fun <T> T.factoryGet(): Any = cast<Factory<*>>().get()
+fun <T> T.factoryGet(): Any = (this as Factory<*>).get()
 
 @Suppress("UNCHECKED_CAST")
 fun Result.appComponentFactoryCreate(

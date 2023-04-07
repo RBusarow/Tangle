@@ -61,6 +61,7 @@ allprojects {
     google()
     mavenLocal()
     mavenCentral()
+    maven("https://androidx.dev/storage/compose-compiler/repository/")
     maven("https://oss.sonatype.org/content/repositories/snapshots")
   }
   configurations.all {

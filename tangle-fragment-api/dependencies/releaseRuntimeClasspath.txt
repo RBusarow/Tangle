@@ -23,10 +23,10 @@ androidx.viewpager:viewpager:1.0.0
 com.google.dagger:dagger:2.43.2
 com.google.guava:listenablefuture:1.0
 javax.inject:javax.inject:1
-org.jetbrains.kotlin:kotlin-stdlib-common:1.8.10
-org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.10
-org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.10
-org.jetbrains.kotlin:kotlin-stdlib:1.8.10
+org.jetbrains.kotlin:kotlin-stdlib-common:1.8.20
+org.jetbrains.kotlin:kotlin-stdlib-jdk7:1.8.20
+org.jetbrains.kotlin:kotlin-stdlib-jdk8:1.8.20
+org.jetbrains.kotlin:kotlin-stdlib:1.8.20
 org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.1
 org.jetbrains.kotlinx:kotlinx-coroutines-bom:1.6.1
 org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.6.1
