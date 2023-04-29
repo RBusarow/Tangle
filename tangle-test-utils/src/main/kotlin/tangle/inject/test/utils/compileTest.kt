@@ -52,7 +52,7 @@ fun compileTangle(
 ): Result {
   return KotlinCompilation()
     .apply {
-      compilerPlugins = listOf(AnvilComponentRegistrar())
+      componentRegistrars = listOf(AnvilComponentRegistrar())
       this.useIR = useIR
       useOldBackend = !useIR
       inheritClassPath = true

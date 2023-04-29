@@ -21,8 +21,9 @@ import com.squareup.anvil.compiler.internal.argumentType
 import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.classDescriptor
 import com.squareup.anvil.compiler.internal.reference.ClassReference
+import com.squareup.anvil.compiler.internal.reference.MemberFunctionReference
+import com.squareup.anvil.compiler.internal.reference.MemberPropertyReference
 import com.squareup.anvil.compiler.internal.reference.ParameterReference
-import com.squareup.anvil.compiler.internal.reference.PropertyReference
 import com.squareup.anvil.compiler.internal.reference.Visibility.PRIVATE
 import com.squareup.anvil.compiler.internal.reference.allSuperTypeClassReferences
 import com.squareup.anvil.compiler.internal.reference.argumentAt
@@ -145,7 +146,7 @@ fun TypeParameterDescriptor.boundClassName(): ClassName = representativeUpperBou
   .classDescriptor()
   .asClassName()
 
-fun PropertyReference.tangleParamNameOrNull(): String? {
+fun MemberPropertyReference.tangleParamNameOrNull(): String? {
   return annotations.find { it.fqName == FqNames.tangleParam }
     ?.argumentAt("name", 0)
     ?.value<String>()
@@ -177,7 +178,7 @@ fun CallableMemberDescriptor.requireTangleParamName(): String {
 fun ParameterReference.requireTangleParamName(): String {
   return tangleParamNameOrNull()
     ?: throw TangleCompilationException(
-      this.declaringFunction.declaringClass,
+      (this.declaringFunction as MemberFunctionReference).declaringClass,
       "could not find a @TangleParam annotation for parameter `$name`"
     )
 }
@@ -219,7 +220,7 @@ fun List<AnnotationDescriptor>.qualifierAnnotationSpecs(
   }
 }
 
-fun PropertyReference.toMemberInjectParameter(
+fun MemberPropertyReference.toMemberInjectParameter(
   uniqueName: String
 ): MemberInjectParameter {
   val propertyReference = this

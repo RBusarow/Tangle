@@ -17,7 +17,7 @@ package tangle.fragment.compiler
 
 import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.reference.ClassReference
-import com.squareup.anvil.compiler.internal.reference.FunctionReference
+import com.squareup.anvil.compiler.internal.reference.MemberFunctionReference
 import com.squareup.anvil.compiler.internal.reference.TypeParameterReference
 import com.squareup.anvil.compiler.internal.reference.TypeReference
 import com.squareup.anvil.compiler.internal.reference.allSuperTypeClassReferences
@@ -57,7 +57,7 @@ internal sealed class FragmentInjectParams {
     val fragmentClass: ClassReference,
     val fragmentFactoryClassNameString: String,
     val fragmentFactoryClassName: ClassName,
-    val constructor: FunctionReference,
+    val constructor: MemberFunctionReference,
     val constructorParams: List<ConstructorInjectParameter>,
     val memberInjectedParams: List<MemberInjectParameter>,
     val typeParameters: List<TypeParameterReference>,
@@ -68,7 +68,7 @@ internal sealed class FragmentInjectParams {
       fun create(
         module: ModuleDescriptor,
         fragmentClass: ClassReference,
-        constructor: FunctionReference
+        constructor: MemberFunctionReference
       ): Fragment {
         val packageName = fragmentClass.packageFqName
           .safePackageString(dotSuffix = false)
@@ -145,7 +145,7 @@ internal sealed class FragmentInjectParams {
         module: ModuleDescriptor,
         factoryInterface: ClassReference,
         fragmentClass: ClassReference,
-        constructor: FunctionReference
+        constructor: MemberFunctionReference
       ): Factory {
         val packageName = factoryInterface.packageFqName.safePackageString(dotSuffix = false)
 

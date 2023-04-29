@@ -17,7 +17,6 @@ package tangle.inject.test.utils
 
 import com.tschuchort.compiletesting.KotlinCompilation.Result
 import dagger.internal.Factory
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 import java.lang.reflect.Executable
 import java.lang.reflect.Member
 import java.lang.reflect.Method
@@ -33,7 +32,7 @@ val Member.isStatic: Boolean
  * Creates a new instance of this class with the given arguments. This method assumes that this
  * class only declares a single constructor.
  */
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "NewApi")
 fun <T : Any> Class<T>.createInstance(
   vararg initargs: Any?
 ): T = declaredConstructors.single()
@@ -54,7 +53,7 @@ fun <T : Any> Class<T>.createStatic(
   .invoke(null, *initargs) as T
 
 @Suppress("UNCHECKED_CAST")
-fun <T> T.factoryGet(): Any = cast<Factory<*>>().get()
+fun <T> T.factoryGet(): Any = (this as Factory<*>).get()
 
 @Suppress("UNCHECKED_CAST")
 fun Result.appComponentFactoryCreate(
