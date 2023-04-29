@@ -15,7 +15,6 @@
 
 package tangle.inject.test.utils
 
-import androidx.annotation.RequiresApi
 import com.tschuchort.compiletesting.KotlinCompilation.Result
 import dagger.internal.Factory
 import java.lang.reflect.Executable
@@ -33,7 +32,7 @@ val Member.isStatic: Boolean
  * Creates a new instance of this class with the given arguments. This method assumes that this
  * class only declares a single constructor.
  */
-@Suppress("UNCHECKED_CAST")
+@Suppress("UNCHECKED_CAST", "NewApi")
 fun <T : Any> Class<T>.createInstance(
   vararg initargs: Any?
 ): T = declaredConstructors.single()
