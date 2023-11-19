@@ -151,7 +151,7 @@ class TanglePluginTest : BasePluginTest() {
     module(
       """
       plugins {
-        kotlin("jvm")
+        id("org.jetbrains.kotlin.jvm")
         id("com.rickbusarow.tangle")
       }
 

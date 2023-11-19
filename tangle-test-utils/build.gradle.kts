@@ -14,15 +14,16 @@
  */
 
 plugins {
-  javaLibrary
+  `java-library`
   kotlin("kapt")
+  id("org.jetbrains.kotlin.jvm")
+
 }
 
-experimentalAnvil()
+//experimentalAnvil()
 
 dependencies {
 
-  kapt(libs.google.dagger.compiler)
 
   api(libs.bundles.hermit)
   api(libs.bundles.jUnit)
@@ -42,6 +43,7 @@ dependencies {
 
   api(projects.tangleApi)
   api(projects.tangleCompiler)
+  kapt(libs.google.dagger.compiler)
 
   compileOnly(libs.google.auto.service.processor)
 }

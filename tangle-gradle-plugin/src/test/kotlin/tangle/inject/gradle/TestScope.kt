@@ -68,11 +68,6 @@ data class TestScope(
       it.writeText(
         """
         |buildscript {
-        |  dependencies {
-        |    classpath("com.squareup.anvil:gradle-plugin:$anvilVersion")
-        |    classpath("com.android.tools.build:gradle:$agpVersion")
-        |    classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlinVersion")
-        |  }
         |  repositories {
         |    mavenCentral()
         |    mavenLocal()

@@ -22,21 +22,22 @@ import org.gradle.kotlin.dsl.withType
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 @Suppress("UnstableApiUsage", "MagicNumber")
-fun CommonExtension<*, *, *, *>.commonAndroid(target: Project) {
+fun CommonExtension<*, *, *, *, *>.commonAndroid(target: Project) {
 
   val publishedAsArtifact = target.extensions.findByName("com.vanniktech.maven.publish") != null
 
-  compileSdk = 32
+  compileSdk = 33
 
   buildToolsVersion = "31.0.0"
 
   defaultConfig {
     minSdk = 21
 
+
     // `targetSdk` doesn't have a single base interface, as of AGP 7.1.0
     when (this@defaultConfig) {
-      is LibraryBaseFlavor -> targetSdk = 32
-      is ApplicationBaseFlavor -> targetSdk = 32
+      is LibraryBaseFlavor -> targetSdk = 33
+      is ApplicationBaseFlavor -> targetSdk = 33// TODO review code gen target
     }
 
     vectorDrawables {

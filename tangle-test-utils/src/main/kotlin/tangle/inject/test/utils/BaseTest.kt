@@ -23,7 +23,6 @@ import io.kotest.assertions.asClue
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
 import org.intellij.lang.annotations.Language
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestInfo
@@ -144,8 +143,6 @@ abstract class BaseTest : HermitJUnit5() {
 
     components.isAccessible = true
 
-    components.call(graphInstance)
-      .cast<MutableSet<Any>>()
-      .clear()
+    (components.call(graphInstance) as MutableSet<Any>).clear()
   }
 }

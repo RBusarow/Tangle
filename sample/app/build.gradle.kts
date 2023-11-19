@@ -14,12 +14,14 @@
  */
 
 plugins {
-  androidApplication
+  id("com.android.application")
   id("com.squareup.anvil")
+  id("org.jetbrains.kotlin.android")
   kotlin("kapt")
 }
 
 android {
+
   /*
   This sample app requires an api key.  You can get a free one here: https://thedogapi.com/signup
 
@@ -32,7 +34,14 @@ android {
    */
   val dogApiKey = project.extra.properties["tangle.dog.api.key"] as? String ?: ""
 
+  namespace = "tangle.sample.app"
   defaultConfig {
+    applicationId = "tangle.sample.app"
+
+    minSdk = 21
+    targetSdk = 33
+    versionCode = 1
+    versionName = "1.0"
 
     buildConfigField("String", "DOG_API_KEY", "\"$dogApiKey\"")
 
@@ -72,7 +81,7 @@ dependencies {
 
   kapt(libs.google.dagger.compiler)
 
-  kaptAndroidTest(libs.google.dagger.compiler)
+  //kaptAndroidTest(libs.google.dagger.compiler)
 
   androidTestImplementation(libs.androidx.arch.test.core)
   androidTestImplementation(libs.androidx.compose.test.junit)

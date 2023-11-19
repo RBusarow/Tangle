@@ -13,25 +13,32 @@
  * limitations under the License.
  */
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
-import tangle.builds.GROUP
-import tangle.builds.VERSION_NAME
+
 
 plugins {
-  javaLibrary
+  `java-library`
+  id("org.jetbrains.kotlin.jvm")
   id("java-gradle-plugin")
-  id("com.gradle.plugin-publish") version "1.0.0"
-  published
+  id("com.gradle.plugin-publish") version "1.1.0"
+  `maven-publish`
   idea
 }
 
-tanglePublishing {
-  artifactId.set("tangle-gradle-plugin")
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      groupId = "com.rickbusarow.tangle"
+      artifactId = "tangle-gradle-plugin"
+
+      from(components["java"])
+    }
+  }
 }
 
 val main by sourceSets.getting
 val test by sourceSets.getting
 
-val integrationTest by java.sourceSets.registering {
+val integrationTest by sourceSets.registering {
   kotlin.apply {
     compileClasspath += main.output
       .plus(test.output)
@@ -82,18 +89,13 @@ gradlePlugin {
       group = "com.rickbusarow.tangle"
       displayName = "Tangle"
       implementationClass = "tangle.inject.gradle.TanglePlugin"
-      version = VERSION_NAME
+      version = "0.15.3-OneKey"
       description = "Create Android component bindings for Dagger with Anvil"
+      website.set("https://github.com/RBusarow/Tangle")
+      vcsUrl.set("https://github.com/RBusarow/Tangle")
+      tags.set(setOf("android", "dagger2", "kotlin", "kotlin-compiler-plugin"))
     }
   }
-}
-
-pluginBundle {
-  website = "https://github.com/RBusarow/Tangle"
-  vcsUrl = "https://github.com/RBusarow/Tangle"
-  description = "Create Android component bindings for Dagger with Anvil"
-
-  tags = setOf("android", "dagger2", "kotlin", "kotlin-compiler-plugin")
 }
 
 tasks.create("setupPluginUploadFromEnvironment") {
@@ -121,8 +123,8 @@ sourceSets {
 
 val generateBuildProperties by tasks.registering {
 
-  val version = VERSION_NAME
-  val group = GROUP
+  val version = "0.15.3-OneKey"
+  val group = "com.rickbusarow.tangle"
 
   val buildPropertiesDir = File(generatedDirPath)
   val buildPropertiesFile = File(
@@ -179,7 +181,7 @@ val generateTestVersions by tasks.registering {
       """package tangle.inject.gradle
       |
       |object TestVersions {
-      |  const val AGP = "${libs.versions.androidTools.get()}"
+      |  const val AGP = "${libs.plugins.kotlin.android.get()}"
       |  const val ANVIL = "${libs.versions.square.anvil.get()}"
       |  const val GRADLE = "${gradle.gradleVersion}"
       |  const val KOTLIN = "${libs.versions.kotlin.get()}"
@@ -203,6 +205,7 @@ tasks.withType<KotlinCompile>().configureEach {
 tasks.matching {
   it.name in setOf(
     "javaSourcesJar",
+    "sourcesJar",
     "runKtlintCheckOverMainSourceSet",
     "runKtlintFormatOverMainSourceSet"
   )

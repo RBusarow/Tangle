@@ -14,12 +14,20 @@
  */
 
 plugins {
-  androidLibrary
-  published
+  id("com.android.library")
+  `maven-publish`
 }
 
-tanglePublishing {
-  artifactId.set("tangle-work-api")
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      groupId = "com.rickbusarow.tangle"
+      artifactId = "tangle-work-api"
+    }
+  }
+}
+android {
+  namespace = "tangle.work"
 }
 
 dependencies {

@@ -19,6 +19,7 @@ import org.gradle.api.tasks.testing.logging.TestExceptionFormat
 import org.gradle.api.tasks.testing.logging.TestLogEvent.FAILED
 import org.gradle.api.tasks.testing.logging.TestLogEvent.PASSED
 import org.gradle.kotlin.dsl.withType
+import org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_1_8
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 import java.io.File
 
@@ -27,19 +28,22 @@ fun Project.common() {
   tasks.withType<KotlinCompile>()
     .configureEach {
 
-      kotlinOptions {
-        allWarningsAsErrors = false
+      compilerOptions {
+        allWarningsAsErrors.set(false)
 
-        jvmTarget = "1.8"
+        jvmTarget.set(JVM_1_8)
 
-        freeCompilerArgs = freeCompilerArgs + listOf(
-          "-Xjvm-default=all",
-          "-Xallow-result-return-type",
-          "-opt-in=kotlin.contracts.ExperimentalContracts",
-          "-opt-in=kotlin.Experimental",
-          "-opt-in=kotlin.time.ExperimentalTime",
-          "-opt-in=kotlin.RequiresOptIn",
-          "-Xinline-classes"
+        freeCompilerArgs.set(
+          freeCompilerArgs.get() + listOf(
+            "-Xjvm-default=all",
+            "-Xallow-result-return-type",
+            "-opt-in=kotlin.contracts.ExperimentalContracts",
+            "-opt-in=kotlin.Experimental",
+            "-opt-in=kotlin.time.ExperimentalTime",
+            "-opt-in=kotlin.RequiresOptIn",
+            "-opt-in=org.jetbrains.kotlin.compiler.plugin.ExperimentalCompilerApi",
+            "-Xinline-classes"
+          )
         )
       }
     }
@@ -117,7 +121,7 @@ fun Project.common() {
   }
 }
 
-fun Project.experimentalAnvil() {
+/*fun Project.experimentalAnvil() {
 
   tasks.withType<KotlinCompile>()
     .configureEach {
@@ -130,4 +134,4 @@ fun Project.experimentalAnvil() {
       }
     }
 
-}
+}*/

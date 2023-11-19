@@ -19,7 +19,6 @@ import android.content.Context
 import androidx.work.WorkerParameters
 import hermit.test.mockk.resetsMockk
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
 import tangle.inject.InternalTangleApi
 import tangle.inject.TangleGraph
@@ -70,8 +69,7 @@ class WorkerIntegrationTest : BaseTest() {
   ) {
 
     val component = daggerAppComponent.createFunction()
-      .invoke(null)
-      .cast<TangleWorkerComponent>()
+      .invoke(null) as TangleWorkerComponent
 
     val mapSubcomponent = component.tangleWorkerMapSubcomponentFactory
       .create()

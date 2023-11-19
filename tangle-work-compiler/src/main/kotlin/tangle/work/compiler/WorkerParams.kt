@@ -16,7 +16,7 @@
 package tangle.work.compiler
 
 import com.squareup.anvil.compiler.internal.reference.ClassReference
-import com.squareup.anvil.compiler.internal.reference.FunctionReference
+import com.squareup.anvil.compiler.internal.reference.MemberFunctionReference
 import com.squareup.anvil.compiler.internal.reference.asClassName
 import com.squareup.kotlinpoet.ClassName
 import org.jetbrains.kotlin.descriptors.ModuleDescriptor
@@ -46,7 +46,7 @@ data class WorkerParams(
     fun create(
       module: ModuleDescriptor,
       workerClass: ClassReference,
-      constructor: FunctionReference
+      constructor: MemberFunctionReference
     ): WorkerParams {
       val workerClassClassName = workerClass.asClassName()
       val workerClassNameString = workerClassClassName.simpleName

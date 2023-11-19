@@ -14,7 +14,7 @@
  */
 
 plugins {
-  androidLibrary
+  id("com.android.library")
   id("com.squareup.anvil")
 }
 
@@ -23,6 +23,7 @@ anvil {
 }
 
 android {
+  namespace = "tangle.sample.core"
 
   buildFeatures {
     viewBinding = true

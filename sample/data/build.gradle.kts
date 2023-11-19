@@ -14,13 +14,17 @@
  */
 
 plugins {
-  androidLibrary
+  id("com.android.library")
   id("com.squareup.anvil")
   id("com.google.devtools.ksp")
 }
 
 anvil {
   generateDaggerFactories.set(true)
+}
+
+android {
+  namespace = "tangle.sample.data"
 }
 
 dependencies {

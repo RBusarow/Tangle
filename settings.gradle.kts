@@ -18,6 +18,20 @@ pluginManagement {
     gradlePluginPortal()
     mavenCentral()
     mavenLocal()
+    google()
+  }
+}
+
+dependencyResolutionManagement {
+
+  @Suppress("UnstableApiUsage")
+  repositories {
+    google()
+    mavenCentral()
+    mavenLocal()
+    maven("https://jitpack.io")
+    jcenter()
+    gradlePluginPortal()
   }
 }
 
@@ -52,7 +66,6 @@ gradleEnterprise {
 }
 
 rootProject.name = "Tangle"
-enableFeaturePreview("VERSION_CATALOGS")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 include(

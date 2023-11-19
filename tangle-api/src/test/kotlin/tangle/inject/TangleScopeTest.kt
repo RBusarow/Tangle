@@ -16,7 +16,6 @@
 package tangle.inject
 
 import io.kotest.matchers.shouldBe
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.TestFactory
 import tangle.inject.internal.TangleInjector
 import tangle.inject.test.utils.BaseTest
@@ -44,8 +43,7 @@ class TangleScopeTest : BaseTest() {
       class Target
      """
     ) {
-      val tangleInjector = targetClass.tangleInjector().createInstance()
-        .cast<TangleInjector<Any>>()
+      val tangleInjector = targetClass.tangleInjector().createInstance() as TangleInjector<Any>
 
       val target = targetClass.createInstance()
 
@@ -71,8 +69,7 @@ class TangleScopeTest : BaseTest() {
      """
     ) {
       val membersInjector = targetClass.membersInjector().createInstance("name".provider())
-      val tangleInjector = targetClass.tangleInjector().createInstance(membersInjector)
-        .cast<TangleInjector<Any>>()
+      val tangleInjector = targetClass.tangleInjector().createInstance(membersInjector) as TangleInjector<Any>
 
       val target = targetClass.createInstance()
 
@@ -101,8 +98,7 @@ class TangleScopeTest : BaseTest() {
     ) {
       val membersInjector = baseClass.membersInjector().createInstance("baseName".provider())
       val tangleInjector = targetClass.tangleInjector()
-        .createInstance(membersInjector)
-        .cast<TangleInjector<Any>>()
+        .createInstance(membersInjector) as TangleInjector<Any>
 
       val target = targetClass.createInstance()
 
@@ -136,8 +132,7 @@ class TangleScopeTest : BaseTest() {
           .createInstance("baseName".provider(), "name".provider())
 
         val tangleInjector = targetClass.tangleInjector()
-          .createInstance(membersInjector)
-          .cast<TangleInjector<Any>>()
+          .createInstance(membersInjector) as TangleInjector<Any>
 
         val target = targetClass.createInstance()
 

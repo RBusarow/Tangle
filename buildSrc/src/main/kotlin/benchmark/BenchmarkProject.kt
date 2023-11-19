@@ -107,7 +107,6 @@ private fun projectSettingsFile(rootDir: File, includes: String) = SettingsFile(
         |include(":hilt-app")
         |include(":tangle-app")
         |
-        |enableFeaturePreview("VERSION_CATALOGS")
         |enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
         |""".trimMargin()
 )
@@ -137,13 +136,6 @@ private fun projectBuildFile(rootDir: File, tangleVersion: String) = BuildFile(
       |   mavenCentral()
       |   google()
       |   maven("https://plugins.gradle.org/m2/")
-      | }
-      | dependencies {
-      |   classpath(libs.android.gradle)
-      |   classpath(libs.kotlin.gradle.plug)
-      |   classpath(libs.google.hilt.pluginGradle)
-      |   classpath(libs.square.anvil.gradle)
-      |   classpath("com.rickbusarow.tangle:tangle-gradle-plugin:$tangleVersion")
       | }
       |}
       |

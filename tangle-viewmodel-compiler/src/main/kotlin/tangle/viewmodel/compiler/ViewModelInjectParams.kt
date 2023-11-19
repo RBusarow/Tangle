@@ -17,7 +17,7 @@ package tangle.viewmodel.compiler
 
 import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.reference.ClassReference
-import com.squareup.anvil.compiler.internal.reference.FunctionReference
+import com.squareup.anvil.compiler.internal.reference.MemberFunctionReference
 import com.squareup.anvil.compiler.internal.reference.asClassName
 import com.squareup.anvil.compiler.internal.reference.generateClassName
 import com.squareup.anvil.compiler.internal.safePackageString
@@ -68,7 +68,7 @@ data class ViewModelParams(
   val viewModelFactoryClassNameString: String,
   val viewModelFactoryClassName: ClassName,
   val viewModelFactoryConstructorParams: List<Parameter>,
-  val constructor: FunctionReference,
+  val constructor: MemberFunctionReference,
   val memberInjectedParams: List<MemberInjectParameter>,
   val typeParameters: List<TypeVariableName>,
   val viewModelClassSimpleName: String,
@@ -79,7 +79,7 @@ data class ViewModelParams(
     fun create(
       module: ModuleDescriptor,
       viewModelClass: ClassReference,
-      constructor: FunctionReference
+      constructor: MemberFunctionReference
     ): ViewModelParams {
       val packageName = viewModelClass.packageFqName.safePackageString()
 
@@ -187,7 +187,7 @@ data class Factory(
       module: ModuleDescriptor,
       factoryInterface: ClassReference,
       viewModelClass: ClassReference,
-      constructor: FunctionReference
+      constructor: MemberFunctionReference
     ): Factory {
       val packageName = factoryInterface.packageFqName.safePackageString(dotSuffix = false)
 
