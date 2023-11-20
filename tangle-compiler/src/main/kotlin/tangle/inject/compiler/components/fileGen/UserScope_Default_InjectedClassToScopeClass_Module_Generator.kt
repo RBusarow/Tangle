@@ -41,6 +41,7 @@ import java.io.File
  * }
  * ```
  */
+@OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 internal object UserScope_Default_InjectedClassToScopeClass_Module_Generator :
   FileGenerator<MergeComponentParams> {
   override fun generate(

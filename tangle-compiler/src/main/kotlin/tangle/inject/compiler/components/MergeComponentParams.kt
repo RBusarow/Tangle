@@ -15,6 +15,7 @@
 
 package tangle.inject.compiler.components
 
+import com.squareup.anvil.annotations.ExperimentalAnvilApi
 import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.requireFqName
 import com.squareup.anvil.compiler.internal.safePackageString
@@ -27,6 +28,7 @@ import tangle.inject.compiler.AnnotationSpec
 import tangle.inject.compiler.ClassNames
 import tangle.inject.compiler.generateSimpleNameString
 
+@OptIn(ExperimentalAnvilApi::class)
 data class MergeComponentParams(
   val module: ModuleDescriptor,
   val packageName: String,

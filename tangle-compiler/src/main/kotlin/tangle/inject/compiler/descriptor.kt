@@ -14,6 +14,7 @@
  */
 
 @file:Suppress("TooManyFunctions")
+@file:OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 
 package tangle.inject.compiler
 

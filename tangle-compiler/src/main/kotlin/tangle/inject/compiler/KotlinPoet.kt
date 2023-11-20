@@ -13,9 +13,10 @@
  * limitations under the License.
  */
 @file:Suppress("TooManyFunctions")
-
+@file:OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 package tangle.inject.compiler
 
+import com.squareup.anvil.annotations.ExperimentalAnvilApi
 import com.squareup.anvil.compiler.internal.argumentType
 import com.squareup.anvil.compiler.internal.asClassName
 import com.squareup.anvil.compiler.internal.classDescriptor
@@ -104,6 +105,7 @@ fun AnnotationSpec(
   .apply { block() }
   .build()
 
+@OptIn(ExperimentalAnvilApi::class)
 fun List<AnnotationReference>.qualifierAnnotationSpecs(
   module: ModuleDescriptor
 ): List<AnnotationSpec> = mapNotNull { annotationReference ->

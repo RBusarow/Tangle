@@ -13,6 +13,7 @@
  * limitations under the License.
  */
 @file:Suppress("ComplexMethod", "TooManyFunctions", "NestedBlockDepth")
+@file:OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 
 package tangle.inject.compiler
 

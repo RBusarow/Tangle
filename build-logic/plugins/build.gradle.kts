@@ -50,10 +50,23 @@ dependencies {
 
 gradlePlugin {
   plugins {
+
+    create("plugins.tangle.library.androidapp") {
+      id = "tangle.library.androidapp"
+      implementationClass = "com.tangle.plugins.AndroidApplication"
+      description = "Set up a module as a Kotlin library module access to Android App"
+    }
+
     create("plugins.tangle.library.android") {
       id = "tangle.library.android"
       implementationClass = "com.tangle.plugins.AndroidLibrary"
       description = "Set up a module as a Kotlin library module access to Android Libraries"
+    }
+
+    create("plugins.tangle.library.java") {
+      id = "tangle.library.java"
+      implementationClass = "com.tangle.plugins.JavaLibrary"
+      description = "Set up a module as a Kotlin library module access to JavaLibrary Libraries"
     }
   }
 }

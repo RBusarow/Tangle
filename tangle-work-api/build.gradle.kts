@@ -27,7 +27,7 @@ publishing {
   }
 }
 android {
-  namespace = "tangle.work"
+  namespace = "tangle.viewmodel.api"
 }
 
 dependencies {

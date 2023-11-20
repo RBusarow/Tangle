@@ -14,7 +14,7 @@
  */
 
 plugins {
-  `java-library`
+  id("tangle.library.java")
   kotlin("kapt")
   id("org.jetbrains.kotlin.jvm")
 

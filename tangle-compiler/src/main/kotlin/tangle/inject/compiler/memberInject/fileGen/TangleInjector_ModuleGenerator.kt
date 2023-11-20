@@ -49,6 +49,7 @@ import java.io.File
  * }
  * ```
  */
+@OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 internal object TangleInjector_ModuleGenerator : FileGenerator<MemberInjectParams> {
 
   override fun generate(

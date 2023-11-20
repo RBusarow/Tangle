@@ -14,7 +14,7 @@
  */
 
 plugins {
-  `java-library`
+  id("tangle.library.java")
   `maven-publish`
   id("org.jetbrains.kotlin.jvm")
 }

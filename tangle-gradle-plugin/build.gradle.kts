@@ -16,7 +16,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 
 plugins {
-  `java-library`
+  id("tangle.library.java")
   id("org.jetbrains.kotlin.jvm")
   id("java-gradle-plugin")
   id("com.gradle.plugin-publish") version "1.1.0"

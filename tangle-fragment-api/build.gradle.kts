@@ -27,7 +27,7 @@ publishing {
   }
 }
 android {
-  namespace = "tangle.fragment"
+  namespace = "tangle.fragment.api"
 }
 
 dependencies {

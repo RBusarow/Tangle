@@ -15,7 +15,7 @@
 
 plugins {
   kotlin("kapt")
-  `java-library`
+  id("tangle.library.java")
   `maven-publish`
 }
 

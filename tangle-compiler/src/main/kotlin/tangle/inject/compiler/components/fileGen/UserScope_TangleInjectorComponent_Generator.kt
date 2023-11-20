@@ -41,6 +41,7 @@ import java.io.File
  * public interface AppScope_TangleInjectorComponent : TangleInjectorComponent
  * ```
  */
+@OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 internal object UserScope_TangleInjectorComponent_Generator : FileGenerator<MergeComponentParams> {
   override fun generate(
     codeGenDir: File,

@@ -22,6 +22,7 @@ import com.squareup.kotlinpoet.ClassName
 import tangle.inject.compiler.generateSimpleNameString
 import tangle.inject.compiler.memberInjectedParameters
 
+@OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 data class MemberInjectParams(
   val scopeClassName: ClassName,
   val packageName: String,

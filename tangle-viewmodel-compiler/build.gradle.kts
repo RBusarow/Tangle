@@ -15,7 +15,7 @@
 
 plugins {
   id("org.jetbrains.kotlin.jvm")
-  `java-library`
+  id("tangle.library.java")
   `maven-publish`
   kotlin("kapt")
 }

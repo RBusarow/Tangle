@@ -14,7 +14,7 @@
  */
 
 plugins {
-  id("com.android.application")
+  id("tangle.library.androidapp")
   id("com.squareup.anvil")
   id("org.jetbrains.kotlin.android")
   kotlin("kapt")
