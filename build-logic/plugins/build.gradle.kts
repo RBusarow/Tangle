@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Rick Busarow
+ * Copyright (C) 2023 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -46,4 +46,14 @@ dependencies {
   implementation(libs.dokka.gradle)
   implementation(libs.dropbox.dependencyGuard)
   implementation(libs.kotlinx.knit.gradle)
+}
+
+gradlePlugin {
+  plugins {
+    create("plugins.tangle.library.android") {
+      id = "tangle.library.android"
+      implementationClass = "com.tangle.plugins.AndroidLibrary"
+      description = "Set up a module as a Kotlin library module access to Android Libraries"
+    }
+  }
 }

@@ -65,6 +65,8 @@ gradleEnterprise {
   }
 }
 
+includeBuild("build-logic")
+
 rootProject.name = "Tangle"
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 

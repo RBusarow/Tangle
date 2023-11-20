@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2022 Rick Busarow
+ * Copyright (C) 2023 Rick Busarow
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
  * You may obtain a copy of the License at
@@ -13,17 +13,12 @@
  * limitations under the License.
  */
 
-plugins {
-  id("tangle.library.android")
-  id("kotlin-android")
-}
+package com.tangle.plugins.util
 
-android {
+import org.gradle.api.JavaVersion.VERSION_1_8
 
-  commonAndroid(project)
-  common()
-
-  // don't generate BuildConfig
-  @Suppress("UnstableApiUsage")
-  buildFeatures.buildConfig = false
+object AndroidVersions {
+  val compileSdk = 33
+  val minsSdk = 21
+  val javaVersion = VERSION_1_8
 }

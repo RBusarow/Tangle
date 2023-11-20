@@ -21,6 +21,13 @@ import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
 // https://youtrack.jetbrains.com/issue/KTIJ-19369
 // There's also an IntelliJ plugin to disable this warning globally:
 // https://plugins.jetbrains.com/plugin/18949-gradle-libs-error-suppressor
+
+buildscript {
+  dependencies {
+    classpath("build-logic:plugins")
+  }
+}
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
   alias(libs.plugins.kotlin.jvm) apply false

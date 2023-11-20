@@ -104,7 +104,7 @@ internal fun hiltLibraryBuildFile(
   return BuildFile(
     directory = moduleRoot,
     content = """plugins{
-        |  id("com.android.library")
+        |  id("tangle.library.android")
         |  kotlin("android")
         |  kotlin("kapt")
         |  id("dagger.hilt.android.plugin")
@@ -164,7 +164,7 @@ internal fun hiltAppBuildFile(
   return BuildFile(
     directory = moduleRoot,
     content = """plugins{
-        |  id("com.android.library")
+        |  id("tangle.library.android")
         |  kotlin("android")
         |  kotlin("kapt")
         |  id("dagger.hilt.android.plugin")
