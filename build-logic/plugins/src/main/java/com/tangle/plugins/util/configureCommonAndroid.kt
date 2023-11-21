@@ -35,8 +35,8 @@ fun Project.configureCommonAndroid() {
 
       // `targetSdk` doesn't have a single base interface, as of AGP 7.1.0
       when (this@defaultConfig) {
-        is LibraryBaseFlavor -> targetSdk = 33
-        is ApplicationBaseFlavor -> targetSdk = 33 // TODO review code gen target
+        is LibraryBaseFlavor -> targetSdk = AndroidVersions.targetSdk
+        is ApplicationBaseFlavor -> targetSdk = AndroidVersions.targetSdk // TODO review code gen target
       }
 
       vectorDrawables {

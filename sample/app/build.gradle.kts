@@ -38,8 +38,8 @@ android {
   defaultConfig {
     applicationId = "tangle.sample.app"
 
-    minSdk = 21
-    targetSdk = 33
+    minSdk = com.tangle.plugins.util.AndroidVersions.minsSdk
+    targetSdk = com.tangle.plugins.util.AndroidVersions.targetSdk
     versionCode = 1
     versionName = "1.0"
 

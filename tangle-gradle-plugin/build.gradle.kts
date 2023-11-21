@@ -68,7 +68,6 @@ val integrationTestRuntime by configurations.registering {
 
 dependencies {
 
-  compileOnly(libs.android.gradle)
   compileOnly(libs.kotlin.reflect)
 
   implementation(libs.kotlin.stdlib.jdk8)

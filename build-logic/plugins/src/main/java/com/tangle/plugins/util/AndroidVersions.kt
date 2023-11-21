@@ -18,7 +18,8 @@ package com.tangle.plugins.util
 import org.gradle.api.JavaVersion.VERSION_1_8
 
 object AndroidVersions {
-  val compileSdk = 33
+  val compileSdk = 34
   val minsSdk = 21
+  val targetSdk = 34
   val javaVersion = VERSION_1_8
 }
