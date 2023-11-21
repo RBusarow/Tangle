@@ -14,20 +14,29 @@
  */
 
 plugins {
-  javaLibrary
-  published
+  id("org.jetbrains.kotlin.jvm")
+  id("tangle.library.java")
+  `maven-publish`
   kotlin("kapt")
 }
 
-tanglePublishing {
-  artifactId.set("tangle-viewmodel-compiler")
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      groupId = "com.rickbusarow.tangle"
+      artifactId = "tangle-viewmodel-compiler"
+
+      from(components["java"])
+    }
+  }
 }
 
-experimentalAnvil()
+
+//experimentalAnvil()
 
 dependencies {
 
-  kapt(libs.google.auto.service.processor)
+  implementation(libs.google.auto.service.processor)
 
   api(libs.kotlin.compiler)
   api(libs.square.anvil.compiler.api)

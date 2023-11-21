@@ -14,12 +14,21 @@
  */
 
 plugins {
-  androidLibrary
-  published
+  id("tangle.library.android")
+  `maven-publish`
 }
 
-tanglePublishing {
-  artifactId.set("tangle-viewmodel-activity")
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      groupId = "com.rickbusarow.tangle"
+      artifactId = "tangle-viewmodel-activity"
+    }
+  }
+}
+
+android {
+  namespace = "tangle.viewmodel.activity"
 }
 
 dependencies {

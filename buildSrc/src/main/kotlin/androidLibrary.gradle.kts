@@ -14,7 +14,7 @@
  */
 
 plugins {
-  id("com.android.library")
+  id("tangle.library.android")
   id("kotlin-android")
 }
 

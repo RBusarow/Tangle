@@ -16,7 +16,8 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-  kotlin("jvm")
+  id("org.jetbrains.kotlin.jvm")
+  `java-library`
 }
 
 common()

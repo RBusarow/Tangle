@@ -14,15 +14,22 @@
  */
 
 plugins {
-  androidLibrary
-  published
+  id("tangle.library.android")
+  `maven-publish`
 }
 
-tanglePublishing {
-  artifactId.set("tangle-viewmodel-compose")
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      groupId = "com.rickbusarow.tangle"
+      artifactId = "tangle-viewmodel-compose"
+    }
+  }
 }
 
 android {
+
+  namespace = "tangle.viewmodel.compose"
 
   buildFeatures {
     compose = true

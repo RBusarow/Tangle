@@ -34,6 +34,7 @@ import java.io.File
 
 @Suppress("UNUSED")
 @AutoService(CodeGenerator::class)
+@OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 class TangleInjectorMergeComponentCodeGenerator : TangleCodeGenerator() {
 
   val fileGenerators = listOf(

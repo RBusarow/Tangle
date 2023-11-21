@@ -32,6 +32,7 @@ import java.io.File
  *   TangleScopeMapProvider
  * ```
  */
+@OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 internal object TangleAppScope_TangleInjectorMapProvider_Subcomponent_Generator : FileGenerator<MergeComponentParams> {
   override fun generate(
     codeGenDir: File,

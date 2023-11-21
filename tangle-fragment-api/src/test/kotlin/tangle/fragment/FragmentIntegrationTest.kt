@@ -18,7 +18,6 @@ package tangle.fragment
 import androidx.fragment.app.Fragment
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
 import tangle.inject.test.utils.BaseTest
 import tangle.inject.test.utils.appComponent
@@ -65,8 +64,7 @@ class FragmentIntegrationTest : BaseTest() {
     ) {
 
       val component = daggerAppComponent.createFunction()
-        .invoke(null)
-        .cast<FragmentComponent>()
+        .invoke(null) as FragmentComponent
 
       val fragment = component.tangleProviderMap[myFragmentClass]!!
 
@@ -101,8 +99,7 @@ class FragmentIntegrationTest : BaseTest() {
     ) {
 
       val component = daggerAppComponent.createFunction()
-        .invoke(null)
-        .cast<FragmentComponent>()
+        .invoke(null) as FragmentComponent
 
       val factory = component.fragmentFactory
 
@@ -168,8 +165,7 @@ class FragmentIntegrationTest : BaseTest() {
     ) {
 
       val component = daggerAppComponent.createFunction()
-        .invoke(null)
-        .cast<FragmentComponent>()
+        .invoke(null) as FragmentComponent
 
       val fragment = component.providerMap[myFragmentClass]!!
 
@@ -198,8 +194,7 @@ class FragmentIntegrationTest : BaseTest() {
     ) {
 
       val component = daggerAppComponent.createFunction()
-        .invoke(null)
-        .cast<FragmentComponent>()
+        .invoke(null) as FragmentComponent
 
       val factory = component.fragmentFactory
 

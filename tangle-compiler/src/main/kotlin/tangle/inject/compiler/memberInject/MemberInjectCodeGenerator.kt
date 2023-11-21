@@ -34,6 +34,7 @@ import tangle.inject.compiler.vmInjectConstructor
 import java.io.File
 
 @Suppress("UNUSED")
+@OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 @AutoService(CodeGenerator::class)
 class MemberInjectCodeGenerator : TangleCodeGenerator() {
 

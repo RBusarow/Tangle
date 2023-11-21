@@ -52,6 +52,7 @@ import java.io.File
  * }
  * ```
  */
+@OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 internal object TangleAppScope_UserScope_to_Component_Module_Generator : FileGenerator<MergeComponentParams> {
 
   override fun generate(

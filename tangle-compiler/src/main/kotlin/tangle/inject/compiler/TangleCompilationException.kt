@@ -12,6 +12,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@file:OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 
 package tangle.inject.compiler
 
@@ -34,18 +35,21 @@ class TangleCompilationException(
   element: PsiElement? = null
 ) : CompilationException(message, cause, element) {
 
+  @OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
   constructor(
     annotationDescriptor: AnnotationDescriptor,
     message: String,
     cause: Throwable? = null
   ) : this(message, cause = cause, element = annotationDescriptor.identifier)
 
+  @OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
   constructor(
     classReference: ClassReference,
     message: String,
     cause: Throwable? = null
   ) : this(message, cause = cause, element = classReference.findPsi())
 
+  @OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
   constructor(
     declarationDescriptor: DeclarationDescriptor,
     message: String,

@@ -15,33 +15,32 @@
 
 import io.gitlab.arturbosch.detekt.Detekt
 import io.gitlab.arturbosch.detekt.DetektCreateBaselineTask
-import org.jlleitschuh.gradle.ktlint.KtlintExtension
-import org.jlleitschuh.gradle.ktlint.tasks.BaseKtLintCheckTask
 
-buildscript {
-  repositories {
-    mavenLocal()
-    mavenCentral()
-    google()
-    maven("https://plugins.gradle.org/m2/")
-    maven("https://oss.sonatype.org/content/repositories/snapshots")
-  }
-  dependencies {
-    classpath(libs.android.gradle)
-    classpath(libs.square.anvil.gradle)
-    classpath(libs.google.ksp)
-    classpath(libs.kotlin.gradle.plug)
-    classpath(libs.ktlint.gradle)
-  }
-}
 
 // `alias(libs.______)` inside the plugins block throws a false positive warning
 // https://youtrack.jetbrains.com/issue/KTIJ-19369
 // There's also an IntelliJ plugin to disable this warning globally:
 // https://plugins.jetbrains.com/plugin/18949-gradle-libs-error-suppressor
+
+buildscript {
+  dependencies {
+    classpath("build-logic:plugins")
+  }
+}
+
 @Suppress("DSL_SCOPE_VIOLATION")
 plugins {
-  kotlin("jvm")
+  alias(libs.plugins.kotlin.jvm) apply false
+  alias(libs.plugins.kotlin.android) apply false
+  alias(libs.plugins.kapt) apply false
+  alias(libs.plugins.ksp) apply false
+
+  alias(libs.plugins.android.application) apply false
+  alias(libs.plugins.android.library) apply false
+  alias(libs.plugins.android.test) apply false
+  alias(libs.plugins.anvil) apply false
+  alias(libs.plugins.moshix) apply false
+
   alias(libs.plugins.dependencyAnalysis)
   alias(libs.plugins.detekt)
   alias(libs.plugins.taskTree)
@@ -49,30 +48,10 @@ plugins {
   alias(libs.plugins.benManes)
   alias(libs.plugins.kotlinx.binaryCompatibility)
   base
-  benchmarks
+/*  benchmarks
   dokka
   knit
-  website
-}
-
-allprojects {
-
-  repositories {
-    google()
-    mavenLocal()
-    mavenCentral()
-    maven("https://oss.sonatype.org/content/repositories/snapshots")
-  }
-  configurations.all {
-    resolutionStrategy {
-
-      eachDependency {
-        when {
-          requested.group == "org.jetbrains.kotlin" -> useVersion(libs.versions.kotlin.get())
-        }
-      }
-    }
-  }
+  website*/
 }
 
 detekt {
@@ -131,7 +110,7 @@ tasks.named(
   }
 }
 
-allprojects {
+/*allprojects {
   apply(plugin = "org.jlleitschuh.gradle.ktlint")
 
   configure<KtlintExtension> {
@@ -160,7 +139,7 @@ allprojects {
   tasks.withType<BaseKtLintCheckTask> {
     workerMaxHeapSize.set("512m")
   }
-}
+}*/
 
 apiValidation {
   /** Packages that are excluded from public API dumps even if they contain public API. */

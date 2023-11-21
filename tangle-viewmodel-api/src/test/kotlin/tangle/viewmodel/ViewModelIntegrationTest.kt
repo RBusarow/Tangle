@@ -18,7 +18,6 @@ package tangle.viewmodel
 import androidx.lifecycle.SavedStateHandle
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.string.shouldContain
-import org.jetbrains.kotlin.utils.addToStdlib.cast
 import org.junit.jupiter.api.Test
 import tangle.inject.InternalTangleApi
 import tangle.inject.test.utils.BaseTest
@@ -52,8 +51,7 @@ class ViewModelIntegrationTest : BaseTest() {
   ) {
 
     val component = daggerAppComponent.createFunction()
-      .invoke(null)
-      .cast<TangleViewModelComponent>()
+      .invoke(null) as TangleViewModelComponent
 
     val mapSubcomponent = component.tangleViewModelMapSubcomponentFactory
       .create(SavedStateHandle())
@@ -84,8 +82,7 @@ class ViewModelIntegrationTest : BaseTest() {
   ) {
 
     val component = daggerAppComponent.createFunction()
-      .invoke(null)
-      .cast<TangleViewModelComponent>()
+      .invoke(null)as TangleViewModelComponent
 
     val keysSubcomponent = component.tangleViewModelKeysSubcomponentFactory
       .create()
@@ -236,8 +233,7 @@ class ViewModelIntegrationTest : BaseTest() {
     val expected = "Expected"
     val unexpected = "Unexpected"
 
-    val viewModel = appComponentFactoryCreate(expected, unexpected)
-      .cast<TangleViewModelComponent>()
+    val viewModel = (appComponentFactoryCreate(expected, unexpected) as TangleViewModelComponent)
       .tangleViewModelMapSubcomponentFactory
       .create(SavedStateHandle())
       .viewModelProviderMap[targetClass]!!
@@ -289,8 +285,7 @@ class ViewModelIntegrationTest : BaseTest() {
     val expected = "Expected"
     val unexpected = "Unexpected"
 
-    val viewModel = appComponentFactoryCreate(expected, unexpected)
-      .cast<TangleViewModelComponent>()
+    val viewModel = (appComponentFactoryCreate(expected, unexpected) as TangleViewModelComponent)
       .tangleViewModelMapSubcomponentFactory
       .create(SavedStateHandle.createHandle(null, null))
       .viewModelProviderMap[targetClass]!!

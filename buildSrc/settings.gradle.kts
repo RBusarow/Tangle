@@ -14,7 +14,6 @@
  */
 
 rootProject.name = "buildSrc"
-enableFeaturePreview("VERSION_CATALOGS")
 enableFeaturePreview("TYPESAFE_PROJECT_ACCESSORS")
 
 @Suppress("UnstableApiUsage")
@@ -23,5 +22,14 @@ dependencyResolutionManagement {
     create("libs") {
       from(files("../gradle/libs.versions.toml"))
     }
+  }
+  @Suppress("UnstableApiUsage")
+  repositories {
+    google()
+    mavenCentral()
+    mavenLocal()
+    maven("https://jitpack.io")
+    jcenter()
+    gradlePluginPortal()
   }
 }

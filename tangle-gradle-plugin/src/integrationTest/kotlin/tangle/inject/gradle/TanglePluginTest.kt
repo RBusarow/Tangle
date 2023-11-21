@@ -27,7 +27,7 @@ class TanglePluginTest : BasePluginTest() {
     module(
       """
       plugins {
-        id("com.android.library")
+        id("tangle.library.android")
         kotlin("android")
         id("com.rickbusarow.tangle")
       }
@@ -70,7 +70,7 @@ class TanglePluginTest : BasePluginTest() {
     module(
       """
       plugins {
-        id("com.android.library")
+        id("tangle.library.android")
         kotlin("android")
         id("com.rickbusarow.tangle")
       }
@@ -118,7 +118,7 @@ class TanglePluginTest : BasePluginTest() {
       module(
         """
       plugins {
-        id("com.android.library")
+        id("tangle.library.android")
         kotlin("android")
         id("com.rickbusarow.tangle")
       }
@@ -151,7 +151,7 @@ class TanglePluginTest : BasePluginTest() {
     module(
       """
       plugins {
-        kotlin("jvm")
+        id("org.jetbrains.kotlin.jvm")
         id("com.rickbusarow.tangle")
       }
 

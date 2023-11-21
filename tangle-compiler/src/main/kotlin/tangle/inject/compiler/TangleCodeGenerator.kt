@@ -15,6 +15,7 @@
 
 package tangle.inject.compiler
 
+import com.squareup.anvil.annotations.ExperimentalAnvilApi
 import com.squareup.anvil.compiler.api.AnvilContext
 import com.squareup.anvil.compiler.api.CodeGenerator
 import com.squareup.anvil.compiler.api.GeneratedFile
@@ -34,6 +35,7 @@ import java.io.File
  *
  * In short, this is an attempt to prevent flooding Anvil's issue tracker with Tangle bug reports.
  */
+@OptIn(ExperimentalAnvilApi::class)
 abstract class TangleCodeGenerator : CodeGenerator {
 
   final override fun isApplicable(context: AnvilContext): Boolean = true

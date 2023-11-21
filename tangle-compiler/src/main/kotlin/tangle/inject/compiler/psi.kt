@@ -13,13 +13,14 @@
  * limitations under the License.
  */
 @file:Suppress("ComplexMethod", "TooManyFunctions", "NestedBlockDepth")
+@file:OptIn(com.squareup.anvil.annotations.ExperimentalAnvilApi::class)
 
 package tangle.inject.compiler
 
 import com.squareup.anvil.compiler.api.AnvilCompilationException
 import com.squareup.anvil.compiler.internal.reference.AnnotationReference
 import com.squareup.anvil.compiler.internal.reference.ClassReference
-import com.squareup.anvil.compiler.internal.reference.FunctionReference
+import com.squareup.anvil.compiler.internal.reference.MemberFunctionReference
 import com.squareup.anvil.compiler.internal.reference.ParameterReference
 import com.squareup.kotlinpoet.ParameterizedTypeName
 import com.squareup.kotlinpoet.ParameterizedTypeName.Companion.parameterizedBy
@@ -30,25 +31,25 @@ import org.jetbrains.kotlin.descriptors.ModuleDescriptor
 import org.jetbrains.kotlin.name.FqName
 import javax.inject.Provider
 
-fun ClassReference.vmInjectConstructor(): FunctionReference? {
+fun ClassReference.vmInjectConstructor(): MemberFunctionReference? {
   return annotatedConstructorOrNull(FqNames.vmInject)
 }
 
-fun ClassReference.assistedInjectConstructor(): FunctionReference? {
+fun ClassReference.assistedInjectConstructor(): MemberFunctionReference? {
   return annotatedConstructorOrNull(FqNames.assistedInject)
 }
 
-fun ClassReference.fragmentInjectConstructor(): FunctionReference? {
+fun ClassReference.fragmentInjectConstructor(): MemberFunctionReference? {
   return annotatedConstructorOrNull(FqNames.fragmentInject)
 }
 
-fun ClassReference.injectConstructor(): FunctionReference? {
+fun ClassReference.injectConstructor(): MemberFunctionReference? {
   return annotatedConstructorOrNull(FqNames.inject)
 }
 
 internal fun ClassReference.annotatedConstructorOrNull(
   annotationFqName: FqName
-): FunctionReference? {
+): MemberFunctionReference? {
   val constructors = constructors.filter {
     it.hasAnnotation(annotationFqName)
   }
@@ -65,7 +66,7 @@ internal fun ClassReference.annotatedConstructorOrNull(
 
 fun <T : AnnotationReference> Iterable<T>.find(fqName: FqName): T? = find { it.fqName == fqName }
 
-fun FunctionReference.hasAnnotation(fqName: FqName): Boolean =
+fun MemberFunctionReference.hasAnnotation(fqName: FqName): Boolean =
   annotations.any { it.fqName == fqName }
 
 fun List<ParameterReference>.mapToParameters(

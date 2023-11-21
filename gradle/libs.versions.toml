@@ -1,11 +1,11 @@
 [versions]
-androidTools = "7.2.2"
+gradle = "8.1.0"
 benManes = "0.42.0"
 changeTracker = "0.7.3"
-coil = "2.2.0"
+coil = "2.4.0"
 dependencyAnalysis = "1.13.1"
 dispatch = "1.0.0-beta10"
-detekt = "1.21.0"
+detekt = "1.23.0"
 # can't update Dokka until AGP 7.3+ https://github.com/Kotlin/dokka/issues/2472
 dokka = "1.6.10"
 dropbox-dependencyGuard = "0.3.1"
@@ -13,46 +13,45 @@ gradleDoctor = "0.8.1"
 groovy = "3.0.12"
 hermit = "0.9.6"
 jUnit = "5.9.0"
-kotest = "5.4.2"
-kotlin = "1.7.0"
+kotest = "5.6.2"
+kotlin = "1.8.22"
 ktlint-gradle = "11.0.0"
 
 sonarPlugin = "2.6.1"
 spotless = "5.10.1"
-targetSdk = "30"
 taskTree = "2.1.0"
+mochix = "0.22.0"
 
 androidx-activity = "1.5.1"
-androidx-compose-runtime = "1.2.1"
-androidx-compose-compiler = "1.2.0"
-androidx-fragment-version = "1.5.2"
+androidx-compose-runtime = "1.5.0"
+androidx-compose-compiler = "1.4.8"
+androidx-fragment-version = "1.6.1"
 androidx-hilt = "1.0.0"
 androidx-lifecycle = "2.5.1"
 androidx-navigation-version = "2.5.1"
 androidx-paging = "3.1.1"
 androidx-paging-compose = "1.0.0-alpha14"
-androidx-room = "2.4.3"
+androidx-room = "2.5.2"
 androidx-startup = "1.1.1"
 androidx-test-core = "1.4.0"
-androidx-test-espresso = "3.4.0"
+androidx-test-espresso = "3.5.1"
 androidx-test-jUnit = "1.1.3"
 androidx-test-orchestrator = "1.4.1"
-androidx-work-version = "2.7.1"
+androidx-work-version = "2.8.1"
 
 kotlinx-atomicfu = "0.18.3"
 kotlinx-binaryCompatibility = "0.11.0"
-kotlinx-coroutines = "1.6.4"
+kotlinx-coroutines = "1.7.0"
 kotlinx-knit = "0.4.0"
 
-google-dagger = "2.43.2"
-google-ksp = "1.7.0-1.0.6"
+google-dagger = "2.48"
 google-material = "1.6.1"
 
 rickBusarow-dependencySync = "0.11.4"
 rickBusarow-moduleCheck = "0.12.3"
 
-square-anvil = "2.4.2"
-square-moshi = "1.13.0"
+square-anvil = "2.4.6"
+square-moshi = "1.15.0"
 square-okhttp = "4.10.0"
 square-retrofit = "2.9.0"
 
@@ -62,12 +61,18 @@ zacSweers-moshix = "0.18.3"
 
 [plugins]
 
+android-application = { id = "com.android.application", version.ref = "gradle" }
+android-library = { id = "com.android.library", version.ref = "gradle" }
+android-lint = { id = "com.android.lint" }
+android-test = { id = "com.android.test", version.ref = "gradle" }
+
 anvil = { id = "com.squareup.anvil", version.ref = "square-anvil" }
 benManes = { id = "com.github.ben-manes.versions", version.ref = "benManes" }
 dependencyAnalysis = { id = "com.autonomousapps.dependency-analysis", version.ref = "dependencyAnalysis" }
 detekt = { id = "io.gitlab.arturbosch.detekt", version.ref = "detekt" }
 dropbox-dependencyGuard = { id = "com.dropbox.dependency-guard", version.ref = "dropbox-dependencyGuard" }
 gradleDoctor = { id = "com.osacky.doctor", version.ref = "gradleDoctor" }
+kotlin-android = { id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
 ktlint = { id = "org.jlleitschuh.gradle.ktlint", version.ref = "ktlint-gradle" }
 taskTree = { id = "com.dorongold.task-tree", version.ref = "taskTree" }
@@ -79,8 +84,15 @@ dokka = { id = "org.jetbrains.dokka", version.ref = "dokka" }
 kotlinx-binaryCompatibility = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "kotlinx-binaryCompatibility" }
 kotlinx-knit = { id = "kotlinx-knit", version.ref = "kotlinx-knit" }
 
+ksp = { id = "com.google.devtools.ksp", version = "1.8.22-1.0.11" }
+kapt = { id = "org.jetbrains.kotlin.kapt", version.ref = "kotlin" }
+
+moshix = { id = "dev.zacsweers.moshix", version.ref = "mochix" }
+
+
+
 [libraries]
-android-gradle = { module = "com.android.tools.build:gradle", version.ref = "androidTools" }
+android-gradle = { module = "com.android.tools.build:gradle", version.ref = "gradle" }
 
 androidx-activity-compose = { module = "androidx.activity:activity-compose", version.ref = "androidx-activity" }
 androidx-activity-core = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
@@ -193,7 +205,6 @@ google-hilt-library = { module = "com.google.dagger:hilt-android", version.ref =
 google-hilt-pluginGradle = { module = "com.google.dagger:hilt-android-gradle-plugin", version.ref = "google-dagger" }
 google-hilt-testing = { module = "com.google.dagger:hilt-android-testing", version.ref = "google-dagger" }
 
-google-ksp = { module = "com.google.devtools.ksp:symbol-processing-gradle-plugin", version.ref = "google-ksp" }
 
 google-material-android = { module = "com.google.android.material:material", version.ref = "google-material" }
 
@@ -265,7 +276,6 @@ square-anvil-annotations = { module = "com.squareup.anvil:annotations", version.
 square-anvil-compiler-api = { module = "com.squareup.anvil:compiler-api", version.ref = "square-anvil" }
 square-anvil-compiler-core = { module = "com.squareup.anvil:compiler", version.ref = "square-anvil" }
 square-anvil-compiler-utils = { module = "com.squareup.anvil:compiler-utils", version.ref = "square-anvil" }
-square-anvil-gradle = { module = "com.squareup.anvil:gradle-plugin", version.ref = "square-anvil" }
 
 square-kotlinPoet = "com.squareup:kotlinpoet:1.12.0"
 
@@ -286,11 +296,6 @@ swiftzer-semver = "net.swiftzer.semver:semver:1.2.0"
 timber = "com.jakewharton.timber:timber:5.0.1"
 
 vanniktech-publish = { module = "com.vanniktech:gradle-maven-publish-plugin", version.ref = "vanniktech-publish" }
-
-zacSweers-auto-service-ksp = "dev.zacsweers.autoservice:auto-service-ksp:1.0.0"
-
-zacSweers-moshix-runtime = { module = "dev.zacsweers.moshix:moshi-sealed-runtime", version.ref = "zacSweers-moshix" }
-zacSweers-moshix-sealed = { module = "dev.zacsweers.moshix:moshi-sealed-codegen", version.ref = "zacSweers-moshix" }
 
 [bundles]
 jUnit = ["junit-api", "junit-params", "junit-engine"]

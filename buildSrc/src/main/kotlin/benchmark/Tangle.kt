@@ -100,7 +100,7 @@ internal fun tangleLibraryBuildFile(
   return BuildFile(
     directory = moduleRoot,
     content = """plugins{
-        |  id("com.android.library")
+        |  id("tangle.library.android")
         |  kotlin("android")
         |  id("com.rickbusarow.tangle")
         |}
@@ -162,7 +162,7 @@ internal fun tangleAppBuildFile(
   return BuildFile(
     directory = moduleRoot,
     content = """plugins{
-        |  id("com.android.library")
+        |  id("tangle.library.android")
         |  kotlin("android")
         |  kotlin("kapt")
         |  id("com.rickbusarow.tangle")

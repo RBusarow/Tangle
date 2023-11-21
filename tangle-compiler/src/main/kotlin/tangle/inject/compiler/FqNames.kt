@@ -15,6 +15,7 @@
 
 package tangle.inject.compiler
 
+import com.squareup.anvil.annotations.ExperimentalAnvilApi
 import com.squareup.anvil.annotations.MergeComponent
 import com.squareup.anvil.annotations.MergeSubcomponent
 import com.squareup.anvil.compiler.internal.fqName
@@ -26,6 +27,7 @@ import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Qualifier
 
+@OptIn(ExperimentalAnvilApi::class)
 object FqNames {
 
   val context = FqName("android.content.Context")

@@ -14,13 +14,31 @@
  */
 
 plugins {
-  javaLibrary
-  published
+  id("tangle.library.java")
+  `maven-publish`
+  id("org.jetbrains.kotlin.jvm")
 }
 
-tanglePublishing {
+/*tanglePublishing {
   artifactId.set("tangle-api")
+}*/
+
+publishing {
+  publications {
+    create<MavenPublication>("maven") {
+      groupId = "com.rickbusarow.tangle"
+      artifactId = "tangle-api"
+
+      from(components["java"])
+    }
+  }
 }
+
+/*
+publishing.publications.getByName<MavenPublication>("maven") {
+  artifactId = "tangle-api"
+}
+*/
 
 kotlin {
   explicitApi()
